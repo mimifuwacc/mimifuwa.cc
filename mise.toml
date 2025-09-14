@@ -1,0 +1,8 @@
+[tasks."setup"]
+depends = ["setup:deps", "setup:config"]
+
+[tasks."setup:deps"]
+run = ["pnpm install"]
+
+[tasks."setup:config"]
+run = ["pnpm lefthook install"]

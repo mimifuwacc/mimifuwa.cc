@@ -1,0 +1,19 @@
+commit-msg:
+  skip: merge
+  commands:
+    commitlint:
+      run: pnpx commitlint --edit {1}
+
+pre-commit:
+  commands:
+    lint:
+      run: pnpm run lint
+    format:
+      run: pnpm run format
+    git-update:
+      run: git update-index --again
+
+pre-push:
+  commands:
+    format:
+      run: pnpm run format
