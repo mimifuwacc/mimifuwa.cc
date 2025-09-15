@@ -45,4 +45,5 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           PRODUCTION: false
           GITHUB_DEPLOYMENT: true
+          GITHUB_DEPLOYMENT_ENV: Devel
           PR_LABELS: 'deployed(devel)'
