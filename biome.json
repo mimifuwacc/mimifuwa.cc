@@ -19,7 +19,13 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noUnknownAtRules": "off"
+        "noUnknownAtRules": "off",
+        "noConsole": {
+          "level": "warn",
+          "options": {
+            "allow": ["assert", "error", "info", "warn"]
+          }
+        }
       }
     },
     "domains": {

@@ -8,8 +8,7 @@
     "editor.defaultFormatter": "biomejs.biome",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll": "explicit",
-      "source.organizeImports": "explicit"
+      "source.fixAll": "always"
     },
     "[typescript]": {
       "editor.defaultFormatter": "biomejs.biome"
