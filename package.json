@@ -8,9 +8,14 @@
     "start": "next start",
     "lint": "biome check",
     "fix": "biome check --apply",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.8.2",
     "@tailwindcss/postcss": "^4.1.13",
     "@types/unist": "^3.0.3",
     "next": "15.5.3",
@@ -39,7 +44,8 @@
     "conventional-changelog-atom": "^5.0.0",
     "lefthook": "^1.13.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.37.0"
   },
   "packageManager": "pnpm@10.14.0"
 }
