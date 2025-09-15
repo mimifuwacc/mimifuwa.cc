@@ -64,20 +64,15 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Bump version and push tag
+        id: tag-version
+        uses: mathieudutour/github-tag-action@v6.2
         with:
-          node-version-file: ".node-version"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v4
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
         with:
-          semantic_version: 24
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.tag-version.outputs.new_tag }}
+          name: Release ${{ steps.tag-version.outputs.new_tag }}
+          body: ${{ steps.tag-version.outputs.changelog }}
