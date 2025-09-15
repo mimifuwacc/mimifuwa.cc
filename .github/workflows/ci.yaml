@@ -7,7 +7,7 @@ on:
       - devel
 
 jobs:
-  deploy:
+  ci:
     uses: ./.github/workflows/deploy-vercel.yaml
 
     permissions:
@@ -19,4 +19,4 @@ jobs:
       environment: 'preview'
       deployment: false
       production: false
-      pr_labels: 'deployed(preview)'
+      pr_labels: false

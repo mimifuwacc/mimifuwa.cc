@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  main:
     uses: ./.github/workflows/deploy-vercel.yaml
 
     permissions:
