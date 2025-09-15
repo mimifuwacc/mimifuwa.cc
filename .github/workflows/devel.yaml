@@ -33,7 +33,7 @@ jobs:
         run: pnpm lint
 
       - name: Test
-        run: pnpm run test
+        run: pnpm test
 
       - name: Install Vercel CLI
         run: pnpm install --global vercel

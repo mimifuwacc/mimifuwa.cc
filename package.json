@@ -12,7 +12,7 @@
     "format": "biome format --write",
     "sb:dev": "storybook dev -p 6006",
     "sb:build": "storybook build",
-    "test": "vitest run",
+    "test": "vitest",
     "test:unit": "vitest --project unit",
     "test:sb": "vitest --project storybook",
     "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
