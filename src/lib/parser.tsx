@@ -8,7 +8,7 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { matter } from "vfile-matter";
 
-import InfoCard from "@/components/info-card";
+import InfoCard, { type InfoCardProps } from "@/components/info-card";
 import LinkCard from "@/components/link-card";
 
 import {
@@ -43,7 +43,11 @@ export default async function parser(markdown: string): Promise<ParsedResult> {
               ) : null;
             case "info-card":
               return (
-                <InfoCard type={componentData["data-info-type"] || "note"}>
+                <InfoCard
+                  type={
+                    componentData["data-info-type"] as InfoCardProps["type"]
+                  }
+                >
                   {children}
                 </InfoCard>
               );

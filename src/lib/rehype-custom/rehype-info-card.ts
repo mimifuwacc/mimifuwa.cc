@@ -1,7 +1,7 @@
 import type { Element, Parent, Root, Text } from "hast";
 import { visit } from "unist-util-visit";
 
-const infoType = ["NOTE", "WARN", "ERROR"] as const;
+const infoType = ["INFO", "SUCCESS", "WARNING", "DANGER"] as const;
 const infoReg = new RegExp(`^\\[!(${infoType.join("|")})\\]\\S?`);
 
 const isTarget = (node: Element): boolean => {

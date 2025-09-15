@@ -9,7 +9,7 @@ date: 2024-01-01
 
 https://mimifuwa.cc
 
-> [!NOTE]
+> [!INFO]
 > Highlights information that users should take into account, even when skimming.
 > [a](https://google.com)
 

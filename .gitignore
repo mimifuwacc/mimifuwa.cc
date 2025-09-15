@@ -41,4 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 # open-next
-.open-next
+/.open-next
+.wrangler
+
+# storybook
+*storybook.log
+storybook-static
