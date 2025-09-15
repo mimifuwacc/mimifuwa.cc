@@ -27,7 +27,7 @@ jobs:
 
       - name: Build & Deploy to Vercel
         id: vercel-deploy
-        uses: vercel/action@v1
+        uses: BetaHuhn/deploy-to-vercel-action@latest
         with:
           vercel-token: ${{ secrets.VERCEL_ACCESS_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
