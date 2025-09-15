@@ -2,6 +2,7 @@
   "name": "mimifuwa.cc",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -9,12 +10,14 @@
     "lint": "biome check",
     "fix": "biome check --apply",
     "format": "biome format --write",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "sb:dev": "storybook dev -p 6006",
+    "sb:build": "storybook build",
+    "v:deploy": "vercel --prod",
+    "v:upload": "vercel",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf:upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.8.2",
@@ -61,6 +64,5 @@
     "typescript": "^5",
     "vitest": "^3.2.4",
     "wrangler": "^4.37.0"
-  },
-  "packageManager": "pnpm@10.14.0"
+  }
 }
