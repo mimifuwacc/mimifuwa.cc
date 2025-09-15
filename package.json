@@ -17,6 +17,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.8.2",
     "@tailwindcss/postcss": "^4.1.13",
     "@types/unist": "^3.0.3",
     "next": "15.5.3",
@@ -32,6 +33,7 @@
     "remark-rehype": "^11.1.2",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
+    "vercel": "^48.0.0",
     "vfile-matter": "^5.0.1"
   },
   "devDependencies": {
