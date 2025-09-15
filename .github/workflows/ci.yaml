@@ -2,7 +2,7 @@ name: Deploy to Vercel Preview
 
 on:
   push:
-    ignore-branches:
+    branches-ignore:
       - main
       - devel
 
