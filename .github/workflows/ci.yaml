@@ -9,6 +9,12 @@ on:
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-vercel.yaml
+
+    permissions:
+      contents: write
+      deployments: write
+      pull-requests: write
+
     with:
       environment: 'preview'
       deployment: false
