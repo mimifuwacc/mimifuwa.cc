@@ -47,3 +47,4 @@ jobs:
           PRODUCTION: false
           GITHUB_DEPLOYMENT: false
           PR_LABELS: false
+          CREATE_COMMENT: true
