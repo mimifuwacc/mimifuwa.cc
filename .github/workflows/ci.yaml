@@ -19,4 +19,4 @@ jobs:
       environment: 'preview'
       deployment: false
       production: false
-      pr_labels: false
+      pr_labels: 'deployed(preview)'
