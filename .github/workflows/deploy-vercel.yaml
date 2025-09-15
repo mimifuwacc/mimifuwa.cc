@@ -21,7 +21,7 @@ on:
       pr_labels:
         description: 'PR labels for deployment'
         required: false
-        type: string | boolean
+        type: string
         default: false
 
 jobs:
