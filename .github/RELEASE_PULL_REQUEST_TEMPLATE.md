@@ -1,11 +1,9 @@
 <%= ENV['PR_TITLE'] %>
 
-## 概要
+## 確認事項
+- [ ] develでの動作チェック
 
-## チケット
-
-## 変更内容
-
+## 更新内容
 <% pull_requests.each do |pr| -%>
 <%= pr.to_checklist_item %>
 <% end -%>
