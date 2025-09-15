@@ -1,8 +1,9 @@
 name: Deploy to Vercel Preview
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
+    ignore-branches:
+      - main
 
 jobs:
   deploy:
@@ -42,4 +43,6 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          CREATE_COMMENT: true
+          GITHUB_DEPLOYMENT: false
+          PRODUCTION: false
+          PR_LABELS: false
