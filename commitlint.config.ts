@@ -5,6 +5,7 @@ const Configuration = {
 
   rules: {
     "header-max-length": [2, "always", 999],
+    "subject-case": [0],
   },
 
   ignores: [(commit: string) => commit === ""],
