@@ -15,15 +15,14 @@ pre-commit:
 
 pre-push:
   commands:
-    format:
-      run: pnpm run format
-
     prevent-direct-push:
       run: |
         current_branch=$(git rev-parse --abbrev-ref HEAD)
         protected_branches="main devel"
         if [[ " ${protected_branches} " =~ " ${current_branch} " ]]; then
-          echo -e "\033[31m✖ Direct pushes to the branch '${current_branch}' are forbidden. Use a pull request.\033[0m"
+          echo -e "\033[31m✖\033[0m Direct pushes to the branch '${current_branch}' are forbidden. Use a pull request."
           exit 1
         fi
         exit 0
+    format:
+      run: pnpm run format
