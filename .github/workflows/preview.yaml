@@ -1,8 +1,9 @@
-name: Deploy to Vercel (Devel)
+name: Deploy to Vercel (Preview)
 
 on:
   push:
-    branches:
+    branches-ignore:
+      - main
       - devel
 
 jobs:
@@ -44,5 +45,5 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           PRODUCTION: false
-          GITHUB_DEPLOYMENT: true
-          PR_LABELS: 'deployed(devel)'
+          GITHUB_DEPLOYMENT: false
+          PR_LABELS: false
