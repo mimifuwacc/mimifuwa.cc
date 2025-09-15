@@ -32,6 +32,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Test
+        run: pnpm test:unit
+
       - name: Install Vercel CLI
         run: pnpm install --global vercel
 
@@ -45,4 +48,5 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           PRODUCTION: false
           GITHUB_DEPLOYMENT: true
+          GITHUB_DEPLOYMENT_ENV: Devel
           PR_LABELS: 'deployed(devel)'
