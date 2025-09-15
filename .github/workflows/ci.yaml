@@ -31,6 +31,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Install Vercel CLI
+        run: pnpm install --global vercel
+
       - name: Build & Deploy to Vercel
         id: vercel-deploy
         uses: BetaHuhn/deploy-to-vercel-action@latest
