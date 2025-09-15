@@ -26,7 +26,5 @@ jobs:
         run: pnpm install
 
       - name: Build & Deploy to Vercel Preview
-        env:
-          VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
         run: |
-          pnpm run v:upload
+          pnpm run v:upload --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
