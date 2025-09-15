@@ -7,8 +7,10 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { matter } from "vfile-matter";
+
 import InfoCard from "@/components/info-card";
 import LinkCard from "@/components/link-card";
+
 import {
   type ComponentProps,
   extractComponentProps,
@@ -45,8 +47,9 @@ export default async function parser(markdown: string): Promise<ParsedResult> {
                   {children}
                 </InfoCard>
               );
+            default:
+              return <div {...restProps}>{children}</div>;
           }
-          return <div {...restProps}>{children}</div>;
         },
       },
     })
