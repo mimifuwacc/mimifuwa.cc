@@ -8,7 +8,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-blue-500 text-white hover:bg-blue-600",
         secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
-        ghost:
+        disabled:
           "bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50",
         destructive: "bg-red-500 text-white hover:bg-red-600",
         success: "bg-green-500 text-white hover:bg-green-600",
@@ -16,7 +16,7 @@ const buttonVariants = cva(
       size: {
         default: "",
         sm: "px-4 py-2 text-sm",
-        lg: "px-10 py-5 text-lg",
+        lg: "px-6 py-4 text-xl",
       },
       disabled: {
         true: "opacity-50 cursor-not-allowed hover:scale-100",
@@ -36,7 +36,6 @@ export interface ButtonProps
   icon?: React.ReactNode;
   text: string;
   url?: string;
-  asChild?: boolean;
 }
 
 export default function Button({
@@ -48,7 +47,6 @@ export default function Button({
   disabled,
   className,
   onClick,
-  asChild = false,
   ...props
 }: ButtonProps) {
   const isDisabled = !!disabled;
@@ -66,24 +64,11 @@ export default function Button({
     </>
   );
 
-  if (url && !asChild) {
+  if (url) {
     return (
       <Link href={url} className={buttonClasses}>
         {content}
       </Link>
-    );
-  }
-
-  if (asChild) {
-    return (
-      <button
-        onClick={onClick}
-        disabled={isDisabled}
-        className={buttonClasses}
-        {...props}
-      >
-        {content}
-      </button>
     );
   }
 

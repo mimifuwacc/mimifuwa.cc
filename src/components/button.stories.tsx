@@ -56,13 +56,6 @@ export const Secondary: Story = {
   },
 };
 
-export const Ghost: Story = {
-  args: {
-    text: "Ghost",
-    variant: "ghost",
-  },
-};
-
 export const Destructive: Story = {
   args: {
     text: "Delete",
@@ -124,5 +117,12 @@ export const WithOnClick: Story = {
     icon: "play",
     onClick: () => alert("Button clicked!"),
     variant: "success",
+  },
+};
+
+export const CustomStyles: Story = {
+  args: {
+    text: "Custom Styled",
+    className: "bg-purple-600 hover:bg-purple-700 text-white",
   },
 };

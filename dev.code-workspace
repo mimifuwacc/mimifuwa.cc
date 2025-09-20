@@ -23,7 +23,8 @@
       "editor.defaultFormatter": "biomejs.biome"
     },
     "tailwindCSS.experimental.classRegex": [
-      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"]
+      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"],
+      ["className\\s*:\\s*[\"'`]([^\"'`]*)[\"'`]"]
     ]
   },
   "extensions": {
