@@ -3,7 +3,7 @@ import { FaCircleInfo, FaGithub, FaPlay } from "react-icons/fa6";
 import Button from "./button";
 
 const meta = {
-  title: "Components/Button",
+  title: "Commons/Button",
   component: Button,
   tags: ["autodocs"],
   parameters: {

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@import "../styles/themes";
+@import "../styles/fonts";
 @import "../styles/animations";
 
 /* z-index 階層の統一 */

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Card from "./card";
 
 const meta = {
-  title: "Components/Card",
+  title: "Commons/Card",
   component: Card,
   tags: ["autodocs"],
   parameters: {
