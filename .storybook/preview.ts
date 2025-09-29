@@ -1,13 +1,19 @@
 import type { Preview } from "@storybook/nextjs-vite";
 import "../src/app/globals.css";
 
+import { INITIAL_VIEWPORTS } from "storybook/viewport";
+
 const preview: Preview = {
   parameters: {
+    actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+    },
+    viewport: {
+      options: INITIAL_VIEWPORTS,
     },
 
     a11y: {
