@@ -27,7 +27,7 @@ export default function HeroSection() {
   }, []);
 
   const scrollToContent = () => {
-    scrollToElement("about-content");
+    scrollToElement("about-section");
   };
 
   return (
@@ -80,21 +80,21 @@ export default function HeroSection() {
             <Button
               icon={<FaGithub />}
               text="GitHub"
-              url="https://github.com/mimifuwa"
+              url="https://github.com/mimifuwacc"
               variant="custom"
               className="bg-gray-800 text-white hover:bg-gray-700"
             />
             <Button
               icon={<FaTwitter />}
               text="Twitter"
-              url="https://twitter.com/mimifuwa_dev"
+              url="https://twitter.com/mimifuwacc"
               variant="custom"
               className="bg-blue-500 text-white hover:bg-blue-600"
             />
             <Button
               icon={<SiZenn />}
               text="Zenn"
-              url="https://zenn.dev/mimifuwa"
+              url="https://zenn.dev/mimifuwacc"
               variant="custom"
               className="bg-blue-600 text-white hover:bg-blue-700"
             />

@@ -2,6 +2,7 @@
 
 import { cva } from "class-variance-authority";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { memo, useCallback, useState } from "react";
 import { FaRegFileAlt } from "react-icons/fa";
 import { PiHouseBold } from "react-icons/pi";
@@ -13,7 +14,7 @@ export interface NavItem {
 }
 
 export interface HeaderProps {
-  path: string;
+  path?: string;
 }
 
 const logoStyles = cva(
@@ -237,6 +238,8 @@ const MobileNavigation = memo(function MobileNavigation({
 
 // メインのヘッダーコンポーネント
 const Header = memo(function Header({ path }: HeaderProps) {
+  const pathname = usePathname();
+  const currentPath = path ?? pathname;
   const { isMenuOpen, toggleMenu, closeMenu } = useMobileMenu();
 
   return (
@@ -252,7 +255,7 @@ const Header = memo(function Header({ path }: HeaderProps) {
           </div>
 
           {/* デスクトップナビゲーション */}
-          <DesktopNavigation currentPath={path} />
+          <DesktopNavigation currentPath={currentPath} />
 
           {/* モバイルメニューボタン */}
           <div className="md:hidden">
@@ -262,7 +265,7 @@ const Header = memo(function Header({ path }: HeaderProps) {
 
         {/* モバイルナビゲーション */}
         <MobileNavigation
-          currentPath={path}
+          currentPath={currentPath}
           isOpen={isMenuOpen}
           onClose={closeMenu}
         />

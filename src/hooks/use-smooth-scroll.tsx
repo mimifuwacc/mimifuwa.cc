@@ -9,9 +9,8 @@ export const useSmoothScroll = () => {
     }
 
     // ヘッダーの高さを考慮したオフセット
-    const headerHeight = 80;
-    const additionalOffset = 20;
-    const yOffset = -(headerHeight + additionalOffset);
+    const headerHeight = 64; // ヘッダーの高さを適宜調整してください
+    const yOffset = -headerHeight;
 
     const elementTop = element.getBoundingClientRect().top;
     const targetY = window.pageYOffset + elementTop + yOffset;

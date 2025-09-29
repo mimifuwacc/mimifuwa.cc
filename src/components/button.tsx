@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 
 const buttonVariants = cva(
-  "flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base font-medium cursor-pointer",
+  "flex items-center gap-2 sm:gap-3 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg font-medium cursor-pointer",
   {
     variants: {
       variant: {
@@ -15,7 +15,7 @@ const buttonVariants = cva(
         custom: "",
       },
       size: {
-        default: "",
+        default: "px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-base",
         sm: "px-4 py-2 text-sm",
         lg: "px-6 py-4 text-xl",
       },
