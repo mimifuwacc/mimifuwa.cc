@@ -7,7 +7,7 @@ commit-msg:
 pre-commit:
   commands:
     lint:
-      run: pnpm run lint
+      run: pnpm run lint --fix
     format:
       run: pnpm run format
     git-update:
@@ -24,5 +24,3 @@ pre-push:
           exit 1
         fi
         exit 0
-    format:
-      run: pnpm run format
