@@ -1,3 +1,5 @@
+import HeroSection from "./_components/hero-section";
+
 export default function Page() {
-  return <h1>mimifuwa.cc</h1>;
+  return <HeroSection />;
 }
