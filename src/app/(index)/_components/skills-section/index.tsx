@@ -183,7 +183,7 @@ export default function SkillsSection() {
       icon="✨"
       bg="gray"
     >
-      <div className="space-y-6">
+      <div className="space-y-8">
         {skillCategories.map((category) => (
           <Category
             key={category.key}
