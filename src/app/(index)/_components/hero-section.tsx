@@ -7,8 +7,6 @@ import { SiZenn } from "react-icons/si";
 import Button from "@/components/button";
 import { useSmoothScroll } from "@/hooks/use-smooth-scroll";
 
-const roles = ["観測者", "改変者", "ENJP"];
-
 export const Background = () => (
   <div className="absolute inset-0 overflow-hidden">
     <div className="absolute -top-20 -right-20 sm:-top-40 sm:-right-40 w-40 h-40 sm:w-80 sm:h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -24,10 +22,12 @@ export const Avatar = () => (
     className="w-48 h-48 sm:w-48 sm:h-48 mx-auto rounded-full border-6 border-white shadow-2xl hover:scale-110 transition-transform duration-500"
     width={144}
     height={144}
+    priority
   />
 );
 
 export const Profile = () => {
+  const roles = ["観測者", "改変者", "ENJP"];
   const [currentRole, setCurrentRole] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 

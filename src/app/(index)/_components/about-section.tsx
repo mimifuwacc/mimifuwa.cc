@@ -19,17 +19,24 @@ const qualifications = [
   "全珠連 暗算検定 準四段",
 ];
 
-const musicInterests = [
-  "KAMITSUBAKI STUDIO（V.W.P、ヰ世界情緒、CIEL、心世紀、罪十罰、梓川など...）",
-  "ボカロ",
-  "その他インターネットの音楽",
-];
-
-const novelInterests = [
-  "こちら週末停滞委員会",
-  "スパイ教室",
-  "週に一度クラスメイトを買う話",
-  "わたしが恋人になれるわけないじゃん、ムリムリ!（※ムリじゃなかった!?）",
+const hobbies = [
+  {
+    name: "音楽",
+    items: [
+      "KAMITSUBAKI STUDIO（V.W.P、ヰ世界情緒、CIEL、心世紀、罪十罰、梓川など...）",
+      "ボカロ",
+      "その他インターネットの音楽",
+    ],
+  },
+  {
+    name: "ライトノベル",
+    items: [
+      "こちら週末停滞委員会",
+      "スパイ教室",
+      "週に一度クラスメイトを買う話",
+      "わたしが恋人になれるわけないじゃん、ムリムリ!（※ムリじゃなかった!?）",
+    ],
+  },
 ];
 
 const timelineData: TimelineEvent[] = [
@@ -96,7 +103,7 @@ export const Profile = () => (
         <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">
           みみ
         </h3>
-        <p className="text-gray-600 mb-2 text-lg">Kimimichi Shioiri</p>
+        <p className="text-gray-600 mb-2 text-lg">mimifuwacc</p>
         <p className="text-sm sm:text-base text-gray-500 leading-relaxed">
           電気通信大学 情報理工学域
           <br />
@@ -168,24 +175,19 @@ export const Hobby = () => (
       <span>趣味</span>
     </h4>
     <ul className="space-y-4 text-gray-600">
-      <li className="flex items-center gap-3 text-sm sm:text-base">
-        <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
-        音楽
-      </li>
-      <ul className="ml-8 mt-2 space-y-2 list-disc text-gray-500 text-sm sm:text-base">
-        {musicInterests.map((interest) => (
-          <li key={interest}>{interest}</li>
-        ))}
-      </ul>
-      <li className="flex items-center gap-3 text-sm sm:text-base">
-        <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
-        ライトノベル
-      </li>
-      <ul className="ml-8 mt-2 space-y-2 list-disc text-gray-500 text-sm sm:text-base">
-        {novelInterests.map((novel) => (
-          <li key={novel}>{novel}</li>
-        ))}
-      </ul>
+      {hobbies.map((hobby) => (
+        <li key={hobby.name}>
+          <div className="flex items-center gap-3 text-sm sm:text-base">
+            <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
+            {hobby.name}
+          </div>
+          <ul className="ml-8 mt-2 space-y-2 list-disc text-gray-500 text-sm sm:text-base">
+            {hobby.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </li>
+      ))}
     </ul>
   </Card>
 );
