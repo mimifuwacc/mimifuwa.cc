@@ -5,7 +5,7 @@ interface SectionProps {
   title?: string;
   subtitle?: string;
   icon?: ReactNode;
-  background?: "gray" | "white" | "none";
+  bg?: "gray" | "white" | "custom";
   className?: string;
   children: ReactNode;
 }
@@ -15,26 +15,19 @@ export function Section({
   title,
   subtitle,
   icon,
-  background = "gray",
+  bg = "gray",
   className = "",
   children,
 }: SectionProps) {
   const bgClasses = {
     gray: "bg-gray-50",
     white: "bg-white",
-    none: "",
+    custom: "bg-gradient-to-r from-blue-50 to-indigo-50",
   };
-
-  const paddingClasses = {
-    gray: "py-16 sm:py-24",
-    white: "py-16 sm:py-24",
-    none: "py-16 sm:py-24",
-  };
-
   return (
     <section
       id={id}
-      className={`${bgClasses[background]} ${paddingClasses[background]} ${className}`}
+      className={`${bgClasses[bg]} ${bg && "py-16 sm:py-24"} ${className}`}
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {(title || subtitle) && (

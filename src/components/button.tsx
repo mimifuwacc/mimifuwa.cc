@@ -35,13 +35,15 @@ export interface ButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "disabled">,
     VariantProps<typeof buttonVariants> {
   icon?: React.ReactNode;
-  text: string;
+  text?: string;
+  children?: React.ReactNode;
   url?: string;
 }
 
 export default function Button({
   icon,
   text,
+  children,
   url,
   variant,
   size,
@@ -61,7 +63,7 @@ export default function Button({
   const content = (
     <>
       {icon && <span className="text-lg sm:text-xl">{icon}</span>}
-      {text}
+      {text || children}
     </>
   );
 

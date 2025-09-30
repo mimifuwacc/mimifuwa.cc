@@ -25,7 +25,7 @@ const meta = {
       control: "text",
       description: "Section icon (emoji)",
     },
-    background: {
+    bg: {
       control: "select",
       options: ["gray", "white", "none"],
       description: "Background color variant",
@@ -51,7 +51,7 @@ export const Default: Story = {
     title: "セクションタイトル",
     subtitle: "これはセクションのサブタイトルです",
     icon: "📝",
-    background: "gray",
+    bg: "gray",
     children: (
       <div className="grid lg:grid-cols-2 gap-8 items-start">
         <div className="space-y-8">
