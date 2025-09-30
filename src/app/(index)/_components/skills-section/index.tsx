@@ -4,7 +4,7 @@ import Image from "next/image";
 import Card from "@/components/card";
 import { Section } from "../section";
 
-const skills = {
+export const skills = {
   languages: [
     {
       name: "HTML",
@@ -128,32 +128,28 @@ const skills = {
   ],
 } as const;
 
-const skillCategories = [
+export const skillCategories = [
   { key: "languages", title: "Languages", emoji: "💻", color: "blue" },
   { key: "frameworks", title: "Frameworks", emoji: "⚡", color: "green" },
   { key: "tools", title: "Tools", emoji: "🛠️", color: "purple" },
 ] as const;
 
-export const SkillItem = ({
-  skill,
-}: {
-  skill: { name: string; image: string };
-}) => (
+export const SkillItem = ({ name, image }: { name: string; image: string }) => (
   <div
-    key={skill.name}
+    key={name}
     className="group flex flex-col items-center p-3 pt-4 rounded-lg hover:bg-gray-50 transition-all duration-300 hover:scale-105"
   >
     <div className="relative mb-3 sm:mb-4">
       <Image
-        src={skill.image}
-        alt={skill.name}
+        src={image}
+        alt={name}
         width={48}
         height={48}
         className="w-10 h-10 sm:w-12 sm:h-12 transition-transform duration-300 group-hover:scale-110"
       />
     </div>
     <span className="text-xs sm:text-sm font-medium text-gray-700 text-center leading-tight">
-      {skill.name}
+      {name}
     </span>
   </div>
 );
@@ -196,7 +192,11 @@ export default function SkillsSection() {
           >
             <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-4 sm:gap-6">
               {skills[category.key].map((skill) => (
-                <SkillItem key={skill.name} skill={skill} />
+                <SkillItem
+                  key={skill.name}
+                  name={skill.name}
+                  image={skill.image}
+                />
               ))}
             </div>
           </Category>
