@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Avatar } from "./hero-section";
+import { Profile } from ".";
 
 const meta = {
-  title: "Pages/Top/HeroSection/Avatar",
-  component: Avatar,
+  title: "Pages/Top/HeroSection/Profile",
+  component: Profile,
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },
   decorators: [
     (Story) => (
-      <div className="py-16">
+      <div className="flex flex-col text-center items-center justify-center py-16">
         <Story />
       </div>
     ),
   ],
-} satisfies Meta<typeof Avatar>;
+} satisfies Meta<typeof Profile>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Background } from "./hero-section";
+import { SocialLinks } from ".";
 
 const meta = {
-  title: "Pages/Top/HeroSection/Background",
-  component: Background,
+  title: "Pages/Top/HeroSection/SocialLinks",
+  component: SocialLinks,
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },
   decorators: [
     (Story) => (
-      <div className="flex min-h-[50dvh]">
+      <div className="py-4">
         <Story />
       </div>
     ),
   ],
-} satisfies Meta<typeof Background>;
+} satisfies Meta<typeof SocialLinks>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

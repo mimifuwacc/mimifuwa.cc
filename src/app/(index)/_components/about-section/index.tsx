@@ -3,7 +3,7 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import { SiZenn } from "react-icons/si";
 import Button from "@/components/button";
 import Card from "@/components/card";
-import { Section } from "./section";
+import { Section } from "../section";
 
 interface TimelineEvent {
   date: string;
@@ -228,7 +228,7 @@ export const Timeline = () => {
   );
 };
 
-export function AboutSection() {
+export default function AboutSection() {
   return (
     <Section
       id="about-section"

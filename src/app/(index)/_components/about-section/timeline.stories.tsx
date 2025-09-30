@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Profile } from "./about-section";
+import { Timeline } from ".";
 
 const meta = {
-  title: "Pages/Top/AboutSection/Profile",
-  component: Profile,
+  title: "Pages/Top/AboutSection/Timeline",
+  component: Timeline,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Profile>;
+} satisfies Meta<typeof Timeline>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
