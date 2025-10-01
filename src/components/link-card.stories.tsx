@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import LinkCard from "./link-card";
 
 const meta = {
-  title: "Components/LinkCard",
+  title: "Commons/LinkCard",
   component: LinkCard,
   tags: ["autodocs"],
   argTypes: {

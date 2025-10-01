@@ -21,7 +21,11 @@
     },
     "[javascriptreact]": {
       "editor.defaultFormatter": "biomejs.biome"
-    }
+    },
+    "tailwindCSS.experimental.classRegex": [
+      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"],
+      ["className\\s*:\\s*[\"'`]([^\"'`]*)[\"'`]"]
+    ]
   },
   "extensions": {
     "recommendations": [

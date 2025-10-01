@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@import "../styles/fonts";
+@import "../styles/animations";
+
+/* z-index 階層の統一 */
+:root {
+  --z-dropdown: 1000;
+  --z-sticky: 1010;
+  --z-fixed: 1020;
+  --z-modal-backdrop: 1030;
+  --z-modal: 1040;
+  --z-popover: 1050;
+  --z-tooltip: 1060;
+  --z-toast: 1070;
+}
