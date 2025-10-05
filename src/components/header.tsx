@@ -3,12 +3,9 @@
 import { cva } from "class-variance-authority";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { memo, useCallback, useState } from "react";
-import { FaRegFileAlt } from "react-icons/fa";
-import { PiHouseBold } from "react-icons/pi";
+import { useCallback, useState } from "react";
 
 export interface NavItem {
-  icon: React.ReactNode;
   href: string;
   label: string;
 }
@@ -60,19 +57,20 @@ function useMobileMenu() {
 }
 
 const navItems: NavItem[] = [
-  { icon: <PiHouseBold />, href: "/", label: "ホーム" },
-  { icon: <FaRegFileAlt />, href: "/blogs", label: "ブログ" },
+  { href: "/", label: "ホーム" },
+  { href: "/blogs", label: "ブログ" },
+  { href: "/links", label: "相互リンク" },
 ];
 
-const Logo = memo(function Logo() {
+const Logo = function Logo() {
   return (
     <Link href="/" className={logoStyles()}>
       mimifuwa.cc
     </Link>
   );
-});
+};
 
-const NavItemComponent = memo(function NavItemComponent({
+const NavItemComponent = function NavItemComponent({
   item,
   isActive,
   size = "desktop",
@@ -83,21 +81,18 @@ const NavItemComponent = memo(function NavItemComponent({
   size?: "desktop" | "mobile";
   onClick?: () => void;
 }) {
-  const iconSize = size === "desktop" ? "text-lg" : "text-xl";
-
   return (
     <Link
       href={item.href}
       className={navItemStyles({ isActive, size })}
       onClick={onClick}
     >
-      <span className={iconSize}>{item.icon}</span>
       {item.label}
     </Link>
   );
-});
+};
 
-const MobileMenuButton = memo(function MobileMenuButton({
+const MobileMenuButton = function MobileMenuButton({
   isOpen,
   onToggle,
 }: {
@@ -153,17 +148,17 @@ const MobileMenuButton = memo(function MobileMenuButton({
       </svg>
     </button>
   );
-});
+};
 
 // デスクトップナビゲーションコンポーネント
-const DesktopNavigation = memo(function DesktopNavigation({
+const DesktopNavigation = function DesktopNavigation({
   currentPath,
 }: {
   currentPath: string;
 }) {
   return (
     <nav className="hidden md:block" aria-label="メインナビゲーション">
-      <ul className="ml-10 flex items-baseline space-x-4">
+      <ul className="flex items-baseline gap-2">
         {navItems.map((item) => {
           const isActive =
             currentPath === item.href ||
@@ -180,10 +175,10 @@ const DesktopNavigation = memo(function DesktopNavigation({
       </ul>
     </nav>
   );
-});
+};
 
 // モバイルナビゲーションコンポーネント
-const MobileNavigation = memo(function MobileNavigation({
+const MobileNavigation = function MobileNavigation({
   currentPath,
   isOpen,
   onClose,
@@ -234,10 +229,10 @@ const MobileNavigation = memo(function MobileNavigation({
       </div>
     </div>
   );
-});
+};
 
 // メインのヘッダーコンポーネント
-const Header = memo(function Header({ path }: HeaderProps) {
+const Header = function Header({ path }: HeaderProps) {
   const pathname = usePathname();
   const currentPath = path ?? pathname;
   const { isMenuOpen, toggleMenu, closeMenu } = useMobileMenu();
@@ -272,6 +267,6 @@ const Header = memo(function Header({ path }: HeaderProps) {
       </div>
     </header>
   );
-});
+};
 
 export default Header;
