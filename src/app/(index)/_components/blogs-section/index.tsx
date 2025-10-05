@@ -45,7 +45,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
 }
 
 const BlogLink = () => (
-  <Button url="/blogs" className="w-fit mx-auto">
+  <Button url="/blogs" className="mx-auto">
     <span>すべての記事を見る</span>
     <span>→</span>
   </Button>

@@ -54,7 +54,7 @@ export const ProjectCard = ({
     url={work.url}
   >
     {/* Project image */}
-    <div className="relative overflow-hidden bg-gray-100 h-48 sm:h-56 -m-6">
+    <div className="relative overflow-hidden bg-gray-100 aspect-[1.91/1] -m-6">
       <Image
         src={work.image}
         alt={work.title}
@@ -80,7 +80,7 @@ export const GitHubLink = () => (
   <Button
     url={`https://github.com/mimifuwacc`}
     icon={<FaGithub />}
-    className="w-fit mx-auto bg-gray-800 text-white hover:bg-gray-700"
+    className="mx-auto bg-gray-800 text-white hover:bg-gray-700"
   >
     <span className="hidden sm:inline">GitHubで他のプロジェクトを見る</span>
     <span className="sm:hidden">GitHub</span>
@@ -96,7 +96,7 @@ export default function ProjectsSection() {
       icon="🚀"
       bg="white"
     >
-      <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
         {works.map((work) => (
           <ProjectCard key={work.title} work={work} />
         ))}

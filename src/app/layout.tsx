@@ -1,7 +1,7 @@
 // import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 
-// import Footer from "@/components/footer";
+import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { fonts } from "@/lib/fonts";
 
@@ -62,7 +62,7 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         {/* <GoogleAnalytics gaId="G-85K159T0NC" /> */}
-        {/* <Footer /> */}
+        <Footer />
       </body>
     </html>
   );
