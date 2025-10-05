@@ -3,7 +3,7 @@
 import { cva } from "class-variance-authority";
 import Link from "next/link";
 import { memo } from "react";
-import { FaGithub, FaXTwitter, FaEnvelope } from "react-icons/fa6";
+import { FaEnvelope, FaGithub, FaXTwitter } from "react-icons/fa6";
 
 export interface FooterLink {
   href: string;
