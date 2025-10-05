@@ -65,6 +65,9 @@ importers:
       vercel:
         specifier: ^48.0.0
         version: 48.0.0(rollup@4.50.1)
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
       vfile-matter:
         specifier: ^5.0.1
         version: 5.0.1

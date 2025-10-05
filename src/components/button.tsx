@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 
 const buttonVariants = cva(
-  "flex items-center gap-2 sm:gap-3 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg font-medium cursor-pointer",
+  "flex w-fit items-center gap-2 sm:gap-3 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg font-medium cursor-pointer",
   {
     variants: {
       variant: {
