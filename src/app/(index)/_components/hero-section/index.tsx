@@ -27,7 +27,7 @@ export const Avatar = () => (
 );
 
 export const Profile = () => {
-  const roles = ["観測者", "改変者", "ENJP"];
+  const roles = ["観測者", "改変者"];
   const [currentRole, setCurrentRole] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
