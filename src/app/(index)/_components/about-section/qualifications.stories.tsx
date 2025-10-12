@@ -4,9 +4,13 @@ import { Qualifications } from ".";
 const meta = {
   title: "Pages/Top/AboutSection/Qualifications",
   component: Qualifications,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
+    previewTabs: {
+      "storybook/docs/panel": {
+        hidden: true,
+      },
+    },
   },
 } satisfies Meta<typeof Qualifications>;
 

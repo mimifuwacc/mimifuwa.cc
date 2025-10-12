@@ -4,7 +4,6 @@ import { Avatar } from ".";
 const meta = {
   title: "Pages/Top/HeroSection/Avatar",
   component: Avatar,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

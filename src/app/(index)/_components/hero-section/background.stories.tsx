@@ -4,7 +4,6 @@ import { Background } from ".";
 const meta = {
   title: "Pages/Top/HeroSection/Background",
   component: Background,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

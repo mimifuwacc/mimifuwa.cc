@@ -4,7 +4,6 @@ import { Category, SkillItem, skills } from ".";
 const meta = {
   title: "Pages/Top/SkillsSection/Category",
   component: Category,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },
