@@ -3,7 +3,7 @@ import path from "node:path";
 import parser from "@/lib/parser";
 
 export async function generateStaticParams() {
-  const postsDirectory = path.join(process.cwd(), "src/contents");
+  const postsDirectory = path.join(process.cwd(), "src/contents/blogs");
   const filenames = await fs.promises.readdir(postsDirectory);
 
   return filenames
@@ -19,7 +19,7 @@ export default async function Page(props: {
   const params = await props.params;
   const postPath = path.join(
     process.cwd(),
-    "src/contents/",
+    "src/contents/blogs/",
     `${params.slug}.md`,
   );
   const fileContent = await fs.promises.readFile(postPath, "utf8");
