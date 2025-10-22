@@ -1,6 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import type { Metadata } from "next";
+import Button from "@/components/button";
 import parser from "@/lib/parser";
+import { Section } from "../../(index)/_components/section";
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), "src/contents/blogs");
@@ -13,6 +16,49 @@ export async function generateStaticParams() {
     }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const postPath = path.join(
+    process.cwd(),
+    "src/contents/blogs/",
+    `${resolvedParams.slug}.md`,
+  );
+
+  try {
+    const fileContent = await fs.promises.readFile(postPath, "utf8");
+    const parsed = await parser(fileContent);
+
+    const title = (parsed.frontmatter.title as string) || resolvedParams.slug;
+    const excerpt = (parsed.frontmatter.excerpt as string) || "ブログ記事";
+
+    return {
+      title: `${title} - mimifuwa.cc`,
+      description: excerpt,
+      openGraph: {
+        title: `${title} - mimifuwa.cc`,
+        description: excerpt,
+        type: "article",
+        publishedTime: parsed.frontmatter.date as string,
+        tags: (parsed.frontmatter.tags as string[]) || [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${title} - mimifuwa.cc`,
+        description: excerpt,
+      },
+    };
+  } catch (_error) {
+    return {
+      title: `${resolvedParams.slug} - mimifuwa.cc`,
+      description: "ブログ記事",
+    };
+  }
+}
+
 export default async function Page(props: {
   params: Promise<{ slug: string }>;
 }) {
@@ -22,15 +68,160 @@ export default async function Page(props: {
     "src/contents/blogs/",
     `${params.slug}.md`,
   );
-  const fileContent = await fs.promises.readFile(postPath, "utf8");
-  const parsed = await parser(fileContent);
 
-  return (
-    <div className="prose mx-auto">
-      <h1 className="text-2xl font-bold text-blue-500">
-        {parsed.frontmatter.title || params.slug}
-      </h1>
-      {parsed.content}
-    </div>
-  );
+  try {
+    const fileContent = await fs.promises.readFile(postPath, "utf8");
+    const parsed = await parser(fileContent);
+
+    const title = (parsed.frontmatter.title as string) || params.slug;
+    const date = (parsed.frontmatter.date as string) || "";
+    const tags = (parsed.frontmatter.tags as string[]) || [];
+
+    // 日付のフォーマット
+    const formatDate = (dateString: string) => {
+      try {
+        return new Date(dateString).toLocaleDateString("ja-JP", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      } catch {
+        return dateString;
+      }
+    };
+
+    return (
+      <div className="min-h-screen">
+        {/* パンくずナビゲーション */}
+        <div className="bg-gray-50 border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-6 sm:px-8 py-4">
+            <nav className="flex items-center space-x-2 text-sm text-gray-600">
+              <a href="/" className="hover:text-blue-600 transition-colors">
+                HOME
+              </a>
+              <span>/</span>
+              <a
+                href="/blogs"
+                className="hover:text-blue-600 transition-colors"
+              >
+                ブログ
+              </a>
+              <span>/</span>
+              <span className="text-gray-900 font-medium truncate">
+                {title}
+              </span>
+            </nav>
+          </div>
+        </div>
+
+        {/* メインコンテンツ */}
+        <Section
+          id="blog-post"
+          title=""
+          subtitle=""
+          bg="white"
+          className="pt-12"
+        >
+          {/* 戻るボタン */}
+          <div className="mb-8">
+            <Button url="/blogs" variant="secondary" size="sm" icon="←">
+              ブログ一覧に戻る
+            </Button>
+          </div>
+
+          {/* 記事ヘッダー */}
+          <header className="mb-12 text-center">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 leading-tight">
+              {title}
+            </h1>
+
+            {/* メタ情報 */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-600 mb-6">
+              {date && (
+                <div className="flex items-center gap-2">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    role="img"
+                    aria-label="日付"
+                  >
+                    <title>日付</title>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <time dateTime={date}>{formatDate(date)}</time>
+                </div>
+              )}
+
+              {tags.length > 0 && (
+                <div className="flex items-center gap-2 flex-wrap justify-center">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    role="img"
+                    aria-label="タグ"
+                  >
+                    <title>タグ</title>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                    />
+                  </svg>
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag: string) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full hover:bg-blue-200 transition-colors"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </header>
+
+          {/* 記事本文 */}
+          <article className="prose-custom max-w-4xl mx-auto">
+            {parsed.content}
+          </article>
+
+          {/* 記事フッター */}
+          <footer className="mt-16 pt-8 border-t border-gray-200">
+            <div className="text-center">
+              <Button url="/blogs" className="mx-auto">
+                ブログ一覧に戻る
+              </Button>
+            </div>
+          </footer>
+        </Section>
+      </div>
+    );
+  } catch (_error) {
+    return (
+      <Section
+        id="blog-error"
+        title="記事が見つかりません"
+        subtitle="お探しの記事は存在しないか、削除された可能性があります。"
+        bg="white"
+      >
+        <div className="text-center">
+          <Button url="/blogs" className="mx-auto">
+            ブログ一覧に戻る
+          </Button>
+        </div>
+      </Section>
+    );
+  }
 }

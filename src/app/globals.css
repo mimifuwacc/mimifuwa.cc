@@ -2,6 +2,7 @@
 
 @import "../styles/fonts";
 @import "../styles/animations";
+@import "../styles/prose";
 
 /* z-index 階層の統一 */
 :root {

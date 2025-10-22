@@ -5,7 +5,17 @@ excerpt: これはサンプルブログ記事です。ブログシステムの�
 tags: ["サンプル", "テスト", "ブログ"]
 ---
 
-# hoge
+# heading 1
+
+## heading 2
+
+### heading 3
+
+#### heading 4
+
+##### heading 5
+
+###### heading 6
 
 これはサンプル投稿です。
 
@@ -15,5 +25,14 @@ https://mimifuwa.cc
 > Highlights information that users should take into account, even when skimming.
 > [a](https://google.com)
 
-* [ ] to do
-* [x] done
+- [ ] to do
+- [x] done
+
+- hoge
+- fuga
+- piyo
+
+> hogehogehoge
+> fugafugafuga
+>
+> aaaaaa
