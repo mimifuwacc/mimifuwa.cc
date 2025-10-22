@@ -1,10 +1,8 @@
-/* カスタムブログ記事スタイル */
 .prose-custom {
   @apply text-gray-700 leading-relaxed;
   max-width: none;
 }
 
-/* 見出し */
 .prose-custom h1 {
   @apply text-4xl sm:text-4xl font-bold mb-8 text-slate-700;
 }
@@ -33,13 +31,16 @@
   @apply mb-6 text-base sm:text-lg text-slate-600 leading-[1.7];
 }
 
-/* リンク */
 .prose-custom > :not(.link-card) a {
   @apply text-blue-600 hover:text-blue-800 underline decoration-2 transition duration-500;
 }
 
 .prose-custom ul {
   @apply mb-6;
+}
+
+.prose-custom ul + ul {
+  @apply mt-2 mb-6;
 }
 
 .prose-custom ol {
