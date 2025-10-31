@@ -4,7 +4,6 @@ import { ProjectCard, works } from "./index";
 const meta = {
   title: "Pages/Top/ProjectsSection/ProjectCard",
   component: ProjectCard,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },

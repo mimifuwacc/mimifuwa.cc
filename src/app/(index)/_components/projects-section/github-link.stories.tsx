@@ -4,7 +4,6 @@ import { GitHubLink } from ".";
 const meta = {
   title: "Pages/Top/ProjectsSection/GitHubLink",
   component: GitHubLink,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },

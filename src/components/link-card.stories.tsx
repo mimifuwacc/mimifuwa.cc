@@ -5,7 +5,6 @@ import LinkCard from "./link-card";
 const meta = {
   title: "Commons/LinkCard",
   component: LinkCard,
-  tags: ["autodocs"],
   argTypes: {
     url: { control: "text" },
   },

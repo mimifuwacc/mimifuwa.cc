@@ -4,7 +4,6 @@ import { Hobby } from ".";
 const meta = {
   title: "Pages/Top/AboutSection/Hobby",
   component: Hobby,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },
