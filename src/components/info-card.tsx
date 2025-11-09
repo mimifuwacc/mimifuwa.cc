@@ -45,7 +45,7 @@ export default function InfoCard({ type, children }: InfoCardProps) {
   const Icon = themes[type].icon;
   return (
     <div
-      className={`flex ${themes[type].bgColor} my-4 rounded-lg overflow-clip`}
+      className={`info-card flex ${themes[type].bgColor} my-4 rounded-lg overflow-clip`}
     >
       <div className={`w-1.5 ${themes[type].borderColor}`} />
       <div className={`p-4 w-full`}>
@@ -55,7 +55,7 @@ export default function InfoCard({ type, children }: InfoCardProps) {
           <Icon />
           {type.toUpperCase()}
         </div>
-        <p className={`${themes[type].textColor}`}>{children}</p>
+        <div className={`${themes[type].textColor}`}>{children}</div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Category, SkillItem, skills } from ".";
+import { skills } from "@/contents/skills";
+import { Category, SkillCard } from ".";
 
 const meta = {
   title: "Pages/Top/SkillsSection/Category",
@@ -31,7 +32,7 @@ export const Default: Story = {
     children: (
       <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-4 sm:gap-6">
         {Array.from({ length: 4 }).map((_, i) => (
-          <SkillItem
+          <SkillCard
             key={skills.languages[i].name}
             name={skills.languages[i].name}
             image={skills.languages[i].image}

@@ -34,7 +34,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     year: 2024,
-    author: "Kimimichi Shioiri",
+    author: "mimifuwacc",
     showSocialLinks: true,
     footerLinks: [
       { href: "/", label: "ホーム" },
@@ -47,7 +47,7 @@ export const Default: Story = {
 export const WithoutSocialLinks: Story = {
   args: {
     year: 2024,
-    author: "Kimimichi Shioiri",
+    author: "mimifuwacc",
     showSocialLinks: false,
     footerLinks: [
       { href: "/", label: "ホーム" },
@@ -60,7 +60,7 @@ export const WithoutSocialLinks: Story = {
 export const CustomYear: Story = {
   args: {
     year: 2025,
-    author: "Kimimichi Shioiri",
+    author: "mimifuwacc",
     showSocialLinks: true,
     footerLinks: [
       { href: "/", label: "ホーム" },
@@ -73,7 +73,7 @@ export const CustomYear: Story = {
 export const MinimalLinks: Story = {
   args: {
     year: 2024,
-    author: "Kimimichi Shioiri",
+    author: "mimifuwacc",
     showSocialLinks: true,
     footerLinks: [
       { href: "/", label: "ホーム" },

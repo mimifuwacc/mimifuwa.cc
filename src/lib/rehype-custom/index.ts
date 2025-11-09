@@ -2,14 +2,17 @@ import type { Root } from "hast";
 import type { HTMLAttributes, ReactNode } from "react";
 import rehypeInfoCard from "./rehype-info-card";
 import rehypeLinkCard from "./rehype-link-card";
+import rehypeSplitTaskLists from "./rehype-split-task-lists";
 
 export const rehypeCustom = () => {
   const infoCardPlugin = rehypeInfoCard();
   const linkCardPlugin = rehypeLinkCard();
+  const splitTaskListsPlugin = rehypeSplitTaskLists();
 
   return (tree: Root) => {
     infoCardPlugin(tree);
     linkCardPlugin(tree);
+    splitTaskListsPlugin(tree);
   };
 };
 
