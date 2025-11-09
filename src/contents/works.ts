@@ -1,0 +1,49 @@
+export interface WorkItem {
+  title: string;
+  description: string;
+  image?: string;
+  url: string;
+}
+
+export const works: WorkItem[] = [
+  {
+    title: "uBoard",
+    description:
+      "電気通信大学の「ベンチャー工房」team411で開発している大学のWEBサービスやサイト、資料などを一箇所に集約した大学生向けサービスです。",
+    url: "https://uboard.info",
+    image: "/images/works/uboard.png",
+  },
+  {
+    title: "team411 HP",
+    description:
+      "電気通信大学「ベンチャー工房」team411の公式サイトです。活動内容やプロジェクトの紹介など情報発信を行なっています。",
+    url: "https://team411.net",
+    image: "/images/works/team411.png",
+  },
+  {
+    title: "74th Chofusai",
+    description:
+      "第74回調布祭公式サイトです。来場者向けに企画情報やマップ、タイムテーブルなどの情報を提供しました。",
+    url: "https://74th.chofusai.jp",
+    image: "/images/works/chofusai.png",
+  },
+  {
+    title: "神椿市市民票ジェネレーター",
+    description:
+      "ゲーム「神椿市建設中。REGENERATE」の魔女の娘たちが持っている市民票を自分用にカスタマイズして生成できるツールです。",
+    url: "https://kamitsubaki-cert.mimifuwa.cc",
+    image: "/images/works/kamitsubaki-cert.png",
+  },
+  {
+    title: "Enhanced NowPlaying",
+    description:
+      "NowPlayingのX(旧Twitter)への投稿をおしゃれにするツールです。ブラウザの拡張機能として動作します。",
+    url: "https://github.com/mimifuwacc/enhanced-nowplaying",
+  },
+  {
+    title: "RSC Boundary Marker",
+    description:
+      "ReactでServer ComponentsとClient Componentsの境界を視覚的に確認するためのVSCode拡張機能。",
+    url: "https://github.com/mimifuwacc/rsc-boundary-marker",
+  },
+];

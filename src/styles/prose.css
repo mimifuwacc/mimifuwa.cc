@@ -1,0 +1,150 @@
+.prose-custom {
+  @apply text-gray-700 leading-relaxed;
+  max-width: none;
+}
+
+.prose-custom h1 {
+  @apply text-4xl sm:text-4xl font-bold mb-8 text-slate-700;
+}
+
+.prose-custom h2 {
+  @apply text-3xl sm:text-3xl font-bold mt-12 mb-6 pb-4 text-slate-700 border-b-2 border-b-slate-200;
+}
+
+.prose-custom h3 {
+  @apply text-2xl sm:text-2xl font-semibold mt-8 mb-4 pb-3 text-slate-700 border-b-2 border-b-slate-200;
+}
+
+.prose-custom h4 {
+  @apply text-xl sm:text-xl font-semibold mt-6 mb-3 pb-2 text-slate-700 border-b-2 border-b-slate-200;
+}
+
+.prose-custom h5 {
+  @apply text-lg sm:text-lg font-semibold mt-4 mb-2 text-slate-700;
+}
+
+.prose-custom h6 {
+  @apply text-base font-semibold mt-3 mb-1 text-slate-700;
+}
+
+.prose-custom p {
+  @apply mb-6 text-base sm:text-lg text-slate-600 leading-[1.7];
+}
+
+.prose-custom > :not(.link-card) a {
+  @apply text-blue-600 hover:text-blue-800 underline decoration-2 transition duration-500;
+}
+
+.prose-custom ul {
+  @apply mb-6;
+}
+
+.prose-custom ul + ul {
+  @apply mt-2 mb-6;
+}
+
+.prose-custom ol {
+  @apply mb-6;
+}
+
+.prose-custom li {
+  @apply text-base sm:text-lg;
+}
+
+.prose-custom ul > li {
+  @apply flex items-center;
+}
+
+.prose-custom ul > li:not(.task-list-item)::before {
+  content: "•";
+  @apply text-blue-500 mr-3 font-bold text-xl;
+}
+
+.prose-custom ul > li > p {
+  @apply mb-0;
+}
+
+.prose-custom blockquote {
+  @apply border-l-4 border-slate-500 pl-6 py-4 my-8 bg-slate-100 rounded-r-lg;
+}
+
+.prose-custom blockquote p {
+  @apply text-gray-700 italic mb-2;
+}
+
+.prose-custom blockquote p:last-child {
+  @apply mb-0;
+}
+
+/* コード - インラインコードのみスタイル適用 */
+.prose-custom :not(pre) > code {
+  @apply bg-gray-100 text-gray-800 px-2 py-1 rounded-md text-sm font-mono;
+  border: 1px solid #e5e7eb;
+}
+
+/* コードブロック - highlight.jsにスタイルを委譲 */
+.prose-custom pre {
+  @apply rounded-lg overflow-x-auto mb-6;
+  border: 1px solid #374151;
+  background-color: #242a2e; /* GitHub dark theme background */
+}
+
+.prose-custom pre code {
+  @apply p-0 text-sm;
+  background: transparent !important;
+  border: none;
+  padding: 1rem; /* highlight.js用のパディング */
+  display: block;
+}
+
+/* テーブル */
+.prose-custom table {
+  @apply w-full border-collapse mb-6;
+}
+
+.prose-custom th {
+  @apply border border-gray-300 bg-gray-50 px-4 py-2 text-left font-semibold;
+}
+
+.prose-custom td {
+  @apply border border-gray-300 px-4 py-2;
+}
+
+/* 水平線 */
+.prose-custom hr {
+  @apply my-8 border-2 border-gray-200;
+}
+
+/* 画像 */
+.prose-custom img {
+  @apply rounded-lg shadow-lg my-6 max-w-full h-auto;
+  border: 1px solid #e5e7eb;
+}
+
+/* 強調 */
+.prose-custom strong {
+  @apply font-bold text-gray-900;
+}
+
+.prose-custom em {
+  @apply italic;
+}
+
+/* タスクリスト */
+.prose-custom input[type="checkbox"] {
+  @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 mr-3;
+}
+
+.prose-custom .task-list-item {
+  @apply list-none ml-0;
+}
+
+.prose-custom .task-list-item label {
+  @apply flex items-center cursor-pointer;
+}
+
+/* リンクカードと情報カードの調整 */
+.prose-custom .link-card,
+.prose-custom .info-card {
+  @apply my-6;
+}

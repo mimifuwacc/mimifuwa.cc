@@ -4,7 +4,6 @@ import { Section } from "./section";
 const meta = {
   title: "Pages/Top/Section",
   component: Section,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

@@ -4,7 +4,6 @@ import { Timeline } from ".";
 const meta = {
   title: "Pages/Top/AboutSection/Timeline",
   component: Timeline,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },

@@ -4,7 +4,6 @@ import { Profile } from ".";
 const meta = {
   title: "Pages/Top/AboutSection/Profile",
   component: Profile,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },

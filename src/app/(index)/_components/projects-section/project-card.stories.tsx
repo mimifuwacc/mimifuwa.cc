@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { ProjectCard, works } from "./index";
+import { works } from "@/contents/works";
+import { ProjectCard } from "./index";
 
 const meta = {
   title: "Pages/Top/ProjectsSection/ProjectCard",
   component: ProjectCard,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },

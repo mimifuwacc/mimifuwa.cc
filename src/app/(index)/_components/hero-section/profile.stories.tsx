@@ -4,7 +4,6 @@ import { Profile } from ".";
 const meta = {
   title: "Pages/Top/HeroSection/Profile",
   component: Profile,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

@@ -3,7 +3,7 @@
 import { cva } from "class-variance-authority";
 import Link from "next/link";
 import { memo } from "react";
-import { FaEnvelope, FaGithub, FaXTwitter } from "react-icons/fa6";
+import { FaEnvelope, FaGithub, FaTwitter } from "react-icons/fa6";
 
 export interface FooterLink {
   href: string;
@@ -61,7 +61,7 @@ const SocialLink = memo(function SocialLink({
 
 const Footer = memo(function Footer({
   year = new Date().getFullYear(),
-  author = "Kimimichi Shioiri",
+  author = "mimifuwacc",
   showSocialLinks = true,
   footerLinks = [
     { href: "/", label: "ホーム" },
@@ -77,11 +77,11 @@ const Footer = memo(function Footer({
     },
     {
       href: "https://x.com/mimifuwa_cc",
-      icon: <FaXTwitter />,
+      icon: <FaTwitter />,
       label: "X (Twitter)",
     },
     {
-      href: "mailto:contact@mimifuwa.cc",
+      href: "mailto:mail@mimifuwa.cc",
       icon: <FaEnvelope />,
       label: "Email",
     },

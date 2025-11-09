@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import production from "react/jsx-runtime";
+import rehypeHighlight from "rehype-highlight";
 import rehypeReact from "rehype-react";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
@@ -19,7 +20,7 @@ import {
 
 export interface ParsedResult {
   content: ReactElement;
-  frontmatter: Record<string, string | number | boolean>;
+  frontmatter: Record<string, unknown>;
 }
 
 export default async function parser(markdown: string): Promise<ParsedResult> {
@@ -28,6 +29,7 @@ export default async function parser(markdown: string): Promise<ParsedResult> {
     .use(remarkFrontmatter)
     .use(remarkGfm)
     .use(remarkRehype)
+    .use(rehypeHighlight)
     .use(rehypeCustom)
     .use(rehypeReact, {
       ...production,
