@@ -61,7 +61,7 @@ const SocialLink = memo(function SocialLink({
 
 const Footer = memo(function Footer({
   year = new Date().getFullYear(),
-  author = "Kimimichi Shioiri",
+  author = "mimifuwacc",
   showSocialLinks = true,
   footerLinks = [
     { href: "/", label: "ホーム" },

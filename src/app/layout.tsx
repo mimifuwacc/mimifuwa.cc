@@ -8,7 +8,7 @@ import { fonts } from "@/lib/fonts";
 import "./globals.css";
 
 const appName = "mimifuwa.cc";
-const description = "Kimimichi Shioiriのポートフォリオサイト";
+const description = "mimifuwaccのポートフォリオサイト";
 
 export const metadata: Metadata = {
   title: {

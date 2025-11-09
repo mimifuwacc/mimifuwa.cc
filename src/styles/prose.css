@@ -76,20 +76,25 @@
   @apply mb-0;
 }
 
-/* コード */
-.prose-custom code {
+/* コード - インラインコードのみスタイル適用 */
+.prose-custom :not(pre) > code {
   @apply bg-gray-100 text-gray-800 px-2 py-1 rounded-md text-sm font-mono;
   border: 1px solid #e5e7eb;
 }
 
+/* コードブロック - highlight.jsにスタイルを委譲 */
 .prose-custom pre {
-  @apply bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto mb-6;
+  @apply rounded-lg overflow-x-auto mb-6;
   border: 1px solid #374151;
+  background-color: #242a2e; /* GitHub dark theme background */
 }
 
 .prose-custom pre code {
-  @apply bg-transparent p-0 text-sm;
+  @apply p-0 text-sm;
+  background: transparent !important;
   border: none;
+  padding: 1rem; /* highlight.js用のパディング */
+  display: block;
 }
 
 /* テーブル */

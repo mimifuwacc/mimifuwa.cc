@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
-import Button from "@/components/button";
 import parser from "@/lib/parser";
 import { Section } from "../../(index)/_components/section";
 
@@ -43,7 +42,9 @@ export async function generateMetadata({
         description: excerpt,
         type: "article",
         publishedTime: parsed.frontmatter.date as string,
-        tags: (parsed.frontmatter.tags as string[]) || [],
+        tags: Array.isArray(parsed.frontmatter.tags)
+          ? String(parsed.frontmatter.tags)
+          : [],
       },
       twitter: {
         card: "summary_large_image",
@@ -92,28 +93,6 @@ export default async function Page(props: {
 
     return (
       <div className="min-h-screen">
-        {/* パンくずナビゲーション */}
-        <div className="bg-gray-50 border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8 py-4">
-            <nav className="flex items-center space-x-2 text-sm text-gray-600">
-              <a href="/" className="hover:text-blue-600 transition-colors">
-                HOME
-              </a>
-              <span>/</span>
-              <a
-                href="/blogs"
-                className="hover:text-blue-600 transition-colors"
-              >
-                ブログ
-              </a>
-              <span>/</span>
-              <span className="text-gray-900 font-medium truncate">
-                {title}
-              </span>
-            </nav>
-          </div>
-        </div>
-
         {/* メインコンテンツ */}
         <Section
           id="blog-post"
@@ -122,13 +101,6 @@ export default async function Page(props: {
           bg="white"
           className="pt-12"
         >
-          {/* 戻るボタン */}
-          <div className="mb-8">
-            <Button url="/blogs" variant="secondary" size="sm" icon="←">
-              ブログ一覧に戻る
-            </Button>
-          </div>
-
           {/* 記事ヘッダー */}
           <header className="mb-12 text-center">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 leading-tight">
@@ -196,15 +168,6 @@ export default async function Page(props: {
           <article className="prose-custom max-w-4xl mx-auto">
             {parsed.content}
           </article>
-
-          {/* 記事フッター */}
-          <footer className="mt-16 pt-8 border-t border-gray-200">
-            <div className="text-center">
-              <Button url="/blogs" className="mx-auto">
-                ブログ一覧に戻る
-              </Button>
-            </div>
-          </footer>
         </Section>
       </div>
     );
@@ -217,9 +180,7 @@ export default async function Page(props: {
         bg="white"
       >
         <div className="text-center">
-          <Button url="/blogs" className="mx-auto">
-            ブログ一覧に戻る
-          </Button>
+          <p>お探しの記事は存在しないか、削除された可能性があります。</p>
         </div>
       </Section>
     );

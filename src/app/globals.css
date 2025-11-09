@@ -3,6 +3,7 @@
 @import "../styles/fonts";
 @import "../styles/animations";
 @import "../styles/prose";
+@import "highlight.js/styles/github-dark.css";
 
 /* z-index 階層の統一 */
 :root {
