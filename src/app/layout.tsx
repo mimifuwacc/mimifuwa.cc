@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: appName,
     images: [
       {
-        url: "https://mimifuwa.cc/ogp.png",
+        url: "https://mimifuwa.cc/og.png",
         width: 1200,
         height: 630,
         alt: appName,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: appName,
     description,
-    images: ["https://mimifuwa.cc/ogp.png"],
+    images: ["https://mimifuwa.cc/og.png"],
   },
 };
 

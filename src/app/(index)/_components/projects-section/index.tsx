@@ -2,53 +2,24 @@
 
 import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
+
 import Button from "@/components/button";
 import Card from "@/components/card";
+import type { WorkItem } from "@/contents/works";
+import { works } from "@/contents/works";
 import { Section } from "../section";
 
-export const works = [
-  {
-    title: "uBoard",
-    description:
-      "電気通信大学の「ベンチャー工房」team411で開発している大学のWEBサービスやサイト、資料などを一箇所に集約した大学生向けサービスです。",
-    url: "https://uboard.info",
-    image: "/images/works/uboard.png",
-  },
-  {
-    title: "team411 HP",
-    description:
-      "電気通信大学「ベンチャー工房」team411の公式サイトです。活動内容やプロジェクトの紹介など情報発信を行なっています。",
-    url: "https://team411.net",
-    image: "/images/works/team411.png",
-  },
-  {
-    title: "74th Chofusai",
-    description:
-      "第74回調布祭公式サイトです。来場者向けに企画情報やマップ、タイムテーブルなどの情報を提供しました。",
-    url: "https://74th.chofusai.jp",
-    image: "/images/works/chofusai.png",
-  },
-  {
-    title: "神椿市市民票ジェネレーター",
-    description:
-      "ゲーム「神椿市建設中。REGENERATE」の魔女の娘たちが持っている市民票を自分用にカスタマイズして生成できるツールです。",
-    url: "https://kamitsubaki-cert.mimifuwa.cc",
-    image: "/images/works/kamitsubaki-cert.png",
-  },
-  {
-    title: "Enhanced NowPlaying",
-    description:
-      "NowPlayingのX(旧Twitter)への投稿をおしゃれにするツールです。ブラウザの拡張機能として動作します。",
-    url: "https://github.com/mimifuwa/enhanced-nowplaying",
-    image: "/images/works/enhanced-nowplaying.png",
-  },
-];
+// GitHubリポジトリのOG画像URLを生成
+const getGitHubOgImage = (url: string): string => {
+  const match = url.match(/github\.com\/([^/]+)\/([^/?]+)/);
+  if (match) {
+    const [, owner, repo] = match;
+    return `https://opengraph.githubassets.com/1/${owner}/${repo}`;
+  }
+  return "";
+};
 
-export const ProjectCard = ({
-  work,
-}: {
-  work: { title: string; description: string; image: string; url: string };
-}) => (
+export const ProjectCard = ({ work }: { work: WorkItem }) => (
   <Card
     className="group overflow-hidden hover:shadow-xl h-full flex flex-col"
     url={work.url}
@@ -56,9 +27,13 @@ export const ProjectCard = ({
     {/* Project image */}
     <div className="relative overflow-hidden bg-gray-100 aspect-[1.91/1] -m-6">
       <Image
-        src={work.image}
+        src={
+          work.url.includes("github.com")
+            ? getGitHubOgImage(work.url) || work.image || "/no-image.png"
+            : work.image || "/no-image.png"
+        }
         alt={work.title}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        className="w-full h-full object-cover"
         width={400}
         height={300}
       />

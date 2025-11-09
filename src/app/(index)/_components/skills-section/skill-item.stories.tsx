@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { SkillItem, skills } from ".";
+import { skills } from "@/contents/skills";
+import { SkillCard } from ".";
 
 const meta = {
-  title: "Pages/Top/SkillsSection/SkillItem",
-  component: SkillItem,
+  title: "Pages/Top/SkillsSection/SkillCard",
+  component: SkillCard,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
@@ -12,7 +13,7 @@ const meta = {
     name: { control: "text" },
     image: { control: "text" },
   },
-} satisfies Meta<typeof SkillItem>;
+} satisfies Meta<typeof SkillCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

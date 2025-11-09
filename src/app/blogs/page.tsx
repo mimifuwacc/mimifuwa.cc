@@ -21,9 +21,7 @@ export default async function BlogsPage() {
     >
       {posts.length === 0 ? (
         <div className="text-center py-16">
-          <div className="text-gray-400 text-lg mb-4">
-            📝 まだ記事がありません
-          </div>
+          <div className="text-gray-400 text-lg mb-4">まだ記事がありません</div>
           <p className="text-gray-500">
             記事が公開され次第、ここに表示されます。
           </p>
