@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-
-import { Category, SkillCard } from ".";
 import { skills } from "@/contents/skills";
+import { Category, SkillCard } from ".";
 
 const meta = {
   title: "Pages/Top/SkillsSection/Category",

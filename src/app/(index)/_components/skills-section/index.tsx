@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import Card from "@/components/card";
-import { skills, skillCategories } from "@/contents/skills";
+import { skillCategories, skills } from "@/contents/skills";
 import { Section } from "../section";
 
 export const SkillCard = ({ name, image }: { name: string; image: string }) => (
