@@ -1,5 +1,3 @@
-// import { GoogleAnalytics } from "@next/third-parties/google";
-
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import Footer from "@/components/footer";
