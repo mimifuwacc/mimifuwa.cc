@@ -43,7 +43,8 @@
     "unist-util-visit": "^5.0.0",
     "vercel": "^48.0.0",
     "vfile": "^6.0.3",
-    "vfile-matter": "^5.0.1"
+    "vfile-matter": "^5.0.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",

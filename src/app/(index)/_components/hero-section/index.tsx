@@ -5,11 +5,7 @@ import { FaChevronDown } from "react-icons/fa";
 import { useSmoothScroll } from "@/hooks/use-smooth-scroll";
 
 export const Background = () => (
-  <div className="absolute inset-0 overflow-hidden">
-    {/* <div className="absolute -top-20 -right-20 sm:-top-40 sm:-right-40 w-40 h-40 sm:w-80 sm:h-80 bg-cyan-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-    <div className="absolute -bottom-20 -left-20 sm:-bottom-40 sm:-left-40 w-40 h-40 sm:w-80 sm:h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-    <div className="absolute top-20 left-20 sm:top-40 sm:left-40 w-40 h-40 sm:w-80 sm:h-80 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div> */}
-  </div>
+  <div className="absolute inset-0 overflow-hidden" />
 );
 
 export const Avatar = () => (

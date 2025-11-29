@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
 import parser from "@/lib/parser";
+import { currentUrl } from "@/lib/url";
 import { Section } from "../../(index)/_components/section";
 
 export async function generateStaticParams() {
@@ -26,6 +27,7 @@ export async function generateMetadata({
     "src/contents/blogs/",
     `${resolvedParams.slug}.md`,
   );
+  const apiUrl = currentUrl();
 
   try {
     const fileContent = await fs.promises.readFile(postPath, "utf8");
@@ -33,6 +35,10 @@ export async function generateMetadata({
 
     const title = (parsed.frontmatter.title as string) || resolvedParams.slug;
     const excerpt = (parsed.frontmatter.excerpt as string) || "ブログ記事";
+    const date = parsed.frontmatter.date as string;
+    const tags = Array.isArray(parsed.frontmatter.tags)
+      ? parsed.frontmatter.tags
+      : [];
 
     return {
       title: `${title} - mimifuwa.cc`,
@@ -41,15 +47,21 @@ export async function generateMetadata({
         title: `${title} - mimifuwa.cc`,
         description: excerpt,
         type: "article",
-        publishedTime: parsed.frontmatter.date as string,
-        tags: Array.isArray(parsed.frontmatter.tags)
-          ? String(parsed.frontmatter.tags)
-          : [],
+        publishedTime: date,
+        tags: tags,
+        url: `${apiUrl}/blogs/${resolvedParams.slug}`,
+        images: {
+          url: `${apiUrl}/api/blog/og?slug=${resolvedParams.slug}`,
+          width: 1200,
+          height: 630,
+          alt: `${title} - mimifuwa.cc`,
+        },
       },
       twitter: {
         card: "summary_large_image",
         title: `${title} - mimifuwa.cc`,
         description: excerpt,
+        images: [`${apiUrl}/api/blog/og?slug=${resolvedParams.slug}`],
       },
     };
   } catch (_error) {
