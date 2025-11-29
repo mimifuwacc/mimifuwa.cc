@@ -2,14 +2,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 
 const buttonVariants = cva(
-  "flex w-fit items-center gap-2 sm:gap-3 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg font-medium cursor-pointer",
+  "flex w-fit items-center gap-2 sm:gap-3 rounded-2xl transition-all duration-300 hover:scale-[102%] shadow-lg font-medium cursor-pointer",
   {
     variants: {
       variant: {
-        default: "bg-blue-500 text-white hover:bg-blue-600",
-        secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+        default: "bg-cyan-600 text-white hover:bg-cyan-600/90",
+        secondary: "bg-slate-200 text-slate-800 hover:bg-slate-300",
         disabled:
-          "bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50",
+          "bg-transparent border border-slate-300 text-slate-700 hover:bg-slate-50",
         destructive: "bg-red-500 text-white hover:bg-red-600",
         success: "bg-green-500 text-white hover:bg-green-600",
         custom: "",

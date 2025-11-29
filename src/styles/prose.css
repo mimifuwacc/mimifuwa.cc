@@ -1,5 +1,5 @@
 .prose-custom {
-  @apply text-gray-700 leading-relaxed;
+  @apply text-slate-700 leading-relaxed;
   max-width: none;
 }
 
@@ -32,7 +32,7 @@
 }
 
 .prose-custom > :not(.link-card) a {
-  @apply text-blue-600 hover:text-blue-800 underline decoration-2 transition duration-500;
+  @apply text-cyan-600 hover:text-cyan-800 underline decoration-2 transition duration-500;
 }
 
 .prose-custom ul {
@@ -57,7 +57,7 @@
 
 .prose-custom ul > li:not(.task-list-item)::before {
   content: "•";
-  @apply text-blue-500 mr-3 font-bold text-xl;
+  @apply text-cyan-500 mr-3 font-bold text-xl;
 }
 
 .prose-custom ul > li > p {
@@ -65,11 +65,11 @@
 }
 
 .prose-custom blockquote {
-  @apply border-l-4 border-slate-500 pl-6 py-4 my-8 bg-slate-100 rounded-r-lg;
+  @apply border-l-4 border-slate-500 pl-6 py-4 my-4 bg-slate-100 rounded-r-lg;
 }
 
 .prose-custom blockquote p {
-  @apply text-gray-700 italic mb-2;
+  @apply text-slate-700 italic mb-2;
 }
 
 .prose-custom blockquote p:last-child {
@@ -78,7 +78,7 @@
 
 /* コード - インラインコードのみスタイル適用 */
 .prose-custom :not(pre) > code {
-  @apply bg-gray-100 text-gray-800 px-2 py-1 rounded-md text-sm font-mono;
+  @apply bg-slate-100 text-slate-800 px-2 py-1 rounded-md text-sm font-mono;
   border: 1px solid #e5e7eb;
 }
 
@@ -91,6 +91,7 @@
 
 .prose-custom pre code {
   @apply p-0 text-sm;
+  /* biome-ignore lint/complexity/noImportantStyles: 必要 */
   background: transparent !important;
   border: none;
   padding: 1rem; /* highlight.js用のパディング */
@@ -103,16 +104,16 @@
 }
 
 .prose-custom th {
-  @apply border border-gray-300 bg-gray-50 px-4 py-2 text-left font-semibold;
+  @apply border border-slate-300 bg-slate-50 px-4 py-2 text-left font-semibold;
 }
 
 .prose-custom td {
-  @apply border border-gray-300 px-4 py-2;
+  @apply border border-slate-300 px-4 py-2;
 }
 
 /* 水平線 */
 .prose-custom hr {
-  @apply my-8 border-2 border-gray-200;
+  @apply my-8 border-2 border-slate-200;
 }
 
 /* 画像 */
@@ -123,7 +124,7 @@
 
 /* 強調 */
 .prose-custom strong {
-  @apply font-bold text-gray-900;
+  @apply font-bold text-slate-900;
 }
 
 .prose-custom em {
@@ -132,7 +133,7 @@
 
 /* タスクリスト */
 .prose-custom input[type="checkbox"] {
-  @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 mr-3;
+  @apply w-4 h-4 text-cyan-600 bg-slate-100 border-slate-300 rounded focus:ring-cyan-500 focus:ring-2 mr-3;
 }
 
 .prose-custom .task-list-item {

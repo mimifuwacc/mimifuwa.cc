@@ -10,8 +10,7 @@
     "lint": "biome check",
     "fix": "biome check --apply",
     "format": "biome format --write",
-    "sb:dev": "storybook dev -p 6006",
-    "sb:build": "storybook build",
+    "storybook": "storybook dev -p 6006",
     "test": "vitest",
     "test:unit": "vitest --project unit",
     "test:sb": "vitest --project storybook",
@@ -21,6 +20,7 @@
     "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
+    "@next/third-parties": "^16.0.3",
     "@opennextjs/cloudflare": "^1.8.2",
     "@tailwindcss/postcss": "^4.1.13",
     "@types/unist": "^3.0.3",
@@ -43,7 +43,8 @@
     "unist-util-visit": "^5.0.0",
     "vercel": "^48.0.0",
     "vfile": "^6.0.3",
-    "vfile-matter": "^5.0.1"
+    "vfile-matter": "^5.0.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",

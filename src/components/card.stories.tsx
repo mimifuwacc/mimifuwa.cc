@@ -9,9 +9,17 @@ const meta = {
     layout: "centered",
   },
   argTypes: {
-    url: {
+    href: {
       control: "text",
       description: "Optional URL for link wrapper",
+    },
+    target: {
+      control: "text",
+      description: "Target attribute for link",
+    },
+    rel: {
+      control: "text",
+      description: "Rel attribute for link",
     },
     className: {
       control: "text",
@@ -33,7 +41,7 @@ export const Default: Story = {
     children: (
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">Default Card</h3>
-        <p className="text-gray-600">
+        <p className="text-slate-600">
           This is a default card with standard styling.
         </p>
       </div>
@@ -43,11 +51,13 @@ export const Default: Story = {
 
 export const WithLink: Story = {
   args: {
-    url: "https://example.com",
+    href: "https://example.com",
+    target: "_blank",
+    rel: "noopener noreferrer",
     children: (
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">Link Card</h3>
-        <p className="text-sm text-gray-600">Click to visit our about page</p>
+        <p className="text-sm text-slate-600">Click to visit example.com</p>
       </div>
     ),
   },
@@ -55,13 +65,13 @@ export const WithLink: Story = {
 
 export const CustomStyled: Story = {
   args: {
-    className: "bg-gradient-to-r from-blue-50 to-indigo-50",
+    className: "bg-gradient-to-r from-cyan-50 to-indigo-50",
     children: (
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-blue-800">
+        <h3 className="text-lg font-semibold text-cyan-800">
           Custom Styled Card
         </h3>
-        <p className="text-blue-600">
+        <p className="text-cyan-600">
           This card demonstrates custom styling possibilities.
         </p>
       </div>

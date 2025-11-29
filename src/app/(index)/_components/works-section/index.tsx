@@ -19,13 +19,15 @@ const getGitHubOgImage = (url: string): string => {
   return "";
 };
 
-export const ProjectCard = ({ work }: { work: WorkItem }) => (
+export const WorkCard = ({ work }: { work: WorkItem }) => (
   <Card
-    className="group overflow-hidden hover:shadow-xl h-full flex flex-col"
-    url={work.url}
+    className="group overflow-hidden hover:shadow-xl h-full flex flex-col !p-4 sm:p-6"
+    href={work.url}
+    target="_blank"
+    rel="noopener noreferrer"
   >
-    {/* Project image */}
-    <div className="relative overflow-hidden bg-gray-100 aspect-[1.91/1] -m-6">
+    {/* Work image */}
+    <div className="relative overflow-hidden bg-slate-100 aspect-[1.91/1] !-m-4 sm:-mt-6">
       <Image
         src={
           work.url.includes("github.com")
@@ -39,12 +41,12 @@ export const ProjectCard = ({ work }: { work: WorkItem }) => (
       />
     </div>
 
-    {/* Project content */}
-    <div className="mt-12 px-2 mb-4 flex-1 flex flex-col">
-      <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4 group-hover:text-blue-600 transition-colors">
+    {/* Work content */}
+    <div className="mt-8 sm:mt-10 px-2 mb-2 sm:mb-4 flex-1 flex flex-col">
+      <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-3 sm:mb-4 group-hover:text-cyan-600 transition-colors">
         {work.title}
       </h3>
-      <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 flex-1">
+      <p className="text-slate-600 text-sm leading-relaxed flex-1">
         {work.description}
       </p>
     </div>
@@ -55,29 +57,27 @@ export const GitHubLink = () => (
   <Button
     url={`https://github.com/mimifuwacc`}
     icon={<FaGithub />}
-    className="mx-auto bg-gray-800 text-white hover:bg-gray-700"
+    className="mx-auto bg-slate-800 text-white hover:bg-slate-700"
   >
     <span className="hidden sm:inline">GitHubで他のプロジェクトを見る</span>
     <span className="sm:hidden">GitHub</span>
   </Button>
 );
 
-export default function ProjectsSection() {
+export default function WorksSection() {
   return (
     <Section
-      id="projects-section"
-      title="プロジェクト"
+      id="works-section"
+      title="Works"
       subtitle="作成したアプリ・サービスなど"
-      icon="🚀"
-      bg="white"
     >
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-12">
         {works.map((work) => (
-          <ProjectCard key={work.title} work={work} />
+          <WorkCard key={work.title} work={work} />
         ))}
       </div>
 
-      {/* View more projects */}
+      {/* View more works */}
       <div className="text-center">
         <GitHubLink />
       </div>
