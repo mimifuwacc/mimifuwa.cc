@@ -57,10 +57,10 @@ export default function RootLayout({
       lang="ja"
       className={`${fonts.map((font) => font.variable).join(" ")}`}
     >
-      <body className="text-slate-700 font-normal">
+      <body className="text-slate-700 bg-slate-50 font-normal min-h-screen grid grid-rows-[auto_1fr_auto]">
+        <GoogleAnalytics gaId="G-85K159T0NC" />
         <Header />
         <main>{children}</main>
-        <GoogleAnalytics gaId="G-85K159T0NC" />
         <Footer />
       </body>
     </html>

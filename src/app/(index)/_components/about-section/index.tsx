@@ -1,110 +1,28 @@
 import Image from "next/image";
+
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { SiZenn } from "react-icons/si";
+
 import Button from "@/components/button";
 import Card from "@/components/card";
 import { Section } from "../section";
 
-interface TimelineEvent {
-  date: string;
-  title: string;
-  description?: string;
-}
-
-const qualifications = [
-  "応用情報技術者 (2024年度秋)",
-  "ITパスポート (2020年度春)",
-  "実用数学技能検定 準1級",
-  "全珠連 珠算検定 参段",
-  "全珠連 暗算検定 準四段",
-];
-
-const hobbies = [
-  {
-    name: "音楽",
-    items: [
-      "KAMITSUBAKI STUDIO（V.W.P、ヰ世界情緒、CIEL、心世紀、罪十罰、梓川など...）",
-      "ボカロ",
-      "その他インターネットの音楽",
-    ],
-  },
-  {
-    name: "ライトノベル",
-    items: [
-      "こちら週末停滞委員会",
-      "スパイ教室",
-      "週に一度クラスメイトを買う話",
-      "わたしが恋人になれるわけないじゃん、ムリムリ!（※ムリじゃなかった!?）",
-    ],
-  },
-];
-
-const timelineData: TimelineEvent[] = [
-  {
-    date: "2020年4月",
-    title: "新宿山吹高校 情報科 入学",
-  },
-  {
-    date: "2021年12月",
-    title: "第31回山吹祭 実行委員会 技術担当",
-    description:
-      "公式サイトの作成、ストリーミング配信の実施やそこで使用するアプリケーションの開発などを行いました",
-  },
-  {
-    date: "2023年4月",
-    title: "電気通信大学 I類 入学",
-  },
-  {
-    date: "2023年4月",
-    title: "UEC Dashboard(現uBoard) リリース",
-    description:
-      "大学入学当初、情報が散在しており不便であったため自分用に開発し、一般にも公開しました",
-  },
-  {
-    date: "2023年4月",
-    title: "team411 入部",
-    description:
-      "「IT技術を通じて 大学と社会の課題を解決する」電通大の学生団体 team411 に入部しました",
-  },
-  {
-    date: "2023年8月",
-    title: "U☆PoC～UECアイディア実証コンテスト～2023",
-    description:
-      "2つのプロジェクトで出展し、ハートビーツ賞・たましん賞を受賞しました",
-  },
-  {
-    date: "2024年8月",
-    title: "U☆PoC～UECアイディア実証コンテスト～2024",
-    description:
-      "UEC Dashboardをきっかけとしたプロジェクトで出展し、コムサットジャパン賞・きらぼし賞・ハートビーツ賞を受賞しました",
-  },
-  {
-    date: "2024年10月",
-    title: "応用情報技術者試験 合格",
-  },
-  {
-    date: "2024年11月",
-    title: "第74回調布祭実行委員会 技術局",
-    description: "調布祭公式サイトのデザイン・制作を担当しました",
-  },
-];
+import { certifications, hobbies, timelineData } from "@/contents/about";
 
 export const Profile = () => (
   <Card className="p-6 sm:p-10">
-    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 mb-8">
+    <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8 mb-4">
       <Image
         src="https://github.com/mimifuwacc.png"
         alt="mimifuwa"
-        className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-blue-100 shadow-md flex-shrink-0"
+        className="w-36 h-36 sm:w-28 sm:h-28 rounded-full border-4 border-slate-200 shadow-md flex-shrink-0 sm:mx-0 mx-auto"
         width={112}
         height={112}
       />
-      <div className="text-center sm:text-left">
-        <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">
-          みみ
-        </h3>
-        <p className="text-gray-600 mb-2 text-lg">mimifuwacc</p>
-        <p className="text-sm sm:text-base text-gray-500 leading-relaxed">
+      <div>
+        <h3 className="text-xl sm:text-2xl font-bold text-slate-700">みみ</h3>
+        <p className="text-slate-400 mb-2">@mimifuwacc</p>
+        <p className="text-sm sm:text-base text-slate-500">
           電気通信大学 情報理工学域
           <br />
           CSプログラム
@@ -112,35 +30,34 @@ export const Profile = () => (
       </div>
     </div>
 
-    <p className="text-gray-600 leading-relaxed mb-8 text-base">
+    <p className="text-slate-600 mb-8 text-sm sm:text-base">
       フロントエンド開発を中心に、Web技術を使ってアプリケーションを開発しています。
-      大学では学生団体team411で「IT技術を通じて
-      大学と社会の課題を解決する」ことを目標にチームで活動しています。
+      電気通信大学ベンチャー工房team411などに所属しています。
     </p>
 
     {/* Social links */}
     <div className="flex flex-wrap gap-2 sm:gap-3 justify-start">
       <Button
-        url="https://github.com/mimifuwa"
+        url="https://github.com/mimifuwacc"
         variant="custom"
         size="sm"
-        className="bg-gray-800 text-white hover:bg-gray-700"
+        className="bg-slate-800 text-white hover:bg-slate-700 text-xs sm:text-sm"
         icon={<FaGithub />}
         text="GitHub"
       />
       <Button
-        url="https://twitter.com/mimifuwa_dev"
+        url="https://twitter.com/mimifuwacc"
         variant="custom"
         size="sm"
-        className="bg-blue-500 text-white hover:bg-blue-600"
+        className="bg-[#00acee] text-white hover:bg-[#00acee]/90 text-xs sm:text-sm"
         icon={<FaTwitter />}
         text="Twitter"
       />
       <Button
-        url="https://zenn.dev/mimifuwa"
+        url="https://zenn.dev/mimifuwacc"
         variant="custom"
         size="sm"
-        className="bg-blue-600 text-white hover:bg-blue-700"
+        className="bg-[#3ea8ff] text-white hover:bg-[#3ea8ff]/90 text-xs sm:text-sm"
         icon={<SiZenn />}
         text="Zenn"
       />
@@ -148,20 +65,19 @@ export const Profile = () => (
   </Card>
 );
 
-export const Qualifications = () => (
+export const Certifications = () => (
   <Card className="p-6 sm:p-10">
-    <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-6 flex gap-3">
-      <span>🏅</span>
-      <span>資格・検定</span>
+    <h4 className="text-xl sm:text-2xl font-semibold text-slate-700 mb-6 flex gap-3">
+      <span>Certifications</span>
     </h4>
-    <ul className="space-y-4 text-gray-600">
-      {qualifications.map((qualification) => (
+    <ul className="space-y-4 text-slate-600">
+      {certifications.map((certification) => (
         <li
-          key={qualification}
+          key={certification}
           className="flex items-center gap-3 text-sm sm:text-base"
         >
-          <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
-          {qualification}
+          <span className="w-2 h-2 bg-cyan-600 rounded-full flex-shrink-0"></span>
+          {certification}
         </li>
       ))}
     </ul>
@@ -170,20 +86,22 @@ export const Qualifications = () => (
 
 export const Hobby = () => (
   <Card className="p-6 sm:p-10">
-    <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-6 flex gap-3">
-      <span>🎨</span>
-      <span>趣味</span>
+    <h4 className="text-xl sm:text-2xl font-semibold text-slate-700 mb-6 flex gap-3">
+      <span>Hobby</span>
     </h4>
-    <ul className="space-y-4 text-gray-600">
+    <ul className="space-y-4 text-slate-600">
       {hobbies.map((hobby) => (
         <li key={hobby.name}>
           <div className="flex items-center gap-3 text-sm sm:text-base">
-            <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
+            <span className="w-2 h-2 bg-cyan-600 rounded-full flex-shrink-0"></span>
             {hobby.name}
           </div>
-          <ul className="ml-8 mt-2 space-y-2 list-disc text-gray-500 text-sm sm:text-base">
-            {hobby.items.map((item) => (
-              <li key={item}>{item}</li>
+          <ul className="ml-8 mt-2 space-y-2 text-slate-500 text-sm sm:text-base">
+            {hobby.items?.map((item) => (
+              <li key={item} className="flex items-center gap-3">
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full flex-shrink-0"></span>
+                {item}
+              </li>
             ))}
           </ul>
         </li>
@@ -195,27 +113,26 @@ export const Hobby = () => (
 export const Timeline = () => {
   return (
     <Card className="p-6 sm:p-10">
-      <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-8 flex gap-3">
-        <span>📅</span>
-        <span>活動記録</span>
+      <h4 className="text-xl sm:text-2xl font-semibold text-slate-700 mb-8 flex gap-3">
+        <span>Timeline</span>
       </h4>
       <div className="relative pl-6">
-        <div className="absolute left-2.5 top-0 bottom-0 w-0.5 bg-blue-200"></div>
+        <div className="absolute left-2.5 top-0 bottom-0 w-0.5 bg-slate-200"></div>
         <div className="space-y-8">
           {timelineData.map((event) => (
             <div key={`${event.date}-${event.title}`} className="relative">
-              <div className="absolute -left-[29px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md transform translate-x-1/2"></div>
-              <div className="pl-2">
+              <div className="absolute -left-[29px] w-4 h-4 bg-cyan-600 rounded-full border-2 border-white shadow-md transform translate-x-1/2"></div>
+              <div className="pl-2 -translate-y-1.5">
                 <div className="mb-2">
-                  <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-md inline-block">
+                  <span className="text-xs font-medium text-cyan-600 border-cyan-600 border-1 px-2 py-1 rounded-md inline-block">
                     {event.date}
                   </span>
                 </div>
-                <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">
+                <h4 className="text-sm sm:text-base font-semibold text-slate-700 mb-2">
                   {event.title}
                 </h4>
                 {event.description && (
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                     {event.description}
                   </p>
                 )}
@@ -234,13 +151,15 @@ export default function AboutSection() {
       id="about-section"
       title="About Me"
       subtitle="みみについて..."
-      icon="👋"
-      bg="gray"
+      className="relative rounded-t-4xl shadow-[0_-10px_10px_rgba(0,0,0,0.025)]"
     >
-      <div className="grid lg:grid-cols-2 gap-8 items-start">
-        <div className="space-y-8">
+      <div className="absolute top-5 left-0 right-0 w-full">
+        <div className="w-12 h-1.5 bg-slate-300 mx-auto rounded-full" />
+      </div>
+      <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 items-start">
+        <div className="space-y-4 sm:space-y-6">
           <Profile />
-          <Qualifications />
+          <Certifications />
           <Hobby />
         </div>
         <Timeline />

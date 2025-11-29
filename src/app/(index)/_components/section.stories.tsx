@@ -56,20 +56,20 @@ export const Default: Story = {
         <div className="space-y-8">
           <div className="p-6 bg-white rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold mb-4">コンテンツ1</h3>
-            <p className="text-gray-600">
+            <p className="text-slate-600">
               これはセクション内のコンテンツ例です。Sectionコンポーネントは、汎用的なセクションコンテナとして使用できます。
             </p>
           </div>
           <div className="p-6 bg-white rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold mb-4">コンテンツ2</h3>
-            <p className="text-gray-600">
+            <p className="text-slate-600">
               背景色やパディングを簡単に変更できます。
             </p>
           </div>
         </div>
         <div className="p-6 bg-white rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold mb-4">サイドコンテンツ</h3>
-          <p className="text-gray-600">
+          <p className="text-slate-600">
             グリッドレイアウトにも対応しています。
           </p>
         </div>

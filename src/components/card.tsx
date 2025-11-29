@@ -2,12 +2,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 
 const cardVariants = cva(
-  "bg-white rounded-2xl shadow-lg p-6 transition-all duration-300",
+  "bg-white rounded-2xl shadow-md p-6 transition-all duration-300",
   {
     variants: {
       variant: {
         default: "",
-        hover: "hover:shadow-xl hover:scale-105",
+        hover: "hover:shadow-lg hover:scale-[101%] sm:hover:scale-[102%]",
       },
     },
     defaultVariants: {
@@ -19,17 +19,22 @@ const cardVariants = cva(
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {
-  url?: string;
+  href?: string;
+  target?: string;
+  rel?: string;
 }
 
 export default function Card({
-  url,
+  href,
+  target,
+  rel,
   children,
   className,
+  variant,
   ...props
 }: CardProps) {
   const cardClasses = cardVariants({
-    variant: url ? "hover" : "default",
+    variant: href ? "hover" : variant,
     className,
   });
 
@@ -39,8 +44,12 @@ export default function Card({
     </div>
   );
 
-  if (url) {
-    return <Link href={url}>{content}</Link>;
+  if (href) {
+    return (
+      <Link href={href} target={target} rel={rel}>
+        {content}
+      </Link>
+    );
   }
 
   return content;

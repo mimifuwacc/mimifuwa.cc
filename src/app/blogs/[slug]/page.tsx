@@ -92,23 +92,17 @@ export default async function Page(props: {
     };
 
     return (
-      <div className="min-h-screen">
+      <div className="py-12 sm:py-24">
         {/* メインコンテンツ */}
-        <Section
-          id="blog-post"
-          title=""
-          subtitle=""
-          bg="white"
-          className="pt-12"
-        >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           {/* 記事ヘッダー */}
           <header className="mb-12 text-center">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-slate-900 leading-tight">
               {title}
             </h1>
 
             {/* メタ情報 */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-600 mb-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-slate-600 mb-6">
               {date && (
                 <div className="flex items-center gap-2">
                   <svg
@@ -153,7 +147,7 @@ export default async function Page(props: {
                     {tags.map((tag: string) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full hover:bg-blue-200 transition-colors"
+                        className="px-3 py-1 bg-cyan-600 text-white text-sm rounded-full"
                       >
                         #{tag}
                       </span>
@@ -168,7 +162,7 @@ export default async function Page(props: {
           <article className="prose-custom max-w-4xl mx-auto">
             {parsed.content}
           </article>
-        </Section>
+        </div>
       </div>
     );
   } catch (_error) {
@@ -177,7 +171,6 @@ export default async function Page(props: {
         id="blog-error"
         title="記事が見つかりません"
         subtitle="お探しの記事は存在しないか、削除された可能性があります。"
-        bg="white"
       >
         <div className="text-center">
           <p>お探しの記事は存在しないか、削除された可能性があります。</p>

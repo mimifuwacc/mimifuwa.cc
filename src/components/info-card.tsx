@@ -8,10 +8,10 @@ import {
 const themes = {
   info: {
     icon: FaCircleInfo,
-    headingColor: "text-blue-500",
-    textColor: "text-blue-900",
-    bgColor: "bg-blue-50",
-    borderColor: "bg-blue-500",
+    headingColor: "text-cyan-500",
+    textColor: "text-cyan-900",
+    bgColor: "bg-cyan-50",
+    borderColor: "bg-cyan-500",
   },
   success: {
     icon: FaCircleCheck,
