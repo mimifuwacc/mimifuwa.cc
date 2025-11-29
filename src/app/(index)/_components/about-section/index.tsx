@@ -5,9 +5,8 @@ import { SiZenn } from "react-icons/si";
 
 import Button from "@/components/button";
 import Card from "@/components/card";
-import { Section } from "../section";
-
 import { certifications, hobbies, timelineData } from "@/contents/about";
+import { Section } from "../section";
 
 export const Profile = () => (
   <Card className="p-6 sm:p-10">
