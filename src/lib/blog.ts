@@ -3,12 +3,16 @@ import path from "node:path";
 import { VFile } from "vfile";
 import { matter } from "vfile-matter";
 
+// 開発環境かどうかを判定
+const isDevelopment = process.env.NODE_ENV === "development";
+
 export interface BlogPost {
   slug: string;
   title: string;
   date: string;
   excerpt: string;
   tags: string[];
+  draft?: boolean;
 }
 
 export default async function getFrontmatter(
@@ -40,6 +44,7 @@ export async function getRecentPosts(count: number) {
     date: string;
     excerpt: string;
     tags: string[];
+    draft?: boolean;
   }[] = [];
   // use getFrontmatter to extract frontmatter from each file
   for (const path in files) {
@@ -51,7 +56,8 @@ export async function getRecentPosts(count: number) {
       typeof frontmatter.date === "string" &&
       typeof frontmatter.excerpt === "string" &&
       Array.isArray(frontmatter.tags) &&
-      frontmatter.tags.every((tag: unknown) => typeof tag === "string")
+      frontmatter.tags.every((tag: unknown) => typeof tag === "string") &&
+      (isDevelopment || !frontmatter.draft) // 開発環境以外は下書き記事を除外
     ) {
       posts.push({
         slug,
@@ -59,6 +65,7 @@ export async function getRecentPosts(count: number) {
         date: frontmatter.date,
         excerpt: frontmatter.excerpt,
         tags: frontmatter.tags,
+        draft: frontmatter.draft,
       });
     }
   }
@@ -85,6 +92,7 @@ export async function getAllPosts() {
     date: string;
     excerpt: string;
     tags: string[];
+    draft?: boolean;
   }[] = [];
 
   // use getFrontmatter to extract frontmatter from each file
@@ -97,7 +105,8 @@ export async function getAllPosts() {
       typeof frontmatter.date === "string" &&
       typeof frontmatter.excerpt === "string" &&
       Array.isArray(frontmatter.tags) &&
-      frontmatter.tags.every((tag: unknown) => typeof tag === "string")
+      frontmatter.tags.every((tag: unknown) => typeof tag === "string") &&
+      (isDevelopment || !frontmatter.draft) // 開発環境以外は下書き記事を除外
     ) {
       posts.push({
         slug,
@@ -105,6 +114,7 @@ export async function getAllPosts() {
         date: frontmatter.date,
         excerpt: frontmatter.excerpt,
         tags: frontmatter.tags,
+        draft: frontmatter.draft,
       });
     }
   }
