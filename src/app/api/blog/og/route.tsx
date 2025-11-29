@@ -5,6 +5,9 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import parser from "@/lib/parser";
 
+// 開発環境かどうかを判定
+const isDevelopment = process.env.NODE_ENV === "development";
+
 // フォントファイルを読み込む
 const notoSansJpRegular = fs.readFileSync(
   path.join(process.cwd(), "src/app/api/blog/og/fonts/NotoSansJP-Regular.ttf"),
@@ -207,6 +210,11 @@ export async function GET(request: NextRequest) {
     try {
       const fileContent = await fs.promises.readFile(postPath, "utf8");
       const parsed = await parser(fileContent);
+
+      // 開発環境以外で下書き記事の場合は404
+      if (!isDevelopment && parsed.frontmatter.draft) {
+        return new Response("Blog post not found", { status: 404 });
+      }
 
       const title = (parsed.frontmatter.title as string) || slug;
       const excerpt = (parsed.frontmatter.excerpt as string) || undefined;
