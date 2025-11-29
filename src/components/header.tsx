@@ -15,16 +15,16 @@ export interface HeaderProps {
 }
 
 const logoStyles = cva(
-  "text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-indigo-700 transition-all duration-200",
+  "text-2xl font-bold text-cyan-600 hover:text-cyan-600/90 transition-all duration-200",
 );
 
 const navItemStyles = cva(
-  "flex items-center rounded-lg font-medium transition-all duration-200",
+  "flex items-center rounded-xl font-medium transition-all duration-200",
   {
     variants: {
       isActive: {
-        true: "bg-blue-100 text-blue-700 shadow-sm",
-        false: "text-gray-600 hover:text-gray-900 hover:bg-gray-100",
+        true: "bg-cyan-600 text-white",
+        false: "text-slate-400 hover:text-slate-600 hover:bg-slate-50",
       },
       size: {
         desktop: "gap-2 px-3 py-2 text-sm",
@@ -103,7 +103,7 @@ const MobileMenuButton = function MobileMenuButton({
     <button
       type="button"
       onClick={onToggle}
-      className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-200 transform hover:scale-105"
+      className="inline-flex items-center justify-center p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500 transition-all duration-200 transform hover:scale-105"
       aria-expanded={isOpen}
       aria-controls="mobile-menu"
     >
@@ -197,7 +197,7 @@ const MobileNavigation = function MobileNavigation({
         animation: "slideDown 0.3s ease-out forwards",
       }}
     >
-      <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
+      <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-slate-200">
         <nav aria-label="モバイルナビゲーション">
           <ul>
             {navItems.map((item, index) => {
@@ -239,7 +239,7 @@ const Header = function Header({ path }: HeaderProps) {
 
   return (
     <header
-      className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-200"
+      className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200"
       style={{ zIndex: "var(--z-fixed)" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

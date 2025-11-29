@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Qualifications } from ".";
+import { Certifications } from ".";
 
 const meta = {
   title: "Pages/Top/AboutSection/Qualifications",
-  component: Qualifications,
+  component: Certifications,
   parameters: {
     layout: "centered",
     previewTabs: {
@@ -12,7 +12,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Qualifications>;
+} satisfies Meta<typeof Certifications>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

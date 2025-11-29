@@ -28,6 +28,13 @@ export const works: WorkItem[] = [
     image: "/images/works/chofusai.png",
   },
   {
+    title: "MO",
+    description:
+      "team411で開発している学祭向けの汎用モバイルオーダーシステムです。第75回調布祭に向けてた開発で、主にフロントエンド開発に携わりました。",
+    url: "https://team411.net/projects/mo/",
+    image: "/images/works/mo.png",
+  },
+  {
     title: "神椿市市民票ジェネレーター",
     description:
       "ゲーム「神椿市建設中。REGENERATE」の魔女の娘たちが持っている市民票を自分用にカスタマイズして生成できるツールです。",

@@ -9,9 +9,15 @@ import { Section } from "../section";
 
 export const LinkToPage = ({ link }: { link: LinkItem }) => {
   return (
-    <Card variant="hover" className="h-full group" url={link.url}>
+    <Card
+      variant="hover"
+      className="h-full group"
+      href={link.url}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-12 h-12 bg-gray-500 rounded-xl flex items-center justify-center flex-shrink-0">
+        <div className="w-12 h-12 bg-slate-500 rounded-xl flex items-center justify-center flex-shrink-0">
           <svg
             className="w-6 h-6 text-white"
             fill="none"
@@ -28,10 +34,10 @@ export const LinkToPage = ({ link }: { link: LinkItem }) => {
           </svg>
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+          <h3 className="text-lg font-semibold text-slate-700 group-hover:text-cyan-600 transition-colors truncate">
             {link.name}
           </h3>
-          <div className="flex items-center gap-1 text-sm text-gray-500">
+          <div className="flex items-center gap-1 text-sm text-slate-500">
             <span className="truncate">
               {new URL(link.url).hostname.replace("www.", "")}
             </span>
@@ -39,7 +45,9 @@ export const LinkToPage = ({ link }: { link: LinkItem }) => {
           </div>
         </div>
       </div>
-      <p className="text-gray-600 leading-relaxed">{link.description}</p>
+      <p className="text-slate-600 text-sm leading-relaxed">
+        {link.description}
+      </p>
     </Card>
   );
 };
@@ -62,12 +70,10 @@ export default function LinksSection() {
   return (
     <Section
       id="links-section"
-      title="相互リンク"
+      title="Links"
       subtitle="知り合いのオタクのサイトたちです"
-      icon="🔗"
-      bg="gray"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-12">
         {randomLinks.map((link, index) => (
           <LinkToPage key={`${link.name}-${index}`} link={link} />
         ))}

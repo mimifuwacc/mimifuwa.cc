@@ -17,16 +17,16 @@ export interface FooterProps {
   footerLinks?: FooterLink[];
 }
 
-const footerStyles = cva("bg-gray-900 border-t border-gray-700");
+const footerStyles = cva("bg-slate-900 border-t border-slate-700");
 
 const containerStyles = cva("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8");
 
 const linkStyles = cva(
-  "text-gray-300 hover:text-blue-400 transition-colors duration-200",
+  "text-slate-300 hover:text-cyan-400 transition-colors duration-200",
 );
 
 const socialLinkStyles = cva(
-  "text-gray-400 hover:text-blue-400 transition-colors duration-200 transform hover:scale-110",
+  "text-slate-400 hover:text-cyan-400 transition-colors duration-200 transform hover:scale-110",
 );
 
 const FooterLink = memo(function FooterLink({ link }: { link: FooterLink }) {
@@ -100,7 +100,7 @@ const Footer = memo(function Footer({
 
           {/* 中央：コピーライト */}
           <div className="text-center md:text-center">
-            <p className="text-gray-300 text-sm">
+            <p className="text-slate-300 text-sm">
               © {year} {author}
             </p>
           </div>
