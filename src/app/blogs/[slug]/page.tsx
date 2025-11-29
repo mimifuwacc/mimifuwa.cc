@@ -5,15 +5,31 @@ import parser from "@/lib/parser";
 import { currentUrl } from "@/lib/url";
 import { Section } from "../../(index)/_components/section";
 
+// 開発環境かどうかを判定
+const isDevelopment = process.env.NODE_ENV === "development";
+
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), "src/contents/blogs");
   const filenames = await fs.promises.readdir(postsDirectory);
 
-  return filenames
-    .filter((filename) => filename.endsWith(".md"))
-    .map((filename) => ({
-      slug: filename.replace(/\.md$/, ""),
-    }));
+  const params = [];
+
+  for (const filename of filenames) {
+    if (filename.endsWith(".md")) {
+      const filePath = path.join(postsDirectory, filename);
+      const fileContent = await fs.promises.readFile(filePath, "utf8");
+      const parsed = await parser(fileContent);
+
+      // 開発環境以外は下書き記事を除外
+      if (isDevelopment || !parsed.frontmatter.draft) {
+        params.push({
+          slug: filename.replace(/\.md$/, ""),
+        });
+      }
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({
@@ -32,6 +48,14 @@ export async function generateMetadata({
   try {
     const fileContent = await fs.promises.readFile(postPath, "utf8");
     const parsed = await parser(fileContent);
+
+    // 開発環境以外で下書き記事の場合は基本情報のみ返す
+    if (!isDevelopment && parsed.frontmatter.draft) {
+      return {
+        title: `${resolvedParams.slug} - mimifuwa.cc`,
+        description: "ブログ記事",
+      };
+    }
 
     const title = (parsed.frontmatter.title as string) || resolvedParams.slug;
     const excerpt = (parsed.frontmatter.excerpt as string) || "ブログ記事";
@@ -85,6 +109,11 @@ export default async function Page(props: {
   try {
     const fileContent = await fs.promises.readFile(postPath, "utf8");
     const parsed = await parser(fileContent);
+
+    // 開発環境以外で下書き記事の場合はアクセス不可
+    if (!isDevelopment && parsed.frontmatter.draft) {
+      throw new Error("Draft post");
+    }
 
     const title = (parsed.frontmatter.title as string) || params.slug;
     const date = (parsed.frontmatter.date as string) || "";

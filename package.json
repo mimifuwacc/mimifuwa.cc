@@ -10,6 +10,7 @@
     "lint": "biome check",
     "fix": "biome check --apply",
     "format": "biome format --write",
+    "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "test": "vitest",
     "test:unit": "vitest --project unit",
