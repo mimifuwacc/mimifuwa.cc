@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { works } from "@/contents/works";
-import { ProjectCard } from "./index";
+import { WorkCard } from "./index";
 
 const meta = {
-  title: "Pages/Top/ProjectsSection/ProjectCard",
-  component: ProjectCard,
+  title: "Pages/Top/ProjectsSection/WorkCard",
+  component: WorkCard,
   parameters: {
     layout: "centered",
   },
@@ -21,7 +21,7 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof ProjectCard>;
+} satisfies Meta<typeof WorkCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

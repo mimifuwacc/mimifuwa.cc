@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { skills } from "@/contents/skills";
+import { allSkills } from "@/contents/skills";
 import { SkillCard } from ".";
 
 const meta = {
@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    name: skills.languages[0].name,
-    image: skills.languages[0].image,
+    name: allSkills[0].name,
+    image: allSkills[0].image,
   },
 };

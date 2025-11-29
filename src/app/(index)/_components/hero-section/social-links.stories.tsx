@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { SocialLinks } from ".";
+import SocialLinks from ".";
 
 const meta = {
   title: "Pages/Top/HeroSection/SocialLinks",

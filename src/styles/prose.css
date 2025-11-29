@@ -91,6 +91,7 @@
 
 .prose-custom pre code {
   @apply p-0 text-sm;
+  /* biome-ignore lint/complexity/noImportantStyles: 必要 */
   background: transparent !important;
   border: none;
   padding: 1rem; /* highlight.js用のパディング */

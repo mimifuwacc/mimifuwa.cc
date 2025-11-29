@@ -20,15 +20,6 @@ const meta = {
       control: "text",
       description: "Section subtitle",
     },
-    icon: {
-      control: "text",
-      description: "Section icon (emoji)",
-    },
-    bg: {
-      control: "select",
-      options: ["gray", "white", "none"],
-      description: "Background color variant",
-    },
     className: {
       control: "text",
       description: "Additional CSS classes",
@@ -49,8 +40,6 @@ export const Default: Story = {
     id: "default-section",
     title: "セクションタイトル",
     subtitle: "これはセクションのサブタイトルです",
-    icon: "📝",
-    bg: "gray",
     children: (
       <div className="grid lg:grid-cols-2 gap-8 items-start">
         <div className="space-y-8">
