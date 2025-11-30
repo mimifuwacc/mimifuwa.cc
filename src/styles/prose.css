@@ -28,7 +28,7 @@
 }
 
 .prose-custom p {
-  @apply mb-6 text-base sm:text-lg text-slate-600 leading-[1.7];
+  @apply mb-6 text-base text-slate-600 leading-8;
 }
 
 .prose-custom > :not(.link-card) a {
@@ -84,7 +84,9 @@
 
 /* コードブロック - highlight.jsにスタイルを委譲 */
 .prose-custom pre {
-  @apply rounded-lg overflow-x-auto mb-6;
+  @apply rounded-xl overflow-x-scroll mb-6;
+  max-width: 100% !important;
+  container-type: inline-size;
   border: 1px solid #374151;
   background-color: #242a2e; /* GitHub dark theme background */
 }
@@ -92,6 +94,7 @@
 .prose-custom pre code {
   @apply p-0 text-sm;
   /* biome-ignore lint/complexity/noImportantStyles: 必要 */
+  max-width: 100cqw !important;
   background: transparent !important;
   border: none;
   padding: 1rem; /* highlight.js用のパディング */
@@ -118,7 +121,7 @@
 
 /* 画像 */
 .prose-custom img {
-  @apply rounded-lg shadow-lg my-6 max-w-full h-auto;
+  @apply rounded-xl shadow-sm my-6 max-w-[min(100%,36rem)] mx-auto h-auto;
   border: 1px solid #e5e7eb;
 }
 

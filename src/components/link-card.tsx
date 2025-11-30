@@ -72,7 +72,7 @@ export default function LinkCard({ url }: LinkCardProps) {
     >
       <div className="flex space-x-4 items-center">
         {ogpData.image && (
-          <div className="flex !h-28 aspect-square sm:aspect-[1.91/1] object-cover rounded-lg bg-slate-100 overflow-hidden shrink-0">
+          <div className="hidden sm:flex !h-28 aspect-[1.91/1] object-cover rounded-lg bg-slate-100 overflow-hidden shrink-0">
             {/* biome-ignore lint/performance/noImgElement: NextのImageを使うと厄介なので */}
             <img
               src={ogpData.image}
