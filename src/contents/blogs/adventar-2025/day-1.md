@@ -11,6 +11,14 @@ tags: ["アドカレ2025", "技術"]
 
 ## つくったもの
 
+今日の記事では、NowPlayingをおしゃれに投稿できるようにした話をします。
+
+NowPlayingを知らない人に向けて解説をしておくと、
+
+> 現在自分が聴いている音楽のタイトル、アーティスト名をシェアする
+
+文化のことです。特にTwitterで盛んだと思います。
+
 https://github.com/mimifuwacc/enhanced-nowplaying
 
 ## なぜ作ったのか
