@@ -147,7 +147,7 @@ export default async function Page(props: {
     return (
       <div className="py-12 sm:py-24">
         {/* メインコンテンツ */}
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
           {/* 記事ヘッダー */}
           <header className="mb-12 text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-6 text-slate-700 leading-tight">
