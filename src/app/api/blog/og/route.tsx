@@ -27,20 +27,7 @@ const querySchema = z.object({
   slug: z.string().min(1, "Slug is required"),
 });
 
-const BlogOgImage = ({ title, date, tags }: BlogOgImageProps) => {
-  // 日付のフォーマット
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString("ja-JP", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
+const BlogOgImage = ({ title, tags }: BlogOgImageProps) => {
   return (
     <div
       style={{
@@ -95,28 +82,6 @@ const BlogOgImage = ({ title, date, tags }: BlogOgImageProps) => {
           >
             {title}
           </div>
-
-          {date && (
-            <div
-              style={{
-                fontSize: "24px",
-                color: "#64748b",
-                marginBottom: "16px",
-              }}
-            >
-              {formatDate(date)}
-            </div>
-          )}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            position: "absolute",
-            bottom: "2rem",
-            left: "2rem",
-          }}
-        >
           {tags && tags.length > 0 && (
             <div
               style={{

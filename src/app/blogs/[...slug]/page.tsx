@@ -5,29 +5,42 @@ import parser from "@/lib/parser";
 import { currentUrl } from "@/lib/url";
 import { Section } from "../../(index)/_components/section";
 
-// 開発環境かどうかを判定
 const isDevelopment = process.env.NODE_ENV === "development";
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), "src/contents/blogs");
-  const filenames = await fs.promises.readdir(postsDirectory);
+  const params: { slug: string[] }[] = [];
 
-  const params = [];
+  async function findMarkdownFiles(dir: string, basePath: string = "") {
+    const items = fs.readdirSync(dir);
 
-  for (const filename of filenames) {
-    if (filename.endsWith(".md")) {
-      const filePath = path.join(postsDirectory, filename);
-      const fileContent = await fs.promises.readFile(filePath, "utf8");
-      const parsed = await parser(fileContent);
+    for (const item of items) {
+      const fullPath = path.join(dir, item);
+      const stat = fs.statSync(fullPath);
 
-      // 開発環境以外は下書き記事を除外
-      if (isDevelopment || !parsed.frontmatter.draft) {
-        params.push({
-          slug: filename.replace(/\.md$/, ""),
-        });
+      if (stat.isDirectory()) {
+        await findMarkdownFiles(fullPath, path.join(basePath, item));
+      } else if (item.endsWith(".md")) {
+        const filePath = fullPath;
+        const fileContent = await fs.promises.readFile(filePath, "utf8");
+        const parsed = await parser(fileContent);
+
+        if (isDevelopment || !parsed.frontmatter.draft) {
+          const relativePath = path.relative(postsDirectory, filePath);
+          const slugPath = relativePath
+            .replace(/\.md$/, "")
+            .replace(/\\/g, "/");
+          const slugArray = slugPath.split("/");
+
+          params.push({
+            slug: slugArray,
+          });
+        }
       }
     }
   }
+
+  await findMarkdownFiles(postsDirectory);
 
   return params;
 }
@@ -35,13 +48,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
+  const slugPath = resolvedParams.slug.join("/");
   const postPath = path.join(
     process.cwd(),
     "src/contents/blogs/",
-    `${resolvedParams.slug}.md`,
+    `${slugPath}.md`,
   );
   const apiUrl = currentUrl();
 
@@ -49,15 +63,14 @@ export async function generateMetadata({
     const fileContent = await fs.promises.readFile(postPath, "utf8");
     const parsed = await parser(fileContent);
 
-    // 開発環境以外で下書き記事の場合は基本情報のみ返す
     if (!isDevelopment && parsed.frontmatter.draft) {
       return {
-        title: `${resolvedParams.slug} - mimifuwa.cc`,
+        title: `${slugPath} - mimifuwa.cc`,
         description: "ブログ記事",
       };
     }
 
-    const title = (parsed.frontmatter.title as string) || resolvedParams.slug;
+    const title = (parsed.frontmatter.title as string) || slugPath;
     const excerpt = (parsed.frontmatter.excerpt as string) || "ブログ記事";
     const date = parsed.frontmatter.date as string;
     const tags = Array.isArray(parsed.frontmatter.tags)
@@ -73,9 +86,9 @@ export async function generateMetadata({
         type: "article",
         publishedTime: date,
         tags: tags,
-        url: `${apiUrl}/blogs/${resolvedParams.slug}`,
+        url: `${apiUrl}/blogs/${slugPath}`,
         images: {
-          url: `${apiUrl}/api/blog/og?slug=${resolvedParams.slug}`,
+          url: `${apiUrl}/api/blog/og?slug=${slugPath}`,
           width: 1200,
           height: 630,
           alt: `${title} - mimifuwa.cc`,
@@ -85,41 +98,40 @@ export async function generateMetadata({
         card: "summary_large_image",
         title: `${title} - mimifuwa.cc`,
         description: excerpt,
-        images: [`${apiUrl}/api/blog/og?slug=${resolvedParams.slug}`],
+        images: [`${apiUrl}/api/blog/og?slug=${slugPath}`],
       },
     };
   } catch (_error) {
     return {
-      title: `${resolvedParams.slug} - mimifuwa.cc`,
+      title: `${slugPath} - mimifuwa.cc`,
       description: "ブログ記事",
     };
   }
 }
 
 export default async function Page(props: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string[] }>;
 }) {
   const params = await props.params;
+  const slugPath = params.slug.join("/");
   const postPath = path.join(
     process.cwd(),
     "src/contents/blogs/",
-    `${params.slug}.md`,
+    `${slugPath}.md`,
   );
 
   try {
     const fileContent = await fs.promises.readFile(postPath, "utf8");
     const parsed = await parser(fileContent);
 
-    // 開発環境以外で下書き記事の場合はアクセス不可
     if (!isDevelopment && parsed.frontmatter.draft) {
       throw new Error("Draft post");
     }
 
-    const title = (parsed.frontmatter.title as string) || params.slug;
+    const title = (parsed.frontmatter.title as string) || slugPath;
     const date = (parsed.frontmatter.date as string) || "";
     const tags = (parsed.frontmatter.tags as string[]) || [];
 
-    // 日付のフォーマット
     const formatDate = (dateString: string) => {
       try {
         return new Date(dateString).toLocaleDateString("ja-JP", {
@@ -135,10 +147,10 @@ export default async function Page(props: {
     return (
       <div className="py-12 sm:py-24">
         {/* メインコンテンツ */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
           {/* 記事ヘッダー */}
           <header className="mb-12 text-center">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-slate-900 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold mb-6 text-slate-700 leading-tight">
               {title}
             </h1>
 
