@@ -4,23 +4,23 @@
 }
 
 .prose-custom h1 {
-  @apply text-4xl sm:text-4xl font-bold mb-8 text-slate-700;
+  @apply text-3xl sm:text-3xl font-bold mb-8 text-slate-700;
 }
 
 .prose-custom h2 {
-  @apply text-3xl sm:text-3xl font-bold mt-12 mb-6 pb-4 text-slate-700 border-b-2 border-b-slate-200;
+  @apply text-2xl sm:text-2xl font-bold mt-12 mb-6 pb-4 text-slate-700 border-b-2 border-b-slate-200;
 }
 
 .prose-custom h3 {
-  @apply text-2xl sm:text-2xl font-semibold mt-8 mb-4 pb-3 text-slate-700 border-b-2 border-b-slate-200;
+  @apply text-xl sm:text-xl font-semibold mt-8 mb-4 pb-3 text-slate-700 border-b-2 border-b-slate-200;
 }
 
 .prose-custom h4 {
-  @apply text-xl sm:text-xl font-semibold mt-6 mb-3 pb-2 text-slate-700 border-b-2 border-b-slate-200;
+  @apply text-lg sm:text-lg font-semibold mt-6 mb-3 pb-2 text-slate-700 border-b-2 border-b-slate-200;
 }
 
 .prose-custom h5 {
-  @apply text-lg sm:text-lg font-semibold mt-4 mb-2 text-slate-700;
+  @apply text-base sm:text-base font-semibold mt-4 mb-2 text-slate-700;
 }
 
 .prose-custom h6 {
@@ -28,7 +28,7 @@
 }
 
 .prose-custom p {
-  @apply mb-6 text-base sm:text-lg text-slate-600 leading-[1.7];
+  @apply mb-6 text-base text-slate-600 leading-8;
 }
 
 .prose-custom > :not(.link-card) a {
@@ -84,7 +84,9 @@
 
 /* コードブロック - highlight.jsにスタイルを委譲 */
 .prose-custom pre {
-  @apply rounded-lg overflow-x-auto mb-6;
+  @apply rounded-xl overflow-x-scroll mb-6;
+  max-width: 100% !important;
+  container-type: inline-size;
   border: 1px solid #374151;
   background-color: #242a2e; /* GitHub dark theme background */
 }
@@ -92,6 +94,7 @@
 .prose-custom pre code {
   @apply p-0 text-sm;
   /* biome-ignore lint/complexity/noImportantStyles: 必要 */
+  max-width: 100cqw !important;
   background: transparent !important;
   border: none;
   padding: 1rem; /* highlight.js用のパディング */
@@ -118,7 +121,7 @@
 
 /* 画像 */
 .prose-custom img {
-  @apply rounded-lg shadow-lg my-6 max-w-full h-auto;
+  @apply rounded-xl shadow-sm my-6 max-w-[min(100%,36rem)] mx-auto h-auto;
   border: 1px solid #e5e7eb;
 }
 

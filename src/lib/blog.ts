@@ -32,12 +32,25 @@ export async function getRecentPosts(count: number) {
   const postsDir = path.resolve(process.cwd(), "src/contents/blogs");
   const files: Record<string, () => Promise<string>> = {};
 
-  for (const filename of fs.readdirSync(postsDir)) {
-    if (filename.endsWith(".md")) {
-      const filePath = path.join(postsDir, filename);
-      files[filePath] = async () => fs.promises.readFile(filePath, "utf-8");
+  // 再帰的にMarkdownファイルを探索
+  function findMarkdownFiles(dir: string, basePath: string = "") {
+    const items = fs.readdirSync(dir);
+
+    for (const item of items) {
+      const fullPath = path.join(dir, item);
+      const stat = fs.statSync(fullPath);
+
+      if (stat.isDirectory()) {
+        // サブディレクトリを再帰的に探索
+        findMarkdownFiles(fullPath, path.join(basePath, item));
+      } else if (item.endsWith(".md")) {
+        // Markdownファイルを追加
+        files[fullPath] = async () => fs.promises.readFile(fullPath, "utf-8");
+      }
     }
   }
+
+  findMarkdownFiles(postsDir);
   const posts: {
     slug: string;
     title: string;
@@ -47,9 +60,11 @@ export async function getRecentPosts(count: number) {
     draft?: boolean;
   }[] = [];
   // use getFrontmatter to extract frontmatter from each file
-  for (const path in files) {
-    const slug = path.split("/").pop()?.replace(/\.md$/, "") || "";
-    const markdown = await files[path]();
+  for (const filePath in files) {
+    // ファイルパスからblogsディレクトリを除いた相対パスをslugとして使用
+    const relativePath = path.relative(postsDir, filePath);
+    const slug = relativePath.replace(/\.md$/, "").replace(/\\/g, "/");
+    const markdown = await files[filePath]();
     const frontmatter = await getFrontmatter(markdown);
     if (
       typeof frontmatter.title === "string" &&
@@ -79,12 +94,25 @@ export async function getAllPosts() {
   const postsDir = path.resolve(process.cwd(), "src/contents/blogs");
   const files: Record<string, () => Promise<string>> = {};
 
-  for (const filename of fs.readdirSync(postsDir)) {
-    if (filename.endsWith(".md")) {
-      const filePath = path.join(postsDir, filename);
-      files[filePath] = async () => fs.promises.readFile(filePath, "utf-8");
+  // 再帰的にMarkdownファイルを探索
+  function findMarkdownFiles(dir: string, basePath: string = "") {
+    const items = fs.readdirSync(dir);
+
+    for (const item of items) {
+      const fullPath = path.join(dir, item);
+      const stat = fs.statSync(fullPath);
+
+      if (stat.isDirectory()) {
+        // サブディレクトリを再帰的に探索
+        findMarkdownFiles(fullPath, path.join(basePath, item));
+      } else if (item.endsWith(".md")) {
+        // Markdownファイルを追加
+        files[fullPath] = async () => fs.promises.readFile(fullPath, "utf-8");
+      }
     }
   }
+
+  findMarkdownFiles(postsDir);
 
   const posts: {
     slug: string;
@@ -96,9 +124,11 @@ export async function getAllPosts() {
   }[] = [];
 
   // use getFrontmatter to extract frontmatter from each file
-  for (const path in files) {
-    const slug = path.split("/").pop()?.replace(/\.md$/, "") || "";
-    const markdown = await files[path]();
+  for (const filePath in files) {
+    // ファイルパスからblogsディレクトリを除いた相対パスをslugとして使用
+    const relativePath = path.relative(postsDir, filePath);
+    const slug = relativePath.replace(/\.md$/, "").replace(/\\/g, "/");
+    const markdown = await files[filePath]();
     const frontmatter = await getFrontmatter(markdown);
     if (
       typeof frontmatter.title === "string" &&
