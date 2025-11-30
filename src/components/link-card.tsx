@@ -57,7 +57,7 @@ export default function LinkCard({ url }: LinkCardProps) {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="p-4 my-4 flex min-h-[146px] w-full border border-slate-200 rounded-lg"
+          className="p-4 my-4 flex min-h-[] w-full border border-slate-200 rounded-lg"
         ></Link>
       );
     }
@@ -90,7 +90,7 @@ export default function LinkCard({ url }: LinkCardProps) {
               {ogpData.siteName}
             </div>
           )}
-          <div className="text-slate-900 font-medium line-clamp-2 mb-2">
+          <div className="text-cyan-600 font-bold line-clamp-2 mb-2">
             {ogpData.title || ogpData.url}
           </div>
           {ogpData.description && (
