@@ -78,6 +78,7 @@ const BlogOgImage = ({ title, tags }: BlogOgImageProps) => {
               wordBreak: "keep-all",
               overflowWrap: "break-word",
               color: "#0092B8", // cyan-600
+              textAlign: "center",
             }}
           >
             {title}
