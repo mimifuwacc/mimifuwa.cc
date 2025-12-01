@@ -18,13 +18,13 @@ NowPlayingを知らない人に向けて解説をしておくと、
 
 文化のことです。特にTwitterで盛んだと思います。
 
-このNowPlayingをOGIに色々情報を載せておしゃれにしたのが今回作った「Enhanced NowPlaying」というものです（Enhancedは流石に大袈裟な気がしている）。
+このNowPlayingをOG画像に色々情報を載せておしゃれにしたのが今回作った「Enhanced NowPlaying」というものです（Enhancedは流石に大袈裟な気がしている）。
 
 https://x.com/mimifuwacc/status/1985160826802876453?s=20
 
-こんな感じで、楽曲のカバーアートや曲名などがのったOGIが設定されたURLを投稿できて、ここをクリックすると楽曲に飛ぶことができます。
+こんな感じで、楽曲のカバーアートや曲名などがのったOG画像が設定されたURLを投稿できて、ここをクリックすると楽曲に飛ぶことができます。
 
-普段、YouTube Musicをよく使っていますが、Twitterで共有した時にOGIが表示されず、曲が投稿されていることに気づきにくかったので、こんなものを作ってみました。
+普段、YouTube Musicをよく使っていますが、Twitterで共有した時にOG画像が表示されず、曲が投稿されていることに気づきにくかったので、こんなものを作ってみました。
 
 リポジトリはこれです。
 
@@ -80,7 +80,7 @@ const shareText = `#NowPlaying ${shareUrl}`;
 window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}`, "_blank");
 ```
 
-あとは、`nowplaying.mimifuwa.cc` が動的にOGIを作ってくれるようにすれば完成です（が、この記事は明日の内容に回します）。
+あとは、`nowplaying.mimifuwa.cc` が動的にOG画像を作ってくれるようにすれば完成です（が、この記事は明日の内容に回します）。
 
 ## 実はSpotifyでも
 
@@ -113,4 +113,4 @@ Web版を作ってしばらく使っていると、外で音楽を聴いてい�
 ## おわりに
 
 ということで、1日目は「NowPlayingを少しおしゃれにする」話の投稿機能側でした。
-明日はOGIを生成する側の話をしようと思います。
+明日はOG画像を生成する側の話をしようと思います。
