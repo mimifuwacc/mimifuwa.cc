@@ -7,24 +7,54 @@
   @apply text-3xl sm:text-3xl font-bold mb-8 text-slate-700;
 }
 
+.prose-custom h1::before {
+  content: "#";
+  @apply text-slate-300 mr-2;
+}
+
 .prose-custom h2 {
   @apply text-2xl sm:text-2xl font-bold mt-12 mb-6 pb-4 text-slate-700 border-b-2 border-b-slate-200;
+}
+
+.prose-custom h2::before {
+  content: "##";
+  @apply text-slate-300 mr-2;
 }
 
 .prose-custom h3 {
   @apply text-xl sm:text-xl font-semibold mt-8 mb-4 pb-3 text-slate-700 border-b-2 border-b-slate-200;
 }
 
+.prose-custom h3::before {
+  content: "###";
+  @apply text-slate-300 mr-2;
+}
+
 .prose-custom h4 {
   @apply text-lg sm:text-lg font-semibold mt-6 mb-3 pb-2 text-slate-700 border-b-2 border-b-slate-200;
+}
+
+.prose-custom h4::before {
+  content: "####";
+  @apply text-slate-300 mr-2;
 }
 
 .prose-custom h5 {
   @apply text-base sm:text-base font-semibold mt-4 mb-2 text-slate-700;
 }
 
+.prose-custom h5::before {
+  content: "#####";
+  @apply text-slate-300 mr-2;
+}
+
 .prose-custom h6 {
   @apply text-base font-semibold mt-3 mb-1 text-slate-700;
+}
+
+.prose-custom h6::before {
+  content: "######";
+  @apply text-slate-300 mr-2;
 }
 
 .prose-custom p {
