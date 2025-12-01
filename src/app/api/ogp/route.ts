@@ -111,10 +111,12 @@ export async function GET(request: NextRequest) {
 
   try {
     // User-Agentを設定してブロックされるのを防ぐ
+    // Accept-Languageを英語に設定して英語のOGP情報を取得
     const response = await fetch(url, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (compatible; OGP-Fetcher/1.0; +https://mimifuwa.cc)",
+        "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
       },
       redirect: "follow",
       signal: AbortSignal.timeout(10000), // 10秒でタイムアウト

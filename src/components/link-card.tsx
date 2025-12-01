@@ -57,7 +57,7 @@ export default function LinkCard({ url }: LinkCardProps) {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="p-4 my-4 flex min-h-[146px] w-full border border-slate-200 rounded-lg"
+          className="p-4 my-4 flex min-h-[124px] sm:min-h-[146px] w-full border border-slate-200 rounded-lg"
         ></Link>
       );
     }
@@ -68,7 +68,7 @@ export default function LinkCard({ url }: LinkCardProps) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="p-4 my-4 flex w-full min-h-28 border border-slate-200 rounded-lg"
+      className="p-4 my-4 flex w-full min-h-[122px] sm:min-h-28 border border-slate-200 rounded-lg"
     >
       <div className="flex space-x-4 items-center">
         {ogpData.image && (

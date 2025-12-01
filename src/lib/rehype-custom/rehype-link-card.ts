@@ -1,6 +1,8 @@
 import type { Element, Parent, Root, Text } from "hast";
 import { visit } from "unist-util-visit";
 
+type LinkType = "link" | "twitter";
+
 const isTextUrlLink = (node: Element): boolean => {
   return (
     node.tagName === "a" &&
@@ -20,6 +22,16 @@ const isTarget = (node: Element): boolean => {
   );
 };
 
+const getLinkType = (node: Element): LinkType => {
+  if (
+    typeof node.properties.href === "string" &&
+    node.properties.href.match(/^https?:\/\/(www\.)?(twitter|x)\.com\/.+/i)
+  ) {
+    return "twitter";
+  }
+  return "link";
+};
+
 const rehypeLinkCard = () => {
   return (tree: Root) => {
     visit(
@@ -32,7 +44,7 @@ const rehypeLinkCard = () => {
             type: "element",
             tagName: "div",
             properties: {
-              "data-component-type": "link-card",
+              "data-component-type": `${getLinkType(linkNode)}-card`,
               "data-url": linkNode.properties.href,
             },
             children: [],
