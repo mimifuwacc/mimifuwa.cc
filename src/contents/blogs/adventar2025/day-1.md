@@ -20,7 +20,7 @@ NowPlayingを知らない人に向けて解説をしておくと、
 
 このNowPlayingをOGIに色々情報を載せておしゃれにしたのが今回作った「Enhanced NowPlaying」というものです（Enhancedは流石に大袈裟な気がしている）。
 
-![使用例](/images/blogs/adventar-2025/day-1/nowplaying-example.png)
+https://x.com/mimifuwacc/status/1985160826802876453?s=20
 
 こんな感じで、楽曲のカバーアートや曲名などがのったOGIが設定されたURLを投稿できて、ここをクリックすると楽曲に飛ぶことができます。
 

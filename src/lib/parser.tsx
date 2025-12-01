@@ -11,6 +11,7 @@ import { matter } from "vfile-matter";
 
 import InfoCard, { type InfoCardProps } from "@/components/info-card";
 import LinkCard from "@/components/link-card";
+import TwitterCard from "@/components/twitter-card";
 
 import {
   type ComponentProps,
@@ -53,6 +54,10 @@ export default async function parser(markdown: string): Promise<ParsedResult> {
                   {children}
                 </InfoCard>
               );
+            case "twitter-card":
+              return componentData["data-url"] ? (
+                <TwitterCard url={componentData["data-url"]} />
+              ) : null;
             default:
               return <div {...restProps}>{children}</div>;
           }

@@ -64,15 +64,15 @@
   @apply mb-0;
 }
 
-.prose-custom blockquote {
+.prose-custom blockquote:not(.twitter-tweet) {
   @apply border-l-4 border-slate-500 pl-6 py-4 my-4 bg-slate-100 rounded-r-lg;
 }
 
-.prose-custom blockquote p {
+.prose-custom blockquote:not(.twitter-tweet):not(.twitter-tweet) p {
   @apply text-slate-700 italic mb-2;
 }
 
-.prose-custom blockquote p:last-child {
+.prose-custom blockquote:not(.twitter-tweet) p:last-child {
   @apply mb-0;
 }
 
