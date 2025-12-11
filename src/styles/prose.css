@@ -1,6 +1,8 @@
 .prose-custom {
   @apply text-slate-700 leading-relaxed;
   max-width: none;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .prose-custom h1 {
