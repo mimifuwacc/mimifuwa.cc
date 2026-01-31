@@ -2,14 +2,17 @@ commit-msg:
   skip: merge
   commands:
     commitlint:
-      run: pnpm commitlint --edit {1}
+      run: pnpm exec commitlint --edit {1}
 
 pre-commit:
+  parallel: true
   commands:
     lint:
-      run: pnpm run lint --fix
+      run: pnpm turbo run lint -- --fix
+      stage_fixed: true
     format:
-      run: pnpm run format
+      run: pnpm turbo run lint:format
+      stage_fixed: true
     git-update:
       run: git update-index --again
 

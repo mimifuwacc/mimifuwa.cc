@@ -43,6 +43,7 @@ jobs:
         id: vercel-deploy
         uses: BetaHuhn/deploy-to-vercel-action@latest
         with:
+          WORKING_DIRECTORY: apps/web
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
