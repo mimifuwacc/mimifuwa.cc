@@ -22,11 +22,9 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-// don't load opennext config on Vercel
-if (process.env.VERCEL !== "1") {
-  import("@opennextjs/cloudflare")
-    .then(({ initOpenNextCloudflareForDev }) => {
-      initOpenNextCloudflareForDev();
-    })
-    .catch(() => {});
-}
+// load opennext config
+import("@opennextjs/cloudflare")
+  .then(({ initOpenNextCloudflareForDev }) => {
+    initOpenNextCloudflareForDev();
+  })
+  .catch(() => {});

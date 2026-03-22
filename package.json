@@ -21,12 +21,12 @@
   },
   "dependencies": {
     "@next/third-parties": "^16.0.3",
-    "@opennextjs/cloudflare": "^1.8.2",
+    "@opennextjs/cloudflare": "^1.17.1",
     "@tailwindcss/postcss": "^4.1.13",
     "@types/unist": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "highlight.js": "^11.11.1",
-    "next": "15.5.7",
+    "next": "16.2.1",
     "postcss": "^8.5.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -42,7 +42,6 @@
     "swr": "^2.3.7",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
-    "vercel": "^48.0.0",
     "vfile": "^6.0.3",
     "vfile-matter": "^5.0.1",
     "zod": "^4.1.13"
@@ -73,6 +72,6 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^3.2.4",
-    "wrangler": "^4.37.0"
+    "wrangler": "^4.76.0"
   }
 }
