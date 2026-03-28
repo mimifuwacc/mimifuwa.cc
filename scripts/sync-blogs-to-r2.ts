@@ -63,7 +63,7 @@ async function loadLocalMarkdowns(): Promise<BlogPostWithContent[]> {
 }
 
 async function uploadToR2(key: string, content: string): Promise<void> {
-  const localFlag = isLocal ? "--local" : "";
+  const localFlag = isLocal ? "--local" : "--remote";
 
   // 一時ファイルを作成
   const tmpFile = path.join(os.tmpdir(), `blog-upload-${Date.now()}.md`);
@@ -89,7 +89,7 @@ async function uploadImageToR2(
   relativePath: string,
   fullPath: string,
 ): Promise<void> {
-  const localFlag = isLocal ? "--local" : "";
+  const localFlag = isLocal ? "--local" : "--remote";
   const r2Key = `images/${relativePath}`;
 
   try {
