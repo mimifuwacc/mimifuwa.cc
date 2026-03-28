@@ -35,6 +35,11 @@ export default async function getFrontmatter(
 
 // Cloudflare環境かどうかを判定
 async function isCloudflareEnv(): Promise<boolean> {
+  // ビルド時は Cloudflare 環境でないとみなす（プリレンダリング時の D1 アクセスを回避）
+  if (process.env.CI === "true") {
+    return false;
+  }
+
   try {
     await getCloudflareContext({ async: true });
     return true;
