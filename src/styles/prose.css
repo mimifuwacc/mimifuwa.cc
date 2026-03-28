@@ -117,6 +117,7 @@
 /* コードブロック - highlight.jsにスタイルを委譲 */
 .prose-custom pre {
   @apply rounded-xl overflow-x-scroll mb-6;
+  /* biome-ignore lint/complexity/noImportantStyles: コンテナの幅を制限するために必要 */
   max-width: 100% !important;
   container-type: inline-size;
   border: 1px solid #374151;
@@ -125,8 +126,9 @@
 
 .prose-custom pre code {
   @apply p-0 text-sm;
-  /* biome-ignore lint/complexity/noImportantStyles: 必要 */
+  /* biome-ignore lint/complexity/noImportantStyles: highlight.jsの背景色を上書きするために必要 */
   max-width: 100cqw !important;
+  /* biome-ignore lint/complexity/noImportantStyles: highlight.jsの背景色を上書きするために必要 */
   background: transparent !important;
   border: none;
   padding: 1rem; /* highlight.js用のパディング */
