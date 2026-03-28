@@ -6,7 +6,7 @@
 !.envrc
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -19,7 +19,7 @@
 /coverage
 
 # next.js
-/.next/
+.next/
 /out/
 
 # production
@@ -37,6 +37,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.dev.vars
 
 # vercel
 .vercel
@@ -46,9 +47,20 @@ yarn-error.log*
 next-env.d.ts
 
 # open-next
-/.open-next
+.open-next
 .wrangler
 
 # storybook
 *storybook.log
 storybook-static
+
+# go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
