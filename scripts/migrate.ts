@@ -4,6 +4,7 @@ import { glob } from "glob";
 
 const migrationsDir = path.resolve(process.cwd(), "migrations");
 const isRemote = process.argv.includes("--remote");
+const isAll = process.argv.includes("--all");
 
 function getChangedFiles(): Set<string> {
   try {
@@ -47,9 +48,9 @@ async function main() {
   const files = await glob("*.sql", { cwd: migrationsDir });
   files.sort();
 
-  // 変更されたファイル、または初回の場合は全ファイル
+  // 変更されたファイル、または初回/--allの場合は全ファイル
   const filesToRun =
-    changedFiles.size === 0
+    isAll || changedFiles.size === 0
       ? files
       : files.filter((f) => changedFiles.has(`migrations/${f}`));
 

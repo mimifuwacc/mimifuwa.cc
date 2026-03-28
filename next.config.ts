@@ -31,9 +31,11 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-// load opennext config
-import("@opennextjs/cloudflare")
-  .then(({ initOpenNextCloudflareForDev }) => {
-    initOpenNextCloudflareForDev();
-  })
-  .catch(() => {});
+// load opennext config (dev only)
+if (process.env.NODE_ENV !== "production") {
+  import("@opennextjs/cloudflare")
+    .then(({ initOpenNextCloudflareForDev }) => {
+      initOpenNextCloudflareForDev();
+    })
+    .catch(() => {});
+}
