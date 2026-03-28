@@ -22,7 +22,45 @@ interface BlogPostWithContent extends BlogPost {
 
 const blogsDir = path.resolve(process.cwd(), "src/contents/blogs");
 const imagesDir = path.resolve(process.cwd(), "public/images");
-const isLocal = process.argv.includes("--local");
+const isRemote = process.argv.includes("--remote");
+const syncAll = process.argv.includes("--all");
+
+// Git差分から変更されたファイルを取得
+function getChangedFiles(): Set<string> {
+  try {
+    const isCI = process.env.CI === "true";
+    const baseBranch = process.env.GITHUB_REF_NAME || "main";
+
+    if (isCI) {
+      // CIでは origin/main...HEAD で差分を取得
+      execSync("git fetch origin main --depth=1", {
+        encoding: "utf-8",
+        stdio: "ignore",
+      });
+      const result = execSync("git diff --name-only origin/main...HEAD", {
+        encoding: "utf-8",
+      });
+      const files = result
+        .trim()
+        .split("\n")
+        .filter((f) => f);
+      return new Set(files);
+    } else {
+      // ローカルでは HEAD~1...HEAD
+      const result = execSync("git diff --name-only HEAD~1...HEAD", {
+        encoding: "utf-8",
+      });
+      const files = result
+        .trim()
+        .split("\n")
+        .filter((f) => f);
+      return new Set(files);
+    }
+  } catch {
+    // エラー（初回など）は全ファイル同期
+    return new Set();
+  }
+}
 
 async function extractFrontmatter(markdown: string): Promise<BlogPost> {
   const file = new VFile({ value: markdown });
@@ -31,11 +69,19 @@ async function extractFrontmatter(markdown: string): Promise<BlogPost> {
   return frontmatter as BlogPost;
 }
 
-async function loadLocalMarkdowns(): Promise<BlogPostWithContent[]> {
+async function loadLocalMarkdowns(
+  changedFiles: Set<string>,
+): Promise<BlogPostWithContent[]> {
   const files = await glob("**/*.md", { cwd: blogsDir });
   const posts: BlogPostWithContent[] = [];
 
   for (const relativePath of files) {
+    // 変更ファイルのみチェック
+    const gitPath = `src/contents/blogs/${relativePath}`;
+    if (!syncAll && changedFiles.size > 0 && !changedFiles.has(gitPath)) {
+      continue;
+    }
+
     const fullPath = path.join(blogsDir, relativePath);
     const content = await fs.promises.readFile(fullPath, "utf-8");
     const frontmatter = await extractFrontmatter(content);
@@ -63,7 +109,7 @@ async function loadLocalMarkdowns(): Promise<BlogPostWithContent[]> {
 }
 
 async function uploadToR2(key: string, content: string): Promise<void> {
-  const localFlag = isLocal ? "--local" : "--remote";
+  const localFlag = isRemote ? "--remote" : "--local";
 
   // 一時ファイルを作成
   const tmpFile = path.join(os.tmpdir(), `blog-upload-${Date.now()}.md`);
@@ -89,7 +135,7 @@ async function uploadImageToR2(
   relativePath: string,
   fullPath: string,
 ): Promise<void> {
-  const localFlag = isLocal ? "--local" : "--remote";
+  const localFlag = isRemote ? "--remote" : "--local";
   const r2Key = `images/${relativePath}`;
 
   try {
@@ -102,8 +148,8 @@ async function uploadImageToR2(
   }
 }
 
-// public/images/以下のすべての画像をR2にアップロード
-async function syncImages(): Promise<void> {
+// public/images/以下の画像をR2にアップロード（変更ファイルのみ）
+async function syncImages(changedFiles: Set<string>): Promise<void> {
   console.log(`Syncing images from ${imagesDir}...`);
 
   const imageExtensions = [
@@ -130,6 +176,11 @@ async function syncImages(): Promise<void> {
       } else if (item.isFile()) {
         const ext = item.name.toLowerCase();
         if (imageExtensions.some((e) => ext.endsWith(e))) {
+          // 変更ファイルのみチェック
+          const gitPath = `public/images/${relativePath}`;
+          if (!syncAll && changedFiles.size > 0 && !changedFiles.has(gitPath)) {
+            continue;
+          }
           files.push({ relativePath, fullPath });
         }
       }
@@ -138,7 +189,7 @@ async function syncImages(): Promise<void> {
 
   await findImageFiles(imagesDir);
 
-  console.log(`Found ${files.length} image files`);
+  console.log(`Found ${files.length} changed image files`);
 
   for (const { relativePath, fullPath } of files) {
     // WindowsパスをUnix形式に変換
@@ -150,7 +201,7 @@ async function syncImages(): Promise<void> {
 }
 
 async function insertOrUpdateD1(post: BlogPostWithContent): Promise<void> {
-  const db = isLocal ? "--local" : "";
+  const db = isRemote ? "--remote" : "--local";
   const escapedTitle = post.title.replace(/'/g, "''");
   const escapedExcerpt = post.excerpt.replace(/'/g, "''");
 
@@ -236,12 +287,21 @@ async function insertOrUpdateD1(post: BlogPostWithContent): Promise<void> {
 }
 
 async function main() {
-  // まず画像を同期
-  await syncImages();
+  // 変更ファイルを取得
+  const changedFiles = getChangedFiles();
+  if (changedFiles.size > 0) {
+    console.log(`Changed files: ${Array.from(changedFiles).join(", ")}`);
+  } else if (!syncAll) {
+    console.log("No changed files detected. Use --all to sync all files.");
+    return;
+  }
+
+  // 画像を同期
+  await syncImages(changedFiles);
 
   console.log(`Loading markdown files from ${blogsDir}...`);
-  const posts = await loadLocalMarkdowns();
-  console.log(`Found ${posts.length} posts`);
+  const posts = await loadLocalMarkdowns(changedFiles);
+  console.log(`Found ${posts.length} posts to sync`);
 
   for (const post of posts) {
     // Upload to R2
