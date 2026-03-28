@@ -1,10 +1,10 @@
+import { execSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { glob } from "glob";
 import { VFile } from "vfile";
 import { matter } from "vfile-matter";
-import { execSync } from "node:child_process";
 
 interface BlogPost {
   slug: string;

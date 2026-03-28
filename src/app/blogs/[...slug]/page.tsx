@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { getAllSlugs, getPostBySlug } from "@/lib/blog";
 import parser from "@/lib/parser";
 import { currentUrl } from "@/lib/url";
-import { getPostBySlug, getAllSlugs } from "@/lib/blog";
 import { Section } from "../../(index)/_components/section";
 
 const isDevelopment = process.env.NODE_ENV === "development";
