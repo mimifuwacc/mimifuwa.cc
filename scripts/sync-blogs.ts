@@ -22,7 +22,7 @@ interface BlogPostWithContent extends BlogPost {
 
 const blogsDir = path.resolve(process.cwd(), "src/contents/blogs");
 const imagesDir = path.resolve(process.cwd(), "public/images");
-const isLocal = process.argv.includes("--local");
+const isRemote = process.argv.includes("--remote");
 const syncAll = process.argv.includes("--all");
 
 // Git差分から変更されたファイルを取得
@@ -109,7 +109,7 @@ async function loadLocalMarkdowns(
 }
 
 async function uploadToR2(key: string, content: string): Promise<void> {
-  const localFlag = isLocal ? "--local" : "--remote";
+  const localFlag = isRemote ? "--remote" : "--local";
 
   // 一時ファイルを作成
   const tmpFile = path.join(os.tmpdir(), `blog-upload-${Date.now()}.md`);
@@ -135,7 +135,7 @@ async function uploadImageToR2(
   relativePath: string,
   fullPath: string,
 ): Promise<void> {
-  const localFlag = isLocal ? "--local" : "--remote";
+  const localFlag = isRemote ? "--remote" : "--local";
   const r2Key = `images/${relativePath}`;
 
   try {
@@ -201,7 +201,7 @@ async function syncImages(changedFiles: Set<string>): Promise<void> {
 }
 
 async function insertOrUpdateD1(post: BlogPostWithContent): Promise<void> {
-  const db = isLocal ? "--local" : "";
+  const db = isRemote ? "--remote" : "--local";
   const escapedTitle = post.title.replace(/'/g, "''");
   const escapedExcerpt = post.excerpt.replace(/'/g, "''");
 

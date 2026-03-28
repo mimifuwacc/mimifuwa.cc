@@ -34,13 +34,13 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: pnpm run cf:migrate
+        run: pnpm exec tsx scripts/migrate.ts --remote
 
       - name: Sync blogs to R2/D1
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: pnpm run cf:sync-blogs
+        run: pnpm exec tsx scripts/sync-blogs.ts
 
       - name: Build
         run: pnpm exec opennextjs-cloudflare build
