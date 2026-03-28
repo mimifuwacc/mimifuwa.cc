@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
-import { getAllSlugs, getPostBySlug } from "@/lib/blog";
+import { getPostBySlug } from "@/lib/blog";
 import parser from "@/lib/parser";
 import { currentUrl } from "@/lib/url";
 import { Section } from "../../(index)/_components/section";
 
-const isDevelopment = process.env.NODE_ENV === "development";
+// 動的レンダリングを強制（SSR）
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
-export async function generateStaticParams() {
-  const slugs = await getAllSlugs();
-  return slugs.map((slug) => ({
-    slug: slug.split("/"),
-  }));
-}
+const isDevelopment = process.env.NODE_ENV === "development";
 
 export async function generateMetadata({
   params,
