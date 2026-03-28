@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import path from "node:path";
 import { glob } from "glob";
 
-const migrationsDir = path.resolve(process.cwd(), "migrations");
+const migrationsDir = path.resolve(process.cwd(), "db/migrations");
 const isRemote = process.argv.includes("--remote");
 const isAll = process.argv.includes("--all");
 
@@ -52,7 +52,7 @@ async function main() {
   const filesToRun =
     isAll || changedFiles.size === 0
       ? files
-      : files.filter((f) => changedFiles.has(`migrations/${f}`));
+      : files.filter((f) => changedFiles.has(`db/migrations/${f}`));
 
   if (filesToRun.length === 0) {
     console.log("No new migrations to run.");
