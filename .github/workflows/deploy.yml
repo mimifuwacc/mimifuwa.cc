@@ -43,6 +43,10 @@ jobs:
         run: pnpm exec tsx scripts/sync-blogs.ts
 
       - name: Build
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          NODE_ENV: production
         run: pnpm exec opennextjs-cloudflare build
 
       - name: Deploy to Cloudflare
