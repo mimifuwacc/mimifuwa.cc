@@ -13,5 +13,18 @@
       "binding": "WORKER_SELF_REFERENCE",
       "service": "mimifuwa-cc"
     }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mimifuwacc-blogs",
+      "database_id": "YOUR_D1_DATABASE_ID"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BLOGS",
+      "bucket_name": "mimifuwacc-blogs"
+    }
   ]
 }

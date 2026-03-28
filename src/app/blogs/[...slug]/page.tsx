@@ -1,48 +1,16 @@
-import fs from "node:fs";
-import path from "node:path";
 import type { Metadata } from "next";
 import parser from "@/lib/parser";
 import { currentUrl } from "@/lib/url";
+import { getPostBySlug, getAllSlugs } from "@/lib/blog";
 import { Section } from "../../(index)/_components/section";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
 export async function generateStaticParams() {
-  const postsDirectory = path.join(process.cwd(), "src/contents/blogs");
-  const params: { slug: string[] }[] = [];
-
-  async function findMarkdownFiles(dir: string, basePath: string = "") {
-    const items = fs.readdirSync(dir);
-
-    for (const item of items) {
-      const fullPath = path.join(dir, item);
-      const stat = fs.statSync(fullPath);
-
-      if (stat.isDirectory()) {
-        await findMarkdownFiles(fullPath, path.join(basePath, item));
-      } else if (item.endsWith(".md")) {
-        const filePath = fullPath;
-        const fileContent = await fs.promises.readFile(filePath, "utf8");
-        const parsed = await parser(fileContent);
-
-        if (isDevelopment || !parsed.frontmatter.draft) {
-          const relativePath = path.relative(postsDirectory, filePath);
-          const slugPath = relativePath
-            .replace(/\.md$/, "")
-            .replace(/\\/g, "/");
-          const slugArray = slugPath.split("/");
-
-          params.push({
-            slug: slugArray,
-          });
-        }
-      }
-    }
-  }
-
-  await findMarkdownFiles(postsDirectory);
-
-  return params;
+  const slugs = await getAllSlugs();
+  return slugs.map((slug) => ({
+    slug: slug.split("/"),
+  }));
 }
 
 export async function generateMetadata({
@@ -52,30 +20,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const resolvedParams = await params;
   const slugPath = resolvedParams.slug.join("/");
-  const postPath = path.join(
-    process.cwd(),
-    "src/contents/blogs/",
-    `${slugPath}.md`,
-  );
   const apiUrl = currentUrl();
 
   try {
-    const fileContent = await fs.promises.readFile(postPath, "utf8");
-    const parsed = await parser(fileContent);
+    const post = await getPostBySlug(slugPath);
 
-    if (!isDevelopment && parsed.frontmatter.draft) {
+    if (!post || (!isDevelopment && post.draft)) {
       return {
         title: `${slugPath} - mimifuwa.cc`,
         description: "ブログ記事",
       };
     }
 
-    const title = (parsed.frontmatter.title as string) || slugPath;
-    const excerpt = (parsed.frontmatter.excerpt as string) || "ブログ記事";
-    const date = parsed.frontmatter.date as string;
-    const tags = Array.isArray(parsed.frontmatter.tags)
-      ? parsed.frontmatter.tags
-      : [];
+    const title = post.title || slugPath;
+    const excerpt = post.excerpt || "ブログ記事";
+    const date = post.date;
+    const tags = post.tags || [];
 
     return {
       title: `${title} - mimifuwa.cc`,
@@ -114,23 +74,20 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const slugPath = params.slug.join("/");
-  const postPath = path.join(
-    process.cwd(),
-    "src/contents/blogs/",
-    `${slugPath}.md`,
-  );
 
   try {
-    const fileContent = await fs.promises.readFile(postPath, "utf8");
-    const parsed = await parser(fileContent);
+    const post = await getPostBySlug(slugPath);
 
-    if (!isDevelopment && parsed.frontmatter.draft) {
-      throw new Error("Draft post");
+    if (!post || (!isDevelopment && post.draft)) {
+      throw new Error("Draft post or not found");
     }
 
-    const title = (parsed.frontmatter.title as string) || slugPath;
-    const date = (parsed.frontmatter.date as string) || "";
-    const tags = (parsed.frontmatter.tags as string[]) || [];
+    const title = post.title || slugPath;
+    const date = post.date || "";
+    const tags = post.tags || [];
+
+    // Parserでfrontmatterを除去したコンテンツを取得
+    const parsed = await parser(post.content);
 
     const formatDate = (dateString: string) => {
       try {

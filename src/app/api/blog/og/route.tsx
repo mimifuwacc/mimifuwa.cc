@@ -3,7 +3,7 @@ import path from "node:path";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import parser from "@/lib/parser";
+import { getPostBySlug } from "@/lib/blog";
 
 // 開発環境かどうかを判定
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -166,51 +166,39 @@ export async function GET(request: NextRequest) {
 
     const { slug } = parseResult.data;
 
-    // ブログ記事のデータを取得
-    const postPath = path.join(
-      process.cwd(),
-      "src/contents/blogs/",
-      `${slug}.md`,
-    );
+    // ブログ記事のデータをR2/D1から取得
+    const post = await getPostBySlug(slug);
 
-    try {
-      const fileContent = await fs.promises.readFile(postPath, "utf8");
-      const parsed = await parser(fileContent);
-
-      // 開発環境以外で下書き記事の場合は404
-      if (!isDevelopment && parsed.frontmatter.draft) {
-        return new Response("Blog post not found", { status: 404 });
-      }
-
-      const title = (parsed.frontmatter.title as string) || slug;
-      const excerpt = (parsed.frontmatter.excerpt as string) || undefined;
-      const date = (parsed.frontmatter.date as string) || undefined;
-      const tags = (parsed.frontmatter.tags as string[]) || undefined;
-
-      return new ImageResponse(
-        <BlogOgImage title={title} excerpt={excerpt} date={date} tags={tags} />,
-        {
-          width: 1200,
-          height: 630,
-          fonts: [
-            {
-              name: "Noto Sans JP",
-              data: notoSansJpRegular,
-              weight: 400,
-              style: "normal",
-            },
-            {
-              name: "Noto Sans JP",
-              data: notoSansJpBold,
-              weight: 700,
-              style: "normal",
-            },
-          ],
-        },
-      );
-    } catch {
+    if (!post || (!isDevelopment && post.draft)) {
       return new Response("Blog post not found", { status: 404 });
     }
+
+    const title = post.title || slug;
+    const excerpt = post.excerpt || undefined;
+    const date = post.date || undefined;
+    const tags = post.tags || undefined;
+
+    return new ImageResponse(
+      <BlogOgImage title={title} excerpt={excerpt} date={date} tags={tags} />,
+      {
+        width: 1200,
+        height: 630,
+        fonts: [
+          {
+            name: "Noto Sans JP",
+            data: notoSansJpRegular,
+            weight: 400,
+            style: "normal",
+          },
+          {
+            name: "Noto Sans JP",
+            data: notoSansJpBold,
+            weight: 700,
+            style: "normal",
+          },
+        ],
+      },
+    );
   } catch {
     return new Response("Internal server error", { status: 500 });
   }
