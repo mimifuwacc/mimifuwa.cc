@@ -21,6 +21,7 @@ interface BlogPostWithContent extends BlogPost {
 }
 
 const blogsDir = path.resolve(process.cwd(), "src/contents/blogs");
+const imagesDir = path.resolve(process.cwd(), "public/images");
 const isLocal = process.argv.includes("--local");
 
 async function extractFrontmatter(markdown: string): Promise<BlogPost> {
@@ -81,6 +82,71 @@ async function uploadToR2(key: string, content: string): Promise<void> {
       // 削除に失敗しても無視
     });
   }
+}
+
+// 画像ファイルをR2にアップロード
+async function uploadImageToR2(
+  relativePath: string,
+  fullPath: string,
+): Promise<void> {
+  const localFlag = isLocal ? "--local" : "";
+  const r2Key = `images/${relativePath}`;
+
+  try {
+    const command = `wrangler r2 object put mimifuwacc-blogs/${r2Key} ${localFlag} --file="${fullPath}"`;
+    execSync(command, { encoding: "utf-8" });
+    console.log(`Uploaded image: ${r2Key}`);
+  } catch (error) {
+    console.error(`Failed to upload image ${r2Key}:`, error);
+    throw error;
+  }
+}
+
+// public/images/以下のすべての画像をR2にアップロード
+async function syncImages(): Promise<void> {
+  console.log(`Syncing images from ${imagesDir}...`);
+
+  const imageExtensions = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".webp",
+    ".svg",
+    ".avif",
+  ];
+  const files: Array<{ relativePath: string; fullPath: string }> = [];
+
+  // 再帰的に画像ファイルを検索
+  async function findImageFiles(dir: string, baseRelativePath: string = "") {
+    const items = await fs.promises.readdir(dir, { withFileTypes: true });
+
+    for (const item of items) {
+      const fullPath = path.join(dir, item.name);
+      const relativePath = path.join(baseRelativePath, item.name);
+
+      if (item.isDirectory()) {
+        await findImageFiles(fullPath, relativePath);
+      } else if (item.isFile()) {
+        const ext = item.name.toLowerCase();
+        if (imageExtensions.some((e) => ext.endsWith(e))) {
+          files.push({ relativePath, fullPath });
+        }
+      }
+    }
+  }
+
+  await findImageFiles(imagesDir);
+
+  console.log(`Found ${files.length} image files`);
+
+  for (const { relativePath, fullPath } of files) {
+    // WindowsパスをUnix形式に変換
+    const normalizedPath = relativePath.replace(/\\/g, "/");
+    await uploadImageToR2(normalizedPath, fullPath);
+  }
+
+  console.log("Image sync complete!");
 }
 
 async function insertOrUpdateD1(post: BlogPostWithContent): Promise<void> {
@@ -170,6 +236,9 @@ async function insertOrUpdateD1(post: BlogPostWithContent): Promise<void> {
 }
 
 async function main() {
+  // まず画像を同期
+  await syncImages();
+
   console.log(`Loading markdown files from ${blogsDir}...`);
   const posts = await loadLocalMarkdowns();
   console.log(`Found ${posts.length} posts`);

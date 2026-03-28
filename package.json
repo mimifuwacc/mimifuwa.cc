@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@next/third-parties": "^16.0.3",
-    "@opennextjs/cloudflare": "^1.17.1",
+    "@opennextjs/cloudflare": "^1.18.0",
     "@tailwindcss/postcss": "^4.1.13",
     "@types/unist": "^3.0.3",
     "class-variance-authority": "^0.7.1",

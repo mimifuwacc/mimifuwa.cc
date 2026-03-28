@@ -18,6 +18,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // 画像リクエストをR2配信のAPIに転送
+  async rewrites() {
+    return [
+      {
+        source: "/images/:path*",
+        destination: "/api/images/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

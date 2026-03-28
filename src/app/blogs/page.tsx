@@ -3,6 +3,9 @@ import { type BlogPost, getAllPosts } from "@/lib/blog";
 import { BlogCard } from "../(index)/_components/blogs-section";
 import { Section } from "../(index)/_components/section";
 
+// SSRを強制
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "ブログ - mimifuwa.cc",
   description: "主に趣味について書いています",
