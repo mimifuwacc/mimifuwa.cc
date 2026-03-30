@@ -36,7 +36,7 @@ func (d *D1Client) ExecuteQuery(ctx context.Context, sql string, params []string
 	args := []string{
 		"d1", "execute", d.databaseName,
 		"--local",
-		"--config", "../apps/web/wrangler.jsonc",
+		"--config", "../../apps/web/wrangler.jsonc",
 		"--command", sql,
 		"--json",
 	}
@@ -72,7 +72,7 @@ func (d *D1Client) ExecuteQuery(ctx context.Context, sql string, params []string
 }
 
 // Upsert inserts or updates a blog post
-func (d *WranglerD1Client) Upsert(ctx context.Context, post *entity.BlogPost) error {
+func (d *D1Client) Upsert(ctx context.Context, post *entity.BlogPost) error {
 	sql := `
 		INSERT INTO blog_posts (slug, r2_key, title, excerpt, date, draft, content_hash)
 		VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -114,7 +114,7 @@ func (d *WranglerD1Client) Upsert(ctx context.Context, post *entity.BlogPost) er
 }
 
 // Delete deletes a blog post by slug
-func (d *WranglerD1Client) Delete(ctx context.Context, slug string) error {
+func (d *D1Client) Delete(ctx context.Context, slug string) error {
 	sql := `DELETE FROM blog_posts WHERE slug = ?`
 
 	_, err := d.ExecuteQuery(ctx, sql, []string{slug})
@@ -126,7 +126,7 @@ func (d *WranglerD1Client) Delete(ctx context.Context, slug string) error {
 }
 
 // FindBySlug finds a blog post by slug
-func (d *WranglerD1Client) FindBySlug(ctx context.Context, slug string) (*entity.BlogPost, error) {
+func (d *D1Client) FindBySlug(ctx context.Context, slug string) (*entity.BlogPost, error) {
 	sql := `
 		SELECT
 			id, slug, r2_key, title, excerpt, date, draft, content_hash
@@ -147,7 +147,7 @@ func (d *WranglerD1Client) FindBySlug(ctx context.Context, slug string) (*entity
 }
 
 // FindAll finds all blog posts
-func (d *WranglerD1Client) FindAll(ctx context.Context) ([]*entity.BlogPost, error) {
+func (d *D1Client) FindAll(ctx context.Context) ([]*entity.BlogPost, error) {
 	sql := `
 		SELECT
 			id, slug, r2_key, title, excerpt, date, draft, content_hash
@@ -173,7 +173,7 @@ func (d *WranglerD1Client) FindAll(ctx context.Context) ([]*entity.BlogPost, err
 }
 
 // DeleteTags deletes all tags for a blog post
-func (d *WranglerD1Client) DeleteTags(ctx context.Context, blogPostID int64) error {
+func (d *D1Client) DeleteTags(ctx context.Context, blogPostID int64) error {
 	sql := `DELETE FROM blog_tags WHERE blog_post_id = ?`
 
 	_, err := d.ExecuteQuery(ctx, sql, []string{strconv.FormatInt(blogPostID, 10)})
@@ -185,7 +185,7 @@ func (d *WranglerD1Client) DeleteTags(ctx context.Context, blogPostID int64) err
 }
 
 // rowToBlogPost converts a D1 row to a BlogPost entity
-func (d *WranglerD1Client) rowToBlogPost(row map[string]interface{}) (*entity.BlogPost, error) {
+func (d *D1Client) rowToBlogPost(row map[string]interface{}) (*entity.BlogPost, error) {
 	post := &entity.BlogPost{}
 
 	if v, ok := row["slug"].(string); ok {
@@ -218,7 +218,7 @@ func (d *WranglerD1Client) rowToBlogPost(row map[string]interface{}) (*entity.Bl
 }
 
 // GetIDBySlug returns the database ID for a given slug
-func (d *WranglerD1Client) GetIDBySlug(ctx context.Context, slug string) (int64, error) {
+func (d *D1Client) GetIDBySlug(ctx context.Context, slug string) (int64, error) {
 	sql := `SELECT id FROM blog_posts WHERE slug = ?`
 
 	rows, err := d.ExecuteQuery(ctx, sql, []string{slug})
@@ -238,7 +238,7 @@ func (d *WranglerD1Client) GetIDBySlug(ctx context.Context, slug string) (int64,
 }
 
 // FindOrCreate finds a tag by name or creates it
-func (d *WranglerD1Client) FindOrCreate(ctx context.Context, name string) (*entity.Tag, error) {
+func (d *D1Client) FindOrCreate(ctx context.Context, name string) (*entity.Tag, error) {
 	tag, err := d.FindByName(ctx, name)
 	if err == nil {
 		return tag, nil
@@ -255,7 +255,7 @@ func (d *WranglerD1Client) FindOrCreate(ctx context.Context, name string) (*enti
 }
 
 // FindByName finds a tag by name
-func (d *WranglerD1Client) FindByName(ctx context.Context, name string) (*entity.Tag, error) {
+func (d *D1Client) FindByName(ctx context.Context, name string) (*entity.Tag, error) {
 	sql := `SELECT id, name FROM tags WHERE name = ?`
 
 	rows, err := d.ExecuteQuery(ctx, sql, []string{name})
@@ -271,7 +271,7 @@ func (d *WranglerD1Client) FindByName(ctx context.Context, name string) (*entity
 }
 
 // Create creates a new tag
-func (d *WranglerD1Client) Create(ctx context.Context, tag *entity.Tag) error {
+func (d *D1Client) Create(ctx context.Context, tag *entity.Tag) error {
 	sql := `INSERT INTO tags (name) VALUES (?)`
 
 	result, err := d.ExecuteQuery(ctx, sql, []string{tag.Name})
@@ -289,7 +289,7 @@ func (d *WranglerD1Client) Create(ctx context.Context, tag *entity.Tag) error {
 }
 
 // LinkToBlogPost links a tag to a blog post
-func (d *WranglerD1Client) LinkToBlogPost(ctx context.Context, blogPostID, tagID int64) error {
+func (d *D1Client) LinkToBlogPost(ctx context.Context, blogPostID, tagID int64) error {
 	sql := `
 		INSERT OR IGNORE INTO blog_tags (blog_post_id, tag_id)
 		VALUES (?, ?)
@@ -308,7 +308,7 @@ func (d *WranglerD1Client) LinkToBlogPost(ctx context.Context, blogPostID, tagID
 }
 
 // rowToTag converts a D1 row to a Tag entity
-func (d *WranglerD1Client) rowToTag(row map[string]interface{}) (*entity.Tag, error) {
+func (d *D1Client) rowToTag(row map[string]interface{}) (*entity.Tag, error) {
 	tag := &entity.Tag{}
 
 	if v, ok := row["id"].(float64); ok {

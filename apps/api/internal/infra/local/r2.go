@@ -35,10 +35,10 @@ func (r *R2Client) Upload(ctx context.Context, key string, data []byte, contentT
 	// Upload using wrangler (local mode by default)
 	args := []string{
 		"r2", "object", "put",
-		w.bucketName + "/" + key,
+		r.bucketName + "/" + key,
 		"--file", tmpFile,
 		"--local",
-		"--config", "../apps/web/wrangler.jsonc",
+		"--config", "../../apps/web/wrangler.jsonc",
 	}
 
 	if contentType != "" {
@@ -58,9 +58,9 @@ func (r *R2Client) Upload(ctx context.Context, key string, data []byte, contentT
 func (r *R2Client) Delete(ctx context.Context, key string) error {
 	args := []string{
 		"r2", "object", "delete",
-		w.bucketName + "/" + key,
+		r.bucketName + "/" + key,
 		"--local",
-		"--config", "../apps/web/wrangler.jsonc",
+		"--config", "../../apps/web/wrangler.jsonc",
 	}
 
 	allArgs := append([]string{"pnpm", "exec", "wrangler"}, args...)
@@ -76,9 +76,9 @@ func (r *R2Client) Delete(ctx context.Context, key string) error {
 func (r *R2Client) Exists(ctx context.Context, key string) (bool, error) {
 	args := []string{
 		"r2", "object", "get",
-		w.bucketName + "/" + key,
+		r.bucketName + "/" + key,
 		"--local",
-		"--config", "../apps/web/wrangler.jsonc",
+		"--config", "../../apps/web/wrangler.jsonc",
 	}
 
 	allArgs := append([]string{"pnpm", "exec", "wrangler"}, args...)
@@ -98,9 +98,9 @@ func (r *R2Client) Exists(ctx context.Context, key string) (bool, error) {
 func (r *R2Client) Download(ctx context.Context, key string) ([]byte, string, error) {
 	args := []string{
 		"r2", "object", "get",
-		w.bucketName + "/" + key,
+		r.bucketName + "/" + key,
 		"--local",
-		"--config", "../apps/web/wrangler.jsonc",
+		"--config", "../../apps/web/wrangler.jsonc",
 	}
 
 	output, err := execCommand(ctx, append([]string{"pnpm", "exec", "wrangler"}, args...)...).Output()
@@ -115,10 +115,10 @@ func (r *R2Client) Download(ctx context.Context, key string) ([]byte, string, er
 func (r *R2Client) ListFiles(ctx context.Context, prefix string) ([]string, error) {
 	args := []string{
 		"r2", "object", "list",
-		w.bucketName,
+		r.bucketName,
 		"--prefix", prefix,
 		"--local",
-		"--config", "../apps/web/wrangler.jsonc",
+		"--config", "../../apps/web/wrangler.jsonc",
 	}
 
 	output, err := execCommand(ctx, append([]string{"pnpm", "exec", "wrangler"}, args...)...).Output()
@@ -141,15 +141,15 @@ func (r *R2Client) ListFiles(ctx context.Context, prefix string) ([]string, erro
 
 // DeleteByPrefix deletes all files with a given prefix using wrangler
 func (r *R2Client) DeleteByPrefix(ctx context.Context, prefix string) error {
-	files, err := w.ListFiles(ctx, prefix)
+	files, err := r.ListFiles(ctx, prefix)
 	if err != nil {
 		return err
 	}
 
 	for _, file := range files {
 		// Extract key from full path (bucket/key)
-		key := strings.TrimPrefix(file, w.bucketName+"/")
-		if err := w.Delete(ctx, key); err != nil {
+		key := strings.TrimPrefix(file, r.bucketName+"/")
+		if err := r.Delete(ctx, key); err != nil {
 			return fmt.Errorf("failed to delete %s: %w", key, err)
 		}
 	}
