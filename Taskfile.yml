@@ -1,0 +1,56 @@
+version: "3"
+
+vars:
+  PNPM: pnpm
+
+tasks:
+  default:
+    cmds:
+      - task -l
+
+  # Development
+  dev:
+    desc: Start dev server
+    dir: apps/web
+    cmds:
+      - pnpm dev
+
+  # Database
+  db:migrate:
+    desc: Run migrations (status|up|down|create [name])
+    dir: tools/db
+    cmds:
+      - go run cmd/migrate/main.go {{.CLI_ARGS}}
+
+  # Blog
+  blogs:sync:
+    desc: Sync blog posts
+    dir: apps/api
+    cmds:
+      - go run cmd/blog/main.go sync {{.CLI_ARGS}}
+
+  # Installation
+  install:
+    desc: Install dependencies
+    cmds:
+      - task: install:web
+      - task: install:db
+      - task: install:api
+
+  install:web:
+    desc: Install web dependencies
+    dir: apps/web
+    cmds:
+      - pnpm install
+
+  install:db:
+    desc: Install db dependencies
+    dir: tools/db
+    cmds:
+      - go mod tidy
+
+  install:api:
+    desc: Install api dependencies
+    dir: apps/api
+    cmds:
+      - go mod tidy
