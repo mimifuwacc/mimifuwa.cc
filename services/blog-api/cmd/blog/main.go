@@ -4,11 +4,18 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/mimifuwacc/blog-api/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func main() {
+	// Load .env file from project root
+	if err := godotenv.Load("../../.env"); err != nil {
+		// .env is optional for local mode, only log if verbose
+		_ = err
+	}
+
 	rootCmd := &cobra.Command{
 		Use:   "blog",
 		Short: "Blog sync CLI for Cloudflare R2/D1",
