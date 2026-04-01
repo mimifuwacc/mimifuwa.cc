@@ -1,0 +1,33 @@
+# gqlgen configuration
+# https://gqlgen.com/config/
+
+version: v1
+go:
+  package: graphql
+  omit_gomodfile: true
+
+exec:
+  filename: internal/graphql/generated.go
+  package: graphql
+
+model:
+  filename: internal/graphql/models/generated.go
+  package: models
+
+resolver:
+  layout: follow-schema
+  dir: internal/graphql
+  package: graphql
+
+# Uncomment to use federation
+# federation:
+#   filename: internal/graphql/federation.go
+#   package: graphql
+
+autobind: []
+
+models:
+  Cursor:
+    model: github.com/mimifuwacc/api/internal/graphql/cursor.Cursor
+  Time:
+    model: time.Time

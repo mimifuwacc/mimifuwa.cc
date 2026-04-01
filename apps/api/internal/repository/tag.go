@@ -14,6 +14,9 @@ type TagRepository interface {
 	// FindByName finds a tag by name
 	FindByName(ctx context.Context, name string) (*entity.Tag, error)
 
+	// FindAll finds all tags
+	FindAll(ctx context.Context, limit int) ([]*entity.Tag, error)
+
 	// Create creates a new tag
 	Create(ctx context.Context, tag *entity.Tag) error
 
