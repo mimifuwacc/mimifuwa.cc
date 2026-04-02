@@ -65,3 +65,6 @@ go.work.sum
 !flake.nix
 !flake.lock
 !.envrc
+
+# claude
+.claude/settings.local.json

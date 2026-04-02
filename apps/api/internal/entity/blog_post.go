@@ -4,6 +4,7 @@ import "time"
 
 // BlogPost represents a blog post entity
 type BlogPost struct {
+	ID          int64     `json:"id"`
 	Slug        string    `json:"slug"`
 	R2Key       string    `json:"r2_key"`
 	Title       string    `json:"title"`
@@ -13,6 +14,8 @@ type BlogPost struct {
 	Draft       bool      `json:"draft"`
 	ContentHash string    `json:"content_hash,omitempty"` // SHA256 hash of markdown content
 	Content     string    `json:"content,omitempty"`       // Not stored in D1, only for upload
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // TableName returns the D1 table name for blog posts

@@ -3,6 +3,8 @@ package cursor
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
+	"io"
 	"time"
 )
 
@@ -28,4 +30,37 @@ func Decode(cursor string) (*Cursor, error) {
 	var c Cursor
 	err = json.Unmarshal(b, &c)
 	return &c, err
+}
+
+// MarshalGQL implements graphql.Marshaler for Cursor scalar
+func (c Cursor) MarshalGQL(w io.Writer) {
+	b, _ := json.Marshal(c)
+	encoded := base64.URLEncoding.EncodeToString(b)
+	w.Write([]byte(fmt.Sprintf("%q", encoded)))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler for Cursor scalar
+func (c *Cursor) UnmarshalGQL(v interface{}) error {
+	var str string
+	switch s := v.(type) {
+	case string:
+		str = s
+	case []byte:
+		str = string(s)
+	default:
+		return fmt.Errorf("invalid cursor type: %T", v)
+	}
+
+	b, err := base64.URLEncoding.DecodeString(str)
+	if err != nil {
+		return fmt.Errorf("invalid cursor encoding: %w", err)
+	}
+
+	var parsed Cursor
+	if err := json.Unmarshal(b, &parsed); err != nil {
+		return fmt.Errorf("invalid cursor JSON: %w", err)
+	}
+
+	*c = parsed
+	return nil
 }

@@ -94,8 +94,8 @@ func (r *R2Client) Exists(ctx context.Context, key string) (bool, error) {
 	return true, nil
 }
 
-// Download downloads a file from R2 using wrangler
-func (r *R2Client) Download(ctx context.Context, key string) ([]byte, string, error) {
+// Download downloads a file from R2 using wrangler (implements StorageRepository)
+func (r *R2Client) Download(ctx context.Context, key string) ([]byte, error) {
 	args := []string{
 		"r2", "object", "get",
 		r.bucketName + "/" + key,
@@ -105,10 +105,10 @@ func (r *R2Client) Download(ctx context.Context, key string) ([]byte, string, er
 
 	output, err := execCommand(ctx, append([]string{"pnpm", "exec", "wrangler"}, args...)...).Output()
 	if err != nil {
-		return nil, "", fmt.Errorf("failed to download %s: %w", key, err)
+		return nil, fmt.Errorf("failed to download %s: %w", key, err)
 	}
 
-	return output, "", nil
+	return output, nil
 }
 
 // ListFiles lists files in R2 with a given prefix using wrangler

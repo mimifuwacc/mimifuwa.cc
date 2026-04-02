@@ -12,4 +12,7 @@ type StorageRepository interface {
 
 	// Exists checks if a file exists in storage
 	Exists(ctx context.Context, key string) (bool, error)
+
+	// Download downloads a file from storage
+	Download(ctx context.Context, key string) ([]byte, error)
 }

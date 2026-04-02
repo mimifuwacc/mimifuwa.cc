@@ -51,4 +51,7 @@ type BlogPostRepository interface {
 
 	// DeleteTags deletes all tags for a blog post
 	DeleteTags(ctx context.Context, blogPostID int64) error
+
+	// GetIDBySlug returns the database ID for a given slug
+	GetIDBySlug(ctx context.Context, slug string) (int64, error)
 }

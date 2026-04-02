@@ -119,10 +119,10 @@ func (r *R2Client) Exists(ctx context.Context, key string) (bool, error) {
 	return true, nil
 }
 
-// Download downloads a file from R2
-func (r *R2Client) Download(ctx context.Context, key string) ([]byte, string, error) {
+// Download downloads a file from R2 (implements StorageRepository)
+func (r *R2Client) Download(ctx context.Context, key string) ([]byte, error) {
 	if key == "" {
-		return nil, "", fmt.Errorf("key is required")
+		return nil, fmt.Errorf("key is required")
 	}
 
 	resp, err := r.client.GetObject(ctx, &s3.GetObjectInput{
@@ -130,21 +130,16 @@ func (r *R2Client) Download(ctx context.Context, key string) ([]byte, string, er
 		Key:    aws.String(key),
 	})
 	if err != nil {
-		return nil, "", fmt.Errorf("failed to download %s: %w", key, err)
+		return nil, fmt.Errorf("failed to download %s: %w", key, err)
 	}
 	defer resp.Body.Close()
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, "", fmt.Errorf("failed to read body: %w", err)
+		return nil, fmt.Errorf("failed to read body: %w", err)
 	}
 
-	contentType := ""
-	if resp.ContentType != nil {
-		contentType = *resp.ContentType
-	}
-
-	return data, contentType, nil
+	return data, nil
 }
 
 // ListFiles lists files in R2 with a given prefix
