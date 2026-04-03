@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/blog";
 import { currentUrl } from "@/lib/url";
 import { Section } from "../../(index)/_components/section";
+import { ContentHydrator } from "@/components/content-hydrator";
 
 // 動的レンダリングを強制（SSR）
 export const dynamic = "force-dynamic";
@@ -163,11 +164,14 @@ export default async function Page(props: {
           </header>
 
           {/* 記事本文 */}
-          <article
-            className="prose-custom max-w-4xl mx-auto"
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: サーバーサイドで生成された信頼できるHTML
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
+          <div className="relative">
+            <article
+              className="prose-custom max-w-4xl mx-auto"
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: サーバーサイドで生成された信頼できるHTML
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+            />
+            <ContentHydrator />
+          </div>
         </div>
       </div>
     );
