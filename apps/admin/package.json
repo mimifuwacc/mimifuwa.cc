@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack --port 3002",
-    "build": "pnpm exec opennextjs-cloudflare build",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "postinstall": "pnpm cf:typegen"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.18.0",
