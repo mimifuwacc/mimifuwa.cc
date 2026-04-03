@@ -1,5 +1,6 @@
 import { client } from '@/lib/graphql/client'
-import { GET_POSTS, DELETE_POST } from '@/lib/graphql/queries'
+import { GET_POSTS } from '@/lib/graphql/queries'
+import { DeleteButton } from './delete-button'
 
 async function getPosts() {
   try {
@@ -85,17 +86,7 @@ export default async function HomePage() {
                   >
                     Edit
                   </a>
-                  <form
-                    action={async () => {
-                      'use server'
-                      await client.request(DELETE_POST, { slug: edge.node.slug })
-                    }}
-                    className="inline"
-                  >
-                    <button type="submit" className="text-red-600 hover:text-red-800">
-                      Delete
-                    </button>
-                  </form>
+                  <DeleteButton slug={edge.node.slug} />
                 </td>
               </tr>
             ))}
