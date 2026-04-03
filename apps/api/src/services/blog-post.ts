@@ -261,13 +261,21 @@ export class BlogPostService {
   // Encode cursor for pagination
   private encodeCursor(id: number, date: Date): string {
     const data = { id, timestamp: date.getTime() }
-    return Buffer.from(JSON.stringify(data)).toString('base64')
+    const encoder = new TextEncoder()
+    const encoded = encoder.encode(JSON.stringify(data))
+    return btoa(String.fromCharCode(...encoded))
   }
 
   // Decode cursor
   decodeCursor(cursor: string): { id: number; timestamp: number } | null {
     try {
-      const data = JSON.parse(Buffer.from(cursor, 'base64').toString())
+      const binaryString = atob(cursor)
+      const bytes = new Uint8Array(binaryString.length)
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      const decoder = new TextDecoder()
+      const data = JSON.parse(decoder.decode(bytes))
       return { id: Number(data.id), timestamp: Number(data.timestamp) }
     } catch {
       return null
