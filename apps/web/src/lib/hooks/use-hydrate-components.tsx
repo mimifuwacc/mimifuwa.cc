@@ -1,8 +1,8 @@
 "use client";
 
+import type { ReactElement } from "react";
 import { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import type { ReactElement } from "react";
 
 interface ComponentMap {
   [key: string]: React.ComponentType<any>;

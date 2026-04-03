@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import { ContentHydrator } from "@/components/content-hydrator";
 import { getPostBySlug } from "@/lib/blog";
 import { currentUrl } from "@/lib/url";
 import { Section } from "../../(index)/_components/section";
-import { ContentHydrator } from "@/components/content-hydrator";
 
 // 動的レンダリングを強制（SSR）
 export const dynamic = "force-dynamic";
