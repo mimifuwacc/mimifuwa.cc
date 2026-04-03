@@ -6,6 +6,8 @@
     "commitlint": "commitlint"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.9",
+    "@chromatic-com/storybook": "^4.1.1",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/format": "^19.8.1",
