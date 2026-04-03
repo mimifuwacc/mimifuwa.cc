@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "mimifuwacc-admin-devel",
+  "compatibility_date": "2026-03-20",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "mimifuwacc-admin-devel"
+    }
+  ],
+  "vars": {
+    "GRAPHQL_URL": "https://mimifuwacc-api-devel.mimifuwa.cc/graphql"
+  }
+}

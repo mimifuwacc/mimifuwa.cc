@@ -88,10 +88,10 @@ jobs:
 
       - name: Build admin
         working-directory: apps/admin
-        run: pnpm build
+        run: pnpm exec opennextjs-cloudflare build
 
       - name: Deploy admin to Cloudflare
-        run: npx wrangler deploy --config wrangler.devel.toml
+        run: npx wrangler deploy --config wrangler.devel.jsonc
         working-directory: apps/admin
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
