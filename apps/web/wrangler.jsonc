@@ -26,5 +26,10 @@
       "binding": "BLOGS",
       "bucket_name": "mimifuwacc-blogs"
     }
-  ]
+  ],
+  "envs": {
+    "devel": {
+      "name": "mimifuwacc-devel"
+    }
+  }
 }
