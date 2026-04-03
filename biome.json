@@ -33,6 +33,9 @@
       "react": "recommended"
     }
   },
+  "javascript": {
+    "globals": ["React"]
+  },
   "assist": {
     "actions": {
       "source": {

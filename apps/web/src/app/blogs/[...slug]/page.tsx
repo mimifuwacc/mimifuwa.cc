@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/blog";
-import parser from "@/lib/parser";
 import { currentUrl } from "@/lib/url";
 import { Section } from "../../(index)/_components/section";
 
@@ -83,8 +82,8 @@ export default async function Page(props: {
     const date = post.date || "";
     const tags = post.tags || [];
 
-    // Parserでfrontmatterを除去したコンテンツを取得
-    const parsed = await parser(post.content);
+    // post.contentは既にHTML文字列（R2から取得済み）
+    const htmlContent = post.content || "";
 
     const formatDate = (dateString: string) => {
       try {
@@ -166,9 +165,11 @@ export default async function Page(props: {
           </header>
 
           {/* 記事本文 */}
-          <article className="prose-custom max-w-4xl mx-auto">
-            {parsed.content}
-          </article>
+          <article
+            className="prose-custom max-w-4xl mx-auto"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: サーバーサイドで生成された信頼できるHTML
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
+          />
         </div>
       </div>
     );
