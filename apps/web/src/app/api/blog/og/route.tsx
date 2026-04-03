@@ -169,7 +169,7 @@ export async function GET(request: NextRequest) {
     // ブログ記事のデータをR2/D1から取得
     const post = await getPostBySlug(slug);
 
-    if (!post || (!isDevelopment && post.draft)) {
+    if (!post) {
       return new Response("Blog post not found", { status: 404 });
     }
 
