@@ -7,8 +7,6 @@ import { Section } from "../../(index)/_components/section";
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
 
-const isDevelopment = process.env.NODE_ENV === "development";
-
 export async function generateMetadata({
   params,
 }: {
@@ -21,7 +19,7 @@ export async function generateMetadata({
   try {
     const post = await getPostBySlug(slugPath);
 
-    if (!post || (!isDevelopment && post.draft)) {
+    if (!post) {
       return {
         title: `${slugPath} - mimifuwa.cc`,
         description: "ブログ記事",
@@ -74,8 +72,8 @@ export default async function Page(props: {
   try {
     const post = await getPostBySlug(slugPath);
 
-    if (!post || (!isDevelopment && post.draft)) {
-      throw new Error("Draft post or not found");
+    if (!post) {
+      throw new Error("Post not found");
     }
 
     const title = post.title || slugPath;

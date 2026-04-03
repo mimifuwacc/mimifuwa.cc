@@ -10,6 +10,7 @@ interface Post {
   title: string
   excerpt: string
   content: string
+  markdown: string
   date: string
   draft: boolean
   tags: Array<{ id: string; name: string }>
@@ -105,7 +106,7 @@ export function PostForm({ post }: PostFormProps) {
           <textarea
             name="content"
             id="content"
-            defaultValue={post.content}
+            defaultValue={post.markdown || post.content}
             rows={15}
             required
             disabled={isSubmitting || isDeleting}

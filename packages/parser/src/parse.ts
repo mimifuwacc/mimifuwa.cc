@@ -1,4 +1,5 @@
 import rehypeHighlight from "rehype-highlight";
+import rehypeStringify from "rehype-stringify";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
@@ -9,14 +10,13 @@ import { matter } from "vfile-matter";
 import rehypeLinkCard from "./plugins/rehype-link-card";
 import rehypeInfoCard from "./plugins/rehype-info-card";
 import rehypeSplitTaskLists from "./plugins/rehype-split-task-lists";
-import { hastToHtml } from "./serialize";
 
 export interface ParsedResult {
   frontmatter: Record<string, unknown>;
 }
 
 /**
- * MarkdownをHTMLにパースする（Hastノード→HTML）
+ * MarkdownをHTMLにパースする（Workers対応）
  */
 export async function parseToHtml(markdown: string): Promise<{
   html: string;
@@ -29,16 +29,14 @@ export async function parseToHtml(markdown: string): Promise<{
     .use(remarkRehype)
     .use(rehypeHighlight)
     .use(rehypeCustom)
+    .use(rehypeStringify)
     .process(markdown);
 
   matter(file);
   const frontmatter = file.data.matter || {};
 
-  // HastノードをHTMLに変換
-  const html = await hastToHtml(file.result);
-
   return {
-    html,
+    html: String(file.value),
     frontmatter,
   };
 }
@@ -68,7 +66,7 @@ export async function parseToReact(markdown: string): Promise<{
   const frontmatter = file.data.matter || {};
 
   return {
-    content: file.result,
+    content: file.value,
     frontmatter,
   };
 }

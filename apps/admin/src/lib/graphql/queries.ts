@@ -36,6 +36,7 @@ export const GET_POST = `
       title
       excerpt
       content
+      markdown
       date
       draft
       tags {

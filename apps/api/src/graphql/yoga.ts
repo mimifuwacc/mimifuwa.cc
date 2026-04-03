@@ -31,6 +31,7 @@ const typeDefs = /* GraphQL */ `
     title: String!
     excerpt: String!
     content: String!
+    markdown: String
     date: Time!
     tags: [Tag!]!
     draft: Boolean!
@@ -126,11 +127,15 @@ const resolvers: Resolvers = {
         }
       }
 
-      if (content) {
-        post.content = content
-      }
+      // Load Markdown from R2 for editing
+      const markdown = await r2Service.downloadMarkdown(slug) || ''
 
-      return post
+      // Ensure content is always a string (never undefined)
+      return {
+        ...post,
+        content: content || '',
+        markdown,
+      }
     },
 
     blogPosts: async (

@@ -1,5 +1,5 @@
 {
-  "name": "mimifuwa.cc",
+  "name": "@mimifuwacc/monorepo",
   "private": true,
   "scripts": {
     "dev": "pnpm -r dev",
