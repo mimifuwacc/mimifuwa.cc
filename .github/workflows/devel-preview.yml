@@ -61,7 +61,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Deploy API to Cloudflare
-        run: npx wrangler deploy --env devel --config wrangler.toml
+        run: npx wrangler deploy --env devel
         working-directory: apps/api
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -91,7 +91,7 @@ jobs:
         run: pnpm build
 
       - name: Deploy admin to Cloudflare
-        run: npx wrangler deploy --env devel --config wrangler.toml
+        run: npx wrangler deploy --config wrangler.devel.toml
         working-directory: apps/admin
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
