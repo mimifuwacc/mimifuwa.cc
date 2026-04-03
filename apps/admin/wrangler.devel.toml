@@ -1,8 +1,10 @@
 name = "mimifuwacc-admin-devel"
 compatibility_date = "2024-01-01"
 
+main = ".next/server/app.js"
+
 [assets]
-directory = ".next"
+directory = ".next/static"
 binding = "ASSETS"
 
 [vars]
