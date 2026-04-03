@@ -9,7 +9,9 @@ export const GET_POSTS = `
           excerpt
           date
           draft
-          tags
+          tags {
+            name
+          }
         }
       }
       pageInfo {
@@ -29,7 +31,9 @@ export const GET_POST = `
       content
       date
       draft
-      tags
+      tags {
+        name
+      }
     }
   }
 `;

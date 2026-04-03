@@ -1,5 +1,5 @@
 import { client } from "./graphql/client";
-import { GET_POSTS, GET_POST, GET_ALL_SLUGS } from "./graphql/queries";
+import { GET_ALL_SLUGS, GET_POST, GET_POSTS } from "./graphql/queries";
 
 // 開発環境かどうかを判定
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -58,7 +58,7 @@ interface BlogPostsResponse {
         excerpt: string;
         date: string;
         draft: boolean;
-        tags: string[];
+        tags: Array<{ name: string }>;
       };
     }>;
     pageInfo: {
@@ -76,7 +76,7 @@ interface BlogPostResponse {
     content: string;
     date: string;
     draft: boolean;
-    tags: string[];
+    tags: Array<{ name: string }>;
   } | null;
 }
 
@@ -103,7 +103,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
     title: edge.node.title,
     date: edge.node.date,
     excerpt: edge.node.excerpt,
-    tags: edge.node.tags,
+    tags: edge.node.tags.map((t) => t.name),
     draft: edge.node.draft,
   }));
 }
@@ -134,7 +134,7 @@ export async function getPostBySlug(
     title: post.title,
     date: post.date,
     excerpt: post.excerpt,
-    tags: post.tags,
+    tags: post.tags.map((t) => t.name),
     draft: post.draft,
     content: post.content,
   };
