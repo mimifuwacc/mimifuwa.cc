@@ -4,6 +4,7 @@ import { Context } from '../types'
 import { BlogPostService } from '../services/blog-post'
 import { R2Service } from '../services/r2'
 import { createDB } from '../db'
+import { parseToHtml } from '@mimifuwacc/parser'
 import type { Env } from '../types'
 
 const typeDefs = /* GraphQL */ `
@@ -114,10 +115,10 @@ const resolvers: Resolvers = {
       const post = await blogService.findBySlug(slug)
       if (!post) return null
 
-      // Load content from R2
-      const content = await r2Service.downloadContent(post.r2Key)
-      if (content) {
-        post.content = content
+      // Load HTML content from R2
+      const html = await r2Service.downloadHtml(slug)
+      if (html) {
+        post.content = html
       }
 
       return post
@@ -168,7 +169,11 @@ const resolvers: Resolvers = {
         const contentHash = await r2Service.generateContentHash(input.content)
         const r2Key = `posts/${input.slug}.md`
 
-        await r2Service.uploadContent(r2Key, input.content)
+        // Parse Markdown to HTML
+        const { html } = await parseToHtml(input.content)
+
+        // Upload both Markdown and HTML to R2
+        await r2Service.uploadPostContent(input.slug, input.content, html)
 
         const postId = await blogService.upsert({
           slug: input.slug,
@@ -224,7 +229,10 @@ const resolvers: Resolvers = {
         const contentHash = input.content ? await r2Service.generateContentHash(input.content) : existing.contentHash
 
         if (input.content) {
-          await r2Service.uploadContent(existing.r2Key, input.content)
+          // Parse Markdown to HTML
+          const { html } = await parseToHtml(input.content)
+          // Upload both Markdown and HTML to R2
+          await r2Service.uploadPostContent(input.slug, input.content, html)
         }
 
         const postId = await blogService.upsert({
@@ -276,7 +284,8 @@ const resolvers: Resolvers = {
           }
         }
 
-        await r2Service.deleteContent(post.r2Key)
+        // Delete both Markdown and HTML from R2
+        await r2Service.deletePostContent(slug)
         await blogService.delete(slug)
 
         return {
