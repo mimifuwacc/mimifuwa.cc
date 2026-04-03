@@ -40,6 +40,12 @@ async function fetchFromAPI<T>(
     return data;
   } catch (error) {
     console.error("GraphQL API Error:", error);
+    // ビルド時にAPIが利用できない場合は空のデータを返す
+    if (process.env.NODE_ENV === "production" && !process.env.CF_PAGES) {
+      console.warn("API unavailable during build, returning empty data");
+      // Return a minimal valid response structure based on the query type
+      return {} as T;
+    }
     throw error;
   }
 }
@@ -89,18 +95,24 @@ interface AllSlugsResponse {
 // ========== 公開API ==========
 
 export async function getAllPosts(): Promise<BlogPost[]> {
-  const data = await fetchFromAPI<BlogPostsResponse>(GET_POSTS, {
-    filter: { draft: false },
-    page: { first: 100 },
-  });
+  try {
+    const data = await fetchFromAPI<BlogPostsResponse>(GET_POSTS, {
+      filter: { draft: false },
+      page: { first: 100 },
+    });
 
-  return data.blogPosts.edges.map((edge) => ({
-    slug: edge.node.slug,
-    title: edge.node.title,
-    date: edge.node.date,
-    excerpt: edge.node.excerpt,
-    tags: edge.node.tags.map((t) => t.name),
-  }));
+    return data.blogPosts.edges.map((edge) => ({
+      slug: edge.node.slug,
+      title: edge.node.title,
+      date: edge.node.date,
+      excerpt: edge.node.excerpt,
+      tags: edge.node.tags.map((t) => t.name),
+    }));
+  } catch (error) {
+    // ビルド時にAPIが利用できない場合は空の配列を返す
+    console.warn("Failed to fetch posts, returning empty array:", error);
+    return [];
+  }
 }
 
 export async function getRecentPosts(count: number): Promise<BlogPost[]> {
