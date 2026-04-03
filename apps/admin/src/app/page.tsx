@@ -10,8 +10,19 @@ async function getPosts() {
     })
     return data
   } catch (error) {
-    console.error('Failed to fetch posts:', error)
-    return null
+    // Return empty data during build/offline instead of throwing
+    return {
+      blogPosts: {
+        edges: [],
+        pageInfo: {
+          totalCount: 0,
+          hasNextPage: false,
+          hasPreviousPage: false,
+          startCursor: null,
+          endCursor: null,
+        },
+      },
+    }
   }
 }
 
