@@ -346,11 +346,6 @@ export function createYogaServer() {
     schema: createSchema({ typeDefs, resolvers }),
     graphqlEndpoint: '/graphql',
     landingPage: false,
-    cors: {
-      origin: ['http://localhost:3000', 'http://localhost:3001', 'https://mimifuwacc-admin-devel.mimifuwacc.workers.dev'],
-      credentials: true,
-      allowedHeaders: ['Content-Type', 'Authorization'],
-      methods: ['POST', 'GET', 'OPTIONS'],
-    },
+    cors: false, // Disable CORS in Yoga, let Hono handle it
   })
 }
