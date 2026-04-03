@@ -13,7 +13,6 @@ import (
 	"github.com/mimifuwacc/api/internal/entity"
 	"github.com/mimifuwacc/api/internal/graphql/cursor"
 	"github.com/mimifuwacc/api/internal/graphql/models"
-	"github.com/mimifuwacc/api/internal/graphql/scalar"
 	"github.com/mimifuwacc/api/internal/repository"
 )
 
@@ -402,9 +401,14 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 
-// Helper functions
-
-func entityToModelPost(post *entity.BlogPost) *models.BlogPost {
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+/*
+	func entityToModelPost(post *entity.BlogPost) *models.BlogPost {
 	tags := make([]*models.Tag, len(post.Tags))
 	for i, tagName := range post.Tags {
 		tags[i] = &models.Tag{
@@ -433,3 +437,4 @@ func entityToModelPost(post *entity.BlogPost) *models.BlogPost {
 		UpdatedAt:   scalar.FromTime(post.UpdatedAt),
 	}
 }
+*/

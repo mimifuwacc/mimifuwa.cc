@@ -130,7 +130,7 @@ func (d *D1Client) Delete(ctx context.Context, slug string) error {
 func (d *D1Client) FindBySlug(ctx context.Context, slug string) (*entity.BlogPost, error) {
 	sql := `
 		SELECT
-			id, slug, r2_key, title, excerpt, date, draft, content_hash
+			id, slug, r2_key, title, excerpt, date, draft, content_hash, created_at, updated_at
 		FROM blog_posts
 		WHERE slug = ?
 	`
@@ -151,7 +151,7 @@ func (d *D1Client) FindBySlug(ctx context.Context, slug string) (*entity.BlogPos
 func (d *D1Client) FindAll(ctx context.Context) ([]*entity.BlogPost, error) {
 	sql := `
 		SELECT
-			id, slug, r2_key, title, excerpt, date, draft, content_hash
+			id, slug, r2_key, title, excerpt, date, draft, content_hash, created_at, updated_at
 		FROM blog_posts
 		ORDER BY date DESC
 	`
@@ -189,6 +189,9 @@ func (d *D1Client) DeleteTags(ctx context.Context, blogPostID int64) error {
 func (d *D1Client) rowToBlogPost(row map[string]interface{}) (*entity.BlogPost, error) {
 	post := &entity.BlogPost{}
 
+	if v, ok := row["id"].(float64); ok {
+		post.ID = int64(v)
+	}
 	if v, ok := row["slug"].(string); ok {
 		post.Slug = v
 	}
@@ -213,6 +216,16 @@ func (d *D1Client) rowToBlogPost(row map[string]interface{}) (*entity.BlogPost, 
 	}
 	if v, ok := row["content_hash"].(string); ok {
 		post.ContentHash = v
+	}
+	if v, ok := row["created_at"].(float64); ok {
+		post.CreatedAt = time.Unix(int64(v), 0)
+	} else {
+		post.CreatedAt = time.Now()
+	}
+	if v, ok := row["updated_at"].(float64); ok {
+		post.UpdatedAt = time.Unix(int64(v), 0)
+	} else {
+		post.UpdatedAt = time.Now()
 	}
 
 	return post, nil
@@ -375,7 +388,7 @@ func (d *D1Client) FindWithPagination(ctx context.Context, filter repository.Blo
 
 	sql := fmt.Sprintf(`
 		SELECT
-			id, slug, r2_key, title, excerpt, date, draft, content_hash
+			id, slug, r2_key, title, excerpt, date, draft, content_hash, created_at, updated_at
 		FROM blog_posts
 		%s
 		ORDER BY date DESC
