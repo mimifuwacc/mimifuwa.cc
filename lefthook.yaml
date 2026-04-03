@@ -7,16 +7,16 @@ commit-msg:
 pre-commit:
   commands:
     lint:
-      run: pnpm run lint --fix
+      run: cd apps/web && pnpm lint --fix
     format:
-      run: pnpm run format
+      run: cd apps/web && pnpm format
     git-update:
       run: git update-index --again
 
 pre-push:
   commands:
     typecheck:
-      run: pnpm run typecheck
+      run: cd apps/web && pnpm typecheck
     prevent-direct-push:
       run: |
         current_branch=$(git rev-parse --abbrev-ref HEAD)
