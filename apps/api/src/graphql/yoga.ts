@@ -347,7 +347,7 @@ export function createYogaServer() {
     graphqlEndpoint: '/graphql',
     landingPage: false,
     cors: {
-      origin: ['http://localhost:3000', 'http://localhost:3001'],
+      origin: ['http://localhost:3000', 'http://localhost:3001', 'https://mimifuwacc-admin-devel.mimifuwacc.workers.dev'],
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization'],
       methods: ['POST', 'GET', 'OPTIONS'],
