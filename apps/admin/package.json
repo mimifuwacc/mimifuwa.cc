@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.18.0",
     "graphql": "^16.13.2",
     "graphql-request": "^7.4.0",
     "next": "16.2.1",
