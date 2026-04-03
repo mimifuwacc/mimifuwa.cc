@@ -132,7 +132,7 @@ export class BlogPostService {
           r2Key: data.r2Key,
           title: data.title,
           excerpt: data.excerpt,
-          date: data.date,
+          date: data.date.toISOString(),
           draft: data.draft,
           contentHash: data.contentHash,
           updatedAt: new Date(),
@@ -149,7 +149,7 @@ export class BlogPostService {
           r2Key: data.r2Key,
           title: data.title,
           excerpt: data.excerpt,
-          date: data.date,
+          date: data.date.toISOString(),
           draft: data.draft,
           contentHash: data.contentHash,
         })

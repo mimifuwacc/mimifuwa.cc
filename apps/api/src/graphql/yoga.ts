@@ -232,7 +232,7 @@ const resolvers: Resolvers = {
           r2Key: existing.r2Key,
           title: input.title ?? existing.title,
           excerpt: input.excerpt ?? existing.excerpt,
-          date: input.date ?? existing.date,
+          date: input.date ?? new Date(existing.date),
           draft: input.draft ?? existing.draft,
           contentHash,
         })
