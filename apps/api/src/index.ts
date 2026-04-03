@@ -28,7 +28,12 @@ app.use('/graphql/*', async (c) => {
       request: c.req.raw,
     } as Context
   )
-  return response.body
+
+  // Return the response properly
+  return new Response(response.body, {
+    status: response.status,
+    headers: Object.fromEntries(response.headers.entries()),
+  })
 })
 
 export default app

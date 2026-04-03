@@ -1,5 +1,4 @@
 import { createYoga, createSchema } from 'graphql-yoga'
-import { Resolvers } from './generated/graphql'
 import { TimeScalar, CursorScalar } from './scalars'
 import { Context } from '../types'
 import { BlogPostService } from '../services/blog-post'
@@ -324,5 +323,11 @@ export function createYogaServer() {
     schema: createSchema({ typeDefs, resolvers }),
     graphqlEndpoint: '/graphql',
     landingPage: false,
+    cors: {
+      origin: ['http://localhost:3000', 'http://localhost:3001'],
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      methods: ['POST', 'GET', 'OPTIONS'],
+    },
   })
 }
