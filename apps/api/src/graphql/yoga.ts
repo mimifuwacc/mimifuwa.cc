@@ -115,10 +115,19 @@ const resolvers: Resolvers = {
       const post = await blogService.findBySlug(slug)
       if (!post) return null
 
-      // Load HTML content from R2
-      const html = await r2Service.downloadHtml(slug)
-      if (html) {
-        post.content = html
+      // Load HTML content from R2, fallback to Markdown
+      let content = await r2Service.downloadHtml(slug)
+      if (!content) {
+        // HTMLが存在しない場合はMarkdownを取得してパース（既存記事の移行用）
+        const markdown = await r2Service.downloadMarkdown(slug)
+        if (markdown) {
+          const { html } = await parseToHtml(markdown)
+          content = html
+        }
+      }
+
+      if (content) {
+        post.content = content
       }
 
       return post
