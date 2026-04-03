@@ -17,3 +17,7 @@ bucket_name = "mimifuwacc-blogs"
 # Environment variables
 [vars]
 ENVIRONMENT = "production"
+
+# Devel preview environment
+[env.devel]
+name = "mimifuwacc-api-devel"
