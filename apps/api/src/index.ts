@@ -27,7 +27,7 @@ app.use('/graphql/*', async (c) => {
       env: c.env,
       request: c.req.raw,
     } as Context
-  )
+  ) as unknown as Response
 
   // Return the response properly
   return new Response(response.body, {

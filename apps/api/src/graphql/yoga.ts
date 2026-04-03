@@ -103,7 +103,7 @@ const typeDefs = /* GraphQL */ `
   }
 `
 
-const resolvers: Resolvers = {
+const resolvers = {
   Time: TimeScalar,
   Cursor: CursorScalar,
 
@@ -111,7 +111,7 @@ const resolvers: Resolvers = {
     blogPost: async (_: unknown, { slug }: { slug: string }, context: Context) => {
       const db = createDB(context.env)
       const blogService = new BlogPostService(db)
-      const r2Service = new R2Service(context.env.R2)
+      const r2Service = new R2Service(context.env.R2 as any)
 
       const post = await blogService.findBySlug(slug)
       if (!post) return null
@@ -177,7 +177,7 @@ const resolvers: Resolvers = {
     ) => {
       const db = createDB(context.env)
       const blogService = new BlogPostService(db)
-      const r2Service = new R2Service(context.env.R2)
+      const r2Service = new R2Service(context.env.R2 as any)
 
       try {
         const contentHash = await r2Service.generateContentHash(input.content)
@@ -228,7 +228,7 @@ const resolvers: Resolvers = {
     ) => {
       const db = createDB(context.env)
       const blogService = new BlogPostService(db)
-      const r2Service = new R2Service(context.env.R2)
+      const r2Service = new R2Service(context.env.R2 as any)
 
       try {
         const existing = await blogService.findBySlug(input.slug)
@@ -286,7 +286,7 @@ const resolvers: Resolvers = {
     deleteBlogPost: async (_: unknown, { slug }: { slug: string }, context: Context) => {
       const db = createDB(context.env)
       const blogService = new BlogPostService(db)
-      const r2Service = new R2Service(context.env.R2)
+      const r2Service = new R2Service(context.env.R2 as any)
 
       try {
         const post = await blogService.findBySlug(slug)

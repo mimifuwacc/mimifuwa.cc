@@ -85,7 +85,10 @@ export class BlogPostService {
 
     // Build edges with cursors
     const edges: BlogPostEdge[] = posts.map((post) => ({
-      node: post,
+      node: {
+        ...post,
+        date: new Date(post.date) as Date, // Convert string to Date
+      },
       cursor: this.encodeCursor(post.id, post.createdAt),
     }))
 
