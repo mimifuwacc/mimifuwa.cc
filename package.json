@@ -2,6 +2,7 @@
   "name": "mimifuwa.cc",
   "private": true,
   "scripts": {
+    "dev": "pnpm -r dev",
     "commitlint": "commitlint"
   },
   "devDependencies": {

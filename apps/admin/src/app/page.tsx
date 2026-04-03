@@ -52,7 +52,7 @@ export default async function HomePage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
-            {edges.map((edge: { node: { id: string; slug: string; title: string; draft: boolean; date: string; tags: string[] } }) => (
+            {edges.map((edge: { node: { id: string; slug: string; title: string; draft: boolean; date: string; tags: Array<{ id: string; name: string }> } }) => (
               <tr key={edge.node.id} className="hover:bg-slate-50">
                 <td className="px-4 py-3">
                   <a href={`/${edge.node.slug}/edit`} className="font-medium text-blue-600 hover:text-blue-800">
@@ -73,8 +73,8 @@ export default async function HomePage() {
                 <td className="px-4 py-3">
                   <div className="flex gap-1 flex-wrap">
                     {edge.node.tags.map((tag) => (
-                      <span key={tag} className="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded">
-                        {tag}
+                      <span key={tag.id} className="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded">
+                        {tag.name}
                       </span>
                     ))}
                   </div>

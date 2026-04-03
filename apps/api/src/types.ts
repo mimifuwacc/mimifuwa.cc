@@ -7,7 +7,7 @@ export interface BlogPost {
   excerpt: string
   content: string
   date: Date
-  tags: string[]
+  tags: Tag[]
   draft: boolean
   contentHash: string | null
   createdAt: Date

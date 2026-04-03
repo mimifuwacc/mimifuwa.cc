@@ -12,7 +12,7 @@ interface Post {
   content: string
   date: string
   draft: boolean
-  tags: string[]
+  tags: Array<{ id: string; name: string }>
 }
 
 interface PostFormProps {
@@ -121,7 +121,7 @@ export function PostForm({ post }: PostFormProps) {
             type="text"
             name="tags"
             id="tags"
-            defaultValue={post.tags.join(', ')}
+            defaultValue={post.tags.map((t) => t.name).join(', ')}
             placeholder="tech, javascript, web"
             disabled={isSubmitting || isDeleting}
             className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"

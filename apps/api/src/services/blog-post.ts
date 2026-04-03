@@ -7,7 +7,7 @@ export class BlogPostService {
   constructor(private db: DB) {}
 
   // Find a blog post by slug
-  async findBySlug(slug: string): Promise<(BlogPost & { tags: string[]; content: string }) | null> {
+  async findBySlug(slug: string): Promise<(BlogPost & { tags: Tag[]; content: string }) | null> {
     const result = await this.db
       .select({
         id: blogPosts.id,
@@ -28,12 +28,12 @@ export class BlogPostService {
     if (!result[0]) return null
 
     const post = result[0]
-    const tagNames = await this.getTagsByPostId(post.id)
+    const postTags = await this.getTagsByPostId(post.id)
 
     return {
       ...post,
       content: '', // Loaded from R2 separately
-      tags: tagNames,
+      tags: postTags,
     }
   }
 
@@ -74,11 +74,11 @@ export class BlogPostService {
     // Load tags for each post
     const posts = await Promise.all(
       results.map(async (post) => {
-        const tagNames = await this.getTagsByPostId(post.id)
+        const postTags = await this.getTagsByPostId(post.id)
         return {
           ...post,
           content: '',
-          tags: tagNames,
+          tags: postTags,
         }
       })
     )
@@ -211,14 +211,17 @@ export class BlogPostService {
   }
 
   // Get tags for a post
-  async getTagsByPostId(postId: number): Promise<string[]> {
+  async getTagsByPostId(postId: number): Promise<Tag[]> {
     const result = await this.db
-      .select({ name: tags.name })
+      .select({
+        id: tags.id,
+        name: tags.name,
+      })
       .from(tags)
       .innerJoin(blogTags, eq(blogTags.tagId, tags.id))
       .where(eq(blogTags.blogPostId, postId))
       .orderBy(tags.name)
-    return result.map((r) => r.name)
+    return result
   }
 
   // Build conditions from filter

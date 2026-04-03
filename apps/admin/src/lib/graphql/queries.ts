@@ -9,7 +9,10 @@ export const GET_POSTS = `
           excerpt
           date
           draft
-          tags
+          tags {
+            id
+            name
+          }
           createdAt
         }
         cursor
@@ -35,7 +38,10 @@ export const GET_POST = `
       content
       date
       draft
-      tags
+      tags {
+        id
+        name
+      }
       createdAt
       updatedAt
     }
