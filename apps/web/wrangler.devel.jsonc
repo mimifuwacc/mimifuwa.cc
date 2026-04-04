@@ -17,14 +17,14 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "mimifuwacc-blogs",
-      "database_id": "ac1c88bc-d531-49d9-a10c-dad6ff637972"
+      "database_name": "mimifuwacc-blogs-devel",
+      "database_id": "b526fab7-0431-4d97-8553-2a6cbc2bdfce"
     }
   ],
   "r2_buckets": [
     {
       "binding": "BLOGS",
-      "bucket_name": "mimifuwacc-blogs"
+      "bucket_name": "mimifuwacc-blogs-devel"
     }
   ]
 }
