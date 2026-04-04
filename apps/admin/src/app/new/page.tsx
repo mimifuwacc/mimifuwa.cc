@@ -2,6 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { TabSwitcher } from '@/components/tab-switcher'
+import { MarkdownPreview } from '@/components/markdown-preview'
+import { useDebounce } from '@/components/use-debounce'
 
 const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:8787/graphql'
 
@@ -10,19 +13,30 @@ export default function NewPostPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function handleSubmit(formData: FormData) {
+  // Form state
+  const [formData, setFormData] = useState({
+    title: '',
+    slug: '',
+    excerpt: '',
+    content: '',
+    tags: '',
+    date: new Date().toISOString().split('T')[0],
+    draft: false,
+  })
+
+  // Preview state
+  const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit')
+  const [isSplitView, setIsSplitView] = useState(false)
+  const debouncedContent = useDebounce(formData.content, 500)
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
     setIsSubmitting(true)
     setError(null)
 
-    const title = formData.get('title') as string
-    const slug = formData.get('slug') as string
-    const excerpt = formData.get('excerpt') as string
-    const content = formData.get('content') as string
-    const tags = formData.get('tags') as string
-    const date = formData.get('date') as string
-    const draft = formData.get('draft') === 'true'
+    const { title, slug, excerpt, content: contentValue, tags, date, draft } = formData
 
-    if (!title || !slug || !excerpt || !content || !date) {
+    if (!title || !slug || !excerpt || !contentValue || !date) {
       setError('Required fields are missing')
       setIsSubmitting(false)
       return
@@ -53,7 +67,7 @@ export default function NewPostPage() {
               slug,
               title,
               excerpt,
-              content,
+              content: contentValue,
               date: new Date(date).toISOString(),
               tags: tags ? tags.split(',').map((t) => t.trim()) : [],
               draft,
@@ -82,6 +96,10 @@ export default function NewPostPage() {
     }
   }
 
+  const updateField = (field: keyof typeof formData, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">New Post</h2>
@@ -92,108 +110,161 @@ export default function NewPostPage() {
         </div>
       )}
 
-      <form action={handleSubmit} className="max-w-2xl space-y-4">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-1">
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            required
-            disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
-          />
+      <TabSwitcher
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        isSplitView={isSplitView}
+        onSplitViewToggle={() => setIsSplitView(!isSplitView)}
+      />
+
+      <form onSubmit={handleSubmit}>
+        {/* Metadata fields - always at top */}
+        <div className="max-w-2xl space-y-4 mb-4">
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-1">
+              Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={formData.title}
+              onChange={(e) => updateField('title', e.target.value)}
+              required
+              disabled={isSubmitting}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="slug" className="block text-sm font-medium text-slate-700 mb-1">
+              Slug
+            </label>
+            <input
+              type="text"
+              id="slug"
+              value={formData.slug}
+              onChange={(e) => updateField('slug', e.target.value)}
+              required
+              pattern="[a-z0-9-]+"
+              disabled={isSubmitting}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="excerpt" className="block text-sm font-medium text-slate-700 mb-1">
+              Excerpt
+            </label>
+            <textarea
+              id="excerpt"
+              rows={2}
+              value={formData.excerpt}
+              onChange={(e) => updateField('excerpt', e.target.value)}
+              required
+              disabled={isSubmitting}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="tags" className="block text-sm font-medium text-slate-700 mb-1">
+              Tags (comma-separated)
+            </label>
+            <input
+              type="text"
+              id="tags"
+              value={formData.tags}
+              onChange={(e) => updateField('tags', e.target.value)}
+              placeholder="tech, javascript, web"
+              disabled={isSubmitting}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="date" className="block text-sm font-medium text-slate-700 mb-1">
+              Date
+            </label>
+            <input
+              type="date"
+              id="date"
+              value={formData.date}
+              onChange={(e) => updateField('date', e.target.value)}
+              required
+              disabled={isSubmitting}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="draft"
+              checked={formData.draft}
+              onChange={(e) => updateField('draft', e.target.checked)}
+              disabled={isSubmitting}
+              className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 disabled:bg-slate-100"
+            />
+            <label htmlFor="draft" className="ml-2 text-sm text-slate-700">
+              Save as draft
+            </label>
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="slug" className="block text-sm font-medium text-slate-700 mb-1">
-            Slug
-          </label>
-          <input
-            type="text"
-            name="slug"
-            id="slug"
-            required
-            pattern="[a-z0-9-]+"
-            disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
-          />
-        </div>
+        {/* Content and Preview - split or single view */}
+        {isSplitView ? (
+          <div className="grid grid-cols-2 gap-4">
+            {/* Content textarea */}
+            <div>
+              <label htmlFor="content" className="block text-sm font-medium text-slate-700 mb-1">
+                Content (Markdown)
+              </label>
+              <textarea
+                id="content"
+                rows={30}
+                value={formData.content}
+                onChange={(e) => updateField('content', e.target.value)}
+                required
+                disabled={isSubmitting}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm disabled:bg-slate-100"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="excerpt" className="block text-sm font-medium text-slate-700 mb-1">
-            Excerpt
-          </label>
-          <textarea
-            name="excerpt"
-            id="excerpt"
-            rows={2}
-            required
-            disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
-          />
-        </div>
+            {/* Preview */}
+            <div className="border border-slate-300 rounded-lg p-4 overflow-y-auto">
+              <MarkdownPreview markdown={debouncedContent} />
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Single view mode */}
+            {activeTab === 'edit' && (
+              <div className="max-w-2xl">
+                <label htmlFor="content" className="block text-sm font-medium text-slate-700 mb-1">
+                  Content (Markdown)
+                </label>
+                <textarea
+                  id="content"
+                  rows={15}
+                  value={formData.content}
+                  onChange={(e) => updateField('content', e.target.value)}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm disabled:bg-slate-100"
+                />
+              </div>
+            )}
 
-        <div>
-          <label htmlFor="content" className="block text-sm font-medium text-slate-700 mb-1">
-            Content (Markdown)
-          </label>
-          <textarea
-            name="content"
-            id="content"
-            rows={15}
-            required
-            disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm disabled:bg-slate-100"
-          />
-        </div>
+            {activeTab === 'preview' && (
+              <div className="border border-slate-300 rounded-lg p-4 overflow-y-auto">
+                <MarkdownPreview markdown={debouncedContent} />
+              </div>
+            )}
+          </>
+        )}
 
-        <div>
-          <label htmlFor="tags" className="block text-sm font-medium text-slate-700 mb-1">
-            Tags (comma-separated)
-          </label>
-          <input
-            type="text"
-            name="tags"
-            id="tags"
-            placeholder="tech, javascript, web"
-            disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="date" className="block text-sm font-medium text-slate-700 mb-1">
-            Date
-          </label>
-          <input
-            type="date"
-            name="date"
-            id="date"
-            required
-            defaultValue={new Date().toISOString().split('T')[0]}
-            disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
-          />
-        </div>
-
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            name="draft"
-            id="draft"
-            value="true"
-            disabled={isSubmitting}
-            className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 disabled:bg-slate-100"
-          />
-          <label htmlFor="draft" className="ml-2 text-sm text-slate-700">
-            Save as draft
-          </label>
-        </div>
-
-        <div className="flex gap-3 pt-4">
+        {/* Submit buttons */}
+        <div className="max-w-2xl flex gap-3 pt-4">
           <button
             type="submit"
             disabled={isSubmitting}
