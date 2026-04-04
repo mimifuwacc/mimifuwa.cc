@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3003",
-    "build": "next build --turbopack",
+    "dev": "next dev --port 3003",
+    "build": "next build",
     "start": "next start",
     "lint": "biome check",
     "fix": "biome check --apply",
