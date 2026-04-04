@@ -13,8 +13,5 @@
       "binding": "WORKER_SELF_REFERENCE",
       "service": "mimifuwacc-admin"
     }
-  ],
-  "vars": {
-    "GRAPHQL_URL": "https://api.mimifuwa.cc/graphql"
-  }
+  ]
 }
