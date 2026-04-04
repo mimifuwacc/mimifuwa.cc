@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createPost } from '@/lib/graphql/actions'
+
+const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:8787/graphql'
 
 export default function NewPostPage() {
   const router = useRouter()
@@ -13,12 +14,70 @@ export default function NewPostPage() {
     setIsSubmitting(true)
     setError(null)
 
-    const result = await createPost(formData)
+    const title = formData.get('title') as string
+    const slug = formData.get('slug') as string
+    const excerpt = formData.get('excerpt') as string
+    const content = formData.get('content') as string
+    const tags = formData.get('tags') as string
+    const date = formData.get('date') as string
+    const draft = formData.get('draft') === 'true'
 
-    if (result.success) {
-      router.push('/')
-    } else {
-      setError(result.message)
+    if (!title || !slug || !excerpt || !content || !date) {
+      setError('Required fields are missing')
+      setIsSubmitting(false)
+      return
+    }
+
+    try {
+      const response = await fetch(GRAPHQL_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            mutation CreatePost($input: CreateBlogPostInput!) {
+              createBlogPost(input: $input) {
+                success
+                message
+                blogPost {
+                  id
+                  slug
+                  title
+                }
+              }
+            }
+          `,
+          variables: {
+            input: {
+              slug,
+              title,
+              excerpt,
+              content,
+              date: new Date(date).toISOString(),
+              tags: tags ? tags.split(',').map((t) => t.trim()) : [],
+              draft,
+            },
+          },
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.errors) {
+        setError(data.errors[0].message)
+        setIsSubmitting(false)
+        return
+      }
+
+      if (data.data.createBlogPost.success) {
+        router.push('/')
+      } else {
+        setError(data.data.createBlogPost.message)
+        setIsSubmitting(false)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create post')
       setIsSubmitting(false)
     }
   }

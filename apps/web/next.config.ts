@@ -32,10 +32,12 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 
 // load opennext config (dev only)
-if (process.env.NODE_ENV !== "production") {
-  import("@opennextjs/cloudflare")
-    .then(({ initOpenNextCloudflareForDev }) => {
-      initOpenNextCloudflareForDev();
-    })
-    .catch(() => {});
-}
+// NOTE: initOpenNextCloudflareForDev() causes 30GB+ memory usage in dev mode
+// Uncomment only when needed for Cloudflare deployment testing
+// if (process.env.NODE_ENV !== "production") {
+//   import("@opennextjs/cloudflare")
+//     .then(({ initOpenNextCloudflareForDev }) => {
+//       initOpenNextCloudflareForDev();
+//     })
+//     .catch(() => {});
+// }
