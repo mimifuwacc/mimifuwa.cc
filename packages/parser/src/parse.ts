@@ -72,6 +72,43 @@ export async function parseToReact(markdown: string): Promise<{
 }
 
 /**
+ * React用（カスタムコンポーネント対応）
+ * Adminアプリなどでカスタムコンポーネントを渡す場合に使用
+ */
+export async function parseToReactWithComponents(
+  markdown: string,
+  components: Record<string, React.ComponentType<any>>,
+): Promise<{
+  content: any;
+  frontmatter: Record<string, unknown>;
+}> {
+  const rehypeReact = (await import("rehype-react")).default;
+  const production = (await import("react/jsx-runtime")).default;
+
+  const file = await unified()
+    .use(remarkParse)
+    .use(remarkFrontmatter)
+    .use(remarkGfm)
+    .use(remarkRehype)
+    .use(rehypeHighlight)
+    .use(rehypeCustom)
+    .use(rehypeReact, {
+      ...production,
+      createElement: undefined, // Cloudflare Workers対応
+      components,
+    })
+    .process(markdown);
+
+  matter(file);
+  const frontmatter = file.data.matter || {};
+
+  return {
+    content: file.value,
+    frontmatter,
+  };
+}
+
+/**
  * カスタムrehypeプラグインを統合
  */
 const rehypeCustom = () => {

@@ -13,13 +13,15 @@
     "postinstall": "pnpm cf:typegen"
   },
   "dependencies": {
+    "@mimifuwacc/parser": "workspace:*",
     "@opennextjs/cloudflare": "^1.18.0",
     "graphql": "^16.13.2",
     "graphql-request": "^7.4.0",
     "next": "16.2.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "swr": "^2.4.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",

@@ -5,7 +5,7 @@ const nextConfig = {
       process.env.GRAPHQL_URL ||
       (process.env.NODE_ENV === "production"
         ? "https://api.mimifuwa.cc/graphql"
-        : "https://mimifuwacc-api-devel.mimifuwacc.workers.dev/graphql"),
+        : "http://localhost:8787/graphql"),
   },
 };
 

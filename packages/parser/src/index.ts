@@ -1,2 +1,2 @@
-export { parseToHtml, parseToReact } from "./parse";
+export { parseToHtml, parseToReact, parseToReactWithComponents } from "./parse";
 export { serializeReactToHtml } from "./serialize";

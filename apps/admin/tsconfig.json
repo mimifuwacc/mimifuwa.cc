@@ -22,6 +22,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@mimifuwacc/web/*": [
+        "../../web/src/*"
       ]
     },
     "esModuleInterop": true,
