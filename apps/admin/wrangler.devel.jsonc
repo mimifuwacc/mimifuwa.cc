@@ -15,6 +15,6 @@
     }
   ],
   "vars": {
-    "GRAPHQL_URL": "https://mimifuwacc-api-devel.mimifuwa.cc/graphql"
+    "GRAPHQL_URL": "https://mimifuwacc-api-devel.mimifuwacc.workers.dev/graphql"
   }
 }
