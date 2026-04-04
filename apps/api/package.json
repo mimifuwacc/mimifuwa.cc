@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev src/index.ts --local",
-    "dev:remote": "wrangler dev src/index.ts",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "cf:typegen": "wrangler types --env-interface Env env.d.ts"

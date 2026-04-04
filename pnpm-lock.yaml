@@ -32,6 +32,9 @@ importers:
       tsx:
         specifier: ^4.19.2
         version: 4.21.0
+      turbo:
+        specifier: ^2.9.3
+        version: 2.9.3
       wrangler:
         specifier: ^4.76.0
         version: 4.76.0(@cloudflare/workers-types@4.20260317.1)
@@ -43,7 +46,7 @@ importers:
         version: link:../../packages/parser
       '@opennextjs/cloudflare':
         specifier: ^1.18.0
-        version: 1.18.0(next@16.2.1(@babel/core@7.28.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(wrangler@4.76.0(@cloudflare/workers-types@4.20260317.1))
+        version: 1.18.0(next@16.2.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(wrangler@4.76.0(@cloudflare/workers-types@4.20260317.1))
       graphql:
         specifier: ^16.13.2
         version: 16.13.2
@@ -135,7 +138,7 @@ importers:
         version: 16.2.1(next@16.2.1(@babel/core@7.28.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       '@opennextjs/cloudflare':
         specifier: ^1.18.0
-        version: 1.18.0(next@16.2.1(@babel/core@7.28.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(wrangler@4.76.0(@cloudflare/workers-types@4.20260317.1))
+        version: 1.18.0(next@16.2.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(wrangler@4.76.0(@cloudflare/workers-types@4.20260317.1))
       '@tailwindcss/postcss':
         specifier: ^4.1.13
         version: 4.1.13
@@ -2365,6 +2368,36 @@ packages:
   '@tsconfig/node18@1.0.3':
     resolution: {integrity: sha512-RbwvSJQsuN9TB04AQbGULYfOGE/RnSFk/FLQ5b0NmDf5Kx2q/lABZbHQPKCO1vZ6Fiwkplu+yb9pGdLy1iGseQ==}
 
+  '@turbo/darwin-64@2.9.3':
+    resolution: {integrity: sha512-P8foouaP+y/p+hhEGBoZpzMbpVvUMwPjDpcy6wN7EYfvvyISD1USuV27qWkczecihwuPJzQ1lDBuL8ERcavTyg==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@turbo/darwin-arm64@2.9.3':
+    resolution: {integrity: sha512-SIzEkvtNdzdI50FJDaIQ6kQGqgSSdFPcdn0wqmmONN6iGKjy6hsT+EH99GP65FsfV7DLZTh2NmtTIRl2kdoz5Q==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@turbo/linux-64@2.9.3':
+    resolution: {integrity: sha512-pLRwFmcHHNBvsCySLS6OFabr/07kDT2pxEt/k6eBf/3asiVQZKJ7Rk88AafQx2aYA641qek4RsXvYO3JYpiBug==}
+    cpu: [x64]
+    os: [linux]
+
+  '@turbo/linux-arm64@2.9.3':
+    resolution: {integrity: sha512-gy6ApUroC2Nzv+qjGtE/uPNkhHAFU4c8God+zd5Aiv9L9uBgHlxVJpHT3XWl5xwlJZ2KWuMrlHTaS5kmNB+q1Q==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@turbo/windows-64@2.9.3':
+    resolution: {integrity: sha512-d0YelTX6hAsB7kIEtGB3PzIzSfAg3yDoUlHwuwJc3adBXUsyUIs0YLG+1NNtuhcDOUGnWQeKUoJ2pGWvbpRj7w==}
+    cpu: [x64]
+    os: [win32]
+
+  '@turbo/windows-arm64@2.9.3':
+    resolution: {integrity: sha512-/08CwpKJl3oRY8nOlh2YgilZVJDHsr60XTNxRhuDeuFXONpUZ5X+Nv65izbG/xBew9qxcJFbDX9/sAmAX+ITcQ==}
+    cpu: [arm64]
+    os: [win32]
+
   '@types/aria-query@5.0.4':
     resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}
 
@@ -4579,6 +4612,10 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  turbo@2.9.3:
+    resolution: {integrity: sha512-J/VUvsGRykPb9R8Kh8dHVBOqioDexLk9BhLCU/ZybRR+HN9UR3cURdazFvNgMDt9zPP8TF6K73Z+tplfmi0PqQ==}
+    hasBin: true
+
   type-is@2.0.1:
     resolution: {integrity: sha512-OZs6gsjF4vMp32qrCbiVSkrFmXtG/AZhY3t0iAMrMBiAZyV9oALtXO8hsrHbMXF9x6L3grlFuwW2oAz7cav+Gw==}
     engines: {node: '>= 0.6'}
@@ -6497,7 +6534,7 @@ snapshots:
     dependencies:
       gzip-size: 6.0.0
 
-  '@opennextjs/aws@3.9.16(next@16.2.1(@babel/core@7.28.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
+  '@opennextjs/aws@3.9.16(next@16.2.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:
       '@ast-grep/napi': 0.40.5
       '@aws-sdk/client-cloudfront': 3.984.0
@@ -6521,11 +6558,11 @@ snapshots:
       - aws-crt
       - supports-color
 
-  '@opennextjs/cloudflare@1.18.0(next@16.2.1(@babel/core@7.28.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(wrangler@4.76.0(@cloudflare/workers-types@4.20260317.1))':
+  '@opennextjs/cloudflare@1.18.0(next@16.2.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(wrangler@4.76.0(@cloudflare/workers-types@4.20260317.1))':
     dependencies:
       '@ast-grep/napi': 0.40.5
       '@dotenvx/dotenvx': 1.31.0
-      '@opennextjs/aws': 3.9.16(next@16.2.1(@babel/core@7.28.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+      '@opennextjs/aws': 3.9.16(next@16.2.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       cloudflare: 4.5.0
       comment-json: 4.6.2
       enquirer: 2.4.1
@@ -7186,6 +7223,24 @@ snapshots:
       '@testing-library/dom': 10.4.1
 
   '@tsconfig/node18@1.0.3': {}
+
+  '@turbo/darwin-64@2.9.3':
+    optional: true
+
+  '@turbo/darwin-arm64@2.9.3':
+    optional: true
+
+  '@turbo/linux-64@2.9.3':
+    optional: true
+
+  '@turbo/linux-arm64@2.9.3':
+    optional: true
+
+  '@turbo/windows-64@2.9.3':
+    optional: true
+
+  '@turbo/windows-arm64@2.9.3':
+    optional: true
 
   '@types/aria-query@5.0.4': {}
 
@@ -9658,6 +9713,15 @@ snapshots:
       get-tsconfig: 4.13.7
     optionalDependencies:
       fsevents: 2.3.3
+
+  turbo@2.9.3:
+    optionalDependencies:
+      '@turbo/darwin-64': 2.9.3
+      '@turbo/darwin-arm64': 2.9.3
+      '@turbo/linux-64': 2.9.3
+      '@turbo/linux-arm64': 2.9.3
+      '@turbo/windows-64': 2.9.3
+      '@turbo/windows-arm64': 2.9.3
 
   type-is@2.0.1:
     dependencies:

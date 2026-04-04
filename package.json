@@ -1,8 +1,13 @@
 {
   "name": "@mimifuwacc/monorepo",
   "private": true,
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
-    "dev": "pnpm -r dev",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
     "commitlint": "commitlint"
   },
   "devDependencies": {
@@ -14,6 +19,7 @@
     "conventional-changelog-atom": "^5.0.0",
     "lefthook": "^1.13.0",
     "tsx": "^4.19.2",
+    "turbo": "^2.9.3",
     "wrangler": "^4.76.0"
   }
 }

@@ -2,6 +2,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_GRAPHQL_URL:
+      process.env.GRAPHQL_URL ||
+      (process.env.NODE_ENV === "production"
+        ? "https://api.mimifuwa.cc/graphql"
+        : "http://localhost:8787/graphql"),
+  },
   images: {
     remotePatterns: [
       {
