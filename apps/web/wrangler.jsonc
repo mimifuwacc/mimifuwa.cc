@@ -26,8 +26,5 @@
       "binding": "BLOGS",
       "bucket_name": "mimifuwacc-blogs"
     }
-  ],
-  "vars": {
-    "NEXT_PUBLIC_GRAPHQL_URL": "https://api.mimifuwa.cc/graphql"
-  }
+  ]
 }
