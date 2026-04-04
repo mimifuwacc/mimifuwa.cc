@@ -51,6 +51,8 @@ jobs:
       - name: Build admin
         working-directory: apps/admin
         run: pnpm exec opennextjs-cloudflare build
+        env:
+          GRAPHQL_URL: https://api.mimifuwa.cc/graphql
 
       - name: Deploy admin
         run: npx wrangler deploy --config wrangler.jsonc
