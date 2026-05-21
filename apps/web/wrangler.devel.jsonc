@@ -1,30 +1,10 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
   "name": "mimifuwacc-devel",
-  "compatibility_date": "2026-03-20",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "main": "worker.ts",
+  "compatibility_date": "2026-05-15",
   "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    "directory": "./dist",
+    "run_worker_first": true,
   },
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "mimifuwacc-devel"
-    }
-  ],
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "mimifuwacc-blogs-devel",
-      "database_id": "b526fab7-0431-4d97-8553-2a6cbc2bdfce"
-    }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "BLOGS",
-      "bucket_name": "mimifuwacc-blogs-devel"
-    }
-  ]
 }

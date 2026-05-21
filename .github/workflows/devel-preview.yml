@@ -18,8 +18,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -32,9 +30,9 @@ jobs:
 
       - name: Build web
         working-directory: apps/web
-        run: pnpm exec opennextjs-cloudflare build
+        run: pnpm run build
         env:
-          NEXT_PUBLIC_GRAPHQL_URL: https://mimifuwacc-api-devel.mimifuwacc.workers.dev/graphql
+          VITE_GRAPHQL_URL: https://mimifuwacc-api-devel.mimifuwacc.workers.dev/graphql
 
       - name: Deploy web to Cloudflare
         run: npx wrangler deploy --config wrangler.devel.jsonc
@@ -50,8 +48,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -76,8 +72,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

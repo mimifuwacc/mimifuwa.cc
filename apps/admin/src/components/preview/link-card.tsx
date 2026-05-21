@@ -23,6 +23,19 @@ export interface LinkCardProps {
   url: string;
 }
 
+function NoData({ url }: { url: string }) {
+  return (
+    <Link
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-4 my-4 border border-slate-200 rounded-lg"
+    >
+      <span className="text-slate-700 font-medium truncate flex-1">{url}</span>
+    </Link>
+  );
+}
+
 export default function LinkCard({ url }: LinkCardProps) {
   const {
     data: ogpData,
@@ -33,24 +46,13 @@ export default function LinkCard({ url }: LinkCardProps) {
     revalidateOnReconnect: false,
   });
 
-  const NoData = () => (
-    <Link
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-4 my-4 border border-slate-200 rounded-lg"
-    >
-      <span className="text-slate-700 font-medium truncate flex-1">{url}</span>
-    </Link>
-  );
-
   if (error) {
-    return <NoData />;
+    return <NoData url={url} />;
   }
 
   if (!ogpData) {
     if (!isLoading) {
-      return <NoData />;
+      return <NoData url={url} />;
     } else {
       return (
         <Link
@@ -86,17 +88,13 @@ export default function LinkCard({ url }: LinkCardProps) {
         )}
         <div>
           {ogpData.siteName && (
-            <div className="text-xs text-slate-500 mb-1">
-              {ogpData.siteName}
-            </div>
+            <div className="text-xs text-slate-500 mb-1">{ogpData.siteName}</div>
           )}
           <div className="text-cyan-600 font-bold line-clamp-2 mb-2">
             {ogpData.title || ogpData.url}
           </div>
           {ogpData.description && (
-            <div className="text-sm text-slate-600 line-clamp-3">
-              {ogpData.description}
-            </div>
+            <div className="text-sm text-slate-600 line-clamp-3">{ogpData.description}</div>
           )}
         </div>
       </div>

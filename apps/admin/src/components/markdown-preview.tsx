@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { parseToHtml } from "@mimifuwacc/parser";
+import { useEffect, useState } from "react";
 import InfoCard, { type InfoCardProps } from "./preview/info-card";
 import LinkCard from "./preview/link-card";
 import TwitterCard from "./preview/twitter-card";
@@ -11,10 +11,7 @@ interface MarkdownPreviewProps {
   className?: string;
 }
 
-export function MarkdownPreview({
-  markdown,
-  className = "",
-}: MarkdownPreviewProps) {
+export function MarkdownPreview({ markdown, className = "" }: MarkdownPreviewProps) {
   const [html, setHtml] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,9 +59,7 @@ export function MarkdownPreview({
   }
 
   if (isLoading) {
-    return (
-      <div className="text-slate-500 text-center py-8">Loading preview...</div>
-    );
+    return <div className="text-slate-500 text-center py-8">Loading preview...</div>;
   }
 
   return (
@@ -91,12 +86,15 @@ function extractComponentProps(
     return acc;
   }, {} as ComponentData);
 
-  const cleanProps = Object.keys(restProps).reduce((acc, key) => {
-    if (!key.startsWith("data-")) {
-      acc[key] = restProps[key];
-    }
-    return acc;
-  }, {} as Record<string, any>);
+  const cleanProps = Object.keys(restProps).reduce(
+    (acc, key) => {
+      if (!key.startsWith("data-")) {
+        acc[key] = restProps[key];
+      }
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
 
   return [componentData, cleanProps, children];
 }

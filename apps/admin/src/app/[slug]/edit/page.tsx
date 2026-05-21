@@ -1,24 +1,24 @@
-import { client } from '@/lib/graphql/client'
-import { GET_POST } from '@/lib/graphql/queries'
-import { notFound } from 'next/navigation'
-import { PostForm } from './post-form'
+import { notFound } from "next/navigation";
+import { client } from "@/lib/graphql/client";
+import { GET_POST } from "@/lib/graphql/queries";
+import { PostForm } from "./post-form";
 
 export default async function EditPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const post = await getPost(slug)
+  const { slug } = await params;
+  const post = await getPost(slug);
 
   if (!post) {
-    notFound()
+    notFound();
   }
 
-  return <PostForm post={post} />
+  return <PostForm post={post} />;
 }
 
 async function getPost(slug: string) {
   try {
-    const data = await client.request(GET_POST, { slug })
-    return data.blogPost
+    const data = await client.request(GET_POST, { slug });
+    return data.blogPost;
   } catch {
-    return null
+    return null;
   }
 }

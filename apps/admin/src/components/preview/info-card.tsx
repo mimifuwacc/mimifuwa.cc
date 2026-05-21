@@ -44,14 +44,10 @@ export interface InfoCardProps {
 export default function InfoCard({ type, children }: InfoCardProps) {
   const Icon = themes[type].icon;
   return (
-    <div
-      className={`info-card flex ${themes[type].bgColor} my-4 rounded-lg overflow-clip`}
-    >
+    <div className={`info-card flex ${themes[type].bgColor} my-4 rounded-lg overflow-clip`}>
       <div className={`w-1.5 ${themes[type].borderColor}`} />
       <div className={`p-4 w-full`}>
-        <div
-          className={`flex gap-x-2 items-center font-bold ${themes[type].headingColor}`}
-        >
+        <div className={`flex gap-x-2 items-center font-bold ${themes[type].headingColor}`}>
           <Icon />
           {type.toUpperCase()}
         </div>
