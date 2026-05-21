@@ -13,19 +13,21 @@
     "cf:typegen": "wrangler types --env-interface Env env.d.ts"
   },
   "dependencies": {
+    "@cloudflare/pages-plugin-vercel-og": "^0.1.2",
     "@mimifuwacc/parser": "workspace:*",
-    "@resvg/resvg-js": "^2.6.2",
-    "@resvg/resvg-wasm": "^2.6.2",
     "drizzle-orm": "^0.45.2",
     "graphql": "^16.13.2",
     "graphql-yoga": "^5.13.1",
-    "hono": "^4.6.20",
-    "satori": "^0.26.0"
+    "hono": "^4.6.20"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250521.0",
     "@hono/node-server": "^2.0.3",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/react": "^19.2.15",
     "drizzle-kit": "^0.31.10",
+    "react": "^19.2.6",
+    "satori": "^0.26.0",
     "typescript": "^5.8.3",
     "wrangler": "^4.76.0"
   }

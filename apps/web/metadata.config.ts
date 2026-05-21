@@ -16,21 +16,25 @@ const GET_POST_META = `
   }
 `;
 
+const DEFAULT_OG_IMAGE = "https://mimifuwa.cc/og.png";
+
 export default defineConfig({
   defaults: {
     twitterCard: "summary_large_image",
-    ogImage: "https://mimifuwa.cc/og.png",
-    ogType: "website",
   },
   routes: [
     route("/", {
       title: "mimifuwa.cc",
       description: "mimifuwaccのポートフォリオサイト",
+      ogImage: DEFAULT_OG_IMAGE,
+      ogType: "website",
       ogUrl: "https://mimifuwa.cc",
     }),
     route("/blogs", {
       title: "ブログ - mimifuwa.cc",
       description: "主に趣味について書いています",
+      ogImage: DEFAULT_OG_IMAGE,
+      ogType: "website",
       ogUrl: "https://mimifuwa.cc/blogs",
     }),
     route("/blogs/*", async ({ url }) => {
@@ -46,11 +50,7 @@ export default defineConfig({
           blogPost: { title: string; excerpt: string } | null;
         }>(GET_POST_META, { slug });
         if (!data.blogPost) {
-          return {
-            ...base,
-            title: "mimifuwa.cc",
-            description: "ブログ記事が見つかりませんでした",
-          };
+          return { ...base, title: "mimifuwa.cc", description: "ブログ記事が見つかりませんでした" };
         }
         return {
           ...base,
@@ -58,16 +58,14 @@ export default defineConfig({
           description: data.blogPost.excerpt,
         };
       } catch {
-        return {
-          ...base,
-          title: "mimifuwa.cc",
-          description: "mimifuwaccのブログ",
-        };
+        return { ...base, title: "mimifuwa.cc", description: "mimifuwaccのブログ" };
       }
     }),
     route("/links", {
       title: "相互リンク - mimifuwa.cc",
       description: "知り合いのオタクのサイトたちです",
+      ogImage: DEFAULT_OG_IMAGE,
+      ogType: "website",
       ogUrl: "https://mimifuwa.cc/links",
     }),
   ],
