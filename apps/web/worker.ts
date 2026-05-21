@@ -1,8 +1,9 @@
 import { createHandler } from "haribote";
-import config from "./metadata.config";
+import { createConfig } from "./metadata.config";
 
 type Env = {
   ASSETS: { fetch(req: Request | string): Promise<Response> };
+  GRAPHQL_URL: string;
 };
 
 interface OgpData {
@@ -102,6 +103,7 @@ export default {
       return env.ASSETS.fetch(request);
     }
 
+    const config = createConfig(env.GRAPHQL_URL ?? "http://localhost:8000/graphql");
     return createHandler(config, async () => {
       const res = await env.ASSETS.fetch(new URL("/index.html", request.url).toString());
       return res.text();
