@@ -4,6 +4,7 @@ import { createConfig } from "./metadata.config";
 type Env = {
   ASSETS: { fetch(req: Request | string): Promise<Response> };
   GRAPHQL_URL: string;
+  API: { fetch(req: Request): Promise<Response> };
 };
 
 interface OgpData {
@@ -103,7 +104,7 @@ export default {
       return env.ASSETS.fetch(request);
     }
 
-    const config = createConfig(env.GRAPHQL_URL ?? "http://localhost:8000/graphql");
+    const config = createConfig(env.GRAPHQL_URL ?? "http://localhost:8000/graphql", env.API);
     return createHandler(config, async () => {
       const res = await env.ASSETS.fetch(new URL("/index.html", request.url).toString());
       return res.text();

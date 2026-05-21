@@ -10,4 +10,7 @@
   "vars": {
     "GRAPHQL_URL": "https://api.mimifuwa.cc/graphql",
   },
+  "services": [
+    { "binding": "API", "service": "mimifuwacc-api" },
+  ],
 }
