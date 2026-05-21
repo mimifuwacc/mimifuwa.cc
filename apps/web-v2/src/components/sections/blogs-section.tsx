@@ -6,7 +6,7 @@ import { useRecentPosts, type BlogPost } from "@/lib/query/blog";
 
 export function BlogCard({ post }: { post: BlogPost }) {
   return (
-    <Link to={`/blogs/${post.slug}`} className="group block h-full">
+    <Link viewTransition to={`/blogs/${post.slug}`} className="group block h-full">
       <Card className="h-full hover:shadow-lg transition-shadow duration-200">
         <CardContent className="h-full flex flex-col">
           <p className="text-xs text-muted-foreground mb-2">
@@ -41,6 +41,7 @@ export default function BlogsSection() {
           <div className="w-8 h-0.5 bg-primary mb-3" />
           <p className="text-sm text-muted-foreground mb-3">主に趣味について書いています</p>
           <Link
+            viewTransition
             to="/blogs"
             className="inline-flex items-center gap-1.5 text-sm border border-border rounded-full px-3 py-1 text-muted-foreground"
           >

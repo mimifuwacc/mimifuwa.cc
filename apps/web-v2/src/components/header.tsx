@@ -22,7 +22,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14">
-          <Link to="/" className="text-2xl font-bold text-primary hover:text-primary/90 transition-colors">
+          <Link viewTransition to="/" className="text-2xl font-bold text-primary hover:text-primary/90 transition-colors">
             mimifuwa.cc
           </Link>
 
@@ -32,6 +32,7 @@ export default function Header() {
               const isActive = currentPath === item.href || (item.href !== "/" && currentPath.startsWith(item.href));
               return (
                 <Link
+                  viewTransition
                   key={item.href}
                   to={item.href}
                   className={cn(

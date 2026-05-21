@@ -126,6 +126,12 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@keyframes nav-progress {
+  from { width: 0% }
+  to { width: 85% }
+}
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

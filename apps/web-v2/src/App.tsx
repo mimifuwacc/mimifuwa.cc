@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
   ScrollRestoration,
   Outlet,
   useLocation,
+  useNavigation,
 } from "react-router-dom";
 import { fetchMeta, setMeta } from "haribote/client";
 import { queryClient } from "@/lib/query/client";
@@ -16,6 +17,38 @@ import Home from "@/pages/Home";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
 import Links from "@/pages/Links";
+
+type ProgressState = "hidden" | "loading" | "done";
+
+function NavigationProgress() {
+  const navigation = useNavigation();
+  const [state, setState] = useState<ProgressState>("hidden");
+
+  useEffect(() => {
+    if (navigation.state !== "idle") {
+      setState("loading");
+    } else if (state === "loading") {
+      setState("done");
+      const t = setTimeout(() => setState("hidden"), 400);
+      return () => clearTimeout(t);
+    }
+  }, [navigation.state, state]);
+
+  if (state === "hidden") return null;
+
+  return (
+    <div className="fixed top-0 left-0 right-0 h-0.5 z-[100] pointer-events-none">
+      <div
+        className="h-full bg-primary"
+        style={
+          state === "loading"
+            ? { animation: "nav-progress 30s ease-out forwards" }
+            : { width: "100%", opacity: 0, transition: "width 100ms, opacity 300ms 100ms" }
+        }
+      />
+    </div>
+  );
+}
 
 function MetaSync() {
   const location = useLocation();
@@ -29,6 +62,7 @@ function Layout() {
   return (
     <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-background">
       <ScrollRestoration />
+      <NavigationProgress />
       <MetaSync />
       <Header />
       <main>

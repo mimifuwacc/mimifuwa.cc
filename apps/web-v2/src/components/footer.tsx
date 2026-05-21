@@ -32,7 +32,7 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row justify-between gap-8">
           {/* ブランド */}
           <div>
-            <Link to="/" className="text-lg font-bold text-primary">
+            <Link viewTransition to="/" className="text-lg font-bold text-primary">
               mimifuwa.cc
             </Link>
             <button
@@ -53,6 +53,7 @@ export default function Footer() {
             <div className="flex flex-wrap gap-x-4 gap-y-1">
               {navLinks.map((link) => (
                 <Link
+                  viewTransition
                   key={link.href}
                   to={link.href}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
