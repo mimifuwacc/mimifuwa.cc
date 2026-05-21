@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "esnext",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -20,12 +16,8 @@
     "skipLibCheck": true,
     "incremental": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@mimifuwacc/web/*": [
-        "../../web/src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@mimifuwacc/web/*": ["../../web/src/*"]
     },
     "esModuleInterop": true,
     "plugins": [
@@ -34,12 +26,6 @@
       }
     ]
   },
-  "include": [
-    "src/**/*",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*", ".next/types/**/*.ts", ".next/dev/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

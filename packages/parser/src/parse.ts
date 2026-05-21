@@ -8,8 +8,8 @@ import { unified } from "unified";
 import { matter } from "vfile-matter";
 
 import rehypeCodeFilename from "./plugins/rehype-code-filename";
-import rehypeLinkCard from "./plugins/rehype-link-card";
 import rehypeInfoCard from "./plugins/rehype-info-card";
+import rehypeLinkCard from "./plugins/rehype-link-card";
 import rehypeSplitTaskLists from "./plugins/rehype-split-task-lists";
 
 export interface ParsedResult {

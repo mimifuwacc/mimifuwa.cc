@@ -1,31 +1,31 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { deletePost } from '@/lib/graphql/actions'
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { deletePost } from "@/lib/graphql/actions";
 
 interface DeleteButtonProps {
-  slug: string
+  slug: string;
 }
 
 export function DeleteButton({ slug }: DeleteButtonProps) {
-  const router = useRouter()
-  const [isDeleting, setIsDeleting] = useState(false)
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
-    if (!confirm('Are you sure you want to delete this post?')) {
-      return
+    if (!confirm("Are you sure you want to delete this post?")) {
+      return;
     }
 
-    setIsDeleting(true)
+    setIsDeleting(true);
 
-    const result = await deletePost(slug)
+    const result = await deletePost(slug);
 
     if (result.success) {
-      router.refresh()
+      router.refresh();
     } else {
-      alert(result.message)
-      setIsDeleting(false)
+      alert(result.message);
+      setIsDeleting(false);
     }
   }
 
@@ -35,7 +35,7 @@ export function DeleteButton({ slug }: DeleteButtonProps) {
       disabled={isDeleting}
       className="text-red-600 hover:text-red-800 disabled:text-slate-400"
     >
-      {isDeleting ? 'Deleting...' : 'Delete'}
+      {isDeleting ? "Deleting..." : "Delete"}
     </button>
-  )
+  );
 }

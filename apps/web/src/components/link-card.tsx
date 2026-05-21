@@ -1,7 +1,5 @@
-"use client";
-
-import Link from "next/link";
-import useSWR from "swr";
+import { useQuery } from "@tanstack/react-query";
+import { ExternalLink } from "lucide-react";
 
 interface OgpData {
   title?: string;
@@ -11,95 +9,89 @@ interface OgpData {
   url: string;
 }
 
-const fetcher = async (url: string): Promise<OgpData> => {
+async function fetchOgp(url: string): Promise<OgpData> {
   const response = await fetch(`/api/ogp?url=${encodeURIComponent(url)}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch OGP data");
-  }
+  if (!response.ok) throw new Error("Failed to fetch OGP data");
   return response.json();
-};
+}
 
 export interface LinkCardProps {
   url: string;
 }
 
 export default function LinkCard({ url }: LinkCardProps) {
-  const {
-    data: ogpData,
-    error,
-    isLoading,
-  } = useSWR(url, fetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["ogp", url],
+    queryFn: () => fetchOgp(url),
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: false,
   });
 
-  const NoData = () => (
-    <Link
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-4 my-4 border border-slate-200 rounded-lg"
-    >
-      <span className="text-slate-700 font-medium truncate flex-1">{url}</span>
-    </Link>
-  );
-
-  if (error) {
-    return <NoData />;
-  }
-
-  if (!ogpData) {
-    if (!isLoading) {
-      return <NoData />;
-    } else {
-      return (
-        <Link
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-4 my-4 flex min-h-[124px] sm:min-h-[146px] w-full border border-slate-200 rounded-lg"
-        ></Link>
-      );
+  const hostname = (() => {
+    try {
+      return new URL(url).hostname;
+    } catch {
+      return url;
     }
-  }
+  })();
+
+  const faviconUrl = `https://www.google.com/s2/favicons?domain=${hostname}&sz=32`;
+  const hasImage = !isLoading && !isError && !!data?.image;
 
   return (
-    <Link
+    <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="p-4 my-4 flex w-full min-h-[122px] sm:min-h-28 border border-slate-200 rounded-lg"
+      className="flex items-stretch my-6 rounded-xl border border-border bg-card hover:bg-muted/30 transition-colors overflow-hidden no-underline group"
     >
-      <div className="flex space-x-4 items-center">
-        {ogpData.image && (
-          <div className="hidden sm:flex !h-28 aspect-[1.91/1] object-cover rounded-lg bg-slate-100 overflow-hidden shrink-0">
-            {/* biome-ignore lint/performance/noImgElement: NextのImageを使うと厄介なので */}
-            <img
-              src={ogpData.image}
-              alt={ogpData.title || ogpData.siteName || ""}
-              className=" !my-0 !shadow-none"
-              onError={(e) => {
-                e.currentTarget.style.opacity = "0";
-              }}
-            />
+      {/* テキスト */}
+      <div className="flex flex-col justify-center flex-1 min-w-0 px-5 py-4 gap-1.5">
+        {isLoading ? (
+          <div className="space-y-2">
+            <div className="h-4 w-2/3 rounded-md bg-muted animate-pulse" />
+            <div className="h-3 w-full rounded-md bg-muted animate-pulse" />
+            <div className="h-3 w-1/4 rounded-md bg-muted animate-pulse" />
           </div>
+        ) : (
+          <>
+            <p className="text-sm font-semibold text-foreground line-clamp-1 leading-snug group-hover:text-primary transition-colors">
+              {!isError && data?.title ? data.title : hostname}
+            </p>
+            {!isError && data?.description && (
+              <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                {data.description}
+              </p>
+            )}
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <img
+                src={faviconUrl}
+                alt=""
+                className="!my-0 !shadow-none !border-none !rounded-none size-3 opacity-70"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+              <p className="text-[11px] text-muted-foreground/70 truncate">{hostname}</p>
+              <ExternalLink className="size-2.5 text-muted-foreground/50 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+          </>
         )}
-        <div>
-          {ogpData.siteName && (
-            <div className="text-xs text-slate-500 mb-1">
-              {ogpData.siteName}
-            </div>
-          )}
-          <div className="text-cyan-600 font-bold line-clamp-2 mb-2">
-            {ogpData.title || ogpData.url}
-          </div>
-          {ogpData.description && (
-            <div className="text-sm text-slate-600 line-clamp-3">
-              {ogpData.description}
-            </div>
-          )}
-        </div>
       </div>
-    </Link>
+
+      {/* OG画像 */}
+      {hasImage && (
+        <div className="hidden sm:flex items-center pr-4 shrink-0">
+          <img
+            src={data!.image}
+            alt={data!.title ?? ""}
+            className="!my-0 !shadow-none !border-none max-w-36 max-h-20 w-auto h-auto object-contain rounded-sm border border-border"
+            onError={(e) => {
+              (e.currentTarget.parentElement as HTMLElement)?.remove();
+            }}
+          />
+        </div>
+      )}
+    </a>
   );
 }

@@ -1,37 +1,37 @@
-import { Hono } from 'hono'
-import { cors } from 'hono/cors'
-import { createYogaServer } from './graphql/yoga'
-import type { Env, Context } from './types'
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { createYogaServer } from "./graphql/yoga";
+import type { Context, Env } from "./types";
 
 export function createApp() {
-  const app = new Hono<{ Bindings: Env }>()
+  const app = new Hono<{ Bindings: Env }>();
 
-  app.use('*', cors({
-    origin: '*',
-    allowMethods: ['GET', 'POST', 'OPTIONS'],
-    allowHeaders: ['Content-Type', 'Authorization'],
-  }))
+  app.use(
+    "*",
+    cors({
+      origin: "*",
+      allowMethods: ["GET", "POST", "OPTIONS"],
+      allowHeaders: ["Content-Type", "Authorization"],
+    }),
+  );
 
-  app.get('/health', (c) => {
-    return c.json({ status: 'ok', timestamp: new Date().toISOString() })
-  })
+  app.get("/health", (c) => {
+    return c.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
 
-  const yoga = createYogaServer()
+  const yoga = createYogaServer();
 
-  app.use('/graphql/*', async (c) => {
-    const response = await yoga.handle(
-      new Request(c.req.raw),
-      {
-        env: c.env,
-        request: c.req.raw,
-      } as Context
-    ) as unknown as Response
+  app.use("/graphql/*", async (c) => {
+    const response = (await yoga.handle(new Request(c.req.raw), {
+      env: c.env,
+      request: c.req.raw,
+    } as Context)) as unknown as Response;
 
     return new Response(response.body, {
       status: response.status,
       headers: Object.fromEntries(response.headers.entries()),
-    })
-  })
+    });
+  });
 
-  return app
+  return app;
 }

@@ -20,8 +20,12 @@ export default function RootLayout({
             <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
               <h1 className="text-xl font-bold">Admin</h1>
               <nav className="flex gap-4">
-                <a href="/" className="text-slate-600 hover:text-slate-900">Posts</a>
-                <a href="/new" className="text-slate-600 hover:text-slate-900">New Post</a>
+                <a href="/" className="text-slate-600 hover:text-slate-900">
+                  Posts
+                </a>
+                <a href="/new" className="text-slate-600 hover:text-slate-900">
+                  New Post
+                </a>
               </nav>
             </div>
           </header>

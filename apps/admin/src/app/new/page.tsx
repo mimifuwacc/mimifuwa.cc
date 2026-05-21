@@ -1,52 +1,52 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { TabSwitcher } from '@/components/tab-switcher'
-import { MarkdownPreview } from '@/components/markdown-preview'
-import { useDebounce } from '@/components/use-debounce'
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { MarkdownPreview } from "@/components/markdown-preview";
+import { TabSwitcher } from "@/components/tab-switcher";
+import { useDebounce } from "@/components/use-debounce";
 
-const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:8787/graphql'
+const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:8787/graphql";
 
 export default function NewPostPage() {
-  const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
-    title: '',
-    slug: '',
-    excerpt: '',
-    content: '',
-    tags: '',
-    date: new Date().toISOString().split('T')[0],
+    title: "",
+    slug: "",
+    excerpt: "",
+    content: "",
+    tags: "",
+    date: new Date().toISOString().split("T")[0],
     draft: false,
-  })
+  });
 
   // Preview state
-  const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit')
-  const [isSplitView, setIsSplitView] = useState(false)
-  const debouncedContent = useDebounce(formData.content, 500)
+  const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
+  const [isSplitView, setIsSplitView] = useState(false);
+  const debouncedContent = useDebounce(formData.content, 500);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setError(null)
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
 
-    const { title, slug, excerpt, content: contentValue, tags, date, draft } = formData
+    const { title, slug, excerpt, content: contentValue, tags, date, draft } = formData;
 
     if (!title || !slug || !excerpt || !contentValue || !date) {
-      setError('Required fields are missing')
-      setIsSubmitting(false)
-      return
+      setError("Required fields are missing");
+      setIsSubmitting(false);
+      return;
     }
 
     try {
       const response = await fetch(GRAPHQL_URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           query: `
@@ -69,36 +69,36 @@ export default function NewPostPage() {
               excerpt,
               content: contentValue,
               date: new Date(date).toISOString(),
-              tags: tags ? tags.split(',').map((t) => t.trim()) : [],
+              tags: tags ? tags.split(",").map((t) => t.trim()) : [],
               draft,
             },
           },
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.errors) {
-        setError(data.errors[0].message)
-        setIsSubmitting(false)
-        return
+        setError(data.errors[0].message);
+        setIsSubmitting(false);
+        return;
       }
 
       if (data.data.createBlogPost.success) {
-        router.push('/')
+        router.push("/");
       } else {
-        setError(data.data.createBlogPost.message)
-        setIsSubmitting(false)
+        setError(data.data.createBlogPost.message);
+        setIsSubmitting(false);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create post')
-      setIsSubmitting(false)
+      setError(err instanceof Error ? err.message : "Failed to create post");
+      setIsSubmitting(false);
     }
   }
 
   const updateField = (field: keyof typeof formData, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <div>
@@ -128,7 +128,7 @@ export default function NewPostPage() {
               type="text"
               id="title"
               value={formData.title}
-              onChange={(e) => updateField('title', e.target.value)}
+              onChange={(e) => updateField("title", e.target.value)}
               required
               disabled={isSubmitting}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
@@ -143,7 +143,7 @@ export default function NewPostPage() {
               type="text"
               id="slug"
               value={formData.slug}
-              onChange={(e) => updateField('slug', e.target.value)}
+              onChange={(e) => updateField("slug", e.target.value)}
               required
               pattern="[a-z0-9-]+"
               disabled={isSubmitting}
@@ -159,7 +159,7 @@ export default function NewPostPage() {
               id="excerpt"
               rows={2}
               value={formData.excerpt}
-              onChange={(e) => updateField('excerpt', e.target.value)}
+              onChange={(e) => updateField("excerpt", e.target.value)}
               required
               disabled={isSubmitting}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
@@ -174,7 +174,7 @@ export default function NewPostPage() {
               type="text"
               id="tags"
               value={formData.tags}
-              onChange={(e) => updateField('tags', e.target.value)}
+              onChange={(e) => updateField("tags", e.target.value)}
               placeholder="tech, javascript, web"
               disabled={isSubmitting}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
@@ -189,7 +189,7 @@ export default function NewPostPage() {
               type="date"
               id="date"
               value={formData.date}
-              onChange={(e) => updateField('date', e.target.value)}
+              onChange={(e) => updateField("date", e.target.value)}
               required
               disabled={isSubmitting}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100"
@@ -201,7 +201,7 @@ export default function NewPostPage() {
               type="checkbox"
               id="draft"
               checked={formData.draft}
-              onChange={(e) => updateField('draft', e.target.checked)}
+              onChange={(e) => updateField("draft", e.target.checked)}
               disabled={isSubmitting}
               className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 disabled:bg-slate-100"
             />
@@ -223,7 +223,7 @@ export default function NewPostPage() {
                 id="content"
                 rows={30}
                 value={formData.content}
-                onChange={(e) => updateField('content', e.target.value)}
+                onChange={(e) => updateField("content", e.target.value)}
                 required
                 disabled={isSubmitting}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm disabled:bg-slate-100"
@@ -238,7 +238,7 @@ export default function NewPostPage() {
         ) : (
           <>
             {/* Single view mode */}
-            {activeTab === 'edit' && (
+            {activeTab === "edit" && (
               <div className="max-w-2xl">
                 <label htmlFor="content" className="block text-sm font-medium text-slate-700 mb-1">
                   Content (Markdown)
@@ -247,7 +247,7 @@ export default function NewPostPage() {
                   id="content"
                   rows={15}
                   value={formData.content}
-                  onChange={(e) => updateField('content', e.target.value)}
+                  onChange={(e) => updateField("content", e.target.value)}
                   required
                   disabled={isSubmitting}
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm disabled:bg-slate-100"
@@ -255,7 +255,7 @@ export default function NewPostPage() {
               </div>
             )}
 
-            {activeTab === 'preview' && (
+            {activeTab === "preview" && (
               <div className="border border-slate-300 rounded-lg p-4 overflow-y-auto">
                 <MarkdownPreview markdown={debouncedContent} />
               </div>
@@ -270,7 +270,7 @@ export default function NewPostPage() {
             disabled={isSubmitting}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-slate-400"
           >
-            {isSubmitting ? 'Creating...' : 'Create Post'}
+            {isSubmitting ? "Creating..." : "Create Post"}
           </button>
           <a
             href="/"
@@ -281,5 +281,5 @@ export default function NewPostPage() {
         </div>
       </form>
     </div>
-  )
+  );
 }

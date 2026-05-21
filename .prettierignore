@@ -1,0 +1,11 @@
+**/node_modules/**
+**/dist/**
+**/build/**
+**/out/**
+**/.next/**
+**/.open-next/**
+**/.wrangler/**
+**/.turbo/**
+**/coverage/**
+pnpm-lock.yaml
+**/*.tsbuildinfo

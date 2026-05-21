@@ -11,7 +11,12 @@
       "persistent": true
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "inputs": ["src/**/*.{ts,tsx,js,jsx}", "../../eslint.config.js"]
+    },
+    "format": {
+      "inputs": ["src/**/*.{ts,tsx,js,jsx,css,json}", "../../prettier.config.js"],
+      "cache": false
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],

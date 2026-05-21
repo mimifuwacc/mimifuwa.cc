@@ -1,10 +1,8 @@
 import satori from "satori";
-import { BlogPostService } from "../services/blog-post";
 import type { DB } from "../db";
+import { BlogPostService } from "../services/blog-post";
 
-export type ResvgConstructor = new (
-  svg: string,
-) => { render(): { asPng(): Uint8Array } };
+export type ResvgConstructor = new (svg: string) => { render(): { asPng(): Uint8Array } };
 
 function buildElement(title: string) {
   const display = title.length > 60 ? `${title.slice(0, 60)}…` : title;
@@ -90,9 +88,7 @@ export async function handleOgImage(
     const svg = await satori(buildElement(title) as any, {
       width: 1200,
       height: 630,
-      fonts: [
-        { name: "Noto Sans JP", data: fontData, weight: 700, style: "normal" },
-      ],
+      fonts: [{ name: "Noto Sans JP", data: fontData, weight: 700, style: "normal" }],
     });
 
     const resvg = new Resvg(svg);

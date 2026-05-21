@@ -1,9 +1,7 @@
 export function currentUrl() {
-  const isDevelopment = process.env.NODE_ENV === "development";
-
+  const isDevelopment = import.meta.env.DEV;
   if (isDevelopment) {
-    return "http://localhost:3000";
+    return "http://localhost:5173";
   }
-
   return "https://mimifuwa.cc";
 }

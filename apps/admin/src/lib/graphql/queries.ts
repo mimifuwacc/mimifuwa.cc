@@ -26,7 +26,7 @@ export const GET_POSTS = `
       }
     }
   }
-`
+`;
 
 export const GET_POST = `
   query GetPost($slug: String!) {
@@ -47,7 +47,7 @@ export const GET_POST = `
       updatedAt
     }
   }
-`
+`;
 
 export const GET_TAGS = `
   query GetTags {
@@ -56,7 +56,7 @@ export const GET_TAGS = `
       name
     }
   }
-`
+`;
 
 export const CREATE_POST = `
   mutation CreatePost($input: CreateBlogPostInput!) {
@@ -70,7 +70,7 @@ export const CREATE_POST = `
       }
     }
   }
-`
+`;
 
 export const UPDATE_POST = `
   mutation UpdatePost($input: UpdateBlogPostInput!) {
@@ -84,7 +84,7 @@ export const UPDATE_POST = `
       }
     }
   }
-`
+`;
 
 export const DELETE_POST = `
   mutation DeletePost($slug: String!) {
@@ -93,7 +93,7 @@ export const DELETE_POST = `
       message
     }
   }
-`
+`;
 
 export const ARCHIVE_POST = `
   mutation ArchivePost($slug: String!) {
@@ -102,4 +102,4 @@ export const ARCHIVE_POST = `
       message
     }
   }
-`
+`;

@@ -90,10 +90,7 @@ export async function GET(request: NextRequest) {
   const url = searchParams.get("url");
 
   if (!url) {
-    return NextResponse.json(
-      { error: "URL parameter is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "URL parameter is required" }, { status: 400 });
   }
 
   // URLのバリデーション
@@ -114,8 +111,7 @@ export async function GET(request: NextRequest) {
     // Accept-Languageを英語に設定して英語のOGP情報を取得
     const response = await fetch(url, {
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (compatible; OGP-Fetcher/1.0; +https://mimifuwa.cc)",
+        "User-Agent": "Mozilla/5.0 (compatible; OGP-Fetcher/1.0; +https://mimifuwa.cc)",
         "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
       },
       redirect: "follow",

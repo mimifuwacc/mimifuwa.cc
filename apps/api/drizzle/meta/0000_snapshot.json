@@ -84,9 +84,7 @@
       "indexes": {
         "blog_posts_slug_unique": {
           "name": "blog_posts_slug_unique",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         }
       },
@@ -119,12 +117,8 @@
           "name": "blog_tags_blog_post_id_blog_posts_id_fk",
           "tableFrom": "blog_tags",
           "tableTo": "blog_posts",
-          "columnsFrom": [
-            "blog_post_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["blog_post_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -132,12 +126,8 @@
           "name": "blog_tags_tag_id_tags_id_fk",
           "tableFrom": "blog_tags",
           "tableTo": "tags",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tag_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -167,9 +157,7 @@
       "indexes": {
         "tags_name_unique": {
           "name": "tags_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": true
         }
       },
