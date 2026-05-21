@@ -9,9 +9,7 @@ const rehypeCodeFilename = () => {
       if (!code || code.tagName !== "code") return;
 
       const classes = (code.properties?.className as string[]) ?? [];
-      const langClass = classes.find(
-        (c) => typeof c === "string" && c.startsWith("language-"),
-      );
+      const langClass = classes.find((c) => typeof c === "string" && c.startsWith("language-"));
       if (!langClass) return;
 
       const colonIdx = langClass.indexOf(":");
