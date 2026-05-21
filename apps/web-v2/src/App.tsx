@@ -1,6 +1,14 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  ScrollRestoration,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
 import { fetchMeta, setMeta } from "haribote/client";
+import { queryClient } from "@/lib/query/client";
+import { fetchAllPosts, fetchPostBySlug } from "@/lib/query/blog";
 import { ThemeProvider } from "@/lib/theme";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -20,27 +28,51 @@ function MetaSync() {
 function Layout() {
   return (
     <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-background">
+      <ScrollRestoration />
+      <MetaSync />
       <Header />
       <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blogs" element={<BlogList />} />
-          <Route path="/blogs/*" element={<BlogPost />} />
-          <Route path="/links" element={<Links />} />
-        </Routes>
+        <Outlet />
       </main>
       <Footer />
     </div>
   );
 }
 
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      { path: "/", element: <Home /> },
+      {
+        path: "/blogs",
+        element: <BlogList />,
+        loader: () =>
+          queryClient.ensureQueryData({
+            queryKey: ["posts"],
+            queryFn: fetchAllPosts,
+          }),
+      },
+      {
+        path: "/blogs/*",
+        element: <BlogPost />,
+        loader: ({ params }) => {
+          const slug = params["*"] ?? "";
+          return queryClient.ensureQueryData({
+            queryKey: ["post", slug],
+            queryFn: () => fetchPostBySlug(slug),
+          });
+        },
+      },
+      { path: "/links", element: <Links /> },
+    ],
+  },
+]);
+
 export default function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <MetaSync />
-        <Layout />
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
