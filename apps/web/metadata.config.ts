@@ -46,9 +46,11 @@ export function createConfig(graphqlUrl: string) {
           ogImage: `${apiBase}/og/${slug}`,
         };
         try {
+          console.log("[meta] querying:", graphqlUrl, "slug:", slug);
           const data = await gqlClient.request<{
             blogPost: { title: string; excerpt: string } | null;
           }>(GET_POST_META, { slug });
+          console.log("[meta] result:", JSON.stringify(data));
           if (!data.blogPost) {
             return {
               ...base,
@@ -61,7 +63,8 @@ export function createConfig(graphqlUrl: string) {
             title: `${data.blogPost.title} - mimifuwa.cc`,
             description: data.blogPost.excerpt,
           };
-        } catch {
+        } catch (e) {
+          console.error("[meta] error:", String(e));
           return { ...base, title: "mimifuwa.cc", description: "mimifuwaccのブログ" };
         }
       }),
