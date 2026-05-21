@@ -13,9 +13,15 @@ const GET_POST_META = `
 const COMMON = { twitterCard: "summary_large_image" } as const;
 const DEFAULT_OG_IMAGE = "https://mimifuwa.cc/og.png";
 
-export function createConfig(graphqlUrl: string) {
+interface Fetcher {
+  fetch: typeof fetch;
+}
+
+export function createConfig(graphqlUrl: string, service?: Fetcher) {
   const apiBase = graphqlUrl.replace(/\/graphql$/, "");
-  const gqlClient = new GraphQLClient(graphqlUrl);
+  const gqlClient = new GraphQLClient(graphqlUrl, {
+    fetch: service ? (url, init) => service.fetch(url as string, init) : fetch,
+  });
 
   return defineConfig({
     defaults: {},
