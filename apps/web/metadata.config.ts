@@ -50,7 +50,11 @@ export function createConfig(graphqlUrl: string) {
             blogPost: { title: string; excerpt: string } | null;
           }>(GET_POST_META, { slug });
           if (!data.blogPost) {
-            return { ...base, title: "mimifuwa.cc", description: "ブログ記事が見つかりませんでした" };
+            return {
+              ...base,
+              title: "mimifuwa.cc",
+              description: "ブログ記事が見つかりませんでした",
+            };
           }
           return {
             ...base,
