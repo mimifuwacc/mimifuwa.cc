@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { fetchMeta, setMeta } from "haribote/client";
+import { ThemeProvider } from "@/lib/theme";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Home from "@/pages/Home";
@@ -35,9 +36,11 @@ function Layout() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <MetaSync />
-      <Layout />
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <MetaSync />
+        <Layout />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }

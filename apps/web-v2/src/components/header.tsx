@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
+import { useTheme } from "@/lib/theme";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -15,6 +16,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
+  const { theme, toggle: toggleTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b">
@@ -43,17 +45,35 @@ export default function Header() {
                 </Link>
               );
             })}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              aria-label={theme === "dark" ? "ライトモードに切り替え" : "ダークモードに切り替え"}
+            >
+              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            </button>
           </nav>
 
           {/* モバイルメニューボタン */}
-          <button
-            type="button"
-            onClick={toggleMenu}
-            aria-expanded={isMenuOpen}
-            className="md:hidden text-muted-foreground hover:text-foreground transition-colors p-1"
-          >
-            {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+          <div className="md:hidden flex items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              aria-label={theme === "dark" ? "ライトモードに切り替え" : "ダークモードに切り替え"}
+            >
+              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            </button>
+            <button
+              type="button"
+              onClick={toggleMenu}
+              aria-expanded={isMenuOpen}
+              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+            >
+              {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </div>
         </div>
 
         {/* モバイルナビ */}
