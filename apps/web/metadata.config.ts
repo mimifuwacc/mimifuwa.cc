@@ -76,3 +76,5 @@ export function createConfig(graphqlUrl: string) {
     ],
   });
 }
+
+export default createConfig(process.env.VITE_GRAPHQL_URL ?? "http://localhost:8000/graphql");
