@@ -1,4 +1,3 @@
-/** @jsxImportSource react */
 import { ImageResponse } from "@cloudflare/pages-plugin-vercel-og/api";
 import { BlogPostService } from "../services/blog-post";
 import type { DB } from "../db";

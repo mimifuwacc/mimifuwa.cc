@@ -3,10 +3,6 @@ main = "src/index.ts"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat_v2"]
 
-[[rules]]
-type = "Data"
-globs = ["**/*.ttf"]
-fallthrough = false
 
 # D1 Database
 [[d1_databases]]
