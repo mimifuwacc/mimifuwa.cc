@@ -1,39 +1,26 @@
-import { Hono } from 'hono'
-import { cors } from 'hono/cors'
-import { createYogaServer } from './graphql/yoga'
-import type { Env, Context } from './types'
+import { initWasm, Resvg } from '@resvg/resvg-wasm'
+import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm'
+import fontBold from './routes/fonts/NotoSansJP-Bold.ttf'
+import { createApp } from './app'
+import { createDB } from './db'
+import { handleOgImage, type ResvgConstructor } from './routes/og'
+import type { Env } from './types'
 
-const app = new Hono<{ Bindings: Env }>()
+let resvgReady = false
 
-// CORS for development
-app.use('*', cors({
-  origin: '*',
-  allowMethods: ['GET', 'POST', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization'],
-}))
+async function ensureResvg() {
+  if (resvgReady) return
+  await initWasm(resvgWasm)
+  resvgReady = true
+}
 
-// Health check
-app.get('/health', (c) => {
-  return c.json({ status: 'ok', timestamp: new Date().toISOString() })
-})
+const app = createApp()
 
-// GraphQL Yoga
-const yoga = createYogaServer()
-
-app.use('/graphql/*', async (c) => {
-  const response = await yoga.handle(
-    new Request(c.req.raw),
-    {
-      env: c.env,
-      request: c.req.raw,
-    } as Context
-  ) as unknown as Response
-
-  // Return the response properly
-  return new Response(response.body, {
-    status: response.status,
-    headers: Object.fromEntries(response.headers.entries()),
-  })
+app.get('/og/:slug', async (c) => {
+  await ensureResvg()
+  const slug = c.req.param('slug')
+  const db = createDB(c.env as Env)
+  return handleOgImage(slug, db, Resvg as unknown as ResvgConstructor, fontBold)
 })
 
 export default app

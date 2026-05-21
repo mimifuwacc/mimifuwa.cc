@@ -7,5 +7,6 @@ onlyBuiltDependencies:
   - core-js-pure
   - esbuild
   - lefthook
+  - msw
   - sharp
   - workerd

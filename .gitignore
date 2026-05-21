@@ -46,6 +46,9 @@ cloudflare-env.d.ts
 .open-next
 .wrangler
 
+# turbo
+.turbo
+
 # storybook
 *storybook.log
 storybook-static
