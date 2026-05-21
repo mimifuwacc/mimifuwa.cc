@@ -7,6 +7,7 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { matter } from "vfile-matter";
 
+import rehypeCodeFilename from "./plugins/rehype-code-filename";
 import rehypeLinkCard from "./plugins/rehype-link-card";
 import rehypeInfoCard from "./plugins/rehype-info-card";
 import rehypeSplitTaskLists from "./plugins/rehype-split-task-lists";
@@ -27,6 +28,7 @@ export async function parseToHtml(markdown: string): Promise<{
     .use(remarkFrontmatter)
     .use(remarkGfm)
     .use(remarkRehype)
+    .use(rehypeCodeFilename)
     .use(rehypeHighlight)
     .use(rehypeCustom)
     .use(rehypeStringify)
@@ -41,13 +43,39 @@ export async function parseToHtml(markdown: string): Promise<{
   };
 }
 
+/**
+ * HTMLをReactコンポーネントにパースする（カスタムコンポーネント対応）
+ */
+export async function parseHtmlToReact(
+  html: string,
+  components?: Record<string, React.ComponentType<any>>,
+): Promise<{ content: any }> {
+  const rehypeParse = (await import("rehype-parse")).default;
+  const rehypeReact = (await import("rehype-react")).default;
+  const { jsx, jsxs, Fragment } = await import("react/jsx-runtime");
+
+  const file = await unified()
+    .use(rehypeParse, { fragment: true })
+    .use(rehypeCodeFilename)
+    .use(rehypeHighlight)
+    .use(rehypeReact, {
+      jsx,
+      jsxs,
+      Fragment,
+      ...(components ? { components } : {}),
+    } as any)
+    .process(html);
+
+  return { content: file.result };
+}
+
 // React用（Webアプリなど）
 export async function parseToReact(markdown: string): Promise<{
   content: any;
   frontmatter: Record<string, unknown>;
 }> {
   const rehypeReact = (await import("rehype-react")).default;
-  const production = (await import("react/jsx-runtime")).default;
+  const { jsx, jsxs, Fragment } = await import("react/jsx-runtime");
 
   const file = await unified()
     .use(remarkParse)
@@ -56,10 +84,7 @@ export async function parseToReact(markdown: string): Promise<{
     .use(remarkRehype)
     .use(rehypeHighlight)
     .use(rehypeCustom)
-    .use(rehypeReact, {
-      ...production,
-      createElement: undefined, // Cloudflare Workers対応
-    })
+    .use(rehypeReact, { jsx, jsxs, Fragment } as any)
     .process(markdown);
 
   matter(file);
@@ -73,7 +98,6 @@ export async function parseToReact(markdown: string): Promise<{
 
 /**
  * React用（カスタムコンポーネント対応）
- * Adminアプリなどでカスタムコンポーネントを渡す場合に使用
  */
 export async function parseToReactWithComponents(
   markdown: string,
@@ -83,7 +107,7 @@ export async function parseToReactWithComponents(
   frontmatter: Record<string, unknown>;
 }> {
   const rehypeReact = (await import("rehype-react")).default;
-  const production = (await import("react/jsx-runtime")).default;
+  const { jsx, jsxs, Fragment } = await import("react/jsx-runtime");
 
   const file = await unified()
     .use(remarkParse)
@@ -92,11 +116,7 @@ export async function parseToReactWithComponents(
     .use(remarkRehype)
     .use(rehypeHighlight)
     .use(rehypeCustom)
-    .use(rehypeReact, {
-      ...production,
-      createElement: undefined, // Cloudflare Workers対応
-      components,
-    })
+    .use(rehypeReact, { jsx, jsxs, Fragment, components } as any)
     .process(markdown);
 
   matter(file);

@@ -17,5 +17,5 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*", "env.d.ts"],
-  "exclude": ["node_modules", "_go_archive"]
+  "exclude": ["node_modules", "_go_archive", "src/dev-server.ts"]
 }
