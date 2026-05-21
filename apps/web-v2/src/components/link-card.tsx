@@ -18,72 +18,55 @@ export interface LinkCardProps {
   url: string;
 }
 
-function NoData({ url }: { url: string }) {
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-4 my-4 border border-slate-200 rounded-lg block"
-    >
-      <span className="text-slate-700 font-medium truncate flex-1">{url}</span>
-    </a>
-  );
-}
-
 export default function LinkCard({ url }: LinkCardProps) {
-  const { data: ogpData, isLoading, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["ogp", url],
     queryFn: () => fetchOgp(url),
     staleTime: 24 * 60 * 60 * 1000,
     retry: false,
   });
 
-  if (isError || (!isLoading && !ogpData)) {
-    return <NoData url={url} />;
-  }
-
-  if (isLoading) {
-    return (
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="p-4 my-4 flex min-h-[124px] sm:min-h-[146px] w-full border border-slate-200 rounded-lg"
-      />
-    );
-  }
+  const hostname = (() => { try { return new URL(url).hostname; } catch { return url; } })();
 
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="p-4 my-4 flex w-full min-h-[122px] sm:min-h-28 border border-slate-200 rounded-lg"
+      className="flex my-6 rounded-xl border border-border bg-card hover:bg-muted/50 transition-colors overflow-hidden no-underline"
     >
-      <div className="flex space-x-4 items-center">
-        {ogpData!.image && (
-          <div className="hidden sm:flex !h-28 aspect-[1.91/1] object-cover rounded-lg bg-slate-100 overflow-hidden shrink-0">
-            <img
-              src={ogpData!.image}
-              alt={ogpData!.title || ogpData!.siteName || ""}
-              className="!my-0 !shadow-none"
-              onError={(e) => { e.currentTarget.style.opacity = "0"; }}
-            />
+      <div className="flex flex-col justify-center flex-1 min-w-0 px-4 py-3 gap-1">
+        {isLoading ? (
+          <div className="space-y-2">
+            <div className="h-4 w-2/3 rounded bg-muted animate-pulse" />
+            <div className="h-3 w-full rounded bg-muted animate-pulse" />
+            <div className="h-3 w-1/3 rounded bg-muted animate-pulse" />
           </div>
+        ) : (
+          <>
+            <p className="text-sm font-semibold text-foreground line-clamp-1 leading-snug">
+              {(!isError && data?.title) ? data.title : hostname}
+            </p>
+            {!isError && data?.description && (
+              <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                {data.description}
+              </p>
+            )}
+            <p className="text-xs text-primary truncate mt-0.5">{hostname}</p>
+          </>
         )}
-        <div>
-          {ogpData!.siteName && (
-            <div className="text-xs text-slate-500 mb-1">{ogpData!.siteName}</div>
-          )}
-          <div className="text-cyan-600 font-bold line-clamp-2 mb-2">
-            {ogpData!.title || ogpData!.url}
-          </div>
-          {ogpData!.description && (
-            <div className="text-sm text-slate-600 line-clamp-3">{ogpData!.description}</div>
-          )}
-        </div>
       </div>
+
+      {!isLoading && !isError && data?.image && (
+        <div className="hidden sm:block w-32 shrink-0 self-stretch">
+          <img
+            src={data.image}
+            alt={data.title ?? ""}
+            className="!my-0 !rounded-none !shadow-none !border-none w-full h-full object-cover"
+            onError={(e) => { e.currentTarget.parentElement?.remove(); }}
+          />
+        </div>
+      )}
     </a>
   );
 }

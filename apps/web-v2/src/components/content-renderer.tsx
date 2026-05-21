@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { parseHtmlToReact } from "@mimifuwacc/parser";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -14,6 +14,7 @@ import {
 import type { ComponentType, ReactNode } from "react";
 import { isValidElement } from "react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/lib/theme";
 
 function childrenToText(children: ReactNode): string {
   if (typeof children === "string" || typeof children === "number") return String(children);
@@ -89,23 +90,33 @@ function TwitterCard({ url }: { url: string }) {
   const cleanUrl = url
     .replace(/^https:\/\/x\.com/, "https://twitter.com")
     .split("?")[0];
+  const { theme } = useTheme();
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: theme triggers widget reload with updated data-theme attribute
   useEffect(() => {
-    const w = window as Window & { twttr?: { widgets?: { load: () => void } } };
+    const w = window as Window & { twttr?: { widgets?: { load: (el?: HTMLElement | null) => void } } };
+    const load = () => w.twttr?.widgets?.load(containerRef.current);
     if (w.twttr?.widgets) {
-      w.twttr.widgets.load();
+      load();
       return;
     }
-    if (document.getElementById("twitter-wjs")) return;
+    if (document.getElementById("twitter-wjs")) {
+      const interval = setInterval(() => {
+        if ((window as typeof w).twttr?.widgets) { clearInterval(interval); load(); }
+      }, 100);
+      return () => clearInterval(interval);
+    }
     const js = document.createElement("script");
     js.id = "twitter-wjs";
     js.src = "https://platform.twitter.com/widgets.js";
+    js.onload = load;
     document.body.appendChild(js);
-  }, []);
+  }, [theme]);
 
   return (
-    <div className="flex justify-center my-6">
-      <blockquote className="twitter-tweet" data-lang="ja">
+    <div ref={containerRef} className="flex justify-center my-6">
+      <blockquote className="twitter-tweet" data-lang="ja" data-theme={theme}>
         <a href={`${cleanUrl}?ref_src=twsrc%5Etfw`} className="invisible">
           {cleanUrl}
         </a>
