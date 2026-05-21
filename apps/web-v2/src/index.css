@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "highlight.js/styles/github-dark.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/oxanium";
@@ -51,6 +50,10 @@
 }
 
 :root {
+  --code-bg: #f6f8fa;
+  --code-header-bg: #eaeef2;
+  --code-copy-color: #57606a;
+  --code-copy-hover: #24292f;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -86,6 +89,10 @@
 }
 
 .dark {
+  --code-bg: #0d1117;
+  --code-header-bg: #161b22;
+  --code-copy-color: #8b949e;
+  --code-copy-hover: #e6edf3;
   --background: oklch(0.20 0 0);
   --foreground: oklch(0.95 0 0);
   --card: oklch(0.25 0 0);

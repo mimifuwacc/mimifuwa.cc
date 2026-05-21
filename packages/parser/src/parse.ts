@@ -7,6 +7,7 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { matter } from "vfile-matter";
 
+import rehypeCodeFilename from "./plugins/rehype-code-filename";
 import rehypeLinkCard from "./plugins/rehype-link-card";
 import rehypeInfoCard from "./plugins/rehype-info-card";
 import rehypeSplitTaskLists from "./plugins/rehype-split-task-lists";
@@ -27,6 +28,7 @@ export async function parseToHtml(markdown: string): Promise<{
     .use(remarkFrontmatter)
     .use(remarkGfm)
     .use(remarkRehype)
+    .use(rehypeCodeFilename)
     .use(rehypeHighlight)
     .use(rehypeCustom)
     .use(rehypeStringify)
@@ -54,6 +56,7 @@ export async function parseHtmlToReact(
 
   const file = await unified()
     .use(rehypeParse, { fragment: true })
+    .use(rehypeCodeFilename)
     .use(rehypeHighlight)
     .use(rehypeReact, {
       jsx,

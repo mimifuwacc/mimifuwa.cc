@@ -335,6 +335,9 @@ importers:
       graphql-request:
         specifier: ^7.0.0
         version: 7.4.0(graphql@16.13.2)
+      highlight.js:
+        specifier: ^11.11.1
+        version: 11.11.1
       lucide-react:
         specifier: ^1.16.0
         version: 1.16.0(react@19.1.0)

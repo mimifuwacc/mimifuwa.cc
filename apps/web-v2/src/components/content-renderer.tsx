@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { parseHtmlToReact } from "@mimifuwacc/parser";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -13,13 +13,18 @@ import {
 } from "react-icons/fa6";
 import type { ComponentType, ReactNode } from "react";
 import { isValidElement } from "react";
+import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/lib/theme";
 
 function childrenToText(children: ReactNode): string {
-  if (typeof children === "string" || typeof children === "number") return String(children);
+  if (typeof children === "string" || typeof children === "number")
+    return String(children);
   if (Array.isArray(children)) return children.map(childrenToText).join("");
-  if (isValidElement(children)) return childrenToText((children.props as { children?: ReactNode }).children);
+  if (isValidElement(children))
+    return childrenToText(
+      (children.props as { children?: ReactNode }).children,
+    );
   return "";
 }
 
@@ -95,7 +100,9 @@ function TwitterCard({ url }: { url: string }) {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: theme triggers widget reload with updated data-theme attribute
   useEffect(() => {
-    const w = window as Window & { twttr?: { widgets?: { load: (el?: HTMLElement | null) => void } } };
+    const w = window as Window & {
+      twttr?: { widgets?: { load: (el?: HTMLElement | null) => void } };
+    };
     const load = () => w.twttr?.widgets?.load(containerRef.current);
     if (w.twttr?.widgets) {
       load();
@@ -103,7 +110,10 @@ function TwitterCard({ url }: { url: string }) {
     }
     if (document.getElementById("twitter-wjs")) {
       const interval = setInterval(() => {
-        if ((window as typeof w).twttr?.widgets) { clearInterval(interval); load(); }
+        if ((window as typeof w).twttr?.widgets) {
+          clearInterval(interval);
+          load();
+        }
       }, 100);
       return () => clearInterval(interval);
     }
@@ -121,6 +131,73 @@ function TwitterCard({ url }: { url: string }) {
           {cleanUrl}
         </a>
       </blockquote>
+    </div>
+  );
+}
+
+// ── CodeBlock ────────────────────────────────────────────────────────────
+
+function CodeBlock(props: El) {
+  const { children, ...rest } = props;
+  const filename = rest["data-filename"] as string | undefined;
+  const { "data-filename": _f, ...preProps } = rest;
+  const preRef = useRef<HTMLPreElement>(null);
+  const [copied, setCopied] = useState(false);
+
+  const copy = () => {
+    const text = preRef.current?.innerText ?? "";
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const copyBtn = (
+    <button
+      type="button"
+      onClick={copy}
+      className="flex items-center gap-1 text-xs transition-colors cursor-pointer"
+      style={{ color: "var(--code-copy-color)" }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.color =
+          "var(--code-copy-hover)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.color =
+          "var(--code-copy-color)";
+      }}
+    >
+      {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
+      <span>{copied ? "Copied!" : "Copy"}</span>
+    </button>
+  );
+
+  return (
+    <div className="relative group my-6 rounded-xl overflow-hidden border border-border">
+      {filename && (
+        <div className="absolute top-2.5 left-3 z-10">
+          <span
+            className="text-xs font-mono px-2 py-0.5 rounded-full"
+            style={{
+              backgroundColor: "color-mix(in srgb, var(--code-copy-color) 15%, transparent)",
+              color: "var(--code-copy-color)",
+            }}
+          >
+            {filename}
+          </span>
+        </div>
+      )}
+      <div className="absolute top-2.5 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        {copyBtn}
+      </div>
+      <pre
+        ref={preRef}
+        className={cn("overflow-x-auto px-5 pb-5 text-sm leading-relaxed", filename ? "pt-9" : "pt-5")}
+        style={{ backgroundColor: "var(--code-bg)" }}
+        {...preProps}
+      >
+        {children}
+      </pre>
     </div>
   );
 }
@@ -235,7 +312,12 @@ const blogComponents: Record<string, ComponentType<any>> = {
   code: ({ children, className, ...p }: El) => {
     if (className)
       return (
-        <code className={cn("text-sm font-mono", className)} {...p}>
+        // style overrides hljs background (set by github-dark.css) so the pre bg shows through
+        <code
+          className={cn("text-sm font-mono", className)}
+          style={{ background: "transparent" }}
+          {...p}
+        >
           {children}
         </code>
       );
@@ -248,14 +330,7 @@ const blogComponents: Record<string, ComponentType<any>> = {
       </code>
     );
   },
-  pre: ({ children, ...p }: El) => (
-    <pre
-      className="rounded-xl overflow-x-auto my-6 border border-border bg-[#242a2e] p-5 text-sm leading-relaxed"
-      {...p}
-    >
-      {children}
-    </pre>
-  ),
+  pre: (p: El) => <CodeBlock {...p} />,
   img: ({ src, alt, ...p }: El) => (
     // biome-ignore lint/performance/noImgElement: markdown content
     <img
