@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { fetchMeta, setMeta } from "haribote/client";
-import Header from "./components/header";
-import Footer from "./components/footer";
-import Home from "./pages/Home";
-import BlogList from "./pages/BlogList";
-import BlogPost from "./pages/BlogPost";
-import Links from "./pages/Links";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import Home from "@/pages/Home";
+import BlogList from "@/pages/BlogList";
+import BlogPost from "@/pages/BlogPost";
+import Links from "@/pages/Links";
 
 function MetaSync() {
   const location = useLocation();
@@ -18,7 +18,7 @@ function MetaSync() {
 
 function Layout() {
   return (
-    <div className="text-slate-700 bg-slate-50 min-h-screen grid grid-rows-[auto_1fr_auto]">
+    <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-background">
       <Header />
       <main>
         <Routes>

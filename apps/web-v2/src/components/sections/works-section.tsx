@@ -1,68 +1,63 @@
 import { FaGithub } from "react-icons/fa";
-import Button from "../button";
-import Card from "../card";
-import type { WorkItem } from "@contents/works";
+import { Card } from "@/components/ui/card";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { works } from "@contents/works";
-import { Section } from "../section";
+import type { WorkItem } from "@contents/works";
 
 function getGitHubOgImage(url: string): string {
   const match = url.match(/github\.com\/([^/]+)\/([^/?]+)/);
-  if (match) {
-    const [, owner, repo] = match;
-    return `https://opengraph.githubassets.com/1/${owner}/${repo}`;
-  }
+  if (match) return `https://opengraph.githubassets.com/1/${match[1]}/${match[2]}`;
   return "";
 }
 
 function WorkCard({ work }: { work: WorkItem }) {
+  const imgSrc = work.image ?? getGitHubOgImage(work.url);
+
   return (
-    <Card
-      className="group overflow-hidden hover:shadow-xl h-full flex flex-col !p-4 sm:p-6"
-      href={work.url}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <div className="relative overflow-hidden bg-slate-100 aspect-[1.91/1] !-m-4 sm:-mt-6">
-        <img
-          src={
-            work.url.includes("github.com")
-              ? getGitHubOgImage(work.url) || work.image || "/no-image.png"
-              : work.image || "/no-image.png"
-          }
-          alt={work.title}
-          className="w-full h-full object-cover"
-          width={400}
-          height={300}
-        />
-      </div>
-      <div className="mt-8 sm:mt-10 px-2 mb-2 sm:mb-4 flex-1 flex flex-col">
-        <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-3 sm:mb-4 group-hover:text-cyan-600 transition-colors">
-          {work.title}
-        </h3>
-        <p className="text-slate-600 text-sm leading-relaxed flex-1">{work.description}</p>
-      </div>
-    </Card>
+    <a href={work.url} target="_blank" rel="noopener noreferrer" className="group block h-full">
+      <Card className="overflow-hidden h-full hover:shadow-md transition-shadow duration-200">
+        {imgSrc && (
+          <img
+            src={imgSrc}
+            alt={work.title}
+            className="w-full aspect-[1.91/1] object-cover"
+          />
+        )}
+        <div className="px-4">
+          <h3 className="font-semibold mb-1.5 group-hover:text-primary transition-colors flex items-center gap-1.5">
+            {work.title}
+            <ExternalLink className="size-3.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">{work.description}</p>
+        </div>
+      </Card>
+    </a>
   );
 }
 
 export default function WorksSection() {
   return (
-    <Section id="works-section" title="Works" subtitle="作成したアプリ・サービスなど">
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-12">
-        {works.map((work) => (
-          <WorkCard key={work.title} work={work} />
-        ))}
+    <section id="works-section" className="py-12 sm:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="mb-12 px-2">
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground/70 mb-2">Works</h2>
+          <div className="w-8 h-0.5 bg-primary mb-3" />
+          <p className="text-sm text-muted-foreground mb-3">作成したアプリ・サービスなど</p>
+          <a
+            href="https://github.com/mimifuwacc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm border border-border rounded-full px-3 py-1 text-muted-foreground"
+          >
+            <FaGithub className="size-3.5" />
+            他のプロジェクトを見る
+            <ArrowUpRight className="size-3" />
+          </a>
+        </div>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          {works.map((work) => <WorkCard key={work.title} work={work} />)}
+        </div>
       </div>
-      <div className="text-center">
-        <Button
-          url="https://github.com/mimifuwacc"
-          icon={<FaGithub />}
-          className="mx-auto bg-slate-800 text-white hover:bg-slate-700"
-        >
-          <span className="hidden sm:inline">GitHubで他のプロジェクトを見る</span>
-          <span className="sm:hidden">GitHub</span>
-        </Button>
-      </div>
-    </Section>
+    </section>
   );
 }
