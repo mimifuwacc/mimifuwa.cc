@@ -2,6 +2,12 @@
 
 import { useEffect } from "react";
 
+declare global {
+  interface Window {
+    twttr?: { widgets: { load: () => void } };
+  }
+}
+
 export default function TwitterCard({ url }: { url: string }) {
   useEffect(() => {
     // 既にロード済みならwidgets.load()を呼ぶだけ
