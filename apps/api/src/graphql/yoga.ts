@@ -3,7 +3,7 @@ import { createSchema, createYoga } from "graphql-yoga";
 import { createDB } from "../db";
 import { BlogPostService } from "../services/blog-post";
 import { R2Service } from "../services/r2";
-import { purgeOgCache } from "../routes/og";
+import { purgeOgCache } from "../routes/og-cache";
 import type { Context, Env } from "../types";
 import { CursorScalar, TimeScalar } from "./scalars";
 

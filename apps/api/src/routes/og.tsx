@@ -15,7 +15,8 @@ async function loadFont(): Promise<ArrayBuffer> {
 }
 
 export async function handleOgImage(request: Request, slug: string, db: DB): Promise<Response> {
-  const cache = typeof caches !== "undefined" ? (caches as unknown as { default: Cache }).default : null;
+  const cache =
+    typeof caches !== "undefined" ? (caches as unknown as { default: Cache }).default : null;
 
   if (cache) {
     const cached = await cache.match(request);
@@ -56,7 +57,3 @@ export async function handleOgImage(request: Request, slug: string, db: DB): Pro
   }
 }
 
-export async function purgeOgCache(origin: string, slug: string): Promise<void> {
-  if (typeof caches === "undefined") return;
-  await (caches as unknown as { default: Cache }).default.delete(`${origin}/og/${slug}`);
-}
