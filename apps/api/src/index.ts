@@ -8,7 +8,7 @@ const app = createApp();
 app.get("/og/*", async (c) => {
   const slug = c.req.path.replace(/^\/og\//, "");
   const db = createDB(c.env as Env);
-  return handleOgImage(slug, db);
+  return handleOgImage(c.req.raw, slug, db);
 });
 
 export default app;

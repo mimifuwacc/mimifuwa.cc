@@ -8,7 +8,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
   return (
     <Link viewTransition to={`/blogs/${post.slug}`} className="group block h-full">
       <Card className="h-full hover:shadow-lg transition-shadow duration-200 overflow-hidden py-0">
-        <div className="w-full aspect-[1200/630] overflow-hidden">
+        <div className="w-full aspect-1200/630 overflow-hidden">
           <img src={post.ogImageUrl} alt={post.title} className="w-full h-full object-cover" />
         </div>
         <CardContent className="flex flex-col gap-2 pt-0 pb-4">
