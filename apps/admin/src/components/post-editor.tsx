@@ -651,9 +651,18 @@ export function PostEditor({
             <div className="grid gap-3 max-w-2xl">
               {/* Slug */}
               <div className="grid grid-cols-[5rem_1fr] items-start gap-3">
-                <label className="text-xs font-medium text-muted-foreground text-right pt-1.5">Slug</label>
+                <label className="text-xs font-medium text-muted-foreground text-right pt-1.5">
+                  Slug
+                </label>
                 <div className="flex flex-col gap-1">
-                  <div className={cn("flex items-center gap-1.5 text-xs font-mono bg-background border rounded-md px-2.5 py-1.5 text-foreground focus-within:ring-2 focus-within:ring-ring/50 transition-colors", slugError ? "border-destructive focus-within:border-destructive focus-within:ring-destructive/50" : "border-border focus-within:border-ring")}>
+                  <div
+                    className={cn(
+                      "flex items-center gap-1.5 text-xs font-mono bg-background border rounded-md px-2.5 py-1.5 text-foreground focus-within:ring-2 focus-within:ring-ring/50 transition-colors",
+                      slugError
+                        ? "border-destructive focus-within:border-destructive focus-within:ring-destructive/50"
+                        : "border-border focus-within:border-ring",
+                    )}
+                  >
                     <span className="text-muted-foreground/50">/</span>
                     <input
                       value={formData.slug ?? slug ?? ""}
