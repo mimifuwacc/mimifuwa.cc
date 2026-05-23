@@ -48,7 +48,9 @@ export default async function HomePage() {
           <h2 className="text-xl font-semibold">Posts</h2>
           <p className="text-sm text-muted-foreground mt-0.5">{pageInfo.totalCount} 件</p>
         </div>
-        <a href="/new" className={cn(buttonVariants())}>New Post</a>
+        <a href="/new" className={cn(buttonVariants())}>
+          New Post
+        </a>
       </div>
 
       <div className="rounded-xl border border-border bg-card overflow-hidden">

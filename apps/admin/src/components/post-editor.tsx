@@ -48,8 +48,8 @@ export interface PostEditorData {
   content: string;
   tags: string;
   date?: string;
-  draft: boolean;        // true = 下書き中（MD のみ保存）
-  isPublished: boolean;  // true = 公開中（公開側に表示される）
+  draft: boolean; // true = 下書き中（MD のみ保存）
+  isPublished: boolean; // true = 公開中（公開側に表示される）
 }
 
 interface PostEditorProps {
@@ -130,16 +130,27 @@ export function PostEditor({
   const [viewMode, setViewMode] = useState<ViewMode>("split");
 
   // ── 自動保存 ──────────────────────────────────────────────────────────────
-  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved" | "error">(
+    "idle",
+  );
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedHash = useRef(
-    JSON.stringify({ title: initialTitle, slug: initialSlug, excerpt: initialExcerpt, tags: initialTags, content: initialContent }),
+    JSON.stringify({
+      title: initialTitle,
+      slug: initialSlug,
+      excerpt: initialExcerpt,
+      tags: initialTags,
+      content: initialContent,
+    }),
   );
 
   function getCurrentHash(data: typeof formData) {
     return JSON.stringify({
-      title: data.title, slug: data.slug, excerpt: data.excerpt, tags: data.tags,
+      title: data.title,
+      slug: data.slug,
+      excerpt: data.excerpt,
+      tags: data.tags,
       content: contentRef.current?.value ?? "",
     });
   }
@@ -151,7 +162,11 @@ export function PostEditor({
       const hash = getCurrentHash(data);
       if (hash === lastSavedHash.current) return;
       setAutoSaveStatus("saving");
-      const result = await onSave({ ...data, content: contentRef.current?.value ?? "", draft: true });
+      const result = await onSave({
+        ...data,
+        content: contentRef.current?.value ?? "",
+        draft: true,
+      });
       if (result.success) {
         lastSavedHash.current = hash;
         setLastSavedAt(new Date());
@@ -186,16 +201,26 @@ export function PostEditor({
   function saveSnapshot() {
     const el = contentRef.current;
     if (!el) return;
-    const snap: Snapshot = { value: el.value, selStart: el.selectionStart, selEnd: el.selectionEnd };
+    const snap: Snapshot = {
+      value: el.value,
+      selStart: el.selectionStart,
+      selEnd: el.selectionEnd,
+    };
     if (snap.value === undoStack.current[undoIndex.current]?.value) return;
     undoStack.current = undoStack.current.slice(0, undoIndex.current + 1);
     undoStack.current.push(snap);
     undoIndex.current = undoStack.current.length - 1;
-    if (undoStack.current.length > 200) { undoStack.current.shift(); undoIndex.current--; }
+    if (undoStack.current.length > 200) {
+      undoStack.current.shift();
+      undoIndex.current--;
+    }
   }
 
   function flushAndSave() {
-    if (snapshotTimer.current) { clearTimeout(snapshotTimer.current); snapshotTimer.current = null; }
+    if (snapshotTimer.current) {
+      clearTimeout(snapshotTimer.current);
+      snapshotTimer.current = null;
+    }
     saveSnapshot();
   }
 
@@ -212,7 +237,10 @@ export function PostEditor({
 
   function handleUndo() {
     flushAndSave();
-    if (undoIndex.current > 0) { undoIndex.current--; applySnapshot(undoStack.current[undoIndex.current]); }
+    if (undoIndex.current > 0) {
+      undoIndex.current--;
+      applySnapshot(undoStack.current[undoIndex.current]);
+    }
   }
 
   function handleRedo() {
@@ -248,7 +276,11 @@ export function PostEditor({
     const result = await onSave(data);
     if (result.success) {
       setFormData((prev) => ({ ...prev, draft: nextDraft, isPublished: nextIsPublished }));
-      lastSavedHash.current = getCurrentHash({ ...formData, draft: nextDraft, isPublished: nextIsPublished });
+      lastSavedHash.current = getCurrentHash({
+        ...formData,
+        draft: nextDraft,
+        isPublished: nextIsPublished,
+      });
       setLastSavedAt(new Date());
       setAutoSaveStatus("idle");
       if (nextIsPublished && !asDraft) {
@@ -270,12 +302,7 @@ export function PostEditor({
 
   // 整形ボタン（操作前後にスナップショットを保存）
   const handleFormat = useCallback(
-    (
-      type: "wrap" | "linePrefix",
-      before: string,
-      after?: string,
-      defaultText?: string,
-    ) => {
+    (type: "wrap" | "linePrefix", before: string, after?: string, defaultText?: string) => {
       const el = contentRef.current;
       if (!el) return;
       flushAndSave(); // 操作前スナップショット
@@ -318,11 +345,19 @@ export function PostEditor({
 
   // タグチップ管理
   const [tagInput, setTagInput] = useState("");
-  const tags = formData.tags ? formData.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
+  const tags = formData.tags
+    ? formData.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
+    : [];
 
   function addTag(value: string) {
     const t = value.trim().replace(/,/g, "");
-    if (!t || tags.includes(t)) { setTagInput(""); return; }
+    if (!t || tags.includes(t)) {
+      setTagInput("");
+      return;
+    }
     updateField("tags", [...tags, t].join(", "));
     setTagInput("");
   }
@@ -335,7 +370,6 @@ export function PostEditor({
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-
       {/* ── 上部ナビバー ───────────────────────────────────────────── */}
       <div className="shrink-0 border-b flex items-center gap-2 px-3 py-2 bg-background">
         <a
@@ -361,12 +395,11 @@ export function PostEditor({
           )}
           {autoSaveStatus === "saved" && lastSavedAt && (
             <span className="text-emerald-600">
-              {lastSavedAt.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })} に自動保存
+              {lastSavedAt.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })}{" "}
+              に自動保存
             </span>
           )}
-          {autoSaveStatus === "error" && (
-            <span className="text-destructive">自動保存に失敗</span>
-          )}
+          {autoSaveStatus === "error" && <span className="text-destructive">自動保存に失敗</span>}
         </span>
 
         {/* 状態バッジ */}
@@ -432,7 +465,10 @@ export function PostEditor({
                 <Button
                   type="button"
                   size="sm"
-                  onClick={() => { setPublishConfirm(false); handleSave(false, true); }}
+                  onClick={() => {
+                    setPublishConfirm(false);
+                    handleSave(false, true);
+                  }}
                 >
                   {formData.isPublished ? "更新する" : "公開する"}
                 </Button>
@@ -458,7 +494,10 @@ export function PostEditor({
                 <button
                   type="button"
                   className="w-full text-left text-sm px-3 py-1.5 hover:bg-muted transition-colors text-muted-foreground"
-                  onClick={() => { setMenuOpen(false); setUnpublishConfirm(true); }}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setUnpublishConfirm(true);
+                  }}
                 >
                   非公開にする
                 </button>
@@ -467,7 +506,10 @@ export function PostEditor({
                 <button
                   type="button"
                   className="w-full text-left text-sm px-3 py-1.5 hover:bg-destructive/10 transition-colors text-destructive"
-                  onClick={() => { setMenuOpen(false); setDeleteConfirm(true); }}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setDeleteConfirm(true);
+                  }}
                 >
                   削除
                 </button>
@@ -495,7 +537,10 @@ export function PostEditor({
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => { setUnpublishConfirm(false); handleSave(formData.draft, false); }}
+                  onClick={() => {
+                    setUnpublishConfirm(false);
+                    handleSave(formData.draft, false);
+                  }}
                 >
                   非公開にする
                 </Button>
@@ -511,9 +556,7 @@ export function PostEditor({
             <DialogPopup>
               <DialogHeader>
                 <DialogTitle>記事を削除しますか？</DialogTitle>
-                <DialogDescription>
-                  この操作は元に戻せません。
-                </DialogDescription>
+                <DialogDescription>この操作は元に戻せません。</DialogDescription>
               </DialogHeader>
               <DialogFooter>
                 <DialogClose render={<Button type="button" variant="outline" size="sm" />}>
@@ -523,7 +566,10 @@ export function PostEditor({
                   type="button"
                   variant="destructive"
                   size="sm"
-                  onClick={() => { setDeleteConfirm(false); handleDelete(); }}
+                  onClick={() => {
+                    setDeleteConfirm(false);
+                    handleDelete();
+                  }}
                 >
                   削除する
                 </Button>
@@ -535,10 +581,7 @@ export function PostEditor({
 
       {/* ── エラー ─────────────────────────────────────────────────── */}
       {error && (
-        <Alert
-          variant="destructive"
-          className="shrink-0 rounded-none border-x-0 border-t-0"
-        >
+        <Alert variant="destructive" className="shrink-0 rounded-none border-x-0 border-t-0">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -565,7 +608,10 @@ export function PostEditor({
               <>
                 <span className="opacity-30">·</span>
                 {tags.map((t) => (
-                  <span key={t} className="bg-primary/10 text-primary px-1.5 py-px rounded-full text-[10px] font-medium">
+                  <span
+                    key={t}
+                    className="bg-primary/10 text-primary px-1.5 py-px rounded-full text-[10px] font-medium"
+                  >
                     {t}
                   </span>
                 ))}
@@ -606,7 +652,9 @@ export function PostEditor({
 
               {/* タグ */}
               <div className="grid grid-cols-[5rem_1fr] items-start gap-3">
-                <label className="text-xs font-medium text-muted-foreground text-right pt-1.5">タグ</label>
+                <label className="text-xs font-medium text-muted-foreground text-right pt-1.5">
+                  タグ
+                </label>
                 <div className="flex items-center gap-1 flex-wrap min-h-[2.25rem] bg-background border border-border rounded-md px-2.5 py-1 focus-within:ring-2 focus-within:ring-ring/50 focus-within:border-ring transition-colors">
                   {tags.map((tag) => (
                     <span
@@ -627,10 +675,16 @@ export function PostEditor({
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag(tagInput); }
-                      if (e.key === "Backspace" && !tagInput && tags.length > 0) removeTag(tags[tags.length - 1]);
+                      if (e.key === "Enter" || e.key === ",") {
+                        e.preventDefault();
+                        addTag(tagInput);
+                      }
+                      if (e.key === "Backspace" && !tagInput && tags.length > 0)
+                        removeTag(tags[tags.length - 1]);
                     }}
-                    onBlur={() => { if (tagInput) addTag(tagInput); }}
+                    onBlur={() => {
+                      if (tagInput) addTag(tagInput);
+                    }}
                     placeholder={tags.length === 0 ? "Enter で確定" : "追加..."}
                     className="text-xs outline-none bg-transparent text-foreground placeholder:text-muted-foreground/40 min-w-[5rem]"
                   />
@@ -640,7 +694,9 @@ export function PostEditor({
               {/* date（new のみ） */}
               {mode === "new" && (
                 <div className="grid grid-cols-[5rem_1fr] items-center gap-3">
-                  <label className="text-xs font-medium text-muted-foreground text-right">投稿日</label>
+                  <label className="text-xs font-medium text-muted-foreground text-right">
+                    投稿日
+                  </label>
                   <div className="flex items-center gap-1.5 bg-background border border-border rounded-md px-2.5 py-1.5 text-xs text-foreground focus-within:ring-2 focus-within:ring-ring/50 focus-within:border-ring transition-colors">
                     <CalendarDays className="size-3 text-muted-foreground/50 shrink-0" />
                     <input
@@ -672,33 +728,87 @@ export function PostEditor({
 
       {/* ── 整形ツールバー ─────────────────────────────────────────── */}
       <div className="shrink-0 border-b flex items-center gap-0.5 px-2 py-1 bg-muted/30">
-        <Button type="button" variant="ghost" size="icon" title="Heading (##)" onClick={() => handleFormat("linePrefix", "## ")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Heading (##)"
+          onClick={() => handleFormat("linePrefix", "## ")}
+        >
           <Heading2 className="size-4" />
         </Button>
-        <Button type="button" variant="ghost" size="icon" title="Bold" onClick={() => handleFormat("wrap", "**", "**", "太字テキスト")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Bold"
+          onClick={() => handleFormat("wrap", "**", "**", "太字テキスト")}
+        >
           <Bold className="size-4" />
         </Button>
-        <Button type="button" variant="ghost" size="icon" title="Italic" onClick={() => handleFormat("wrap", "*", "*", "斜体テキスト")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Italic"
+          onClick={() => handleFormat("wrap", "*", "*", "斜体テキスト")}
+        >
           <Italic className="size-4" />
         </Button>
-        <Button type="button" variant="ghost" size="icon" title="Strikethrough" onClick={() => handleFormat("wrap", "~~", "~~", "テキスト")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Strikethrough"
+          onClick={() => handleFormat("wrap", "~~", "~~", "テキスト")}
+        >
           <Strikethrough className="size-4" />
         </Button>
         <div className="w-px h-4 bg-border mx-0.5 shrink-0" />
-        <Button type="button" variant="ghost" size="icon" title="Inline code" onClick={() => handleFormat("wrap", "`", "`", "code")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Inline code"
+          onClick={() => handleFormat("wrap", "`", "`", "code")}
+        >
           <Code className="size-4" />
         </Button>
-        <Button type="button" variant="ghost" size="icon" title="Code block" onClick={() => handleFormat("wrap", "```\n", "\n```", "コード")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Code block"
+          onClick={() => handleFormat("wrap", "```\n", "\n```", "コード")}
+        >
           <SquareCode className="size-4" />
         </Button>
         <div className="w-px h-4 bg-border mx-0.5 shrink-0" />
-        <Button type="button" variant="ghost" size="icon" title="Blockquote" onClick={() => handleFormat("linePrefix", "> ")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Blockquote"
+          onClick={() => handleFormat("linePrefix", "> ")}
+        >
           <Quote className="size-4" />
         </Button>
-        <Button type="button" variant="ghost" size="icon" title="Horizontal rule" onClick={() => handleFormat("linePrefix", "---\n")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Horizontal rule"
+          onClick={() => handleFormat("linePrefix", "---\n")}
+        >
           <Minus className="size-4" />
         </Button>
-        <Button type="button" variant="ghost" size="icon" title="Link" onClick={() => handleFormat("wrap", "[", "](url)", "リンクテキスト")}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Link"
+          onClick={() => handleFormat("wrap", "[", "](url)", "リンクテキスト")}
+        >
           <Link className="size-4" />
         </Button>
         <ImageUploadButton onInsert={insertAtCursor} />
@@ -747,8 +857,16 @@ export function PostEditor({
             onKeyDown={(e) => {
               const mod = e.ctrlKey || e.metaKey;
               if (mod && !e.altKey) {
-                if (e.key === "z" && !e.shiftKey) { e.preventDefault(); handleUndo(); return; }
-                if ((e.key === "z" && e.shiftKey) || e.key === "y") { e.preventDefault(); handleRedo(); return; }
+                if (e.key === "z" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleUndo();
+                  return;
+                }
+                if ((e.key === "z" && e.shiftKey) || e.key === "y") {
+                  e.preventDefault();
+                  handleRedo();
+                  return;
+                }
               }
               // Enter でパラグラフ境界スナップショット
               if (e.key === "Enter") flushAndSave();
@@ -757,9 +875,7 @@ export function PostEditor({
             className="flex-1 min-h-0 resize-none p-6 font-mono text-sm leading-7 bg-background border-none outline-none focus:outline-none placeholder:text-muted-foreground/30 overflow-y-auto"
           />
         )}
-        {viewMode === "split" && (
-          <div className="w-px bg-border shrink-0" />
-        )}
+        {viewMode === "split" && <div className="w-px bg-border shrink-0" />}
         {(viewMode === "preview" || viewMode === "split") && (
           <div className="flex-1 min-h-0 overflow-y-auto p-6 bg-background">
             <div className="max-w-2xl mx-auto">

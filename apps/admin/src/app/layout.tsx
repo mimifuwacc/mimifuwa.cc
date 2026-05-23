@@ -19,7 +19,10 @@ export default function RootLayout({
         <Providers>
           <Toaster position="bottom-right" richColors />
           <div className="h-full flex flex-col bg-background">
-            <header className="shrink-0 bg-card border-b border-border" style={{ height: "var(--header-h)" }}>
+            <header
+              className="shrink-0 bg-card border-b border-border"
+              style={{ height: "var(--header-h)" }}
+            >
               <div className="max-w-6xl mx-auto px-4 h-full flex items-center justify-between">
                 <h1 className="text-base font-semibold text-foreground">mimifuwa.cc admin</h1>
                 <nav className="flex gap-1">

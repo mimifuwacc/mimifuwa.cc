@@ -173,7 +173,8 @@ function CodeBlock(props: El) {
     <div className="relative group my-4 rounded-xl overflow-hidden border border-border">
       {filename ? (
         <>
-          <div className="flex items-center justify-between px-3 py-1.5 border-b border-border/60"
+          <div
+            className="flex items-center justify-between px-3 py-1.5 border-b border-border/60"
             style={{ backgroundColor: "var(--code-bg)" }}
           >
             <span
@@ -185,9 +186,7 @@ function CodeBlock(props: El) {
             >
               {filename}
             </span>
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-              {copyBtn}
-            </div>
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity">{copyBtn}</div>
           </div>
           <pre
             ref={preRef}
