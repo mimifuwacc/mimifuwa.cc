@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   deploy-web:
+    needs: deploy-api
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
