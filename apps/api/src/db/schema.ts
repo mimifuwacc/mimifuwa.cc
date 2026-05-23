@@ -8,7 +8,8 @@ export const blogPosts = sqliteTable("blog_posts", {
   title: text("title").notNull(),
   excerpt: text("excerpt").notNull(),
   date: text("date").notNull(),
-  draft: integer("draft", { mode: "boolean" }).notNull().default(false),
+  draft: integer("draft", { mode: "boolean" }).notNull().default(true),
+  isPublished: integer("is_published", { mode: "boolean" }).notNull().default(false),
   contentHash: text("content_hash"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
