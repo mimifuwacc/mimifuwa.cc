@@ -42,9 +42,21 @@ export interface BlogPostConnection {
   };
 }
 
-export interface CreatePostResponse { createBlogPost: MutationResponse }
-export interface UpdatePostResponse { updateBlogPost: MutationResponse }
-export interface DeletePostResponse { deleteBlogPost: Pick<MutationResponse, "success" | "message"> }
-export interface ArchivePostResponse { archiveBlogPost: Pick<MutationResponse, "success" | "message"> }
-export interface GetPostResponse { adminPost: Post | null }
-export interface GetPostsResponse { blogPosts: BlogPostConnection }
+export interface CreatePostResponse {
+  createBlogPost: MutationResponse;
+}
+export interface UpdatePostResponse {
+  updateBlogPost: MutationResponse;
+}
+export interface DeletePostResponse {
+  deleteBlogPost: Pick<MutationResponse, "success" | "message">;
+}
+export interface ArchivePostResponse {
+  archiveBlogPost: Pick<MutationResponse, "success" | "message">;
+}
+export interface GetPostResponse {
+  adminPost: Post | null;
+}
+export interface GetPostsResponse {
+  blogPosts: BlogPostConnection;
+}
