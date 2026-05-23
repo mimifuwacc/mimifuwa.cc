@@ -88,7 +88,7 @@ export default async function HomePage() {
                   <TableRow key={edge.node.id}>
                     <TableCell>
                       <a
-                        href={`/${edge.node.slug}/edit`}
+                        href={`/edit/${edge.node.slug}`}
                         className="font-medium text-primary hover:text-primary/80 transition-colors"
                       >
                         {edge.node.title || (
@@ -122,7 +122,7 @@ export default async function HomePage() {
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
                         <a
-                          href={`/${edge.node.slug}/edit`}
+                          href={`/edit/${edge.node.slug}`}
                           className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
                         >
                           Edit
