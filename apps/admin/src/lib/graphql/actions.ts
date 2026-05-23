@@ -1,11 +1,12 @@
 "use server";
 
 import { client } from "./client";
-import { ARCHIVE_POST, CREATE_POST, DELETE_POST, UPDATE_POST } from "./queries";
+import { ARCHIVE_POST, CREATE_POST, DELETE_POST, GET_POST, UPDATE_POST } from "./queries";
 import type {
   ArchivePostResponse,
   CreatePostResponse,
   DeletePostResponse,
+  GetPostResponse,
   UpdatePostResponse,
 } from "./types";
 
@@ -19,8 +20,12 @@ export async function createPost(formData: FormData) {
   const draft = formData.get("draft") === "true";
   const isPublished = formData.get("isPublished") === "true";
 
-  if (!title || !slug || !excerpt || !content || !date) {
-    return { success: false, message: "Required fields are missing" };
+  if (draft) {
+    if (!slug || !date) return { success: false, message: "Slug と日付は必須です" };
+  } else {
+    if (!title || !slug || !excerpt || !content || !date) {
+      return { success: false, message: "Required fields are missing" };
+    }
   }
 
   try {
@@ -57,7 +62,7 @@ export async function updatePost(slug: string, formData: FormData) {
   const isPublishedRaw = formData.get("isPublished");
   const isPublished = isPublishedRaw !== null ? isPublishedRaw === "true" : undefined;
 
-  if (!title || !excerpt || !content) {
+  if (!draft && (!title || !excerpt || !content)) {
     return { success: false, message: "Required fields are missing" };
   }
 
@@ -95,6 +100,15 @@ export async function deletePost(slug: string) {
       success: false,
       message: error instanceof Error ? error.message : "Failed to delete post",
     };
+  }
+}
+
+export async function checkSlugExists(slug: string): Promise<boolean> {
+  try {
+    const data = await client.request<GetPostResponse>(GET_POST, { slug });
+    return data.adminPost !== null;
+  } catch {
+    return false;
   }
 }
 

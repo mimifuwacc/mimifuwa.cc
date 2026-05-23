@@ -91,7 +91,9 @@ export default async function HomePage() {
                         href={`/${edge.node.slug}/edit`}
                         className="font-medium text-primary hover:text-primary/80 transition-colors"
                       >
-                        {edge.node.title}
+                        {edge.node.title || (
+                          <span className="text-muted-foreground italic">(タイトル未定)</span>
+                        )}
                       </a>
                       <p className="text-xs text-muted-foreground mt-0.5">{edge.node.slug}</p>
                     </TableCell>
