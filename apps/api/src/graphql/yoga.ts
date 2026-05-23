@@ -309,7 +309,11 @@ const resolvers = {
         if (targetSlug !== input.slug) {
           const conflict = await blogService.findBySlug(targetSlug);
           if (conflict) {
-            return { success: false, message: `slug "${targetSlug}" は既に使用されています`, blogPost: null };
+            return {
+              success: false,
+              message: `slug "${targetSlug}" は既に使用されています`,
+              blogPost: null,
+            };
           }
           // slug リネーム：MD と HTML（あれば）を新 slug へ移動
           const mdContent = input.content || (await r2Service.downloadMarkdown(input.slug)) || "";
