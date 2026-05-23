@@ -9,6 +9,7 @@ compatibility_flags = ["nodejs_compat_v2"]
 binding = "DB"
 database_name = "mimifuwacc-blogs"
 database_id = "ac1c88bc-d531-49d9-a10c-dad6ff637972"
+migrations_dir = "drizzle"
 
 # R2 Bucket
 [[r2_buckets]]
@@ -18,6 +19,7 @@ bucket_name = "mimifuwacc-blogs"
 # Environment variables
 [vars]
 ENVIRONMENT = "production"
+# 本番の ADMIN_SECRET は `wrangler secret put ADMIN_SECRET` で設定する
 
 # Devel preview environment
 [env.devel]

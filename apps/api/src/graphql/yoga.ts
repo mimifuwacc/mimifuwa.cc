@@ -34,6 +34,7 @@ const typeDefs = /* GraphQL */ `
     date: Time!
     tags: [Tag!]!
     draft: Boolean!
+    isPublished: Boolean!
     contentHash: String
     createdAt: Time!
     updatedAt: Time!
@@ -69,17 +70,20 @@ const typeDefs = /* GraphQL */ `
     content: String!
     date: Time!
     tags: [String!]!
-    draft: Boolean = false
+    draft: Boolean = true
+    isPublished: Boolean = false
   }
 
   input UpdateBlogPostInput {
     slug: String!
+    newSlug: String
     title: String
     excerpt: String
     content: String
     date: Time
     tags: [String!]
     draft: Boolean
+    isPublished: Boolean
   }
 
   type MutationResponse {
@@ -90,6 +94,7 @@ const typeDefs = /* GraphQL */ `
 
   type Query {
     blogPost(slug: String!): BlogPost
+    adminPost(slug: String!): BlogPost
     blogPosts(filter: BlogPostFilter, page: PageInput): BlogPostConnection!
     tags: [Tag!]!
   }
@@ -113,27 +118,42 @@ const resolvers = {
       const r2Service = new R2Service(context.env.R2 as any);
 
       const post = await blogService.findBySlug(slug);
-      if (!post) return null;
+      if (!post || !post.isPublished) return null;
 
-      // Load HTML content from R2, fallback to Markdown
-      let content = await r2Service.downloadHtml(slug);
-      if (!content) {
-        // HTMLが存在しない場合はMarkdownを取得してパース（既存記事の移行用）
-        const markdown = await r2Service.downloadMarkdown(slug);
-        if (markdown) {
-          const { html } = await parseToHtml(markdown);
-          content = html;
-        }
-      }
+      const [content, markdown] = await Promise.all([
+        r2Service.downloadHtml(slug),
+        r2Service.downloadMarkdown(slug),
+      ]);
 
-      // Load Markdown from R2 for editing
-      const markdown = (await r2Service.downloadMarkdown(slug)) || "";
-
-      // Ensure content is always a string (never undefined)
       return {
         ...post,
         content: content || "",
-        markdown,
+        markdown: markdown || "",
+      };
+    },
+
+    adminPost: async (_: unknown, { slug }: { slug: string }, context: Context) => {
+      const secret = context.request.headers.get("x-admin-secret");
+      if (!secret || secret !== context.env.ADMIN_SECRET) {
+        throw new Error("Unauthorized");
+      }
+
+      const db = createDB(context.env);
+      const blogService = new BlogPostService(db);
+      const r2Service = new R2Service(context.env.R2 as any);
+
+      const post = await blogService.findBySlug(slug);
+      if (!post) return null;
+
+      const [content, markdown] = await Promise.all([
+        r2Service.downloadHtml(slug),
+        r2Service.downloadMarkdown(slug),
+      ]);
+
+      return {
+        ...post,
+        content: content || "",
+        markdown: markdown || "",
       };
     },
 
@@ -192,6 +212,7 @@ const resolvers = {
           date: Date;
           tags: string[];
           draft?: boolean | null;
+          isPublished?: boolean | null;
         };
       },
       context: Context,
@@ -203,12 +224,17 @@ const resolvers = {
       try {
         const contentHash = await r2Service.generateContentHash(input.content);
         const r2Key = `posts/${input.slug}.md`;
+        const draft = input.draft ?? true;
+        const isPublished = input.isPublished ?? false;
 
-        // Parse Markdown to HTML
-        const { html } = await parseToHtml(input.content);
-
-        // Upload both Markdown and HTML to R2
-        await r2Service.uploadPostContent(input.slug, input.content, html);
+        if (draft) {
+          // draft=true：Markdown のみ保存
+          await r2Service.uploadMarkdown(r2Key, input.content);
+        } else {
+          // draft=false：Markdown + HTML を保存
+          const { html } = await parseToHtml(input.content);
+          await r2Service.uploadPostContent(input.slug, input.content, html);
+        }
 
         const postId = await blogService.upsert({
           slug: input.slug,
@@ -216,7 +242,8 @@ const resolvers = {
           title: input.title,
           excerpt: input.excerpt,
           date: input.date,
-          draft: input.draft || false,
+          draft,
+          isPublished,
           contentHash,
         });
 
@@ -249,12 +276,14 @@ const resolvers = {
       }: {
         input: {
           slug: string;
+          newSlug?: string | null;
           title?: string | null;
           excerpt?: string | null;
           content?: string | null;
           date?: Date | null;
           tags?: string[] | null;
           draft?: boolean | null;
+          isPublished?: boolean | null;
         };
       },
       context: Context,
@@ -273,24 +302,59 @@ const resolvers = {
           };
         }
 
+        // slug リネーム処理
+        const targetSlug =
+          input.newSlug && input.newSlug !== input.slug ? input.newSlug : input.slug;
+
+        if (targetSlug !== input.slug) {
+          const conflict = await blogService.findBySlug(targetSlug);
+          if (conflict) {
+            return { success: false, message: `slug "${targetSlug}" は既に使用されています`, blogPost: null };
+          }
+          // slug リネーム：MD と HTML（あれば）を新 slug へ移動
+          const mdContent = input.content || (await r2Service.downloadMarkdown(input.slug)) || "";
+          await r2Service.uploadMarkdown(`posts/${targetSlug}.md`, mdContent);
+          const existingHtml = await r2Service.downloadHtml(input.slug);
+          if (existingHtml) {
+            await r2Service.uploadHtml(`posts/${targetSlug}.html`, existingHtml);
+          }
+          await r2Service.deletePostContent(input.slug);
+          await blogService.updateSlug(input.slug, targetSlug);
+        }
+
+        const draft = input.draft ?? existing.draft;
+        const isPublished = input.isPublished ?? existing.isPublished;
         const contentHash = input.content
           ? await r2Service.generateContentHash(input.content)
           : existing.contentHash;
 
         if (input.content) {
-          // Parse Markdown to HTML
-          const { html } = await parseToHtml(input.content);
-          // Upload both Markdown and HTML to R2
-          await r2Service.uploadPostContent(input.slug, input.content, html);
+          if (draft) {
+            // draft=true：Markdown のみ更新（HTML は保持）
+            await r2Service.uploadMarkdown(`posts/${targetSlug}.md`, input.content);
+          } else {
+            // draft=false：Markdown を保存し HTML を生成・上書き
+            const { html } = await parseToHtml(input.content);
+            await r2Service.uploadPostContent(targetSlug, input.content, html);
+          }
+        } else if (!draft && existing.draft) {
+          // content 変更なしで draft=false になった場合（公開操作）：MD から HTML を生成
+          const markdown = (await r2Service.downloadMarkdown(targetSlug)) || "";
+          if (markdown) {
+            const { html } = await parseToHtml(markdown);
+            await r2Service.uploadHtml(`posts/${targetSlug}.html`, html);
+          }
         }
+        // draft=true に戻す場合は HTML を保持し続ける
 
         const postId = await blogService.upsert({
-          slug: input.slug,
+          slug: targetSlug,
           r2Key: existing.r2Key,
           title: input.title ?? existing.title,
           excerpt: input.excerpt ?? existing.excerpt,
           date: input.date ?? new Date(existing.date),
-          draft: input.draft ?? existing.draft,
+          draft,
+          isPublished,
           contentHash,
         });
 
@@ -302,7 +366,7 @@ const resolvers = {
           }
         }
 
-        const post = await blogService.findBySlug(input.slug);
+        const post = await blogService.findBySlug(targetSlug);
 
         return {
           success: true,

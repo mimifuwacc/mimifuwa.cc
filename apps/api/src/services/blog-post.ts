@@ -23,6 +23,7 @@ export class BlogPostService {
         excerpt: blogPosts.excerpt,
         date: blogPosts.date,
         draft: blogPosts.draft,
+        isPublished: blogPosts.isPublished,
         contentHash: blogPosts.contentHash,
         createdAt: blogPosts.createdAt,
         updatedAt: blogPosts.updatedAt,
@@ -70,6 +71,7 @@ export class BlogPostService {
         excerpt: blogPosts.excerpt,
         date: blogPosts.date,
         draft: blogPosts.draft,
+        isPublished: blogPosts.isPublished,
         contentHash: blogPosts.contentHash,
         createdAt: blogPosts.createdAt,
         updatedAt: blogPosts.updatedAt,
@@ -128,6 +130,7 @@ export class BlogPostService {
     excerpt: string;
     date: Date;
     draft: boolean;
+    isPublished: boolean;
     contentHash: string | null;
   }): Promise<number> {
     const existing = await this.db
@@ -146,6 +149,7 @@ export class BlogPostService {
           excerpt: data.excerpt,
           date: data.date.toISOString(),
           draft: data.draft,
+          isPublished: data.isPublished,
           contentHash: data.contentHash,
           updatedAt: new Date(),
         })
@@ -163,6 +167,7 @@ export class BlogPostService {
           excerpt: data.excerpt,
           date: data.date.toISOString(),
           draft: data.draft,
+          isPublished: data.isPublished,
           contentHash: data.contentHash,
         })
         .returning({ id: blogPosts.id });
@@ -174,6 +179,14 @@ export class BlogPostService {
   async delete(slug: string): Promise<boolean> {
     const result = await this.db.delete(blogPosts).where(eq(blogPosts.slug, slug));
     return result.meta.changes > 0;
+  }
+
+  // Rename slug
+  async updateSlug(oldSlug: string, newSlug: string): Promise<void> {
+    await this.db
+      .update(blogPosts)
+      .set({ slug: newSlug, r2Key: `posts/${newSlug}.md`, updatedAt: new Date() })
+      .where(eq(blogPosts.slug, oldSlug));
   }
 
   // Update draft status

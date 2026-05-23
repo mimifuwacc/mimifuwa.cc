@@ -70,6 +70,8 @@ export interface Env {
   DB: D1Database;
   R2: R2Bucket;
   ENVIRONMENT?: string;
+  API_BASE_URL?: string;
+  ADMIN_SECRET: string;
 }
 
 // Context for GraphQL resolvers

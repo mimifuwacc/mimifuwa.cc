@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { createYogaServer } from "./graphql/yoga";
+import { imagesRouter } from "./routes/images";
+import { uploadRouter } from "./routes/upload";
 import type { Context, Env } from "./types";
 
 export function createApp() {
@@ -18,6 +20,9 @@ export function createApp() {
   app.get("/health", (c) => {
     return c.json({ status: "ok", timestamp: new Date().toISOString() });
   });
+
+  app.route("/upload", uploadRouter);
+  app.route("/images", imagesRouter);
 
   const yoga = createYogaServer();
 
