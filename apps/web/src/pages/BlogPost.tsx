@@ -1,10 +1,11 @@
+import ContentRenderer from "@mimifuwacc/ui/components/content-renderer";
 import { CalendarDays } from "lucide-react";
 import { useParams } from "react-router-dom";
-import ContentRenderer from "@/components/content-renderer";
 import { Section } from "@/components/section";
 import TableOfContents from "@/components/table-of-contents";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@mimifuwacc/ui/components/ui/badge";
 import { usePostBySlug } from "@/lib/query/blog";
+import { useTheme } from "@/lib/theme";
 
 function formatDate(dateString: string) {
   try {
@@ -21,10 +22,11 @@ function formatDate(dateString: string) {
 export default function BlogPost() {
   const { "*": slugPath = "" } = useParams();
   const { data: post, isPending, isError } = usePostBySlug(slugPath);
+  const { theme } = useTheme();
 
   if (isPending) return null;
 
-  if (isError || !post) {
+  if (isError || !post || !post.content) {
     return (
       <Section
         id="blog-error"
@@ -70,7 +72,7 @@ export default function BlogPost() {
 
         <div className="flex gap-12">
           <article className="min-w-0 flex-1 self-start">
-            <ContentRenderer html={post.content} />
+            <ContentRenderer html={post.content} theme={theme} />
           </article>
           {/* デスクトップ: 右サイドに sticky */}
           <aside className="hidden xl:block w-56 shrink-0">

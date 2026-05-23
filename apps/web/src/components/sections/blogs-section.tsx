@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@mimifuwacc/ui/components/ui/badge";
+import { Card, CardContent } from "@mimifuwacc/ui/components/ui/card";
 import { type BlogPost, useRecentPosts } from "@/lib/query/blog";
 
 export function BlogCard({ post }: { post: BlogPost }) {

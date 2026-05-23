@@ -1,1 +1,84 @@
 @import "tailwindcss";
+@import "highlight.js/styles/github.css";
+
+@source "../../../../packages/ui/src";
+
+/* Custom variants required by packages/ui components */
+@custom-variant dark (&:is(.dark *));
+
+@custom-variant data-checked {
+  &:where([data-state="checked"]),
+  &:where([data-checked]:not([data-checked="false"])) {
+    @slot;
+  }
+}
+@custom-variant data-unchecked {
+  &:where([data-state="unchecked"]) {
+    @slot;
+  }
+}
+@custom-variant data-horizontal {
+  &:where([data-orientation="horizontal"]) {
+    @slot;
+  }
+}
+@custom-variant data-vertical {
+  &:where([data-orientation="vertical"]) {
+    @slot;
+  }
+}
+@custom-variant data-disabled {
+  &:where([data-disabled="true"]),
+  &:where([data-disabled]:not([data-disabled="false"])) {
+    @slot;
+  }
+}
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.145 0 0);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.145 0 0);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.145 0 0);
+  --color-primary: oklch(0.52 0.105 223.128);
+  --color-primary-foreground: oklch(0.984 0.019 200.873);
+  --color-secondary: oklch(0.967 0.001 286.375);
+  --color-secondary-foreground: oklch(0.21 0.006 285.885);
+  --color-muted: oklch(0.97 0 0);
+  --color-muted-foreground: oklch(0.556 0 0);
+  --color-accent: oklch(0.97 0 0);
+  --color-accent-foreground: oklch(0.205 0 0);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-border: oklch(0.922 0 0);
+  --color-input: oklch(0.922 0 0);
+  --color-ring: oklch(0.708 0 0);
+
+  --radius-sm: calc(0.875rem * 0.6);
+  --radius-md: calc(0.875rem * 0.8);
+  --radius-lg: 0.875rem;
+  --radius-xl: calc(0.875rem * 1.4);
+  --radius-2xl: calc(0.875rem * 1.8);
+  --radius-3xl: calc(0.875rem * 2.2);
+  --radius-4xl: calc(0.875rem * 2.6);
+}
+
+:root {
+  --code-bg: #f6f8fa;
+  --code-copy-color: #57606a;
+  --code-copy-hover: #24292f;
+  --radius: 0.875rem;
+  --header-h: 3rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}

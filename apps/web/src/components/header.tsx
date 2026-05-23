@@ -2,7 +2,7 @@ import { Menu, Moon, Sun, X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/lib/theme";
-import { cn } from "@/lib/utils";
+import { cn } from "@mimifuwacc/ui/lib/utils";
 
 const navItems = [
   { href: "/", label: "Home" },

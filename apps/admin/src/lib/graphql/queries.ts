@@ -9,6 +9,7 @@ export const GET_POSTS = `
           excerpt
           date
           draft
+          isPublished
           tags {
             id
             name
@@ -30,7 +31,7 @@ export const GET_POSTS = `
 
 export const GET_POST = `
   query GetPost($slug: String!) {
-    blogPost(slug: $slug) {
+    adminPost(slug: $slug) {
       id
       slug
       title
@@ -39,6 +40,7 @@ export const GET_POST = `
       markdown
       date
       draft
+      isPublished
       tags {
         id
         name

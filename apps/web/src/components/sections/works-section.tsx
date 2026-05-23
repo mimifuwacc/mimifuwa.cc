@@ -2,7 +2,7 @@ import type { WorkItem } from "@contents/works";
 import { works } from "@contents/works";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
-import { Card } from "@/components/ui/card";
+import { Card } from "@mimifuwacc/ui/components/ui/card";
 
 function getGitHubOgImage(url: string): string {
   const match = url.match(/github\.com\/([^/]+)\/([^/?]+)/);

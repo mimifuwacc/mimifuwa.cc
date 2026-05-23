@@ -17,7 +17,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ slug:
 async function getPost(slug: string) {
   try {
     const data = await client.request(GET_POST, { slug });
-    return data.blogPost;
+    return data.adminPost;
   } catch {
     return null;
   }

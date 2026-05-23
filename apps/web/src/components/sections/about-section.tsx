@@ -3,11 +3,11 @@ import { allSkills } from "@contents/skills";
 import { Award, BadgeCheck, ChevronRight, Clock, Smile, Wrench } from "lucide-react";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { SiZenn } from "react-icons/si";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@mimifuwacc/ui/components/ui/avatar";
+import { Badge } from "@mimifuwacc/ui/components/ui/badge";
+import { Button } from "@mimifuwacc/ui/components/ui/button";
+import { Card, CardContent } from "@mimifuwacc/ui/components/ui/card";
+import { Separator } from "@mimifuwacc/ui/components/ui/separator";
 import { Section } from "../section";
 
 function Profile() {

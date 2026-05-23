@@ -14,25 +14,36 @@
     "postinstall": "pnpm cf:typegen"
   },
   "dependencies": {
+    "@base-ui/react": "catalog:",
     "@mimifuwacc/parser": "workspace:*",
-    "@opennextjs/cloudflare": "^1.18.0",
-    "graphql": "^16.13.2",
-    "graphql-request": "^7.4.0",
+    "@mimifuwacc/ui": "workspace:*",
+    "@opennextjs/cloudflare": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "graphql": "catalog:",
+    "graphql-request": "catalog:",
+    "highlight.js": "catalog:",
+    "lucide-react": "catalog:",
     "next": "16.2.1",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-icons": "^5.5.0",
-    "swr": "^2.4.1"
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:",
+    "shadcn": "catalog:",
+    "sonner": "^2.0.7",
+    "swr": "^2.4.1",
+    "tailwind-merge": "catalog:",
+    "tw-animate-css": "catalog:"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250521.0",
-    "@tailwindcss/postcss": "^4.1.13",
+    "@cloudflare/workers-types": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
     "@types/node": "^24",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "opennextjs-cloudflare": "^1.0.0",
-    "tailwindcss": "^4.1.13",
-    "typescript": "^5",
-    "wrangler": "^4.76.0"
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
   }
 }

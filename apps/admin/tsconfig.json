@@ -17,7 +17,7 @@
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@mimifuwacc/web/*": ["../../web/src/*"]
+      "@mimifuwacc/ui/*": ["../../packages/ui/src/*"]
     },
     "esModuleInterop": true,
     "plugins": [
