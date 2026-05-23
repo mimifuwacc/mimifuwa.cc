@@ -12,7 +12,7 @@ export function buildOgElement(title: string, tags: string[] = []) {
         flexDirection: "column",
         justifyContent: "space-between",
         background: "linear-gradient(135deg, #f0f7fa 0%, #e8f4f8 60%, #ddeef5 100%)",
-        padding: "72px 80px 56px",
+        padding: "40px 64px 40px",
         position: "relative",
         overflow: "hidden",
       },
