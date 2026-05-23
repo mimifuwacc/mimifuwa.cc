@@ -96,6 +96,7 @@ const typeDefs = /* GraphQL */ `
     blogPost(slug: String!): BlogPost
     adminPost(slug: String!): BlogPost
     blogPosts(filter: BlogPostFilter, page: PageInput): BlogPostConnection!
+    adminBlogPosts(filter: BlogPostFilter, page: PageInput): BlogPostConnection!
     tags: [Tag!]!
   }
 
@@ -184,7 +185,42 @@ const resolvers = {
         }
       }
 
-      return blogService.findWithPagination({ ...(args.filter || {}), isPublished: true }, {
+      return blogService.findWithPagination(
+        { ...(args.filter || {}), isPublished: true },
+        {
+          first,
+          offset,
+          limit: first,
+        },
+      );
+    },
+
+    adminBlogPosts: async (
+      _: unknown,
+      args: {
+        filter?: {
+          draft?: boolean | null;
+          tag?: string | null;
+          search?: string | null;
+          dateAfter?: Date | null;
+          dateBefore?: Date | null;
+        } | null;
+        page?: { first?: number | null; after?: string | null } | null;
+      },
+      context: Context,
+    ) => {
+      const secret = context.request.headers.get("x-admin-secret");
+      if (!secret || secret !== context.env.ADMIN_SECRET) {
+        throw new Error("Unauthorized");
+      }
+
+      const db = createDB(context.env);
+      const blogService = new BlogPostService(db);
+
+      const first = args.page?.first || 50;
+      const offset = 0;
+
+      return blogService.findWithPagination(args.filter || {}, {
         first,
         offset,
         limit: first,

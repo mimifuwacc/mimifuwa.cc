@@ -1,6 +1,6 @@
 export const GET_POSTS = `
   query GetPosts($filter: BlogPostFilter, $page: PageInput) {
-    blogPosts(filter: $filter, page: $page) {
+    adminBlogPosts(filter: $filter, page: $page) {
       edges {
         node {
           id
