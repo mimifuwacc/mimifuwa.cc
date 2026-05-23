@@ -184,7 +184,7 @@ const resolvers = {
         }
       }
 
-      return blogService.findWithPagination(args.filter || {}, {
+      return blogService.findWithPagination({ ...(args.filter || {}), isPublished: true }, {
         first,
         offset,
         limit: first,
