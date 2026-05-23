@@ -18,10 +18,14 @@ export async function handleOgImage(slug: string, db: DB): Promise<Response> {
   try {
     const service = new BlogPostService(db);
     const post = await service.findBySlug(slug);
-    const title = post?.title ?? "mimifuwa.cc";
+    if (!post) {
+      return Response.redirect("https://mimifuwa.cc/og.png", 302);
+    }
+    const title = post.title;
+    const tags = post.tags.map((t) => t.name);
     const fontData = await loadFont();
 
-    return new ImageResponse(buildOgElement(title) as never, {
+    return new ImageResponse(buildOgElement(title, tags) as never, {
       width: 1200,
       height: 630,
       fonts: [{ name: "Noto Sans JP", data: fontData, weight: 700, style: "normal" }],
