@@ -1,3 +1,5 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
 
@@ -45,7 +47,6 @@ export default function LinkCard({ url }: LinkCardProps) {
       rel="noopener noreferrer"
       className="flex items-stretch my-6 rounded-xl border border-border bg-card hover:bg-muted/30 transition-colors overflow-hidden no-underline group"
     >
-      {/* テキスト */}
       <div className="flex flex-col justify-center flex-1 min-w-0 px-5 py-4 gap-1.5">
         {isLoading ? (
           <div className="space-y-2">
@@ -79,7 +80,6 @@ export default function LinkCard({ url }: LinkCardProps) {
         )}
       </div>
 
-      {/* OG画像 */}
       {hasImage && (
         <div className="hidden sm:flex items-center pr-4 shrink-0">
           <img

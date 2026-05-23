@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@mimifuwacc/ui/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { deletePost } from "@/lib/graphql/actions";
@@ -13,7 +14,7 @@ export function DeleteButton({ slug }: DeleteButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
-    if (!confirm("Are you sure you want to delete this post?")) {
+    if (!confirm("この記事を削除しますか？")) {
       return;
     }
 
@@ -30,12 +31,13 @@ export function DeleteButton({ slug }: DeleteButtonProps) {
   }
 
   return (
-    <button
+    <Button
+      variant="destructive"
+      size="sm"
       onClick={handleDelete}
       disabled={isDeleting}
-      className="text-red-600 hover:text-red-800 disabled:text-slate-400"
     >
-      {isDeleting ? "Deleting..." : "Delete"}
-    </button>
+      {isDeleting ? "削除中..." : "Delete"}
+    </Button>
   );
 }

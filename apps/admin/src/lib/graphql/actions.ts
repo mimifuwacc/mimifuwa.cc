@@ -11,6 +11,7 @@ export async function createPost(formData: FormData) {
   const tags = formData.get("tags") as string;
   const date = formData.get("date") as string;
   const draft = formData.get("draft") === "true";
+  const isPublished = formData.get("isPublished") === "true";
 
   if (!title || !slug || !excerpt || !content || !date) {
     return { success: false, message: "Required fields are missing" };
@@ -26,6 +27,7 @@ export async function createPost(formData: FormData) {
         date: new Date(date).toISOString(),
         tags: tags ? tags.split(",").map((t) => t.trim()) : [],
         draft,
+        isPublished,
       },
     });
 
@@ -41,10 +43,13 @@ export async function createPost(formData: FormData) {
 
 export async function updatePost(slug: string, formData: FormData) {
   const title = formData.get("title") as string;
+  const newSlug = formData.get("newSlug") as string | null;
   const excerpt = formData.get("excerpt") as string;
   const content = formData.get("content") as string;
   const tags = formData.get("tags") as string;
   const draft = formData.get("draft") === "true";
+  const isPublishedRaw = formData.get("isPublished");
+  const isPublished = isPublishedRaw !== null ? isPublishedRaw === "true" : undefined;
 
   if (!title || !excerpt || !content) {
     return { success: false, message: "Required fields are missing" };
@@ -54,11 +59,13 @@ export async function updatePost(slug: string, formData: FormData) {
     const data = await client.request(UPDATE_POST, {
       input: {
         slug,
+        ...(newSlug && newSlug !== slug ? { newSlug } : {}),
         title,
         excerpt,
         content,
         tags: tags ? tags.split(",").map((t) => t.trim()) : [],
         draft,
+        ...(isPublished !== undefined ? { isPublished } : {}),
       },
     });
 

@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
         "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
       },
       redirect: "follow",
-      signal: AbortSignal.timeout(10000), // 10秒でタイムアウト
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!response.ok) {
@@ -149,7 +149,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(ogpData);
   } catch (error) {
-    console.error("Failed to fetch OGP:", error);
+    if (error instanceof Error && error.name !== "TimeoutError") {
+      console.warn("Failed to fetch OGP:", (error as Error).message);
+    }
 
     // エラー時は最低限の情報を返す
     const fallbackData: OgpData = {

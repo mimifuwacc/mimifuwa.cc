@@ -1,3 +1,14 @@
+import { Badge } from "@mimifuwacc/ui/components/ui/badge";
+import { buttonVariants } from "@mimifuwacc/ui/components/ui/button";
+import { cn } from "@mimifuwacc/ui/lib/utils";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@mimifuwacc/ui/components/ui/table";
 import { client } from "@/lib/graphql/client";
 import { GET_POSTS } from "@/lib/graphql/queries";
 import { DeleteButton } from "./delete-button";
@@ -9,8 +20,7 @@ async function getPosts() {
       page: { first: 50 },
     });
     return data;
-  } catch (error) {
-    // Return empty data during build/offline instead of throwing
+  } catch {
     return {
       blogPosts: {
         edges: [],
@@ -29,101 +39,99 @@ async function getPosts() {
 export default async function HomePage() {
   const data = await getPosts();
 
-  if (!data) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-red-600">Failed to load posts</p>
-      </div>
-    );
-  }
-
   const { edges, pageInfo } = data.blogPosts;
 
   return (
-    <div>
+    <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Posts</h2>
-        <a href="/new" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          New Post
-        </a>
+        <div>
+          <h2 className="text-xl font-semibold">Posts</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{pageInfo.totalCount} 件</p>
+        </div>
+        <a href="/new" className={cn(buttonVariants())}>New Post</a>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-slate-50 border-b">
-            <tr>
-              <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">Title</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">Status</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">Date</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-slate-600">Tags</th>
-              <th className="px-4 py-3 text-right text-sm font-medium text-slate-600">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-200">
-            {edges.map(
-              (edge: {
-                node: {
-                  id: string;
-                  slug: string;
-                  title: string;
-                  draft: boolean;
-                  date: string;
-                  tags: Array<{ id: string; name: string }>;
-                };
-              }) => (
-                <tr key={edge.node.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3">
-                    <a
-                      href={`/${edge.node.slug}/edit`}
-                      className="font-medium text-blue-600 hover:text-blue-800"
-                    >
-                      {edge.node.title}
-                    </a>
-                    <p className="text-sm text-slate-500">{edge.node.slug}</p>
-                  </td>
-                  <td className="px-4 py-3">
-                    {edge.node.draft ? (
-                      <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded">
-                        Draft
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">
-                        Published
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-slate-600">
-                    {new Date(edge.node.date).toLocaleDateString("ja-JP")}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-1 flex-wrap">
-                      {edge.node.tags.map((tag) => (
-                        <span
-                          key={tag.id}
-                          className="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded"
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Tags</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {edges.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-12">
+                  投稿がありません
+                </TableCell>
+              </TableRow>
+            ) : (
+              edges.map(
+                (edge: {
+                  node: {
+                    id: string;
+                    slug: string;
+                    title: string;
+                    draft: boolean;
+                    isPublished: boolean;
+                    date: string;
+                    tags: Array<{ id: string; name: string }>;
+                  };
+                }) => (
+                  <TableRow key={edge.node.id}>
+                    <TableCell>
+                      <a
+                        href={`/${edge.node.slug}/edit`}
+                        className="font-medium text-primary hover:text-primary/80 transition-colors"
+                      >
+                        {edge.node.title}
+                      </a>
+                      <p className="text-xs text-muted-foreground mt-0.5">{edge.node.slug}</p>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Badge variant={edge.node.isPublished ? "default" : "outline"}>
+                          {edge.node.isPublished ? "公開中" : "非公開"}
+                        </Badge>
+                        {edge.node.isPublished && edge.node.draft && (
+                          <Badge variant="secondary">差分あり</Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                      {new Date(edge.node.date).toLocaleDateString("ja-JP")}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1 flex-wrap">
+                        {edge.node.tags.map((tag) => (
+                          <Badge key={tag.id} variant="secondary">
+                            {tag.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <a
+                          href={`/${edge.node.slug}/edit`}
+                          className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
                         >
-                          {tag.name}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <a
-                      href={`/${edge.node.slug}/edit`}
-                      className="text-blue-600 hover:text-blue-800 mr-3"
-                    >
-                      Edit
-                    </a>
-                    <DeleteButton slug={edge.node.slug} />
-                  </td>
-                </tr>
-              ),
+                          Edit
+                        </a>
+                        <DeleteButton slug={edge.node.slug} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ),
+              )
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
-
-      <div className="mt-4 text-sm text-slate-600">Total: {pageInfo.totalCount} posts</div>
     </div>
   );
 }

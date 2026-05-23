@@ -1,7 +1,7 @@
 import { links } from "@contents/links";
 import { ExternalLink } from "lucide-react";
 import { Section } from "@/components/section";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@mimifuwacc/ui/components/ui/card";
 
 export default function Links() {
   return (

@@ -1,8 +1,8 @@
 import { ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card } from "@mimifuwacc/ui/components/ui/card";
+import { cn } from "@mimifuwacc/ui/lib/utils";
 import { extractHeadings } from "@/lib/slugify";
-import { cn } from "@/lib/utils";
 
 interface Props {
   html: string;

@@ -11,6 +11,12 @@
     "test": "turbo run test",
     "commitlint": "commitlint"
   },
+  "pnpm": {
+    "overrides": {
+      "react": "^19.2.0",
+      "react-dom": "^19.2.0"
+    }
+  },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.1",
     "@commitlint/cli": "^19.8.1",
