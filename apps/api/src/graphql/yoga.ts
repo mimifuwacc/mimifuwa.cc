@@ -184,11 +184,14 @@ const resolvers = {
         }
       }
 
-      return blogService.findWithPagination({ ...(args.filter || {}), isPublished: true }, {
-        first,
-        offset,
-        limit: first,
-      });
+      return blogService.findWithPagination(
+        { ...(args.filter || {}), isPublished: true },
+        {
+          first,
+          offset,
+          limit: first,
+        },
+      );
     },
 
     tags: async (_: unknown, __: unknown, context: Context) => {
