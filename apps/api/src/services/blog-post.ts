@@ -254,6 +254,10 @@ export class BlogPostService {
       conditions.push(eq(blogPosts.draft, filter.draft));
     }
 
+    if (filter.isPublished !== null && filter.isPublished !== undefined) {
+      conditions.push(eq(blogPosts.isPublished, filter.isPublished));
+    }
+
     if (filter.dateAfter) {
       conditions.push(sql`${blogPosts.date} >= ${filter.dateAfter.toISOString()}`);
     }

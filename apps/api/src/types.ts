@@ -23,6 +23,7 @@ export interface Tag {
 // Filter options
 export interface BlogPostFilter {
   draft?: boolean | null;
+  isPublished?: boolean | null;
   tag?: string | null;
   search?: string | null;
   dateAfter?: Date | null;
