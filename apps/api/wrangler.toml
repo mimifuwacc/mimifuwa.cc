@@ -33,6 +33,7 @@ ENVIRONMENT = "devel"
 binding = "DB"
 database_name = "mimifuwacc-blogs-devel"
 database_id = "b526fab7-0431-4d97-8553-2a6cbc2bdfce"
+migrations_dir = "drizzle"
 
 [[env.devel.r2_buckets]]
 binding = "R2"
