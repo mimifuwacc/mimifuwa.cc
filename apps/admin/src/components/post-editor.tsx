@@ -343,6 +343,9 @@ export function PostEditor({
   }, []);
 
   const [metaExpanded, setMetaExpanded] = useState(false);
+  useEffect(() => {
+    if (mode === "new") setMetaExpanded(true);
+  }, []);
   const [slugError, setSlugError] = useState<string | null>(null);
   const debouncedSlug = useDebounce(formData.slug, 600);
 
