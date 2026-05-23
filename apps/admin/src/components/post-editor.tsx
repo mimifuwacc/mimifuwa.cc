@@ -716,23 +716,21 @@ export function PostEditor({
                 </div>
               </div>
 
-              {/* date（new のみ） */}
-              {mode === "new" && (
-                <div className="grid grid-cols-[5rem_1fr] items-center gap-3">
-                  <label className="text-xs font-medium text-muted-foreground text-right">
-                    投稿日
-                  </label>
-                  <div className="flex items-center gap-1.5 bg-background border border-border rounded-md px-2.5 py-1.5 text-xs text-foreground focus-within:ring-2 focus-within:ring-ring/50 focus-within:border-ring transition-colors">
-                    <CalendarDays className="size-3 text-muted-foreground/50 shrink-0" />
-                    <input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => updateField("date", e.target.value)}
-                      className="flex-1 bg-transparent outline-none text-xs"
-                    />
-                  </div>
+              {/* date */}
+              <div className="grid grid-cols-[5rem_1fr] items-center gap-3">
+                <label className="text-xs font-medium text-muted-foreground text-right">
+                  投稿日
+                </label>
+                <div className="flex items-center gap-1.5 bg-background border border-border rounded-md px-2.5 py-1.5 text-xs text-foreground focus-within:ring-2 focus-within:ring-ring/50 focus-within:border-ring transition-colors">
+                  <CalendarDays className="size-3 text-muted-foreground/50 shrink-0" />
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => updateField("date", e.target.value)}
+                    className="flex-1 bg-transparent outline-none text-xs"
+                  />
                 </div>
-              )}
+              </div>
 
               {/* 概要 */}
               <div className="grid grid-cols-[5rem_1fr] items-center gap-3">
