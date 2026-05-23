@@ -23,7 +23,7 @@ async function getPosts() {
     return data;
   } catch {
     return {
-      blogPosts: {
+      adminBlogPosts: {
         edges: [],
         pageInfo: {
           totalCount: 0,
@@ -40,7 +40,7 @@ async function getPosts() {
 export default async function HomePage() {
   const data = await getPosts();
 
-  const { edges, pageInfo } = data.blogPosts;
+  const { edges, pageInfo } = data.adminBlogPosts;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">

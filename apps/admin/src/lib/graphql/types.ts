@@ -58,5 +58,5 @@ export interface GetPostResponse {
   adminPost: Post | null;
 }
 export interface GetPostsResponse {
-  blogPosts: BlogPostConnection;
+  adminBlogPosts: BlogPostConnection;
 }
