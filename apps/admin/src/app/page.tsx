@@ -11,11 +11,12 @@ import {
 } from "@mimifuwacc/ui/components/ui/table";
 import { client } from "@/lib/graphql/client";
 import { GET_POSTS } from "@/lib/graphql/queries";
+import type { GetPostsResponse } from "@/lib/graphql/types";
 import { DeleteButton } from "./delete-button";
 
 async function getPosts() {
   try {
-    const data = await client.request(GET_POSTS, {
+    const data = await client.request<GetPostsResponse>(GET_POSTS, {
       filter: null,
       page: { first: 50 },
     });

@@ -2,6 +2,12 @@
 
 import { client } from "./client";
 import { ARCHIVE_POST, CREATE_POST, DELETE_POST, UPDATE_POST } from "./queries";
+import type {
+  ArchivePostResponse,
+  CreatePostResponse,
+  DeletePostResponse,
+  UpdatePostResponse,
+} from "./types";
 
 export async function createPost(formData: FormData) {
   const title = formData.get("title") as string;
@@ -18,7 +24,7 @@ export async function createPost(formData: FormData) {
   }
 
   try {
-    const data = await client.request(CREATE_POST, {
+    const data = await client.request<CreatePostResponse>(CREATE_POST, {
       input: {
         slug,
         title,
@@ -56,7 +62,7 @@ export async function updatePost(slug: string, formData: FormData) {
   }
 
   try {
-    const data = await client.request(UPDATE_POST, {
+    const data = await client.request<UpdatePostResponse>(UPDATE_POST, {
       input: {
         slug,
         ...(newSlug && newSlug !== slug ? { newSlug } : {}),
@@ -81,7 +87,7 @@ export async function updatePost(slug: string, formData: FormData) {
 
 export async function deletePost(slug: string) {
   try {
-    const data = await client.request(DELETE_POST, { slug });
+    const data = await client.request<DeletePostResponse>(DELETE_POST, { slug });
     return data.deleteBlogPost;
   } catch (error) {
     console.error("Failed to delete post:", error);
@@ -94,7 +100,7 @@ export async function deletePost(slug: string) {
 
 export async function archivePost(slug: string) {
   try {
-    const data = await client.request(ARCHIVE_POST, { slug });
+    const data = await client.request<ArchivePostResponse>(ARCHIVE_POST, { slug });
     return data.archiveBlogPost;
   } catch (error) {
     console.error("Failed to archive post:", error);
