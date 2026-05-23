@@ -4,9 +4,9 @@ import { GET_POST } from "@/lib/graphql/queries";
 import type { GetPostResponse } from "@/lib/graphql/types";
 import { PostForm } from "./post-form";
 
-export default async function EditPostPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function EditPostPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const post = await getPost(slug.join("/"));
 
   if (!post) {
     notFound();
