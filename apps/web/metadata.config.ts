@@ -69,7 +69,12 @@ export function createConfig(graphqlUrl: string, service?: Fetcher) {
             description: data.blogPost.excerpt,
           };
         } catch {
-          return { ...base, ogImage: DEFAULT_OG_IMAGE, title: "mimifuwa.cc", description: "mimifuwaccのブログ" };
+          return {
+            ...base,
+            ogImage: DEFAULT_OG_IMAGE,
+            title: "mimifuwa.cc",
+            description: "mimifuwaccのブログ",
+          };
         }
       }),
       route("/links", {
