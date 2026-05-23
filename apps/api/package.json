@@ -1,0 +1,34 @@
+{
+  "name": "@mimifuwacc/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/dev-server.ts",
+    "dev:cf": "wrangler dev src/index.ts --local --port 8000",
+    "deploy": "wrangler deploy",
+    "lint": "eslint . --fix",
+    "format": "prettier --write . --ignore-path ../../.prettierignore",
+    "typecheck": "tsc --noEmit",
+    "cf:typegen": "wrangler types --env-interface Env env.d.ts"
+  },
+  "dependencies": {
+    "@cloudflare/pages-plugin-vercel-og": "^0.1.2",
+    "@mimifuwacc/parser": "workspace:*",
+    "drizzle-orm": "^0.45.2",
+    "graphql": "catalog:",
+    "graphql-yoga": "catalog:",
+    "hono": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
+    "@hono/node-server": "^2.0.3",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/react": "catalog:",
+    "drizzle-kit": "^0.31.10",
+    "react": "catalog:",
+    "satori": "^0.26.0",
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "@mimifuwacc/admin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 4000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --fix",
+    "format": "prettier --write . --ignore-path ../../.prettierignore",
+    "typecheck": "tsc --noEmit",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "postinstall": "pnpm cf:typegen"
+  },
+  "dependencies": {
+    "@base-ui/react": "catalog:",
+    "@mimifuwacc/parser": "workspace:*",
+    "@mimifuwacc/ui": "workspace:*",
+    "@opennextjs/cloudflare": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "graphql": "catalog:",
+    "graphql-request": "catalog:",
+    "highlight.js": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "16.2.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:",
+    "shadcn": "catalog:",
+    "sonner": "^2.0.7",
+    "swr": "^2.4.1",
+    "tailwind-merge": "catalog:",
+    "tw-animate-css": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "^24",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "opennextjs-cloudflare": "^1.0.0",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
+  }
+}

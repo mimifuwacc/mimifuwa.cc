@@ -1,55 +1,58 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# development
-!flake.nix
-!flake.lock
-!.envrc
-
 # dependencies
-/node_modules
-/.pnp
+node_modules
+.pnp
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+
+# build outputs
+dist
+build
+out
+.next
+.open-next
+.wrangler
+
+# turbo
+.turbo
 
 # testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
+coverage
 
 # misc
 .DS_Store
 *.pem
+*.tsbuildinfo
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
+# env
 .env*
+!.env.example
 .dev.vars
 
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
+# cloudflare / next
 next-env.d.ts
+cloudflare-env.d.ts
 
-# open-next
-/.open-next
-.wrangler
+# eslint
+.eslintcache
 
 # storybook
 *storybook.log
 storybook-static
+
+# go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+
+# nix
+!flake.nix
+!flake.lock
+!.envrc
+
+# claude
+.claude/settings.local.json

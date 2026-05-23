@@ -5,24 +5,26 @@ commit-msg:
       run: pnpm commitlint --edit {1}
 
 pre-commit:
+  parallel: true
   commands:
     lint:
-      run: pnpm run lint --fix
+      run: pnpm eslint --fix {staged_files}
+      glob: "*.{ts,tsx,js,jsx}"
     format:
-      run: pnpm run format
+      run: pnpm prettier --write {staged_files}
+      glob: "*.{ts,tsx,js,jsx,json,css,md}"
     git-update:
       run: git update-index --again
+      skip: empty
 
 pre-push:
   commands:
     typecheck:
-      run: pnpm run typecheck
+      run: pnpm turbo typecheck
     prevent-direct-push:
       run: |
-        current_branch=$(git rev-parse --abbrev-ref HEAD)
-        protected_branches="main devel"
-        if [[ " ${protected_branches} " =~ " ${current_branch} " ]]; then
-          echo -e "Direct pushes to the branch '${current_branch}' are forbidden. Use a pull request."
+        branch=$(git rev-parse --abbrev-ref HEAD)
+        if [[ "$branch" == "main" || "$branch" == "devel" ]]; then
+          echo "Direct push to '$branch' is forbidden. Use a pull request."
           exit 1
         fi
-        exit 0
