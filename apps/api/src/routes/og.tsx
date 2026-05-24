@@ -56,4 +56,3 @@ export async function handleOgImage(request: Request, slug: string, db: DB): Pro
     return new Response(null, { status: 503 });
   }
 }
-
