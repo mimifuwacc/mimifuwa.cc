@@ -15,8 +15,8 @@ function Profile() {
     <Card>
       <CardContent>
         <div className="flex items-center gap-4 mb-4">
-          <Avatar className="w-16 h-16 border-2 border-muted shrink-0">
-            <AvatarImage src="https://github.com/mimifuwacc.png" alt="mimifuwa" />
+          <Avatar className="w-16 h-16 border-2 border-muted dark:border-foreground/20 shrink-0">
+            <AvatarImage src="/mimifuwacc.png" alt="mimifuwa" />
             <AvatarFallback>M</AvatarFallback>
           </Avatar>
           <div>

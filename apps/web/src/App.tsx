@@ -69,7 +69,7 @@ function Layout() {
       <NavigationProgress />
       <MetaSync />
       <Header />
-      <main>
+      <main className="min-w-0">
         <Outlet />
       </main>
       <Footer />
@@ -94,12 +94,16 @@ const router = createBrowserRouter([
       {
         path: "/blogs/*",
         element: <BlogPost />,
-        loader: ({ params }) => {
+        loader: async ({ params }) => {
           const slug = params["*"] ?? "";
-          return queryClient.ensureQueryData({
-            queryKey: ["post", slug],
-            queryFn: () => fetchPostBySlug(slug),
-          });
+          try {
+            return await queryClient.ensureQueryData({
+              queryKey: ["post", slug],
+              queryFn: () => fetchPostBySlug(slug),
+            });
+          } catch {
+            return null;
+          }
         },
       },
       { path: "/links", element: <Links /> },

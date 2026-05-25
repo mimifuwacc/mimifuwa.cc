@@ -2,6 +2,8 @@ import { serve } from "@hono/node-server";
 import { getPlatformProxy } from "wrangler";
 import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { createApp } from "./app";
 import { createDB } from "./db";
 import { buildOgElement } from "./routes/og-template";
@@ -25,16 +27,23 @@ async function loadFont(): Promise<ArrayBuffer> {
   const app = createApp();
 
   // ローカルでは satori で SVG を返す（WASM 不要）
-  app.get("/og/:slug", async (c) => {
+  app.get("/og/*", async (c) => {
     try {
-      const slug = c.req.param("slug");
+      const slug = c.req.path.replace(/^\/og\//, "");
       const db = createDB(env);
       const service = new BlogPostService(db);
       const post = await service.findBySlug(slug);
-      const title = post?.title ?? "mimifuwa.cc";
+      if (!post) {
+        const defaultOg = await readFile(join(__dirname, "../../web/public/og.png"));
+        return new Response(defaultOg.buffer as ArrayBuffer, {
+          headers: { "Content-Type": "image/png" },
+        });
+      }
+      const title = post.title;
+      const tags = post.tags.map((t) => t.name);
       const fontData = await loadFont();
 
-      const svg = await satori(buildOgElement(title) as never, {
+      const svg = await satori(buildOgElement(title, tags) as never, {
         width: 1200,
         height: 630,
         fonts: [{ name: "Noto Sans JP", data: fontData, weight: 700, style: "normal" }],

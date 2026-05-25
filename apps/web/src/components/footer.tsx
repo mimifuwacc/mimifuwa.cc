@@ -11,8 +11,8 @@ const navLinks = [
 ];
 
 const socialLinks = [
-  { href: "https://github.com/mimifuwa", icon: <FaGithub />, label: "GitHub" },
-  { href: "https://x.com/mimifuwa_cc", icon: <FaTwitter />, label: "X" },
+  { href: "https://github.com/mimifuwacc", icon: <FaGithub />, label: "GitHub" },
+  { href: "https://x.com/mimifuwacc", icon: <FaTwitter />, label: "X" },
   { href: "mailto:mail@mimifuwa.cc", icon: <FaEnvelope />, label: "Email" },
 ];
 

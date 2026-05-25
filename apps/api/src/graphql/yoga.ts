@@ -3,6 +3,7 @@ import { createSchema, createYoga } from "graphql-yoga";
 import { createDB } from "../db";
 import { BlogPostService } from "../services/blog-post";
 import { R2Service } from "../services/r2";
+import { purgeOgCache } from "../routes/og-cache";
 import type { Context, Env } from "../types";
 import { CursorScalar, TimeScalar } from "./scalars";
 
@@ -407,6 +408,22 @@ const resolvers = {
         }
 
         const post = await blogService.findBySlug(targetSlug);
+
+        const titleChanged = input.title != null && input.title !== existing.title;
+        const existingTagNames = existing.tags
+          .map((t) => t.name)
+          .sort()
+          .join(",");
+        const newTagNames = input.tags ? [...input.tags].sort().join(",") : null;
+        const tagsChanged = newTagNames != null && newTagNames !== existingTagNames;
+        const slugChanged = targetSlug !== input.slug;
+
+        if (titleChanged || tagsChanged || slugChanged) {
+          await purgeOgCache(context.env.R2, targetSlug);
+          if (slugChanged) {
+            await purgeOgCache(context.env.R2, input.slug);
+          }
+        }
 
         return {
           success: true,

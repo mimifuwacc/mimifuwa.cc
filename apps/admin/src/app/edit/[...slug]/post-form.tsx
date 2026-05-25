@@ -29,6 +29,7 @@ export function PostForm({ post }: { post: Post }) {
       initialExcerpt={post.excerpt}
       initialContent={post.markdown || post.content}
       initialTags={post.tags.map((t) => t.name).join(", ")}
+      initialDate={post.date ? new Date(post.date).toISOString().split("T")[0] : ""}
       initialDraft={post.draft}
       initialIsPublished={post.isPublished}
       onSave={async (data) => {
@@ -38,6 +39,7 @@ export function PostForm({ post }: { post: Post }) {
         fd.append("excerpt", data.excerpt);
         fd.append("content", data.content);
         fd.append("tags", data.tags);
+        if (data.date) fd.append("date", data.date);
         fd.append("draft", data.draft ? "true" : "false");
         fd.append("isPublished", data.isPublished ? "true" : "false");
         return updatePost(post.slug, fd);

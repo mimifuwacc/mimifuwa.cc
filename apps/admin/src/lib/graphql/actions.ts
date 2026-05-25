@@ -58,6 +58,7 @@ export async function updatePost(slug: string, formData: FormData) {
   const excerpt = formData.get("excerpt") as string;
   const content = formData.get("content") as string;
   const tags = formData.get("tags") as string;
+  const date = formData.get("date") as string | null;
   const draft = formData.get("draft") === "true";
   const isPublishedRaw = formData.get("isPublished");
   const isPublished = isPublishedRaw !== null ? isPublishedRaw === "true" : undefined;
@@ -74,6 +75,7 @@ export async function updatePost(slug: string, formData: FormData) {
         title,
         excerpt,
         content,
+        ...(date ? { date: new Date(date).toISOString() } : {}),
         tags: tags ? tags.split(",").map((t) => t.trim()) : [],
         draft,
         ...(isPublished !== undefined ? { isPublished } : {}),
