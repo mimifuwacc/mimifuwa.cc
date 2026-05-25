@@ -2,12 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import { client } from "../graphql/client";
 import { GET_POST, GET_POSTS } from "../graphql/queries";
 
+const API_BASE = (import.meta.env.VITE_GRAPHQL_URL || "http://localhost:8000/graphql").replace(
+  /\/graphql$/,
+  "",
+);
+
 export interface BlogPost {
   slug: string;
   title: string;
   date: string;
   excerpt: string;
   tags: string[];
+  ogImageUrl: string;
 }
 
 export interface BlogPostWithContent extends BlogPost {
@@ -55,6 +61,7 @@ async function fetchAllPosts(): Promise<BlogPost[]> {
     date: edge.node.date,
     excerpt: edge.node.excerpt,
     tags: edge.node.tags.map((t) => t.name),
+    ogImageUrl: `${API_BASE}/og/${edge.node.slug}`,
   }));
 }
 
@@ -69,6 +76,7 @@ async function fetchPostBySlug(slug: string): Promise<BlogPostWithContent | null
     excerpt: post.excerpt,
     tags: post.tags.map((t) => t.name),
     content: post.content,
+    ogImageUrl: `${API_BASE}/og/${post.slug}`,
   };
 }
 

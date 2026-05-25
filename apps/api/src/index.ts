@@ -5,10 +5,10 @@ import type { Env } from "./types";
 
 const app = createApp();
 
-app.get("/og/:slug", async (c) => {
-  const slug = c.req.param("slug");
+app.get("/og/*", async (c) => {
+  const slug = c.req.path.replace(/^\/og\//, "");
   const db = createDB(c.env as Env);
-  return handleOgImage(slug, db);
+  return handleOgImage(slug, db, c.env.R2);
 });
 
 export default app;
