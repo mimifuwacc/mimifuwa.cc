@@ -409,10 +409,17 @@ const resolvers = {
 
         const post = await blogService.findBySlug(targetSlug);
 
-        const origin = new URL(context.request.url).origin;
-        await purgeOgCache(origin, targetSlug);
-        if (targetSlug !== input.slug) {
-          await purgeOgCache(origin, input.slug);
+        const titleChanged = input.title != null && input.title !== existing.title;
+        const existingTagNames = existing.tags.map((t) => t.name).sort().join(",");
+        const newTagNames = input.tags ? [...input.tags].sort().join(",") : null;
+        const tagsChanged = newTagNames != null && newTagNames !== existingTagNames;
+        const slugChanged = targetSlug !== input.slug;
+
+        if (titleChanged || tagsChanged || slugChanged) {
+          await purgeOgCache(context.env.R2, targetSlug);
+          if (slugChanged) {
+            await purgeOgCache(context.env.R2, input.slug);
+          }
         }
 
         return {

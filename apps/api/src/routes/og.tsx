@@ -14,13 +14,21 @@ async function loadFont(): Promise<ArrayBuffer> {
   return fontCache;
 }
 
-export async function handleOgImage(request: Request, slug: string, db: DB): Promise<Response> {
-  const cache =
-    typeof caches !== "undefined" ? (caches as unknown as { default: Cache }).default : null;
+const OG_HEADERS = {
+  "Content-Type": "image/png",
+  "Cache-Control": "public, max-age=31536000, immutable",
+};
 
-  if (cache) {
-    const cached = await cache.match(request);
-    if (cached) return cached;
+export async function handleOgImage(
+  slug: string,
+  db: DB,
+  r2: R2Bucket,
+): Promise<Response> {
+  const r2Key = `og/${slug}.png`;
+
+  const cached = await r2.get(r2Key);
+  if (cached) {
+    return new Response(cached.body, { headers: OG_HEADERS });
   }
 
   try {
@@ -29,29 +37,21 @@ export async function handleOgImage(request: Request, slug: string, db: DB): Pro
     if (!post) {
       return Response.redirect("https://mimifuwa.cc/og.png", 302);
     }
-    const title = post.title;
-    const tags = post.tags.map((t) => t.name);
+
     const fontData = await loadFont();
-
-    const imageResponse = new ImageResponse(buildOgElement(title, tags) as never, {
-      width: 1200,
-      height: 630,
-      fonts: [{ name: "Noto Sans JP", data: fontData, weight: 700, style: "normal" }],
-    });
-
-    const result = new Response(imageResponse.body, {
-      status: imageResponse.status,
-      headers: {
-        ...Object.fromEntries(imageResponse.headers.entries()),
-        "Cache-Control": "public, max-age=31536000",
+    const imageResponse = new ImageResponse(
+      buildOgElement(post.title, post.tags.map((t) => t.name)) as never,
+      {
+        width: 1200,
+        height: 630,
+        fonts: [{ name: "Noto Sans JP", data: fontData, weight: 700, style: "normal" }],
       },
-    });
+    );
 
-    if (cache) {
-      await cache.put(request, result.clone());
-    }
+    const imageBytes = await imageResponse.arrayBuffer();
+    await r2.put(r2Key, imageBytes, { httpMetadata: { contentType: "image/png" } });
 
-    return result;
+    return new Response(imageBytes, { headers: OG_HEADERS });
   } catch {
     return new Response(null, { status: 503 });
   }
