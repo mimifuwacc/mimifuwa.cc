@@ -410,7 +410,10 @@ const resolvers = {
         const post = await blogService.findBySlug(targetSlug);
 
         const titleChanged = input.title != null && input.title !== existing.title;
-        const existingTagNames = existing.tags.map((t) => t.name).sort().join(",");
+        const existingTagNames = existing.tags
+          .map((t) => t.name)
+          .sort()
+          .join(",");
         const newTagNames = input.tags ? [...input.tags].sort().join(",") : null;
         const tagsChanged = newTagNames != null && newTagNames !== existingTagNames;
         const slugChanged = targetSlug !== input.slug;

@@ -19,11 +19,7 @@ const OG_HEADERS = {
   "Cache-Control": "public, max-age=31536000, immutable",
 };
 
-export async function handleOgImage(
-  slug: string,
-  db: DB,
-  r2: R2Bucket,
-): Promise<Response> {
+export async function handleOgImage(slug: string, db: DB, r2: R2Bucket): Promise<Response> {
   const r2Key = `og/${slug}.png`;
 
   const cached = await r2.get(r2Key);
@@ -40,7 +36,10 @@ export async function handleOgImage(
 
     const fontData = await loadFont();
     const imageResponse = new ImageResponse(
-      buildOgElement(post.title, post.tags.map((t) => t.name)) as never,
+      buildOgElement(
+        post.title,
+        post.tags.map((t) => t.name),
+      ) as never,
       {
         width: 1200,
         height: 630,
