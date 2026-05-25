@@ -69,7 +69,7 @@ function Layout() {
       <NavigationProgress />
       <MetaSync />
       <Header />
-      <main>
+      <main className="min-w-0">
         <Outlet />
       </main>
       <Footer />
