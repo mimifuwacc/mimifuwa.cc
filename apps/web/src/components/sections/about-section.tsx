@@ -3,7 +3,7 @@ import { allSkills } from "@contents/skills";
 import { Award, BadgeCheck, ChevronRight, Clock, Smile, Wrench } from "lucide-react";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { SiZenn } from "react-icons/si";
-import { Avatar, AvatarFallback, AvatarImage } from "@mimifuwacc/ui/components/ui/avatar";
+import { Avatar, AvatarImage } from "@mimifuwacc/ui/components/ui/avatar";
 import { Badge } from "@mimifuwacc/ui/components/ui/badge";
 import { Button } from "@mimifuwacc/ui/components/ui/button";
 import { Card, CardContent } from "@mimifuwacc/ui/components/ui/card";
@@ -16,21 +16,24 @@ function Profile() {
       <CardContent>
         <div className="flex items-center gap-4 mb-4">
           <Avatar className="w-16 h-16 border-2 border-muted dark:border-foreground/20 shrink-0">
-            <AvatarImage src="/mimifuwacc.png" alt="mimifuwa" />
-            <AvatarFallback>M</AvatarFallback>
+            <AvatarImage src="/mimifuwacc.png" alt="mimifuwacc" />
           </Avatar>
           <div>
-            <h3 className="text-lg font-bold leading-tight">みみ</h3>
-            <p className="text-sm text-muted-foreground">@mimifuwacc</p>
+            <h3 className="text-lg font-bold leading-tight">
+              mimifuwacc
+              <span className="text-sm font-normal ml-2 text-muted-foreground">ˈmiːmi</span>
+            </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
-              電気通信大学 情報理工学域 CSプログラム
+              電気通信大学 情報理工学域
+              <br />
+              コンピュータサイエンスプログラム
             </p>
           </div>
         </div>
         <Separator className="mb-4" />
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          フロントエンド開発を中心に、Web技術を使ってアプリケーションを開発しています。
-          電気通信大学ベンチャー工房team411などに所属しています。
+          Webアプリケーションエンジニア．大学ではアセンブリの形式検証に取り組んでいます．
+          ヰ世界情緒とラノベが好き．
         </p>
         <div className="flex flex-wrap gap-2">
           <Button
@@ -213,7 +216,7 @@ export default function AboutSection() {
     <Section
       id="about-section"
       title="About Me"
-      subtitle="みみについて..."
+      subtitle="mimifuwacc について..."
       className="relative rounded-t-4xl shadow-[0_-10px_10px_rgba(0,0,0,0.025)]"
     >
       <div className="absolute top-5 left-0 right-0">
