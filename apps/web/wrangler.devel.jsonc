@@ -10,7 +10,5 @@
   "vars": {
     "GRAPHQL_URL": "https://mimifuwacc-api-devel.m8c.workers.dev/graphql",
   },
-  "services": [
-    { "binding": "API", "service": "mimifuwacc-api-devel" },
-  ],
+  "services": [{ "binding": "API", "service": "mimifuwacc-api-devel" }],
 }

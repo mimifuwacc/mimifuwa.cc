@@ -1,5 +1,5 @@
 import { Section } from "@/components/section";
-import { BlogCard } from "@/components/sections/blogs-section";
+import { BlogCard } from "@/components/blog-card";
 import { useAllPosts } from "@/lib/query/blog";
 
 export default function BlogList() {

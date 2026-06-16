@@ -2,6 +2,7 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@mimifuwacc/ui/components/ui/card";
 import { cn } from "@mimifuwacc/ui/lib/utils";
+import { SCROLL_SPY_OFFSET_PX } from "@/lib/constants";
 import { extractHeadings } from "@/lib/slugify";
 
 interface Props {
@@ -19,11 +20,10 @@ export default function TableOfContents({ html, collapsible = false }: Props) {
   useEffect(() => {
     if (headings.length === 0) return;
     const onScroll = () => {
-      const offset = 120; // header + margin
       let current = headings[0]?.id ?? "";
       for (const { id } of headings) {
         const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= offset) {
+        if (el && el.getBoundingClientRect().top <= SCROLL_SPY_OFFSET_PX) {
           current = id;
         }
       }

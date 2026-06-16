@@ -36,11 +36,17 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { checkSlugExists } from "@/lib/graphql/actions";
+import {
+  AUTOSAVE_IDLE_MS,
+  AUTOSAVE_SAVED_RESET_MS,
+  PREVIEW_DEBOUNCE_MS,
+  SLUG_CHECK_DEBOUNCE_MS,
+  SNAPSHOT_DEBOUNCE_MS,
+  UNDO_STACK_LIMIT,
+} from "@/lib/constants";
 import { ImageUploadButton } from "./image-upload-button";
 import { MarkdownPreview } from "./markdown-preview";
 import { useDebounce } from "./use-debounce";
-
-// ── 型定義 ────────────────────────────────────────────────────────────────
 
 export interface PostEditorData {
   title: string;
@@ -69,8 +75,6 @@ interface PostEditorProps {
 }
 
 type ViewMode = "edit" | "split" | "preview";
-
-// ── 整形ユーティリティ ────────────────────────────────────────────────────
 
 type FormatResult = { value: string; selStart: number; selEnd: number };
 
@@ -104,8 +108,6 @@ function applyFormat(
   }
 }
 
-// ── PostEditor ────────────────────────────────────────────────────────────
-
 export function PostEditor({
   mode,
   initialTitle = "",
@@ -130,7 +132,7 @@ export function PostEditor({
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("split");
 
-  // ── 自動保存 ──────────────────────────────────────────────────────────────
+  // 自動保存
   const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved" | "error">(
     "idle",
   );
@@ -172,11 +174,11 @@ export function PostEditor({
         lastSavedHash.current = hash;
         setLastSavedAt(new Date());
         setAutoSaveStatus("saved");
-        setTimeout(() => setAutoSaveStatus("idle"), 3000);
+        setTimeout(() => setAutoSaveStatus("idle"), AUTOSAVE_SAVED_RESET_MS);
       } else {
         setAutoSaveStatus("error");
       }
-    }, 10_000);
+    }, AUTOSAVE_IDLE_MS);
   }
 
   const [formData, setFormData] = useState({
@@ -191,9 +193,9 @@ export function PostEditor({
 
   // content は uncontrolled で管理（チャンク undo/redo を自前で実装）
   const [previewContent, setPreviewContent] = useState(initialContent);
-  const debouncedContent = useDebounce(previewContent, 400);
+  const debouncedContent = useDebounce(previewContent, PREVIEW_DEBOUNCE_MS);
 
-  // ── undo/redo スタック ──────────────────────────────────────────────────
+  // undo/redo スタック
   type Snapshot = { value: string; selStart: number; selEnd: number };
   const undoStack = useRef<Snapshot[]>([{ value: initialContent, selStart: 0, selEnd: 0 }]);
   const undoIndex = useRef(0);
@@ -211,7 +213,7 @@ export function PostEditor({
     undoStack.current = undoStack.current.slice(0, undoIndex.current + 1);
     undoStack.current.push(snap);
     undoIndex.current = undoStack.current.length - 1;
-    if (undoStack.current.length > 200) {
+    if (undoStack.current.length > UNDO_STACK_LIMIT) {
       undoStack.current.shift();
       undoIndex.current--;
     }
@@ -342,21 +344,24 @@ export function PostEditor({
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const [metaExpanded, setMetaExpanded] = useState(false);
-  useEffect(() => {
-    if (mode === "new") setMetaExpanded(true);
-  }, []);
+  // 新規作成時はメタデータを最初から開いておく（props から導出するので effect は不要）
+  const [metaExpanded, setMetaExpanded] = useState(mode === "new");
   const [slugError, setSlugError] = useState<string | null>(null);
-  const debouncedSlug = useDebounce(formData.slug, 600);
+  const debouncedSlug = useDebounce(formData.slug, SLUG_CHECK_DEBOUNCE_MS);
 
   useEffect(() => {
     if (!debouncedSlug || debouncedSlug === initialSlug) {
       setSlugError(null);
       return;
     }
+    let active = true;
     checkSlugExists(debouncedSlug).then((exists) => {
-      setSlugError(exists ? "このslugは既に使われています" : null);
+      // 古いチェック結果は反映しない
+      if (active) setSlugError(exists ? "このslugは既に使われています" : null);
     });
+    return () => {
+      active = false;
+    };
   }, [debouncedSlug, initialSlug]);
 
   // タグチップ管理
@@ -381,12 +386,9 @@ export function PostEditor({
     updateField("tags", tags.filter((t) => t !== tag).join(", "));
   }
 
-  const metaInputClass =
-    "bg-transparent border-none outline-none focus:outline-none placeholder:text-muted-foreground/40 text-sm text-muted-foreground";
-
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      {/* ── 上部ナビバー ───────────────────────────────────────────── */}
+      {/* 上部ナビバー */}
       <div className="shrink-0 border-b flex items-center gap-2 px-3 py-2 bg-background">
         <a
           href="/"
@@ -595,14 +597,14 @@ export function PostEditor({
         </Dialog>
       </div>
 
-      {/* ── エラー ─────────────────────────────────────────────────── */}
+      {/* エラー */}
       {error && (
         <Alert variant="destructive" className="shrink-0 rounded-none border-x-0 border-t-0">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
-      {/* ── メタデータ ─────────────────────────────────────────────── */}
+      {/* メタデータ */}
       <div className="shrink-0 border-b bg-background">
         {/* 常時表示：タイトル + サマリー行 */}
         <div className="px-6 pt-3 pb-2">
@@ -752,7 +754,7 @@ export function PostEditor({
         )}
       </div>
 
-      {/* ── 整形ツールバー ─────────────────────────────────────────── */}
+      {/* 整形ツールバー */}
       <div className="shrink-0 border-b flex items-center gap-0.5 px-2 py-1 bg-muted/30">
         <Button
           type="button"
@@ -868,7 +870,7 @@ export function PostEditor({
         </div>
       </div>
 
-      {/* ── エディタ + プレビュー ───────────────────────────────────── */}
+      {/* エディタ + プレビュー */}
       <div className="flex-1 min-h-0 flex overflow-hidden">
         {(viewMode === "edit" || viewMode === "split") && (
           <textarea
@@ -877,7 +879,7 @@ export function PostEditor({
             onChange={(e) => {
               setPreviewContent(e.target.value);
               if (snapshotTimer.current) clearTimeout(snapshotTimer.current);
-              snapshotTimer.current = setTimeout(saveSnapshot, 500);
+              snapshotTimer.current = setTimeout(saveSnapshot, SNAPSHOT_DEBOUNCE_MS);
               scheduleAutoSave(formData);
             }}
             onKeyDown={(e) => {

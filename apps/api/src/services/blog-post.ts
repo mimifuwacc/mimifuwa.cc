@@ -286,24 +286,15 @@ export class BlogPostService {
     return conditions.length > 0 ? and(...conditions) : undefined;
   }
 
-  // Encode cursor for pagination
+  // Encode cursor for pagination (payload is ASCII-only JSON of two numbers)
   private encodeCursor(id: number, date: Date): string {
-    const data = { id, timestamp: date.getTime() };
-    const encoder = new TextEncoder();
-    const encoded = encoder.encode(JSON.stringify(data));
-    return btoa(String.fromCharCode(...encoded));
+    return btoa(JSON.stringify({ id, timestamp: date.getTime() }));
   }
 
   // Decode cursor
   decodeCursor(cursor: string): { id: number; timestamp: number } | null {
     try {
-      const binaryString = atob(cursor);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      const decoder = new TextDecoder();
-      const data = JSON.parse(decoder.decode(bytes));
+      const data = JSON.parse(atob(cursor));
       return { id: Number(data.id), timestamp: Number(data.timestamp) };
     } catch {
       return null;

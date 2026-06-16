@@ -1,17 +1,11 @@
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@mimifuwacc/ui/components/ui/avatar";
 import { sessionId } from "@/lib/session-id";
+import { useCopy } from "@/lib/use-copy";
 
 export default function HeroSection() {
   const uuid = sessionId;
-  const [copied, setCopied] = useState(false);
-
-  const copy = () => {
-    navigator.clipboard.writeText(uuid);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const { copied, copy } = useCopy(uuid);
 
   return (
     <div className="flex items-center justify-center px-6 sm:px-8 bg-muted/40">

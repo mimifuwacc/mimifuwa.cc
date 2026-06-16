@@ -4,20 +4,9 @@ import { useParams } from "react-router-dom";
 import { Section } from "@/components/section";
 import TableOfContents from "@/components/table-of-contents";
 import { Badge } from "@mimifuwacc/ui/components/ui/badge";
+import { formatDate } from "@/lib/format";
 import { usePostBySlug } from "@/lib/query/blog";
 import { useTheme } from "@/lib/theme";
-
-function formatDate(dateString: string) {
-  try {
-    return new Date(dateString).toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  } catch {
-    return dateString;
-  }
-}
 
 export default function BlogPost() {
   const { "*": slugPath = "" } = useParams();
