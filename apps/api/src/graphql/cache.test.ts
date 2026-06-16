@@ -91,9 +91,9 @@ describe("isCacheablePublicRead（公開読み取りの判定）", () => {
   });
 
   it("operationName が無いものは対象外", () => {
-    expect(
-      isCacheablePublicRead(publicRequest(), { query: "query { blogPosts { edges } }" }),
-    ).toBe(false);
+    expect(isCacheablePublicRead(publicRequest(), { query: "query { blogPosts { edges } }" })).toBe(
+      false,
+    );
   });
 
   it("操作名が許可リストでも本文が mutation なら対象外", () => {

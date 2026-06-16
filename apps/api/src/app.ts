@@ -36,22 +36,16 @@ export function createApp() {
 
   app.use("/graphql/*", async (c) => {
     const raw = c.req.raw;
-    // ボディは一度しか読めないので先に取り出し、Yoga へは再構築して渡す
-    const bodyText = raw.method === "POST" ? await raw.text() : "";
+    // ボディは複製から読む。raw 本体は未消費のまま Yoga へ渡す
+    const bodyText = raw.method === "POST" ? await raw.clone().text() : "";
     const body = bodyText ? parseGraphQLBody(bodyText) : null;
 
-    const runYoga = async () => {
-      const yogaRequest = new Request(raw.url, {
-        method: raw.method,
-        headers: raw.headers,
-        body: raw.method === "POST" ? bodyText : undefined,
-      });
-      const response = (await yoga.handle(yogaRequest, {
-        env: c.env,
-        request: raw,
-      } as Context)) as unknown as Response;
-      return response;
-    };
+    // handle のオーバーロード解決が依存型に左右されるため、呼び出し形を明示する
+    const handle = yoga.handle as unknown as (
+      request: Request,
+      context: Context,
+    ) => Promise<Response>;
+    const runYoga = async () => handle(new Request(raw), { env: c.env, request: raw });
 
     // Cache API は Workers ランタイム限定（Node の dev サーバには caches が無い）
     const cache =
