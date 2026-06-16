@@ -8,7 +8,7 @@ export default function HeroSection() {
   const { copied, copy } = useCopy(uuid);
 
   return (
-    <div className="flex items-center justify-center px-6 sm:px-8 bg-muted/40">
+    <div className="sticky top-0 z-0 flex items-center justify-center px-6 sm:px-8 bg-muted/40">
       <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mx-auto my-16">
         <div className="hidden sm:block">
           <Avatar className="w-32 h-32 border-4 border-background dark:border-foreground/20 shadow-2xl">
