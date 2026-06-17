@@ -4,13 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vp dev",
     "dev:cf": "wrangler dev",
-    "build": "vite build",
-    "preview": "vite preview",
-    "deploy": "vite build && wrangler deploy",
-    "lint": "eslint . --fix",
-    "format": "prettier --write . --ignore-path ../../.prettierignore",
+    "build": "vp build",
+    "preview": "vp preview",
+    "deploy": "vp build && wrangler deploy",
+    "lint": "vp lint . --fix",
+    "format": "vp fmt . --ignore-path ../../.prettierignore",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -44,7 +44,8 @@
     "haribote": "^0.1.0",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "vite": "^6.0.0",
-    "wrangler": "catalog:"
+    "vite": "catalog:",
+    "wrangler": "catalog:",
+    "vite-plus": "catalog:"
   }
 }

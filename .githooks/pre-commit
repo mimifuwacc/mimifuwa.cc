@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+
+lint_files=$(printf '%s\n' "$staged" | grep -E '\.(ts|tsx|js|jsx)$' || true)
+if [ -n "$lint_files" ]; then
+  printf '%s\n' "$lint_files" | xargs vp lint --fix
+fi
+
+fmt_files=$(printf '%s\n' "$staged" | grep -E '\.(ts|tsx|js|jsx|json|css|md)$' || true)
+if [ -n "$fmt_files" ]; then
+  printf '%s\n' "$fmt_files" | xargs vp fmt --write
+fi
+
+# 自動修正した内容をステージへ戻す
+printf '%s\n' "$staged" | xargs git add
