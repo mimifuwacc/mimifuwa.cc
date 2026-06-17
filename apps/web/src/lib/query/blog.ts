@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { POSTS_PAGE_SIZE } from "@/lib/constants";
 import { client } from "../graphql/client";
 import { GET_POST, GET_POSTS } from "../graphql/queries";
 
@@ -53,7 +54,7 @@ interface BlogPostResponse {
 async function fetchAllPosts(): Promise<BlogPost[]> {
   const data = await client.request<BlogPostsResponse>(GET_POSTS, {
     filter: { draft: false },
-    page: { first: 100 },
+    page: { first: POSTS_PAGE_SIZE },
   });
   return data.blogPosts.edges.map((edge) => ({
     slug: edge.node.slug,

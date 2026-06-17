@@ -2,22 +2,25 @@
 
 import ContentRenderer from "@mimifuwacc/ui/components/content-renderer";
 import { parseToHtml } from "@mimifuwacc/parser";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 export function MarkdownPreview({ markdown }: { markdown: string }) {
   const [html, setHtml] = useState("");
+  // パース結果の反映は非緊急更新として扱い、入力の応答性を保つ
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     if (!markdown) {
       setHtml("");
       return;
     }
-    let cancelled = false;
+    let active = true;
     parseToHtml(markdown).then(({ html: result }) => {
-      if (!cancelled) setHtml(result);
+      // 古い（破棄済みの）パース結果は反映しない
+      if (active) startTransition(() => setHtml(result));
     });
     return () => {
-      cancelled = true;
+      active = false;
     };
   }, [markdown]);
 

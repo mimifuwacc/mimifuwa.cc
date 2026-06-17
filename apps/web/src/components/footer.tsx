@@ -1,8 +1,8 @@
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
 import { FaEnvelope, FaGithub, FaTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { sessionId } from "@/lib/session-id";
+import { useCopy } from "@/lib/use-copy";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -18,13 +18,7 @@ const socialLinks = [
 
 export default function Footer() {
   const uuid = sessionId;
-  const [copied, setCopied] = useState(false);
-
-  const copy = () => {
-    navigator.clipboard.writeText(uuid);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const { copied, copy } = useCopy(uuid);
 
   return (
     <footer className="border-t bg-background">
