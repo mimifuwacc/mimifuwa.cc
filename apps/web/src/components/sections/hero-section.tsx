@@ -1,3 +1,4 @@
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Check, Copy } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@mimifuwacc/ui/components/ui/avatar";
 import { sessionId } from "@/lib/session-id";
@@ -7,9 +8,16 @@ export default function HeroSection() {
   const uuid = sessionId;
   const { copied, copy } = useCopy(uuid);
 
+  // ピン留めされた背景を、スクロールに対して少し遅れて動かすパララックス
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 400], [0, -60]);
+
   return (
-    <div className="sticky top-0 z-0 flex items-center justify-center px-6 sm:px-8 bg-muted/40">
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mx-auto my-16">
+    <div className="sticky top-14 z-0 flex items-center justify-center px-6 sm:px-8 bg-muted/40">
+      <motion.div
+        style={{ y }}
+        className="flex flex-col sm:flex-row items-center justify-center gap-8 mx-auto my-16"
+      >
         <div className="hidden sm:block">
           <Avatar className="w-32 h-32 border-4 border-background dark:border-foreground/20 shadow-2xl">
             <AvatarImage src="/mimifuwacc.png" alt="mimifuwacc" />
@@ -33,7 +41,7 @@ export default function HeroSection() {
             )}
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
