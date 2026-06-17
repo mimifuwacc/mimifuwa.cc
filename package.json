@@ -8,7 +8,7 @@
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^4.1.1",
+    "@dotenvx/dotenvx": "^1.73.1",
     "tsx": "^4.19.2",
     "vite-plus": "catalog:",
     "wrangler": "^4.76.0"

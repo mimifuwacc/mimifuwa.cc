@@ -25,6 +25,12 @@ coverage
 # env
 .env*
 !.env.example
+# dotenvx: 暗号化済みの .env / .env.production / .env.devel は commit する
+!/.env
+!/.env.production
+!/.env.devel
+# 秘密鍵は絶対にコミットしない
+.env.keys
 .dev.vars
 
 # cloudflare / next

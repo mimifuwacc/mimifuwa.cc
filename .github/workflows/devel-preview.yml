@@ -10,6 +10,11 @@ permissions:
   contents: write
   id-token: write
 
+# dotenvx: GitHub Secrets に載せるのは復号鍵だけ。CLOUDFLARE_* / ADMIN_SECRET /
+# GRAPHQL_URL は暗号化済み .env.devel から dotenvx run 経由で注入される。
+env:
+  DOTENV_PRIVATE_KEY_DEVEL: ${{ secrets.DOTENV_PRIVATE_KEY_DEVEL }}
+
 jobs:
   deploy-web:
     needs: deploy-api
@@ -31,16 +36,11 @@ jobs:
 
       - name: Build web
         working-directory: apps/web
-        run: pnpm run build
-        env:
-          VITE_GRAPHQL_URL: https://mimifuwacc-api-devel.m8c.workers.dev/graphql
+        run: pnpm exec dotenvx run -f ../../.env.devel -- pnpm run build
 
       - name: Deploy web to Cloudflare
-        run: pnpm exec wrangler deploy --config wrangler.devel.jsonc
         working-directory: apps/web
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec dotenvx run -f ../../.env.devel -- pnpm exec wrangler deploy --config wrangler.devel.jsonc
 
   deploy-api:
     runs-on: ubuntu-latest
@@ -60,25 +60,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Migrate D1 (devel)
-        run: pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-devel --env devel --remote
         working-directory: apps/api
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec dotenvx run -f ../../.env.devel -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-devel --env devel --remote
 
       - name: Set API secret (devel)
-        run: echo "${{ secrets.ADMIN_SECRET_DEVEL }}" | pnpm exec wrangler secret put ADMIN_SECRET --env devel
         working-directory: apps/api
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec dotenvx run -f ../../.env.devel -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --env devel'
 
       - name: Deploy API to Cloudflare
-        run: pnpm exec wrangler deploy --env devel
         working-directory: apps/api
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec dotenvx run -f ../../.env.devel -- pnpm exec wrangler deploy --env devel
 
   deploy-admin:
     runs-on: ubuntu-latest
@@ -99,20 +90,12 @@ jobs:
 
       - name: Build admin
         working-directory: apps/admin
-        run: pnpm exec opennextjs-cloudflare build
-        env:
-          NEXT_PUBLIC_GRAPHQL_URL: https://mimifuwacc-api-devel.m8c.workers.dev/graphql
+        run: pnpm exec dotenvx run -f ../../.env.devel -- pnpm exec opennextjs-cloudflare build
 
       - name: Set admin secret (devel)
-        run: echo "${{ secrets.ADMIN_SECRET_DEVEL }}" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.devel.jsonc
         working-directory: apps/admin
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec dotenvx run -f ../../.env.devel -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.devel.jsonc'
 
       - name: Deploy admin to Cloudflare
-        run: pnpm exec wrangler deploy --config wrangler.devel.jsonc
         working-directory: apps/admin
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec dotenvx run -f ../../.env.devel -- pnpm exec wrangler deploy --config wrangler.devel.jsonc
