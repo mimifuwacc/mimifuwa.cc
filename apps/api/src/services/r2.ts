@@ -1,5 +1,3 @@
-import type { R2Bucket } from "@cloudflare/workers-types";
-
 export class R2Service {
   constructor(private bucket: R2Bucket) {}
 

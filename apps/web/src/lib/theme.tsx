@@ -14,7 +14,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     try {
       const stored = localStorage.getItem("theme");
       if (stored === "light" || stored === "dark") return stored;
-    } catch {}
+    } catch {
+      // localStorage が使えない環境は無視
+    }
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
 
@@ -22,7 +24,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.classList.toggle("dark", theme === "dark");
     try {
       localStorage.setItem("theme", theme);
-    } catch {}
+    } catch {
+      // localStorage が使えない環境は無視
+    }
 
     const id = "hljs-theme";
     let style = document.getElementById(id) as HTMLStyleElement | null;
@@ -39,6 +43,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return <ThemeContext.Provider value={{ theme, toggle }}>{children}</ThemeContext.Provider>;
 }
 
+// eslint-disable-next-line react/only-export-components -- Provider と同居させる慣用フック
 export function useTheme() {
   return useContext(ThemeContext);
 }

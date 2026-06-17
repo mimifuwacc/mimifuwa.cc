@@ -20,10 +20,6 @@
         buildInputs = with pkgs; [
           nodejs_24
           pnpm_10
-          go
-          gopls
-          gotools
-          go-tools
           nix-vite-plus.packages.${system}.vp
         ];
       };

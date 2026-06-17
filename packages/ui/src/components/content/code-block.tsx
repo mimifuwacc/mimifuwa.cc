@@ -14,7 +14,7 @@ export function CodeBlock(props: El) {
 
   const copy = () => {
     const text = preRef.current?.innerText ?? "";
-    navigator.clipboard.writeText(text).then(() => {
+    void navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), COPY_FEEDBACK_DURATION_MS);
     });
@@ -60,8 +60,7 @@ export function CodeBlock(props: El) {
           <pre
             ref={preRef}
             className="overflow-x-auto p-5 text-sm leading-relaxed"
-            // biome-ignore lint/suspicious/noExplicitAny: csstype version mismatch workaround
-            style={{ backgroundColor: "var(--code-bg)" } as any}
+            style={{ backgroundColor: "var(--code-bg)" } as React.CSSProperties}
             {...(preProps as React.HTMLAttributes<HTMLPreElement>)}
           >
             {children}
@@ -75,8 +74,7 @@ export function CodeBlock(props: El) {
           <pre
             ref={preRef}
             className="overflow-x-auto p-4 text-sm leading-relaxed"
-            // biome-ignore lint/suspicious/noExplicitAny: csstype version mismatch workaround
-            style={{ backgroundColor: "var(--code-bg)" } as any}
+            style={{ backgroundColor: "var(--code-bg)" } as React.CSSProperties}
             {...(preProps as React.HTMLAttributes<HTMLPreElement>)}
           >
             {children}

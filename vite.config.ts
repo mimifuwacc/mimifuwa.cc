@@ -18,6 +18,7 @@ export default defineConfig({
       "**/.open-next/**",
       "**/.wrangler/**",
       "**/.turbo/**",
+      "**/.direnv/**",
       "**/coverage/**",
     ],
     rules: {
@@ -101,7 +102,8 @@ export default defineConfig({
       "react/no-unescaped-entities": "error",
       "react/no-unknown-property": "error",
       "react/no-unsafe": "off",
-      "react/react-in-jsx-scope": "error",
+      // 自動 JSX ランタイム（"jsx": "react-jsx"）のため React のスコープ取り込みは不要
+      "react/react-in-jsx-scope": "off",
       "react/require-render-return": "error",
       "no-console": [
         "warn",
@@ -127,6 +129,8 @@ export default defineConfig({
       "typescript/prefer-namespace-keyword": "error",
       "typescript/triple-slash-reference": "error",
       "vite-plus/prefer-vite-plus-imports": "error",
+      // 未使用 import を no-unused-vars と分離して検出（--fix で自動削除）
+      "unused-imports/no-unused-imports": "error",
     },
     overrides: [
       {
@@ -168,6 +172,16 @@ export default defineConfig({
           ],
         },
       },
+      {
+        // unified/hast/rehype-react を扱う層は AST と動的コンポーネントの性質上 any が避けられない
+        files: [
+          "packages/parser/**/*.{ts,tsx}",
+          "packages/ui/src/components/content/**/*.{ts,tsx}",
+        ],
+        rules: {
+          "typescript/no-explicit-any": "off",
+        },
+      },
     ],
     options: {
       typeAware: true,
@@ -177,6 +191,10 @@ export default defineConfig({
       {
         name: "vite-plus",
         specifier: "vite-plus/oxlint-plugin",
+      },
+      {
+        name: "unused-imports",
+        specifier: "eslint-plugin-unused-imports",
       },
     ],
   },
@@ -196,6 +214,7 @@ export default defineConfig({
       "**/.open-next/**",
       "**/.wrangler/**",
       "**/.turbo/**",
+      "**/.direnv/**",
       "**/coverage/**",
       "pnpm-lock.yaml",
       "**/*.tsbuildinfo",

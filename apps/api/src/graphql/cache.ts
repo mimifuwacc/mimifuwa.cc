@@ -104,8 +104,8 @@ function extractSlugs(body: GraphQLRequestBody): string[] {
   const vars = body.variables ?? {};
   const slugs = new Set<string>();
   const input = vars.input as Record<string, unknown> | undefined;
-  if (input?.slug) slugs.add(String(input.slug));
-  if (input?.newSlug) slugs.add(String(input.newSlug));
+  if (typeof input?.slug === "string") slugs.add(input.slug);
+  if (typeof input?.newSlug === "string") slugs.add(input.newSlug);
   if (typeof vars.slug === "string") slugs.add(vars.slug);
   return [...slugs];
 }

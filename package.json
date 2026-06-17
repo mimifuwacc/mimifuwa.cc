@@ -13,9 +13,10 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.1",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "tsx": "^4.19.2",
     "turbo": "^2.9.3",
-    "wrangler": "^4.76.0",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "wrangler": "^4.76.0"
   }
 }

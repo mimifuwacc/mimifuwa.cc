@@ -8,7 +8,7 @@ export default function MetaSync() {
 
   useEffect(() => {
     let active = true;
-    fetchMeta(location.pathname).then((meta) => {
+    void fetchMeta(location.pathname).then((meta) => {
       if (active) setMeta(meta);
     });
     return () => {

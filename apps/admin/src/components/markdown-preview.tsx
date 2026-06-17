@@ -15,7 +15,7 @@ export function MarkdownPreview({ markdown }: { markdown: string }) {
       return;
     }
     let active = true;
-    parseToHtml(markdown).then(({ html: result }) => {
+    void parseToHtml(markdown).then(({ html: result }) => {
       // 古い（破棄済みの）パース結果は反映しない
       if (active) startTransition(() => setHtml(result));
     });
