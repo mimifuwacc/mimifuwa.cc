@@ -22,7 +22,14 @@ async function loadFont(): Promise<ArrayBuffer> {
 }
 
 void (async () => {
-  const { env, dispose } = await getPlatformProxy<Env>();
+  const { env: platformEnv, dispose } = await getPlatformProxy<Env>();
+  // dotenvx 経由で注入した ADMIN_SECRET を Worker env として見せる（.dev.vars の代替）。
+  // DB/R2 等のバインディングは platformEnv にそのまま委譲する。
+  const env: Env = process.env.ADMIN_SECRET
+    ? new Proxy(platformEnv, {
+        get: (t, p) => (p === "ADMIN_SECRET" ? process.env.ADMIN_SECRET : Reflect.get(t, p)),
+      })
+    : platformEnv;
 
   const app = createApp();
 
