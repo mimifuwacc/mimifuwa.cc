@@ -14,11 +14,11 @@ export const TimeScalar = new GraphQLScalarType({
     if (typeof value === "number") {
       return new Date(value * 1000).toISOString();
     }
-    throw new TypeError(`Time cannot represent value: ${value}`);
+    throw new TypeError(`Time cannot represent value: ${String(value)}`);
   },
   parseValue(value: unknown): Date {
     if (typeof value !== "string") {
-      throw new TypeError(`Time cannot represent non-string value: ${value}`);
+      throw new TypeError(`Time cannot represent non-string value: ${String(value)}`);
     }
     const date = new Date(value);
     if (isNaN(date.getTime())) {
@@ -50,7 +50,7 @@ export const CursorScalar = new GraphQLScalarType({
   },
   parseValue(value: unknown): string {
     if (typeof value !== "string") {
-      throw new TypeError(`Cursor cannot represent non-string value: ${value}`);
+      throw new TypeError(`Cursor cannot represent non-string value: ${String(value)}`);
     }
     return value;
   },

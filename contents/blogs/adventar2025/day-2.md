@@ -11,6 +11,7 @@ tags: ["adventar2025", "技術"]
 今日は、OGP生成部分やデプロイの話をしようと思います。
 
 ## APIから楽曲データを取得して画像を生成
+
 YouTubeから楽曲データを取得してきます。ドキュメントに書いてある通りにAPIキーを発行して、情報が欲しい動画のIDとAPIキーを渡して叩くだけで取得できます。
 
 https://developers.google.com/youtube/v3
@@ -22,7 +23,6 @@ if (!apiKey) {
 }
 
 const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`;
-
 
 const response = await fetch(apiUrl);
 if (!response.ok) {
@@ -50,56 +50,58 @@ https://github.com/vercel/satori
 結果的にVercelにデプロイすることになったので、`@vercel/og` を使っても良かったかも。
 
 ### 背景画像を作成
+
 早速実装していきます。背景にカバーアートをぼかして入れたいので、`position: absolute;` で背面に表示していきます。
+
 ```ts
 const svg = await satori(
-      // 親要素
-      React.createElement(
-        "div",
-        {
-          style: {
-            display: "flex",
-            width: "100%",
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        },
-        // 背景にぼかした画像
-        React.createElement("img", {
-          src: videoData.thumbnail,
-          style: {
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            height: "1200px",
-            textAlign: "center",
-            filter: "blur(10px)",
-          },
-        }),
-        // そのまま背景画像を表示すると明るすぎるので暗くする
-        React.createElement("div", {
-          style: {
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "100%",
-            height: "100%",
-            textAlign: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          },
-        }),
+  // 親要素
+  React.createElement(
+    "div",
+    {
+      style: {
+        display: "flex",
+        width: "100%",
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+    },
+    // 背景にぼかした画像
+    React.createElement("img", {
+      src: videoData.thumbnail,
+      style: {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        height: "1200px",
+        textAlign: "center",
+        filter: "blur(10px)",
+      },
+    }),
+    // そのまま背景画像を表示すると明るすぎるので暗くする
+    React.createElement("div", {
+      style: {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "100%",
+        height: "100%",
+        textAlign: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+      },
+    }),
 
-        // 中身
-
-      ),
-      // ...省略
-    );
+    // 中身
+  ),
+  // ...省略
+);
 ```
 
 ### 楽曲情報を表示する部分を作成
+
 次に楽曲情報を載せていきます。最初LLMに書かせたのですが、ものすごくCSSが下手だったので人間が結局書きました。全体のバランスなど微妙な調整も人間がやってあげないといけないので、人類はまだ敗北していません。
 
 ちょっと長いですが、こちらもソースコードを全部載せておきます。
@@ -161,7 +163,7 @@ React.createElement(
           WebkitLineClamp: 2,
         },
       },
-      videoData.title
+      videoData.title,
     ),
     // アーティスト名
     React.createElement(
@@ -175,7 +177,7 @@ React.createElement(
           marginBottom: "32px",
         },
       },
-      videoData.channelTitle
+      videoData.channelTitle,
     ),
     // タグ
     React.createElement(
@@ -192,7 +194,7 @@ React.createElement(
           backgroundColor: "rgba(255, 255, 255, 0.8)",
         },
       },
-      "#NowPlaying"
+      "#NowPlaying",
     ),
     // 共有されたアプリ
     React.createElement(
@@ -223,11 +225,11 @@ React.createElement(
             marginLeft: "10px",
           },
         },
-        `from ${videoData.serviceName}`
-      )
-    )
-  )
-)
+        `from ${videoData.serviceName}`,
+      ),
+    ),
+  ),
+);
 ```
 
 ### pngに変換する
@@ -296,6 +298,7 @@ jobs:
 https://x.com/mimifuwacc/status/1985201959499071975?s=20
 
 ## Workersにデプロイしたかった話
+
 さて、しばらく使っていましたが、それなりの勢いで曲を共有すると、Vercelの制限に引っかかってTwitter側でOG画像が表示されないという不具合が出てきました。
 
 もともとNext.jsというのも適当に選んだので、Honoとかに乗り換えてWorersにデプロイしてみようかなとか思っていましたが、OG画像を動的生成するのが少し難しそうと思って避けていました。
@@ -315,4 +318,5 @@ Worker exceeded resource limits
 なんにせよ、別の場所に載っけたいので、今月中にAWSに載る気がしています（アドベントカレンダーの記事のためにAWSを勉強したいのでちょうど良いネタになっている）。
 
 ## おわりに
+
 というわけで、2日目は「NowPlayingを少しおしゃれにする」のOGP生成部分やデプロイの話でした。明日は、英語の授業を受けていたらSMCを勉強することになった話をしようと思います。

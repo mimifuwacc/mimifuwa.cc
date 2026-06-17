@@ -34,26 +34,22 @@ const getLinkType = (node: Element): LinkType => {
 
 const rehypeLinkCard = () => {
   return (tree: Root) => {
-    visit(
-      tree,
-      "element",
-      (node: Element, index, parent: Parent | undefined) => {
-        if (isTarget(node) && parent && typeof index === "number") {
-          const linkNode = node.children[0] as Element;
-          const cardNode: Element = {
-            type: "element",
-            tagName: "div",
-            properties: {
-              "data-component-type": `${getLinkType(linkNode)}-card`,
-              "data-url": linkNode.properties.href as string,
-            },
-            children: [],
-          };
+    visit(tree, "element", (node: Element, index, parent: Parent | undefined) => {
+      if (isTarget(node) && parent && typeof index === "number") {
+        const linkNode = node.children[0] as Element;
+        const cardNode: Element = {
+          type: "element",
+          tagName: "div",
+          properties: {
+            "data-component-type": `${getLinkType(linkNode)}-card`,
+            "data-url": linkNode.properties.href as string,
+          },
+          children: [],
+        };
 
-          parent.children[index] = cardNode;
-        }
-      },
-    );
+        parent.children[index] = cardNode;
+      }
+    });
   };
 };
 

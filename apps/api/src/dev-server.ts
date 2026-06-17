@@ -21,7 +21,7 @@ async function loadFont(): Promise<ArrayBuffer> {
   return fontCache;
 }
 
-(async () => {
+void (async () => {
   const { env, dispose } = await getPlatformProxy<Env>();
 
   const app = createApp();
@@ -63,7 +63,7 @@ async function loadFont(): Promise<ArrayBuffer> {
       fetch: (request) => app.fetch(request, env),
       port: 8000,
     },
-    () => console.log("API running on http://localhost:8000"),
+    () => console.info("API running on http://localhost:8000"),
   );
 
   process.on("SIGINT", async () => {

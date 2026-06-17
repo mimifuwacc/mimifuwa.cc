@@ -3,6 +3,8 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers";
 
+// Next.js のルートレイアウトは metadata の export が必須
+// eslint-disable-next-line react/only-export-components
 export const metadata: Metadata = {
   title: "Admin | mimifuwa.cc",
   description: "Blog management dashboard",

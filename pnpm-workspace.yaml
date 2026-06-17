@@ -3,10 +3,9 @@ packages:
   - "packages/*"
 
 onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
+  - "@tailwindcss/oxide"
   - core-js-pure
   - esbuild
-  - lefthook
   - msw
   - sharp
   - workerd
@@ -49,3 +48,18 @@ catalog:
   # Misc shared
   highlight.js: "^11.11.1"
   typescript: "^5.8.3"
+  vite: npm:@voidzero-dev/vite-plus-core@latest
+  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  vite-plus: latest
+overrides:
+  vite: "catalog:"
+  vitest: "catalog:"
+  react: ^19.2.0
+  react-dom: ^19.2.0
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: "*"
+    vitest: "*"

@@ -4,7 +4,7 @@ import { createConfig } from "./metadata.config";
 type Env = {
   ASSETS: { fetch(req: Request | string): Promise<Response> };
   GRAPHQL_URL: string;
-  API: { fetch(req: Request): Promise<Response> };
+  API: { fetch: typeof fetch };
 };
 
 interface OgpData {

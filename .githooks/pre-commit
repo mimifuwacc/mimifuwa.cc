@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# ステージ済みファイルに lint/format を適用（設定は vite.config.ts の staged）
+vp staged

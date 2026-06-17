@@ -18,7 +18,41 @@
         "type": "github"
       }
     },
+    "nix-vite-plus": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1781648487,
+        "narHash": "sha256-ZcBpNAAd2Qoa5I3tCrOrvThFoiib4Pzd2DSUPkMyoZM=",
+        "owner": "ryoppippi",
+        "repo": "nix-vite-plus",
+        "rev": "449874a3ab3dc53467cf8dff63946995f5ea8d7d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ryoppippi",
+        "repo": "nix-vite-plus",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 1773734432,
+        "narHash": "sha256-IF5ppUWh6gHGHYDbtVUyhwy/i7D261P7fWD1bPefOsw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "cda48547b432e8d3b18b4180ba07473762ec8558",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1773840656,
         "narHash": "sha256-9tpvMGFteZnd3gRQZFlRCohVpqooygFuy9yjuyRL2C0=",
@@ -37,7 +71,8 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "nix-vite-plus": "nix-vite-plus",
+        "nixpkgs": "nixpkgs_2"
       }
     },
     "systems": {

@@ -355,7 +355,7 @@ export function PostEditor({
       return;
     }
     let active = true;
-    checkSlugExists(debouncedSlug).then((exists) => {
+    void checkSlugExists(debouncedSlug).then((exists) => {
       // 古いチェック結果は反映しない
       if (active) setSlugError(exists ? "このslugは既に使われています" : null);
     });
@@ -485,7 +485,7 @@ export function PostEditor({
                   size="sm"
                   onClick={() => {
                     setPublishConfirm(false);
-                    handleSave(false, true);
+                    void handleSave(false, true);
                   }}
                 >
                   {formData.isPublished ? "更新する" : "公開する"}
@@ -557,7 +557,7 @@ export function PostEditor({
                   size="sm"
                   onClick={() => {
                     setUnpublishConfirm(false);
-                    handleSave(formData.draft, false);
+                    void handleSave(formData.draft, false);
                   }}
                 >
                   非公開にする
@@ -586,7 +586,7 @@ export function PostEditor({
                   size="sm"
                   onClick={() => {
                     setDeleteConfirm(false);
-                    handleDelete();
+                    void handleDelete();
                   }}
                 >
                   削除する

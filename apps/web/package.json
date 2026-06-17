@@ -4,13 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vp dev",
     "dev:cf": "wrangler dev",
-    "build": "vite build",
-    "preview": "vite preview",
-    "deploy": "vite build && wrangler deploy",
-    "lint": "eslint . --fix",
-    "format": "prettier --write . --ignore-path ../../.prettierignore",
+    "build": "vp build",
+    "preview": "vp preview",
+    "deploy": "vp build && wrangler deploy",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -40,11 +38,12 @@
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-react": "^6.0.2",
     "haribote": "^0.1.0",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "vite": "^6.0.0",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
     "wrangler": "catalog:"
   }
 }

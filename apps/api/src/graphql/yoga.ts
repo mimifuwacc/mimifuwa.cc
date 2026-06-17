@@ -4,7 +4,7 @@ import { createDB } from "../db";
 import { BlogPostService } from "../services/blog-post";
 import { R2Service } from "../services/r2";
 import { purgeOgCache } from "../routes/og-cache";
-import type { Context, Env } from "../types";
+import type { Context } from "../types";
 import { CursorScalar, TimeScalar } from "./scalars";
 
 const typeDefs = /* GraphQL */ `
@@ -117,7 +117,7 @@ const resolvers = {
     blogPost: async (_: unknown, { slug }: { slug: string }, context: Context) => {
       const db = createDB(context.env);
       const blogService = new BlogPostService(db);
-      const r2Service = new R2Service(context.env.R2 as any);
+      const r2Service = new R2Service(context.env.R2);
 
       const post = await blogService.findBySlug(slug);
       if (!post || !post.isPublished) return null;
@@ -142,7 +142,7 @@ const resolvers = {
 
       const db = createDB(context.env);
       const blogService = new BlogPostService(db);
-      const r2Service = new R2Service(context.env.R2 as any);
+      const r2Service = new R2Service(context.env.R2);
 
       const post = await blogService.findBySlug(slug);
       if (!post) return null;
@@ -187,7 +187,7 @@ const resolvers = {
       }
 
       return blogService.findWithPagination(
-        { ...(args.filter || {}), isPublished: true },
+        { ...args.filter, isPublished: true },
         {
           first,
           offset,
@@ -256,7 +256,7 @@ const resolvers = {
     ) => {
       const db = createDB(context.env);
       const blogService = new BlogPostService(db);
-      const r2Service = new R2Service(context.env.R2 as any);
+      const r2Service = new R2Service(context.env.R2);
 
       try {
         const contentHash = await r2Service.generateContentHash(input.content);
@@ -327,7 +327,7 @@ const resolvers = {
     ) => {
       const db = createDB(context.env);
       const blogService = new BlogPostService(db);
-      const r2Service = new R2Service(context.env.R2 as any);
+      const r2Service = new R2Service(context.env.R2);
 
       try {
         const existing = await blogService.findBySlug(input.slug);
@@ -442,7 +442,7 @@ const resolvers = {
     deleteBlogPost: async (_: unknown, { slug }: { slug: string }, context: Context) => {
       const db = createDB(context.env);
       const blogService = new BlogPostService(db);
-      const r2Service = new R2Service(context.env.R2 as any);
+      const r2Service = new R2Service(context.env.R2);
 
       try {
         const post = await blogService.findBySlug(slug);

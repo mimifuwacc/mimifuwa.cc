@@ -31,6 +31,7 @@ https://x.com/mimifuwacc/status/1985160826802876453?s=20
 https://github.com/mimifuwacc/enhanced-nowplaying
 
 ## 拡張機能を作る
+
 まず、現在再生している曲を投稿するための拡張機能を作ります（といってもボタン一個追加するだけのシンプルなもの）。
 
 今回は、PlasmoというReactでブラウザ拡張機能が書けるライブラリを使いました。
@@ -44,6 +45,7 @@ https://wxt.dev/
 実装に関しては特に面白みもない、かつLLMにコーディングさせたのでカットします（ちょうどClaude Codeがで始めた頃に作った）。
 
 ## YouTube Musicから現在再生中の情報を取得する
+
 Spotifyでは、APIから現在再生中の曲などを取得できますが、YouTubeのAPIにはそんな豪華なものはありません。
 
 しかも、YouTube MusicのWeb版では、現在再生されている曲のIDがURLに反映されません（アドレスバーに出てこない）。つまり、 `window.location.href` のようにしても現在再生中の曲が取得できないです。
@@ -54,8 +56,8 @@ Spotifyでは、APIから現在再生中の曲などを取得できますが、Y
 
 ```ts
 const playerTitleLink = document.querySelector<HTMLAnchorElement>(
-        'a[data-sessionlink*="feature=player-title"]'
-      );
+  'a[data-sessionlink*="feature=player-title"]',
+);
 ```
 
 その後、そこから整形した共有用URLを作成します。

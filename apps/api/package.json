@@ -7,10 +7,7 @@
     "dev": "tsx watch src/dev-server.ts",
     "dev:cf": "wrangler dev src/index.ts --local --port 8000",
     "deploy": "wrangler deploy",
-    "lint": "eslint . --fix",
-    "format": "prettier --write . --ignore-path ../../.prettierignore",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
     "cf:typegen": "wrangler types --env-interface Env env.d.ts"
   },
   "dependencies": {
@@ -30,7 +27,8 @@
     "react": "catalog:",
     "satori": "^0.26.0",
     "typescript": "catalog:",
-    "vitest": "^3.2.4",
-    "wrangler": "catalog:"
+    "vitest": "catalog:",
+    "wrangler": "catalog:",
+    "vite-plus": "catalog:"
   }
 }
