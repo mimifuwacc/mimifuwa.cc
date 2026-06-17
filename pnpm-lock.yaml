@@ -57,9 +57,6 @@ catalogs:
     lucide-react:
       specifier: ^1.16.0
       version: 1.16.0
-    react-icons:
-      specifier: ^5.5.0
-      version: 5.5.0
     shadcn:
       specifier: ^4.7.0
       version: 4.8.0
@@ -151,7 +148,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       react-icons:
         specifier: 'catalog:'
-        version: 5.5.0(react@19.2.6)
+        version: 5.6.0(react@19.2.6)
       shadcn:
         specifier: 'catalog:'
         version: 4.8.0(@types/node@24.13.2)(typescript@5.9.3)
@@ -303,7 +300,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       react-icons:
         specifier: 'catalog:'
-        version: 5.5.0(react@19.2.6)
+        version: 5.6.0(react@19.2.6)
       react-router-dom:
         specifier: ^7.0.0
         version: 7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -452,7 +449,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       react-icons:
         specifier: 'catalog:'
-        version: 5.5.0(react@19.2.6)
+        version: 5.6.0(react@19.2.6)
       tailwind-merge:
         specifier: 'catalog:'
         version: 3.6.0
@@ -5215,8 +5212,8 @@ packages:
     peerDependencies:
       react: ^19.2.0
 
-  react-icons@5.5.0:
-    resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
+  react-icons@5.6.0:
+    resolution: {integrity: sha512-RH93p5ki6LfOiIt0UtDyNg/cee+HLVR6cHHtW3wALfo+eOHTp8RnU2kRkI6E+H19zMIs03DyxUG/GfZMOGvmiA==}
     peerDependencies:
       react: ^19.2.0
 
@@ -10973,7 +10970,7 @@ snapshots:
       react: 19.2.6
       scheduler: 0.27.0
 
-  react-icons@5.5.0(react@19.2.6):
+  react-icons@5.6.0(react@19.2.6):
     dependencies:
       react: 19.2.6
 
