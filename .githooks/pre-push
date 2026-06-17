@@ -7,4 +7,5 @@ if [ "$branch" = "main" ] || [ "$branch" = "devel" ]; then
   exit 1
 fi
 
-pnpm turbo typecheck
+# lint + 型チェック（フォーマットは pre-commit 済みなのでスキップ）
+vp check --no-fmt

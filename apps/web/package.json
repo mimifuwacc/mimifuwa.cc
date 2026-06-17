@@ -9,8 +9,6 @@
     "build": "vp build",
     "preview": "vp preview",
     "deploy": "vp build && wrangler deploy",
-    "lint": "vp lint . --fix",
-    "format": "vp fmt . --ignore-path ../../.prettierignore",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

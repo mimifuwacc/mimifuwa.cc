@@ -1,6 +1,20 @@
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
+  test: {
+    // vitest のデフォルト除外 + .direnv（nix の devShell ディレクトリを走査させない）
+    exclude: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/.direnv/**",
+      "**/.wrangler/**",
+      "**/.open-next/**",
+      "**/.next/**",
+      "**/cypress/**",
+      "**/.{idea,git,cache,output,temp}/**",
+      "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*",
+    ],
+  },
   lint: {
     plugins: ["oxc", "typescript", "unicorn", "react"],
     categories: {
@@ -129,8 +143,6 @@ export default defineConfig({
       "typescript/prefer-namespace-keyword": "error",
       "typescript/triple-slash-reference": "error",
       "vite-plus/prefer-vite-plus-imports": "error",
-      // 未使用 import を no-unused-vars と分離して検出（--fix で自動削除）
-      "unused-imports/no-unused-imports": "error",
     },
     overrides: [
       {
@@ -192,10 +204,6 @@ export default defineConfig({
         name: "vite-plus",
         specifier: "vite-plus/oxlint-plugin",
       },
-      {
-        name: "unused-imports",
-        specifier: "eslint-plugin-unused-imports",
-      },
     ],
   },
   fmt: {
@@ -219,5 +227,10 @@ export default defineConfig({
       "pnpm-lock.yaml",
       "**/*.tsbuildinfo",
     ],
+  },
+  // pre-commit (`vp staged`) でステージ済みファイルに対して実行する
+  staged: {
+    "*.{ts,tsx,js,jsx}": "vp lint --fix",
+    "*.{ts,tsx,js,jsx,json,css,md}": "vp fmt --write",
   },
 });

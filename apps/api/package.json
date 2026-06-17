@@ -7,10 +7,7 @@
     "dev": "tsx watch src/dev-server.ts",
     "dev:cf": "wrangler dev src/index.ts --local --port 8000",
     "deploy": "wrangler deploy",
-    "lint": "vp lint . --fix",
-    "format": "vp fmt . --ignore-path ../../.prettierignore",
     "typecheck": "tsc --noEmit",
-    "test": "vp test run",
     "cf:typegen": "wrangler types --env-interface Env env.d.ts"
   },
   "dependencies": {

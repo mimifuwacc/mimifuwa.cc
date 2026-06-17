@@ -6,14 +6,15 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "lint": "turbo run lint",
+    "check": "vp check",
+    "lint": "vp lint",
+    "format": "vp fmt --write",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
+    "test": "vp test run --passWithNoTests",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.1",
-    "eslint-plugin-unused-imports": "^4.4.1",
     "tsx": "^4.19.2",
     "turbo": "^2.9.3",
     "vite-plus": "catalog:",
