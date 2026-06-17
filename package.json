@@ -4,19 +4,12 @@
   "type": "module",
   "packageManager": "pnpm@10.32.1",
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "check": "vp check",
-    "lint": "vp lint",
-    "format": "vp fmt --write",
-    "typecheck": "turbo run typecheck",
-    "test": "vp test run --passWithNoTests",
+    "dev": "mprocs",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.1",
     "tsx": "^4.19.2",
-    "turbo": "^2.9.3",
     "vite-plus": "catalog:",
     "wrangler": "^4.76.0"
   }

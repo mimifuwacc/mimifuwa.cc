@@ -24,6 +24,6 @@ jobs:
       - run: vp check
 
       # 各パッケージの tsc による型チェック
-      - run: vp run typecheck
+      - run: vp run -r typecheck
 
       - run: vp test run --passWithNoTests

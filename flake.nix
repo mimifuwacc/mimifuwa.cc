@@ -20,6 +20,7 @@
         buildInputs = with pkgs; [
           nodejs_24
           pnpm_10
+          mprocs
           nix-vite-plus.packages.${system}.vp
         ];
       };
