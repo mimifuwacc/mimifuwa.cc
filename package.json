@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "pnpm@10.32.1",
   "scripts": {
-    "dev": "mprocs",
+    "dev": "pnpm --parallel --filter './apps/*' run dev",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
