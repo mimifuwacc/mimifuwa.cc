@@ -2,13 +2,13 @@
   "name": "@mimifuwacc/monorepo",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@11.7.0",
   "scripts": {
     "dev": "pnpm --parallel --filter './apps/*' run dev",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "^1.73.1",
+    "@dotenvx/dotenvx": "^1.71.0",
     "tsx": "^4.19.2",
     "vite-plus": "catalog:",
     "wrangler": "^4.76.0"

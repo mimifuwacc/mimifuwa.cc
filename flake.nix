@@ -18,8 +18,6 @@
     in {
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
-          nodejs_24
-          pnpm_10
           nix-vite-plus.packages.${system}.vp
         ];
       };
