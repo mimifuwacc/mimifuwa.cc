@@ -2,7 +2,7 @@
   "name": "@mimifuwacc/monorepo",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@11.7.0",
   "scripts": {
     "dev": "pnpm --parallel --filter './apps/*' run dev",
     "prepare": "git config core.hooksPath .githooks"
