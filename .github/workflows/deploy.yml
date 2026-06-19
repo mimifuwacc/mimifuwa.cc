@@ -34,35 +34,35 @@ jobs:
 
       - name: Migrate D1
         working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../.env.production -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs --remote
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs --remote
 
       - name: Set API secret (prod)
         working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET'
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET'
 
       - name: Deploy API
         working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../.env.production -- pnpm exec wrangler deploy --config wrangler.toml
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.toml
 
       - name: Build web
         working-directory: apps/web
-        run: pnpm exec dotenvx run -f ../../.env.production -- pnpm run build
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Deploy web
         working-directory: apps/web
-        run: pnpm exec dotenvx run -f ../../.env.production -- pnpm exec wrangler deploy --config wrangler.jsonc
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.jsonc
 
       - name: Build admin
         working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../.env.production -- pnpm exec opennextjs-cloudflare build
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec opennextjs-cloudflare build
 
       - name: Set admin secret (prod)
         working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.jsonc'
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.jsonc'
 
       - name: Deploy admin
         working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../.env.production -- pnpm exec wrangler deploy --config wrangler.jsonc
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.jsonc
 
   release:
     needs: deploy

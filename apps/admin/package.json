@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenvx run -f ../../.env -- next dev --port 4000",
+    "dev": "dotenvx run -f ../../env/.env -- next dev --port 4000",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",

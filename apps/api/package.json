@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenvx run -f ../../.env -- tsx watch src/dev-server.ts",
+    "dev": "dotenvx run -f ../../env/.env -- tsx watch src/dev-server.ts",
     "dev:cf": "wrangler dev src/index.ts --local --port 8000",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
