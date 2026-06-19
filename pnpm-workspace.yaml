@@ -34,7 +34,7 @@ catalog:
   tailwind-merge: "^3.6.0"
   lucide-react: "^1.16.0"
   react-icons: "^5.5.0"
-  framer-motion: "^11.0.0"
+  framer-motion: "^12.0.0"
 
   # GraphQL
   graphql: "^16.13.2"
