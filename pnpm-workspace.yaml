@@ -57,6 +57,9 @@ catalog:
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
+  # graphql 17 は Workers のグローバルスコープ制約に違反する（parse が禁止操作を呼ぶ）。
+  # graphql-yoga も 17 非対応（peer は ^15 || ^16）なので、transitive が 17 を掴むのを防ぐため 16 に固定。
+  graphql: "^16.13.2"
 peerDependencyRules:
   allowAny:
     - vite
