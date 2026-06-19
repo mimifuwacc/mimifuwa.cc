@@ -93,7 +93,7 @@ importers:
     devDependencies:
       '@dotenvx/dotenvx':
         specifier: ^1.71.0
-        version: 1.73.0
+        version: 1.73.1
       tsx:
         specifier: ^4.19.2
         version: 4.22.4
@@ -937,8 +937,8 @@ packages:
     resolution: {integrity: sha512-GeDxvtjiRuoyWVU9nQneId879zIyNdL05bS7RKiqMkfBSKpHMWHLoRyRqjYWLaXmX/llKO1hTlqHDmatkQAjPA==}
     hasBin: true
 
-  '@dotenvx/dotenvx@1.73.0':
-    resolution: {integrity: sha512-FV7p7PaO7gJ0bdmHkS+EUafR2NHi+MUwHm2Fi783QMNFVd8bzBYNU6clWLht+CdEddqH9Lb7zNQ9lcWND5IxDQ==}
+  '@dotenvx/dotenvx@1.73.1':
+    resolution: {integrity: sha512-AWf8edAsSpINqJbtaZsaiV3PO+vw5pS4wJFl6ahYNdnp3gfFYeMxRCdsA9042bKP4UPCs8yr5FikSFlvkmFVag==}
     hasBin: true
 
   '@drizzle-team/brocli@0.10.2':
@@ -6335,7 +6335,7 @@ snapshots:
       picomatch: 4.0.4
       which: 4.0.0
 
-  '@dotenvx/dotenvx@1.73.0':
+  '@dotenvx/dotenvx@1.73.1':
     dependencies:
       commander: 11.1.0
       conf: 10.2.0
@@ -10042,7 +10042,7 @@ snapshots:
       '@babel/parser': 7.29.7
       '@babel/plugin-transform-typescript': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
-      '@dotenvx/dotenvx': 1.73.0
+      '@dotenvx/dotenvx': 1.73.1
       '@modelcontextprotocol/sdk': 1.29.0(zod@3.25.76)
       '@types/validate-npm-package-name': 4.0.2
       browserslist: 4.28.2
