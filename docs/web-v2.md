@@ -47,10 +47,10 @@ This starts `api-v2`, `web-v2`, and admin. `api-v2` persists to the same local W
 the previous API, and `web-v2` reads it through `http://localhost:8787` by default. The public site is
 available at `http://localhost:4321`.
 
-SSR content requests select the API from the incoming web hostname: localhost uses the local API,
-`mimifuwacc-devel.m8c.workers.dev` uses the devel API Worker, and production uses
-`api.mimifuwa.cc`. Do not rely exclusively on a build-time environment variable for this routing;
-Cloudflare SSR executes after the build environment is gone.
+SSR content requests use the build-time `API_V2_URL` when it is set. Otherwise they select the API
+from the incoming web hostname: localhost uses the local API, `mimifuwacc-devel.m8c.workers.dev`
+uses the devel API Worker, and production uses `api.mimifuwa.cc`. The hostname fallback means local
+and Cloudflare SSR requests still have a defined target when the build variable is absent.
 
 The Cloudflare configuration enables `nodejs_compat` because the Markdown toolchain imports supported
 Node compatibility modules. Keep runtime checks for an actual article in addition to `astro build`;
