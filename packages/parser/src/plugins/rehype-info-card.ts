@@ -4,21 +4,25 @@ import { visit } from "unist-util-visit";
 const infoType = ["INFO", "SUCCESS", "WARNING", "DANGER"] as const;
 const infoReg = new RegExp(`^\\[!(${infoType.join("|")})\\]\\S?`);
 
-const isTarget = (node: Element): boolean => {
-  return (
-    node.tagName === "blockquote" &&
-    (node.children[1] as Element).tagName === "p" &&
-    ((node.children[1] as Element).children[0] as Text).value.match(infoReg) !== null
-  );
+const getParagraph = (node: Element): Element | undefined =>
+  node.tagName === "blockquote"
+    ? (node.children.find(
+        (child): child is Element => child.type === "element" && child.tagName === "p",
+      ) as Element | undefined)
+    : undefined;
+
+const getMarker = (paragraph: Element): Text | undefined => {
+  const first = paragraph.children[0];
+  return first?.type === "text" && infoReg.test(first.value) ? first : undefined;
 };
 
 const rehypeInfoCard = () => {
   return (tree: Root) => {
     visit(tree, "element", (node: Element, index, parent: Parent | undefined) => {
-      if (isTarget(node) && parent && typeof index === "number") {
-        const infoType = ((node.children[1] as Element).children[0] as Text).value
-          .match(infoReg)?.[1]
-          .toLowerCase();
+      const paragraph = getParagraph(node);
+      const marker = paragraph ? getMarker(paragraph) : undefined;
+      if (paragraph && marker && parent && typeof index === "number") {
+        const infoType = marker.value.match(infoReg)?.[1].toLowerCase();
 
         const cardNode: Element = {
           type: "element",
@@ -27,7 +31,7 @@ const rehypeInfoCard = () => {
             "data-component-type": "info-card",
             "data-info-type": infoType,
           },
-          children: (node.children[1] as Element).children.map((child, index) => {
+          children: paragraph.children.map((child, index) => {
             if (index === 0 && child.type === "text") {
               return {
                 type: "text",

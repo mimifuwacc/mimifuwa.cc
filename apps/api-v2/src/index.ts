@@ -11,6 +11,7 @@ import {
   updateAdminPost,
 } from "./admin-repository";
 import type { ApiErrorBody } from "./contracts";
+import { getOgp } from "./ogp";
 import { getPost, listPosts, type Env } from "./repository";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -61,6 +62,16 @@ app.get("/images/:path{.+}", async (context) => {
   });
 });
 
+app.get("/ogp", async (context) => {
+  const url = context.req.query("url");
+  if (!url) {
+    return context.json({ error: "invalid_request", message: "url is required" }, 400);
+  }
+  const ogp = await getOgp(url);
+  return ogp
+    ? context.json(ogp, 200, { "cache-control": "public, max-age=3600, s-maxage=86400" })
+    : context.json({ error: "invalid_request", message: "url must be a public HTTP URL" }, 400);
+});
 app.get("/posts", async (context) => {
   const rawLimit = Number(context.req.query("limit") ?? 20);
   if (!Number.isInteger(rawLimit) || rawLimit < 1 || rawLimit > 100) {

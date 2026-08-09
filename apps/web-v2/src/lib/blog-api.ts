@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 
-const BlogPostSummary = Schema.Struct({
+export const BlogPostSummary = Schema.Struct({
   slug: Schema.String,
   title: Schema.String,
   excerpt: Schema.String,
@@ -21,6 +21,7 @@ const ApiErrorBody = Schema.Struct({
 });
 
 const baseUrl = (import.meta.env.API_V2_URL ?? "http://localhost:8787").replace(/\/$/, "");
+export const ogpEndpoint = `${baseUrl}/ogp`;
 
 export class BlogApiError extends Error {
   constructor(

@@ -78,6 +78,10 @@ data layers never depend on Astro, React, Zustand, or UI components.
 - Is the only Markdown-to-HTML implementation used by v2 consumers.
 - Rendering is deterministic for a Markdown value plus an explicit parser/renderer version.
 - It has no knowledge of HTTP, databases, Astro pages, or React components.
+- `parseArticleToHtml` performs heading IDs/TOC collection, embed classification, info-card
+  conversion, task-list normalization, syntax highlighting, and code-block structure changes on
+  HAST before serializing once. Applications must not mutate serialized article HTML with regular
+  expressions.
 
 ## Known migration debt
 
@@ -88,7 +92,7 @@ new shared UI. Move them to their consuming application, then remove `@mimifuwac
 `@tanstack/react-query` from `packages/ui` in a dedicated follow-up slice.
 
 The parser also still exports the legacy React entrypoints `parseHtmlToReact`, `parseToReact`, and
-`parseToReactWithComponents`. v2 supports only `parseToHtml`; remove the React entrypoints together
+`parseToReactWithComponents`. v2 uses `parseArticleToHtml`; remove the React entrypoints together
 with the legacy content renderer after its consumers have moved to server-rendered HTML.
 
 ## Client state rule
