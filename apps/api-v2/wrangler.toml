@@ -13,14 +13,10 @@ migrations_dir = "drizzle"
 binding = "R2"
 bucket_name = "mimifuwacc-blogs"
 
-[vars]
-ADMIN_SECRET = "local-development"
-
+# ADMIN_SECRET is configured with `wrangler secret put` for deployed environments.
+# Local development passes a non-production value from the package script.
 [env.devel]
 name = "mimifuwacc-api-devel"
-
-[env.devel.vars]
-ADMIN_SECRET = "local-development"
 
 [[env.devel.d1_databases]]
 binding = "DB"
