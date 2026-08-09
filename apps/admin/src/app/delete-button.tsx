@@ -31,7 +31,7 @@ export function DeleteButton({ slug }: DeleteButtonProps) {
   }
 
   return (
-    <Button variant="destructive" size="sm" onClick={handleDelete} disabled={isDeleting}>
+    <Button variant="destructive" size="sm" onPress={handleDelete} disabled={isDeleting}>
       {isDeleting ? "削除中..." : "Delete"}
     </Button>
   );

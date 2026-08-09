@@ -87,6 +87,10 @@ package to the parser and TanStack Query. They are legacy application components
 new shared UI. Move them to their consuming application, then remove `@mimifuwacc/parser` and
 `@tanstack/react-query` from `packages/ui` in a dedicated follow-up slice.
 
+The parser also still exports the legacy React entrypoints `parseHtmlToReact`, `parseToReact`, and
+`parseToReactWithComponents`. v2 supports only `parseToHtml`; remove the React entrypoints together
+with the legacy content renderer after its consumers have moved to server-rendered HTML.
+
 ## Client state rule
 
 Use ordinary component state first. Use Zustand's vanilla store only when mutable client state must

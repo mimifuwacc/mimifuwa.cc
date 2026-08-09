@@ -26,6 +26,8 @@ function Button({
   size = "default",
   disabled,
   title,
+  isDisabled,
+  "aria-label": ariaLabel,
   ...props
 }: Omit<ButtonProps, "className"> &
   React.RefAttributes<HTMLButtonElement> &
@@ -33,13 +35,14 @@ function Button({
   ButtonCompatibilityProps) {
   return (
     <ButtonPrimitive
+      {...props}
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      aria-label={props["aria-label"] ?? title}
-      isDisabled={props.isDisabled ?? disabled}
+      {...({ title } as { title?: string })}
+      aria-label={ariaLabel ?? title}
+      isDisabled={isDisabled ?? disabled}
       className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
     />
   );
 }
@@ -52,11 +55,11 @@ function LinkButton({
 }: Omit<LinkProps, "className"> & ButtonVariantProps) {
   return (
     <LinkPrimitive
+      {...props}
       data-slot="button"
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
     />
   );
 }

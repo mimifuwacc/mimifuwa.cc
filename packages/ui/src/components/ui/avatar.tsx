@@ -28,6 +28,9 @@ type ImageState = "loading" | "loaded" | "error";
 
 function AvatarImage({ className, onError, onLoad, ...props }: React.ComponentProps<"img">) {
   const [state, setState] = React.useState<ImageState>(props.src ? "loading" : "error");
+  React.useEffect(() => {
+    setState(props.src ? "loading" : "error");
+  }, [props.src]);
   return (
     <img
       data-slot="avatar-image"

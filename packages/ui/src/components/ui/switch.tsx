@@ -13,7 +13,8 @@ function Switch({
   size = "default",
   children,
   ...props
-}: SwitchProps & {
+}: Omit<SwitchProps, "className"> & {
+  className?: string;
   size?: "sm" | "default";
 }) {
   return (
@@ -21,7 +22,7 @@ function Switch({
       data-slot="switch"
       data-size={size}
       className={cn(
-        "peer group/switch relative inline-flex shrink-0 items-center rounded-full border border-transparent bg-input transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 data-selected:bg-primary data-disabled:cursor-not-allowed data-disabled:opacity-50 data-[size=default]:h-[18px] data-[size=default]:w-8 data-[size=sm]:h-3.5 data-[size=sm]:w-6",
+        "peer group/switch inline-flex items-center gap-2 outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
         className,
       )}
       {...props}
@@ -29,10 +30,16 @@ function Switch({
       {composeRenderProps(children, (content, { isSelected }) => (
         <>
           <span
-            data-slot="switch-thumb"
+            data-slot="switch-track"
             data-selected={isSelected || undefined}
-            className="pointer-events-none block size-4 rounded-full bg-background shadow-sm transition-transform group-data-[size=sm]/switch:size-3 data-selected:translate-x-[calc(100%-2px)]"
-          />
+            className="relative inline-flex shrink-0 items-center rounded-full border border-transparent bg-input transition-all group-focus-visible/switch:border-ring group-focus-visible/switch:ring-3 group-focus-visible/switch:ring-ring/50 data-selected:bg-primary group-data-[size=default]/switch:h-[18px] group-data-[size=default]/switch:w-8 group-data-[size=sm]/switch:h-3.5 group-data-[size=sm]/switch:w-6"
+          >
+            <span
+              data-slot="switch-thumb"
+              data-selected={isSelected || undefined}
+              className="pointer-events-none block size-4 rounded-full bg-background shadow-sm transition-transform group-data-[size=sm]/switch:size-3 data-selected:translate-x-[calc(100%-2px)]"
+            />
+          </span>
           {content}
         </>
       ))}

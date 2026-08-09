@@ -445,7 +445,7 @@ export function PostEditor({
           type="button"
           size="sm"
           variant="outline"
-          onClick={() => handleSave(true)}
+          onPress={() => handleSave(true)}
           disabled={isSaving}
         >
           下書きを保存
@@ -478,7 +478,7 @@ export function PostEditor({
             <Button
               type="button"
               size="sm"
-              onClick={() => {
+              onPress={() => {
                 setPublishConfirm(false);
                 void handleSave(false, true);
               }}
@@ -495,7 +495,7 @@ export function PostEditor({
             variant="ghost"
             size="sm"
             className="px-2"
-            onClick={() => setMenuOpen((v) => !v)}
+            onPress={() => setMenuOpen((v) => !v)}
           >
             <MoreHorizontal className="size-4" />
           </Button>
@@ -543,7 +543,7 @@ export function PostEditor({
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => {
+              onPress={() => {
                 setUnpublishConfirm(false);
                 void handleSave(formData.draft, false);
               }}
@@ -567,7 +567,7 @@ export function PostEditor({
               type="button"
               variant="destructive"
               size="sm"
-              onClick={() => {
+              onPress={() => {
                 setDeleteConfirm(false);
                 void handleDelete();
               }}
@@ -742,7 +742,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Heading (##)"
-          onClick={() => handleFormat("linePrefix", "## ")}
+          onPress={() => handleFormat("linePrefix", "## ")}
         >
           <Heading2 className="size-4" />
         </Button>
@@ -751,7 +751,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Bold"
-          onClick={() => handleFormat("wrap", "**", "**", "太字テキスト")}
+          onPress={() => handleFormat("wrap", "**", "**", "太字テキスト")}
         >
           <Bold className="size-4" />
         </Button>
@@ -760,7 +760,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Italic"
-          onClick={() => handleFormat("wrap", "*", "*", "斜体テキスト")}
+          onPress={() => handleFormat("wrap", "*", "*", "斜体テキスト")}
         >
           <Italic className="size-4" />
         </Button>
@@ -769,7 +769,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Strikethrough"
-          onClick={() => handleFormat("wrap", "~~", "~~", "テキスト")}
+          onPress={() => handleFormat("wrap", "~~", "~~", "テキスト")}
         >
           <Strikethrough className="size-4" />
         </Button>
@@ -779,7 +779,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Inline code"
-          onClick={() => handleFormat("wrap", "`", "`", "code")}
+          onPress={() => handleFormat("wrap", "`", "`", "code")}
         >
           <Code className="size-4" />
         </Button>
@@ -788,7 +788,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Code block"
-          onClick={() => handleFormat("wrap", "```\n", "\n```", "コード")}
+          onPress={() => handleFormat("wrap", "```\n", "\n```", "コード")}
         >
           <SquareCode className="size-4" />
         </Button>
@@ -798,7 +798,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Blockquote"
-          onClick={() => handleFormat("linePrefix", "> ")}
+          onPress={() => handleFormat("linePrefix", "> ")}
         >
           <Quote className="size-4" />
         </Button>
@@ -807,7 +807,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Horizontal rule"
-          onClick={() => handleFormat("linePrefix", "---\n")}
+          onPress={() => handleFormat("linePrefix", "---\n")}
         >
           <Minus className="size-4" />
         </Button>
@@ -816,7 +816,7 @@ export function PostEditor({
           variant="ghost"
           size="icon"
           title="Link"
-          onClick={() => handleFormat("wrap", "[", "](url)", "リンクテキスト")}
+          onPress={() => handleFormat("wrap", "[", "](url)", "リンクテキスト")}
         >
           <Link className="size-4" />
         </Button>

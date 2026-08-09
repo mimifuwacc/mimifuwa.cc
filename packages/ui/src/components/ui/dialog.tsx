@@ -15,6 +15,8 @@ import {
 import { cn } from "../../lib/utils";
 import { Button } from "./button";
 
+const DialogDescriptionIdContext = React.createContext<string | undefined>(undefined);
+
 function DialogTrigger(props: DialogTriggerProps) {
   return <DialogTriggerPrimitive data-slot="dialog-trigger" {...props} />;
 }
@@ -47,7 +49,7 @@ function DialogOverlay({
     <ModalOverlay
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/40 duration-150 data-entering:animate-in data-exiting:animate-out",
+        "fixed inset-0 isolate z-50 bg-black/40 duration-150 data-entering:animate-in data-entering:fade-in-0 data-exiting:animate-out data-exiting:fade-out-0",
         className,
       )}
       {...props}
@@ -69,20 +71,22 @@ function Dialog({
   showCloseButton?: boolean;
   isDismissable?: boolean;
 }) {
+  const descriptionId = React.useId();
   return (
     <DialogOverlay isDismissable={isDismissable} {...props}>
       <Modal
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl border border-border bg-background p-6 shadow-xl outline-none sm:max-w-sm",
+          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl border border-border bg-background p-6 shadow-xl outline-none duration-150 data-entering:animate-in data-entering:fade-in-0 data-exiting:animate-out data-exiting:fade-out-0 sm:max-w-sm",
           className,
         )}
       >
         <DialogPrimitive
           data-slot="dialog"
+          aria-describedby={descriptionId}
           className="[display:inherit] [gap:inherit] outline-none"
         >
-          {children}
+          <DialogDescriptionIdContext value={descriptionId}>{children}</DialogDescriptionIdContext>
           {showCloseButton && (
             <DialogClose variant="ghost" size="icon-sm" className="absolute top-2 right-2">
               <XIcon />
@@ -118,9 +122,11 @@ function DialogTitle({ className, ...props }: Omit<React.ComponentProps<typeof H
   );
 }
 
-function DialogDescription({ className, ...props }: React.ComponentProps<"div">) {
+function DialogDescription({ className, id, ...props }: React.ComponentProps<"div">) {
+  const descriptionId = React.useContext(DialogDescriptionIdContext);
   return (
     <div
+      id={id ?? descriptionId}
       data-slot="dialog-description"
       className={cn("text-xs text-muted-foreground", className)}
       {...props}
