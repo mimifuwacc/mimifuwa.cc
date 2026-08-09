@@ -21,6 +21,9 @@ const ApiErrorBody = Schema.Struct({
 });
 
 export const contentApiBaseUrl = (requestUrl: URL) => {
+  const configuredUrl = import.meta.env.API_V2_URL?.trim();
+  if (configuredUrl) return configuredUrl.replace(/\/$/, "");
+
   const hostname = requestUrl.hostname.toLowerCase();
   if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
     return (import.meta.env.API_V2_URL ?? "http://localhost:8787").replace(/\/$/, "");
@@ -46,13 +49,15 @@ const request = async <A, I>(
   schema: Schema.Schema<A, I>,
 ): Promise<A> => {
   const baseUrl = contentApiBaseUrl(requestUrl);
-  const response = await fetch(`${baseUrl}${path}`);
+  const url = `${baseUrl}${path}`;
+  const response = await fetch(url);
   if (!response.ok) {
     const body = await response
       .json()
       .then(Schema.decodeUnknownPromise(ApiErrorBody))
       .catch(() => null);
-    throw new BlogApiError(body?.message ?? "Content API request failed", response.status);
+    const message = body?.message ?? "Content API request failed";
+    throw new BlogApiError(`${message} (${response.status} ${url})`, response.status);
   }
   return Schema.decodeUnknownPromise(schema)(await response.json());
 };
