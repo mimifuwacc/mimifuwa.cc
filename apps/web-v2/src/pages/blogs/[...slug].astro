@@ -2,7 +2,7 @@
 import { parseArticleToHtml } from "@mimifuwacc/parser";
 import { CalendarDays, ChevronDown } from "@lucide/astro";
 import Layout from "../../layouts/Layout.astro";
-import { BlogApiError, getPost, ogpEndpoint } from "../../lib/blog-api";
+import { BlogApiError, contentApiBaseUrl, getPost } from "../../lib/blog-api";
 import { formatDate, postOgImage } from "../../lib/format";
 
 const slug = Astro.params.slug;
@@ -10,13 +10,14 @@ if (!slug) return Astro.redirect("/blogs");
 
 let post;
 try {
-  post = await getPost(slug);
+  post = await getPost(Astro.url, slug);
 } catch (error) {
   if (error instanceof BlogApiError && error.status === 404) return Astro.rewrite("/404");
   throw error;
 }
 
 const { html, headings } = await parseArticleToHtml(post.markdown);
+const ogpEndpoint = `${contentApiBaseUrl(Astro.url)}/ogp`;
 ---
 
 <Layout title={`${post.title} | mimifuwa.cc`} description={post.excerpt} image={postOgImage(post.slug)}>

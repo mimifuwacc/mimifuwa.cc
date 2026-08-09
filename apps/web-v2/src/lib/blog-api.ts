@@ -20,8 +20,16 @@ const ApiErrorBody = Schema.Struct({
   message: Schema.String,
 });
 
-const baseUrl = (import.meta.env.API_V2_URL ?? "http://localhost:8787").replace(/\/$/, "");
-export const ogpEndpoint = `${baseUrl}/ogp`;
+export const contentApiBaseUrl = (requestUrl: URL) => {
+  const hostname = requestUrl.hostname.toLowerCase();
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
+    return (import.meta.env.API_V2_URL ?? "http://localhost:8787").replace(/\/$/, "");
+  }
+  if (hostname === "mimifuwacc-devel.m8c.workers.dev") {
+    return "https://mimifuwacc-api-devel.m8c.workers.dev";
+  }
+  return "https://api.mimifuwa.cc";
+};
 
 export class BlogApiError extends Error {
   constructor(
@@ -32,7 +40,12 @@ export class BlogApiError extends Error {
   }
 }
 
-const request = async <A, I>(path: string, schema: Schema.Schema<A, I>): Promise<A> => {
+const request = async <A, I>(
+  requestUrl: URL,
+  path: string,
+  schema: Schema.Schema<A, I>,
+): Promise<A> => {
+  const baseUrl = contentApiBaseUrl(requestUrl);
   const response = await fetch(`${baseUrl}${path}`);
   if (!response.ok) {
     const body = await response
@@ -44,7 +57,8 @@ const request = async <A, I>(path: string, schema: Schema.Schema<A, I>): Promise
   return Schema.decodeUnknownPromise(schema)(await response.json());
 };
 
-export const getPosts = (limit = 20) => request(`/posts?limit=${limit}`, BlogPostPage);
+export const getPosts = (requestUrl: URL, limit = 20) =>
+  request(requestUrl, `/posts?limit=${limit}`, BlogPostPage);
 
-export const getPost = (slug: string) =>
-  request(`/posts/${slug.split("/").map(encodeURIComponent).join("/")}`, BlogPost);
+export const getPost = (requestUrl: URL, slug: string) =>
+  request(requestUrl, `/posts/${slug.split("/").map(encodeURIComponent).join("/")}`, BlogPost);

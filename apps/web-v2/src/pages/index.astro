@@ -9,7 +9,7 @@ import Section from "../components/Section.astro";
 import Layout from "../layouts/Layout.astro";
 import { getPosts } from "../lib/blog-api";
 
-const { posts } = await getPosts(6);
+const { posts } = await getPosts(Astro.url, 6);
 const workImage = (url: string, image?: string) => {
   if (image?.startsWith("/")) return `https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public${image}`;
   if (image) return image;
