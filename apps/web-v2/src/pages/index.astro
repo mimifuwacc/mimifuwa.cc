@@ -1,25 +1,84 @@
 ---
+import { certifications, hobbies, timelineData } from "../../../../contents/about";
+import { allSkills } from "../../../../contents/skills";
+import { works } from "../../../../contents/works";
+import BlogCard from "../components/BlogCard.astro";
+import Section from "../components/Section.astro";
 import Layout from "../layouts/Layout.astro";
 import { getPosts } from "../lib/blog-api";
 
-const { posts } = await getPosts();
+const { posts } = await getPosts(6);
+const workImage = (url: string, image?: string) => {
+  if (image?.startsWith("/")) return `https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public${image}`;
+  if (image) return image;
+  const match = url.match(/github\.com\/([^/]+)\/([^/?]+)/);
+  return match ? `https://opengraph.githubassets.com/1/${match[1]}/${match[2]}` : undefined;
+};
 ---
 
 <Layout>
-  <section class="page-header">
-    <p class="eyebrow">Blog / v2</p>
-    <h1>書いたもの</h1>
+  <section class="hero">
+    <div class="hero-inner" data-parallax>
+      <img src="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/mimifuwacc.png" alt="mimifuwacc" class="hero-avatar" />
+      <div>
+        <h1><span>mimifuwa.cc</span></h1>
+        <button type="button" class="session-copy hero-session" data-copy-session>
+          <span data-session-id>session</span><span data-copy-status aria-hidden="true">⌘</span>
+        </button>
+      </div>
+    </div>
   </section>
-  <ol class="post-list">
-    {posts.map((post) => (
-      <li>
-        <a href={`/blog/${post.slug}`}>
-          <time datetime={post.date}>{new Date(post.date).toLocaleDateString("ja-JP")}</time>
-          <h2>{post.title}</h2>
-          <p>{post.excerpt}</p>
-          <div class="tags">{post.tags.map((tag) => <span>#{tag}</span>)}</div>
-        </a>
-      </li>
-    ))}
-  </ol>
+
+  <div class="home-sheet">
+    <div class="sheet-handle"></div>
+    <Section id="about-section" title="About Me" subtitle="mimifuwacc について...">
+      <div class="about-grid">
+        <div class="card-stack">
+          <article class="card content-card profile-card">
+            <div class="profile-heading">
+              <img src="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/mimifuwacc.png" alt="mimifuwacc" />
+              <div><h2>mimifuwacc <small>ˈmiːmi</small></h2><p>電気通信大学 情報理工学域<br />コンピュータサイエンスプログラム</p></div>
+            </div>
+            <hr />
+            <p>Webアプリケーションエンジニア．大学ではアセンブリの形式検証に取り組んでいます．ヰ世界情緒とラノベが好き．</p>
+            <div class="button-row">
+              <a class="pill-button" href="https://github.com/mimifuwacc" target="_blank" rel="noopener">GitHub</a>
+              <a class="pill-button" href="https://x.com/mimifuwacc" target="_blank" rel="noopener">X</a>
+              <a class="pill-button" href="https://zenn.dev/mimifuwacc" target="_blank" rel="noopener">Zenn</a>
+            </div>
+          </article>
+
+          <article class="card content-card"><h2>◎ Certifications</h2><hr /><ul class="plain-list">{certifications.map((item) => <li>✓ {item}</li>)}</ul></article>
+          <article class="card content-card"><h2>⌁ Skills</h2><hr /><div class="skills">{allSkills.map((skill) => <img src={skill.image} alt={skill.name} title={skill.name} loading="lazy" />)}</div></article>
+          <article class="card content-card"><h2>☺ Hobby</h2><hr /><div class="hobbies">{hobbies.map((hobby) => <div><h3>› {hobby.name}</h3>{hobby.items && <div class="badges">{hobby.items.map((item) => <span class="badge badge-outline">{item}</span>)}</div>}</div>)}</div></article>
+        </div>
+
+        <article class="card content-card timeline-card">
+          <h2>◷ Timeline</h2><hr />
+          <div class="timeline">{timelineData.map((event) => <div class="timeline-event"><span class="timeline-dot"></span><span class="badge badge-outline">{event.date}</span><h3>{event.title}</h3>{event.description && <p>{event.description}</p>}</div>)}</div>
+        </article>
+      </div>
+    </Section>
+
+    <Section id="works-section" title="Works" subtitle="作成したアプリ・サービスなど">
+      <a class="section-link" href="https://github.com/mimifuwacc" target="_blank" rel="noopener">他のプロジェクトを見る ↗</a>
+      <div class="works-grid">
+        {works.map((work) => <a class="card work-card" href={work.url} target="_blank" rel="noopener">{workImage(work.url, work.image) && <img src={workImage(work.url, work.image)} alt={work.title} loading="lazy" />}<div><h2>{work.title} ↗</h2><p>{work.description}</p></div></a>)}
+      </div>
+    </Section>
+
+    {posts.length > 0 && (
+      <Section id="blog-section" title="Blogs" subtitle="主に趣味について書いています">
+        <a class="section-link" href="/blogs">すべての記事を見る →</a>
+        <div class="blog-grid">{posts.map((post) => <BlogCard post={post} />)}</div>
+      </Section>
+    )}
+  </div>
 </Layout>
+
+<script>
+  const parallax = document.querySelector<HTMLElement>("[data-parallax]");
+  if (parallax && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    addEventListener("scroll", () => { parallax.style.transform = `translateY(${-Math.min(scrollY, 400) * 0.15}px)`; }, { passive: true });
+  }
+</script>

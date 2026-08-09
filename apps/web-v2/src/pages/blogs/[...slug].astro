@@ -1,0 +1,61 @@
+---
+import { parseToHtml } from "@mimifuwacc/parser";
+import Layout from "../../layouts/Layout.astro";
+import { BlogApiError, getPost } from "../../lib/blog-api";
+import { addHeadingIds, formatDate, postOgImage, renderLinkFallbacks } from "../../lib/format";
+
+const slug = Astro.params.slug;
+if (!slug) return Astro.redirect("/blogs");
+
+let post;
+try {
+  post = await getPost(slug);
+} catch (error) {
+  if (error instanceof BlogApiError && error.status === 404) return Astro.rewrite("/404");
+  throw error;
+}
+
+const parsed = await parseToHtml(post.markdown);
+const { html, headings } = addHeadingIds(renderLinkFallbacks(parsed.html));
+---
+
+<Layout title={`${post.title} | mimifuwa.cc`} description={post.excerpt} image={postOgImage(post.slug)}>
+  <div class="article-page container">
+    <header class="article-header">
+      <h1>{post.title}</h1>
+      <time datetime={post.date}>▣ {formatDate(post.date)}</time>
+      {post.tags.length > 0 && <div class="badges">{post.tags.map((tag) => <span class="badge">#{tag}</span>)}</div>}
+    </header>
+
+    {headings.length > 0 && (
+      <details class="mobile-toc card">
+        <summary>目次 <span>⌄</span></summary>
+        <nav>{headings.map((heading) => <a class:list={[heading.level === 3 && "toc-child"]} href={`#${heading.id}`}>{heading.text}</a>)}</nav>
+      </details>
+    )}
+
+    <div class="article-layout">
+      <article class="prose" set:html={html} />
+      {headings.length > 0 && (
+        <aside class="desktop-toc">
+          <nav class="card" aria-label="目次">
+            <strong>目次</strong>
+            {headings.map((heading) => <a data-toc-link={heading.id} class:list={[heading.level === 3 && "toc-child"]} href={`#${heading.id}`}>{heading.text}</a>)}
+          </nav>
+        </aside>
+      )}
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]")];
+  const headings = links.map((link) => document.getElementById(link.dataset.tocLink ?? "")).filter(Boolean) as HTMLElement[];
+  const update = () => {
+    let current = headings[0]?.id;
+    for (const heading of headings) if (heading.getBoundingClientRect().top <= 120) current = heading.id;
+    links.forEach((link) => link.classList.toggle("active", link.dataset.tocLink === current));
+  };
+  addEventListener("scroll", update, { passive: true });
+  update();
+</script>

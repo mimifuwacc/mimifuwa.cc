@@ -1,0 +1,14 @@
+---
+import BlogCard from "../../components/BlogCard.astro";
+import Section from "../../components/Section.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getPosts } from "../../lib/blog-api";
+
+const { posts } = await getPosts(100);
+---
+
+<Layout title="Blogs | mimifuwa.cc" description="主に趣味について書いています">
+  <Section id="blogs-page" title="Blogs" subtitle="主に趣味について書いています">
+    {posts.length === 0 ? <p class="empty-state">記事が公開され次第、ここに表示されます。</p> : <div class="blog-grid">{posts.map((post) => <BlogCard post={post} />)}</div>}
+  </Section>
+</Layout>

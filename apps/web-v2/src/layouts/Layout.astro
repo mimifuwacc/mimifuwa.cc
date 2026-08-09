@@ -1,31 +1,89 @@
 ---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
 import "../styles/global.css";
 
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
 
 const {
   title = "mimifuwa.cc",
-  description = "mimifuwacc のブログ",
+  description = "mimifuwacc のポートフォリオとブログ",
+  image = "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/og.png",
 } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const imageUrl = new URL(image, Astro.site ?? Astro.url.origin);
 ---
 
 <!doctype html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#16839b" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="mimifuwa.cc" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>{title}</title>
+    <script is:inline>
+      const savedTheme = localStorage.getItem("theme");
+      const dark = savedTheme === "dark" || (!savedTheme && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.classList.toggle("dark", dark);
+    </script>
   </head>
   <body>
-    <header class="site-header">
-      <a href="/">mimifuwa.cc</a>
-    </header>
-    <main>
-      <slot />
-    </main>
+    <div class="page-shell">
+      <Header />
+      <main><slot /></main>
+      <Footer />
+    </div>
+    <script>
+      const setTheme = () => {
+        const dark = document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", dark ? "dark" : "light");
+      };
+      document.querySelectorAll<HTMLButtonElement>(".theme-toggle").forEach((button) => {
+        button.addEventListener("click", setTheme);
+      });
+
+      const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const mobileNav = document.querySelector<HTMLElement>(".mobile-nav");
+      menuButton?.addEventListener("click", () => {
+        const open = menuButton.getAttribute("aria-expanded") !== "true";
+        menuButton.setAttribute("aria-expanded", String(open));
+        menuButton.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+        const icon = menuButton.querySelector("span");
+        if (icon) icon.textContent = open ? "×" : "☰";
+        if (mobileNav) mobileNav.hidden = !open;
+      });
+
+      const storageKey = "mimifuwa-session-id";
+      let sessionId = sessionStorage.getItem(storageKey);
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        sessionStorage.setItem(storageKey, sessionId);
+      }
+      document.querySelectorAll<HTMLElement>("[data-session-id]").forEach((node) => {
+        node.textContent = sessionId;
+      });
+      document.querySelectorAll<HTMLButtonElement>("[data-copy-session]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          await navigator.clipboard.writeText(sessionId);
+          const status = button.querySelector<HTMLElement>("[data-copy-status]");
+          if (status) status.textContent = "✓";
+          window.setTimeout(() => { if (status) status.textContent = "⌘"; }, 2000);
+        });
+      });
+    </script>
   </body>
 </html>

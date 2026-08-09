@@ -1,0 +1,29 @@
+---
+import type { Schema } from "effect";
+import { formatDate, postHref, postOgImage } from "../lib/format";
+import type { BlogPostSummary } from "../lib/blog-api";
+
+interface Props {
+  post: Schema.Schema.Type<typeof BlogPostSummary>;
+}
+
+const { post } = Astro.props;
+const maxTags = 3;
+---
+
+<a href={postHref(post.slug)} class="blog-card card">
+  <div class="blog-card-image">
+    <img src={postOgImage(post.slug)} alt={post.title} loading="lazy" />
+  </div>
+  <div class="blog-card-body">
+    <h2>{post.title}</h2>
+    <p>{post.excerpt}</p>
+    <div class="blog-card-meta">
+      <div class="badges">
+        {post.tags.slice(0, maxTags).map((tag) => <span class="badge">#{tag}</span>)}
+        {post.tags.length > maxTags && <span class="badge badge-outline">+{post.tags.length - maxTags}</span>}
+      </div>
+      <time datetime={post.date}>{formatDate(post.date)}</time>
+    </div>
+  </div>
+</a>

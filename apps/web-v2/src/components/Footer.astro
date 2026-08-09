@@ -1,0 +1,25 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container-wide footer-inner">
+    <div>
+      <a href="/" class="footer-brand">mimifuwa.cc</a>
+      <button type="button" class="session-copy" data-copy-session aria-label="セッション ID をコピー">
+        <span data-session-id>session</span><span aria-hidden="true" data-copy-status>⌘</span>
+      </button>
+    </div>
+    <div class="footer-links">
+      <nav aria-label="フッターナビゲーション">
+        <a href="/">Home</a><a href="/blogs">Blog</a><a href="/links">Links</a>
+      </nav>
+      <div class="social-links">
+        <a href="https://github.com/mimifuwacc" rel="me noopener" target="_blank">GitHub</a>
+        <a href="https://x.com/mimifuwacc" rel="me noopener" target="_blank">X</a>
+        <a href="mailto:mail@mimifuwa.cc">Email</a>
+      </div>
+    </div>
+  </div>
+  <p class="container-wide copyright">© {year} mimifuwa.cc</p>
+</footer>

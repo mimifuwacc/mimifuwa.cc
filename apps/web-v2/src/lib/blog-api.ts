@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 
-const BlogPostSummary = Schema.Struct({
+export const BlogPostSummary = Schema.Struct({
   slug: Schema.String,
   title: Schema.String,
   excerpt: Schema.String,
