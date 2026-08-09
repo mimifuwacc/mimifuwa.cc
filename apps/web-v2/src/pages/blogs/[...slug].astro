@@ -1,9 +1,9 @@
 ---
-import { parseToHtml } from "@mimifuwacc/parser";
+import { parseArticleToHtml } from "@mimifuwacc/parser";
 import { CalendarDays, ChevronDown } from "@lucide/astro";
 import Layout from "../../layouts/Layout.astro";
-import { BlogApiError, getPost } from "../../lib/blog-api";
-import { addHeadingIds, formatDate, postOgImage, renderLinkFallbacks } from "../../lib/format";
+import { BlogApiError, getPost, ogpEndpoint } from "../../lib/blog-api";
+import { formatDate, postOgImage } from "../../lib/format";
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.redirect("/blogs");
@@ -16,8 +16,7 @@ try {
   throw error;
 }
 
-const parsed = await parseToHtml(post.markdown);
-const { html, headings } = addHeadingIds(renderLinkFallbacks(parsed.html));
+const { html, headings } = await parseArticleToHtml(post.markdown);
 ---
 
 <Layout title={`${post.title} | mimifuwa.cc`} description={post.excerpt} image={postOgImage(post.slug)}>
@@ -36,7 +35,7 @@ const { html, headings } = addHeadingIds(renderLinkFallbacks(parsed.html));
     )}
 
     <div class="article-layout">
-      <article class="prose" set:html={html} />
+      <article class="prose" data-ogp-endpoint={ogpEndpoint} set:html={html} />
       {headings.length > 0 && (
         <aside class="desktop-toc">
           <nav class="card" aria-label="目次">
@@ -50,6 +49,94 @@ const { html, headings } = addHeadingIds(renderLinkFallbacks(parsed.html));
 </Layout>
 
 <script>
+  interface OgpData {
+    title?: string;
+    description?: string;
+    image?: string;
+  }
+
+  const article = document.querySelector<HTMLElement>(".prose[data-ogp-endpoint]");
+  const endpoint = article?.dataset.ogpEndpoint;
+  if (endpoint) {
+    document.querySelectorAll<HTMLAnchorElement>("[data-ogp-url]").forEach(async (card) => {
+      const url = card.dataset.ogpUrl;
+      if (!url) return;
+      try {
+        const response = await fetch(`${endpoint}?url=${encodeURIComponent(url)}`);
+        if (!response.ok) return;
+        const data = (await response.json()) as OgpData;
+        const title = card.querySelector<HTMLElement>(".embedded-link-title");
+        const description = card.querySelector<HTMLElement>(".embedded-link-description");
+        const imageContainer = card.querySelector<HTMLElement>(".embedded-link-image");
+        const image = imageContainer?.querySelector<HTMLImageElement>("img");
+        if (title && data.title) title.textContent = data.title;
+        if (description && data.description) {
+          description.textContent = data.description;
+          description.hidden = false;
+        }
+        if (imageContainer && image && data.image) {
+          const imageUrl = new URL(data.image);
+          if (imageUrl.protocol === "http:" || imageUrl.protocol === "https:") {
+            image.src = imageUrl.toString();
+            image.alt = data.title ?? "";
+            image.addEventListener("error", () => { imageContainer.hidden = true; }, { once: true });
+            imageContainer.hidden = false;
+          }
+        }
+      } catch {
+        // The server-rendered hostname remains as the fallback.
+      }
+    });
+  }
+
+  type TwitterWindow = Window & { twttr?: { widgets?: { load: (root?: HTMLElement) => void } } };
+  const twitterWindow = window as TwitterWindow;
+  const renderTweets = () => {
+    const dark = document.documentElement.classList.contains("dark");
+    document.querySelectorAll<HTMLElement>("[data-twitter-url]").forEach((container) => {
+      const url = container.dataset.twitterUrl;
+      if (!url) return;
+      const blockquote = document.createElement("blockquote");
+      blockquote.className = "twitter-tweet";
+      blockquote.dataset.lang = "ja";
+      blockquote.dataset.theme = dark ? "dark" : "light";
+      const link = document.createElement("a");
+      link.href = `${url}?ref_src=twsrc%5Etfw`;
+      link.textContent = url;
+      blockquote.append(link);
+      container.replaceChildren(blockquote);
+      twitterWindow.twttr?.widgets?.load(container);
+    });
+  };
+  if (document.querySelector("[data-twitter-url]")) {
+    const existing = document.getElementById("twitter-wjs") as HTMLScriptElement | null;
+    if (twitterWindow.twttr?.widgets) renderTweets();
+    else if (existing) existing.addEventListener("load", renderTweets, { once: true });
+    else {
+      const script = document.createElement("script");
+      script.id = "twitter-wjs";
+      script.src = "https://platform.twitter.com/widgets.js";
+      script.async = true;
+      script.addEventListener("load", renderTweets, { once: true });
+      document.body.append(script);
+    }
+    new MutationObserver(renderTweets).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".code-copy").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const code = button.closest(".code-block")?.querySelector("code")?.textContent;
+      if (code === undefined) return;
+      await navigator.clipboard.writeText(code);
+      const label = button.querySelector("span");
+      if (label) label.textContent = "Copied!";
+      window.setTimeout(() => { if (label) label.textContent = "Copy"; }, 2000);
+    });
+  });
+
   const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]")];
   const headings = links.map((link) => document.getElementById(link.dataset.tocLink ?? "")).filter(Boolean) as HTMLElement[];
   const update = () => {

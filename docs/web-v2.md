@@ -20,12 +20,20 @@ operational failure is not cached or presented as missing content.
 ## Browser behavior
 
 The current public site needs no React runtime. Theme switching, the mobile navigation menu, session
-ID copy feedback, hero parallax, and table-of-contents scroll tracking use small page scripts. Add a
-React island only when an interaction becomes too stateful to express clearly this way.
+ID copy feedback, hero parallax, table-of-contents scroll tracking, OGP card enhancement, Twitter
+widgets, and code copy feedback use small page scripts. Add a React island only when an interaction
+becomes too stateful to express clearly this way.
 
-Article headings receive deterministic IDs after Markdown rendering. Raw link-card placeholders are
-turned into safe server-rendered fallback links, so article URLs remain usable without a client-side
-OGP request. Markdown remains the canonical value.
+`parseArticleToHtml` assigns deterministic heading IDs and collects the table of contents while the
+article is still a HAST tree. It also turns code blocks and standalone URLs into semantic article
+elements before serialization; web-v2 does not post-process generated HTML with regular
+expressions. Markdown remains the canonical value.
+
+A regular standalone URL is initially rendered as a usable hostname link. The browser progressively
+enhances it with title, description, favicon, and image data from `api-v2 /ogp`. That endpoint accepts
+only public HTTP(S) targets, validates every redirect, limits response size and duration, and returns
+a hostname-only fallback when upstream metadata cannot be loaded. Twitter/X URLs instead render a
+dedicated widgets.js target and are reloaded when the site theme changes.
 
 ## Local development
 

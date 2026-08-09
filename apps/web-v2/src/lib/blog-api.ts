@@ -21,6 +21,7 @@ const ApiErrorBody = Schema.Struct({
 });
 
 const baseUrl = (import.meta.env.API_V2_URL ?? "http://localhost:8787").replace(/\/$/, "");
+export const ogpEndpoint = `${baseUrl}/ogp`;
 
 export class BlogApiError extends Error {
   constructor(
