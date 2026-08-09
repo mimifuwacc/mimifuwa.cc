@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "wrangler dev --persist-to ../api/.wrangler/state",
+    "dev:remote": "dotenvx run -f ../../env/.env.devel -- wrangler dev --env devel --remote",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit"
   },
