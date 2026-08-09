@@ -4,7 +4,7 @@ import Section from "../../components/Section.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getPosts } from "../../lib/blog-api";
 
-const { posts } = await getPosts(100);
+const { posts } = await getPosts(Astro.url, 100);
 ---
 
 <Layout title="Blogs | mimifuwa.cc" description="主に趣味について書いています">
