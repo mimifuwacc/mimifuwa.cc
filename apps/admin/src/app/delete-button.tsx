@@ -3,7 +3,7 @@
 import { Button } from "@mimifuwacc/ui/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { deletePost } from "@/lib/graphql/actions";
+import { deletePost } from "@/lib/api/actions";
 
 interface DeleteButtonProps {
   slug: string;

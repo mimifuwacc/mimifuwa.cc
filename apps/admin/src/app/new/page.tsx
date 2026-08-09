@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { PostEditor } from "@/components/post-editor";
-import { createPost } from "@/lib/graphql/actions";
+import { createPost } from "@/lib/api/actions";
 
 export default function NewPostPage() {
   const router = useRouter();

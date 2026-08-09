@@ -11,8 +11,8 @@ Browser -> web-v2 (Astro SSR) -> api-v2 -> D1 metadata
 
 ## Boundaries
 
-- `@mimifuwacc/blog-domain` defines the transport-neutral published-post contract.
-- `api-v2` owns content access. Its public representation is Markdown, never rendered HTML.
+- `api-v2` owns the domain model, Drizzle schema, and content access. Its public representation is
+  Markdown, never rendered HTML.
 - `web-v2` owns presentation and converts Markdown to HTML during server rendering.
 - The existing `web` and `api` applications remain unchanged while v2 is developed.
 
@@ -21,8 +21,8 @@ domain API. A future content IR can replace Markdown without coupling the API to
 
 ## Migration stack
 
-1. Add the shared domain contract and document the boundary.
-2. Add the read-only Effect-based content API (`api-v2`).
-3. Add the Astro server-rendered consumer (`web-v2`).
+1. Make `api-v2` the owner of the content model and database schema.
+2. Move the admin and public reads to the Effect-based content API.
+3. Render Markdown in the Astro server-rendered consumer (`web-v2`).
 
 Merge the pull requests from the bottom of the stack upward.
