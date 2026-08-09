@@ -109,6 +109,10 @@ img {
   font-size: 1.5rem;
   font-weight: 800;
   text-decoration: none;
+  transition: color 0.15s;
+}
+.brand:hover {
+  color: color-mix(in srgb, var(--primary) 90%, transparent);
 }
 .desktop-nav,
 .mobile-actions {
@@ -122,10 +126,13 @@ img {
   font-size: 0.875rem;
   text-decoration: none;
 }
-.desktop-nav a:hover,
 .desktop-nav a[aria-current="page"],
 .mobile-nav a[aria-current="page"] {
   color: var(--primary);
+}
+.desktop-nav a:hover,
+.mobile-nav a:not([aria-current="page"]):hover {
+  color: var(--foreground);
 }
 .desktop-nav a[aria-current="page"] {
   font-weight: 600;
@@ -133,8 +140,13 @@ img {
 .icon-button {
   border: 0;
   background: transparent;
+  color: var(--muted-foreground);
   cursor: pointer;
   padding: 0.25rem;
+  transition: color 0.15s;
+}
+.icon-button:hover {
+  color: var(--foreground);
 }
 .mobile-actions {
   display: none;
@@ -152,6 +164,9 @@ img {
 .mobile-nav a:hover,
 .mobile-nav a[aria-current="page"] {
   background: var(--muted);
+}
+.mobile-nav a[aria-current="page"] {
+  color: var(--foreground);
 }
 
 .site-footer {
@@ -182,6 +197,7 @@ img {
   color: var(--muted-foreground);
   font-size: 0.875rem;
   text-decoration: none;
+  transition: color 0.15s;
 }
 .footer-links a:hover {
   color: var(--foreground);
@@ -204,6 +220,21 @@ img {
   font:
     0.72rem ui-monospace,
     monospace;
+}
+.session-copy .copy-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.session-copy:hover .copy-icon,
+.session-copy:focus-visible .copy-icon {
+  opacity: 1;
+}
+.session-copy .check-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--primary);
 }
 
 .section {
@@ -500,10 +531,11 @@ img {
   text-decoration: none;
   transition: box-shadow 0.2s;
 }
-.work-card:hover,
-.blog-card:hover,
-.link-card:hover {
-  box-shadow: 0 10px 20px rgb(0 0 0 / 8%);
+.work-card:is(:hover, :focus-visible),
+.link-card:is(:hover, :focus-visible) {
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 10%),
+    0 2px 4px -2px rgb(0 0 0 / 10%);
 }
 .work-card > img {
   width: 100%;
@@ -519,6 +551,7 @@ img {
   gap: 0.375rem;
   margin: 0;
   font-size: 1rem;
+  transition: color 0.2s;
 }
 .work-card h2 .icon {
   width: 0.875rem;
@@ -527,8 +560,11 @@ img {
   opacity: 0;
   transition: opacity 0.2s;
 }
-.work-card:hover h2 .icon {
+.work-card:is(:hover, :focus-visible) h2 .icon {
   opacity: 1;
+}
+.work-card:is(:hover, :focus-visible) h2 {
+  color: var(--primary);
 }
 .work-card p {
   margin-bottom: 0;
@@ -546,6 +582,11 @@ img {
   overflow: hidden;
   text-decoration: none;
   transition: box-shadow 0.2s;
+}
+.blog-card:is(:hover, :focus-visible) {
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -4px rgb(0 0 0 / 10%);
 }
 .blog-card-image {
   width: 100%;
@@ -615,16 +656,17 @@ img {
 .link-card > .icon {
   color: var(--primary);
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.2s;
 }
-.link-card:hover > .icon {
+.link-card:is(:hover, :focus-visible) > .icon {
   opacity: 1;
 }
 .link-card strong {
   font-weight: 500;
   transition: color 0.2s;
 }
-.link-card:hover strong {
+.link-card:is(:hover, :focus-visible) strong {
   color: var(--primary);
 }
 .link-card small {
