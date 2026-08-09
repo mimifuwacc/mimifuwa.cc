@@ -1,5 +1,5 @@
 import { Badge } from "@mimifuwacc/ui/components/ui/badge";
-import { buttonVariants } from "@mimifuwacc/ui/components/ui/button";
+import { buttonVariants } from "@mimifuwacc/ui/components/ui/button-variants";
 import { cn } from "@mimifuwacc/ui/lib/utils";
 import {
   Table,

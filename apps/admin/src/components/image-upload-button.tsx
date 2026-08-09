@@ -52,7 +52,7 @@ export function ImageUploadButton({ onInsert }: ImageUploadButtonProps) {
         variant="outline"
         size="sm"
         disabled={uploading}
-        onClick={() => inputRef.current?.click()}
+        onPress={() => inputRef.current?.click()}
       >
         <ImageIcon className="size-3.5" />
         {uploading ? "アップロード中..." : "画像"}

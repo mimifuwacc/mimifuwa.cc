@@ -1,29 +1,42 @@
 "use client";
 
-import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
-import { Check, Minus } from "lucide-react";
-import type * as React from "react";
+import { CheckIcon, MinusIcon } from "lucide-react";
+import {
+  Checkbox as CheckboxPrimitive,
+  composeRenderProps,
+  type CheckboxProps,
+} from "react-aria-components";
 
 import { cn } from "../../lib/utils";
 
 function Checkbox({
   className,
+  children,
   ...props
-}: React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>) {
+}: Omit<CheckboxProps, "className"> & { className?: CheckboxProps["className"] }) {
   return (
-    <CheckboxPrimitive.Root
+    <CheckboxPrimitive
       data-slot="checkbox"
-      className={cn(
-        "peer size-4 shrink-0 rounded-sm border border-input shadow-xs transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:border-primary data-[checked]:bg-primary data-[checked]:text-primary-foreground data-[indeterminate]:border-primary data-[indeterminate]:bg-primary data-[indeterminate]:text-primary-foreground aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
-        className,
+      className={composeRenderProps(className, (resolvedClassName) =>
+        cn(
+          "peer relative flex size-4 shrink-0 items-center justify-center rounded-sm border border-input transition-colors outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-selected:border-primary data-selected:bg-primary data-selected:text-primary-foreground data-indeterminate:border-primary data-indeterminate:bg-primary data-indeterminate:text-primary-foreground",
+          resolvedClassName,
+        ),
       )}
       {...props}
     >
-      <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
-        <Check className="size-3 data-[indeterminate]:hidden" />
-        <Minus className="hidden size-3 data-[indeterminate]:block" />
-      </CheckboxPrimitive.Indicator>
-    </CheckboxPrimitive.Root>
+      {composeRenderProps(children, (content, { isSelected, isIndeterminate }) => (
+        <>
+          <span
+            data-slot="checkbox-indicator"
+            className="grid place-content-center [&>svg]:size-3.5"
+          >
+            {isIndeterminate ? <MinusIcon /> : isSelected ? <CheckIcon /> : null}
+          </span>
+          {content}
+        </>
+      ))}
+    </CheckboxPrimitive>
   );
 }
 
