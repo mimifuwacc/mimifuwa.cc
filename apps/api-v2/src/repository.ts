@@ -7,7 +7,7 @@ import { blogPosts, blogTags, tags } from "./db/schema";
 export interface Env {
   readonly DB: D1Database;
   readonly R2: R2Bucket;
-  readonly ADMIN_SECRET: string;
+  readonly API_ADMIN_SECRET: string;
   readonly API_BASE_URL?: string;
 }
 

@@ -38,7 +38,7 @@ jobs:
 
       - name: Set API secret (prod)
         working-directory: apps/api-v2
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET'
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET'
 
       - name: Deploy API
         working-directory: apps/api-v2

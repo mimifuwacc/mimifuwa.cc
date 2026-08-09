@@ -27,7 +27,7 @@ app.use(
 );
 
 app.use("/admin/*", async (context, next) => {
-  if (context.req.header("x-admin-secret") !== context.env.ADMIN_SECRET) {
+  if (context.req.header("x-admin-secret") !== context.env.API_ADMIN_SECRET) {
     return context.json({ error: "unauthorized", message: "Unauthorized" }, 401);
   }
   await next();
