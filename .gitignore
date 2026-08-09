@@ -9,6 +9,7 @@ build
 out
 .next
 .open-next
+.astro
 .wrangler
 
 # turbo

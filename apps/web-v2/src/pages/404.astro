@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+Astro.response.status = 404;
+---
+
+<Layout title="記事が見つかりません | mimifuwa.cc">
+  <section class="page-header">
+    <p class="eyebrow">404</p>
+    <h1>記事が見つかりません</h1>
+    <p><a href="/">記事一覧へ戻る</a></p>
+  </section>
+</Layout>
