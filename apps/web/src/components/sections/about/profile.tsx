@@ -1,7 +1,7 @@
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { SiZenn } from "react-icons/si";
 import { Avatar, AvatarImage } from "@mimifuwacc/ui/components/ui/avatar";
-import { Button } from "@mimifuwacc/ui/components/ui/button";
+import { LinkButton } from "@mimifuwacc/ui/components/ui/button";
 import { Card, CardContent } from "@mimifuwacc/ui/components/ui/card";
 import { Separator } from "@mimifuwacc/ui/components/ui/separator";
 
@@ -31,48 +31,36 @@ export default function Profile() {
           ヰ世界情緒とラノベが好き．
         </p>
         <div className="flex flex-wrap gap-2">
-          <Button
+          <LinkButton
             size="sm"
             variant="secondary"
-            render={
-              <a
-                href="https://github.com/mimifuwacc"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-              />
-            }
+            href="https://github.com/mimifuwacc"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
           >
             <FaGithub /> GitHub
-          </Button>
-          <Button
+          </LinkButton>
+          <LinkButton
             size="sm"
             variant="secondary"
-            render={
-              <a
-                href="https://twitter.com/mimifuwacc"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Twitter"
-              />
-            }
+            href="https://twitter.com/mimifuwacc"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Twitter"
           >
             <FaTwitter /> Twitter
-          </Button>
-          <Button
+          </LinkButton>
+          <LinkButton
             size="sm"
             variant="secondary"
-            render={
-              <a
-                href="https://zenn.dev/mimifuwacc"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Zenn"
-              />
-            }
+            href="https://zenn.dev/mimifuwacc"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Zenn"
           >
             <SiZenn /> Zenn
-          </Button>
+          </LinkButton>
         </div>
       </CardContent>
     </Card>

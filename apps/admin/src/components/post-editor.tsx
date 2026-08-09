@@ -1,16 +1,14 @@
 "use client";
 
 import { Alert, AlertDescription } from "@mimifuwacc/ui/components/ui/alert";
-import { Button, buttonVariants } from "@mimifuwacc/ui/components/ui/button";
+import { Button } from "@mimifuwacc/ui/components/ui/button";
+import { buttonVariants } from "@mimifuwacc/ui/components/ui/button-variants";
 import {
   Dialog,
-  DialogBackdrop,
   DialogClose,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogPopup,
-  DialogPortal,
   DialogTitle,
 } from "@mimifuwacc/ui/components/ui/dialog";
 import { cn } from "@mimifuwacc/ui/lib/utils";
@@ -454,45 +452,40 @@ export function PostEditor({
         </Button>
 
         {/* 主要アクション */}
-        <Dialog open={publishConfirm} onOpenChange={setPublishConfirm}>
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => setPublishConfirm(true)}
-            disabled={isSaving}
-          >
-            {formData.isPublished ? "更新" : "公開する"}
-          </Button>
-          <DialogPortal>
-            <DialogBackdrop />
-            <DialogPopup>
-              <DialogHeader>
-                <DialogTitle>
-                  {formData.isPublished ? "記事を更新しますか？" : "記事を公開しますか？"}
-                </DialogTitle>
-                <DialogDescription>
-                  {formData.isPublished
-                    ? "公開中の記事が最新の内容に更新されます。"
-                    : "公開すると誰でも閲覧できるようになります。"}
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose render={<Button type="button" variant="outline" size="sm" />}>
-                  キャンセル
-                </DialogClose>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() => {
-                    setPublishConfirm(false);
-                    void handleSave(false, true);
-                  }}
-                >
-                  {formData.isPublished ? "更新する" : "公開する"}
-                </Button>
-              </DialogFooter>
-            </DialogPopup>
-          </DialogPortal>
+        <Button
+          type="button"
+          size="sm"
+          onPress={() => setPublishConfirm(true)}
+          isDisabled={isSaving}
+        >
+          {formData.isPublished ? "更新" : "公開する"}
+        </Button>
+        <Dialog isOpen={publishConfirm} onOpenChange={setPublishConfirm}>
+          <DialogHeader>
+            <DialogTitle>
+              {formData.isPublished ? "記事を更新しますか？" : "記事を公開しますか？"}
+            </DialogTitle>
+            <DialogDescription>
+              {formData.isPublished
+                ? "公開中の記事が最新の内容に更新されます。"
+                : "公開すると誰でも閲覧できるようになります。"}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose type="button" variant="outline" size="sm">
+              キャンセル
+            </DialogClose>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                setPublishConfirm(false);
+                void handleSave(false, true);
+              }}
+            >
+              {formData.isPublished ? "更新する" : "公開する"}
+            </Button>
+          </DialogFooter>
         </Dialog>
 
         {/* サブアクション（⋯ メニュー） */}
@@ -537,63 +530,51 @@ export function PostEditor({
         </div>
 
         {/* 非公開確認ダイアログ */}
-        <Dialog open={unpublishConfirm} onOpenChange={setUnpublishConfirm}>
-          <DialogPortal>
-            <DialogBackdrop />
-            <DialogPopup>
-              <DialogHeader>
-                <DialogTitle>非公開にしますか？</DialogTitle>
-                <DialogDescription>
-                  公開を停止します。記事の内容は削除されません。
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose render={<Button type="button" variant="outline" size="sm" />}>
-                  キャンセル
-                </DialogClose>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setUnpublishConfirm(false);
-                    void handleSave(formData.draft, false);
-                  }}
-                >
-                  非公開にする
-                </Button>
-              </DialogFooter>
-            </DialogPopup>
-          </DialogPortal>
+        <Dialog isOpen={unpublishConfirm} onOpenChange={setUnpublishConfirm}>
+          <DialogHeader>
+            <DialogTitle>非公開にしますか？</DialogTitle>
+            <DialogDescription>公開を停止します。記事の内容は削除されません。</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose type="button" variant="outline" size="sm">
+              キャンセル
+            </DialogClose>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setUnpublishConfirm(false);
+                void handleSave(formData.draft, false);
+              }}
+            >
+              非公開にする
+            </Button>
+          </DialogFooter>
         </Dialog>
 
         {/* 削除確認ダイアログ */}
-        <Dialog open={deleteConfirm} onOpenChange={setDeleteConfirm}>
-          <DialogPortal>
-            <DialogBackdrop />
-            <DialogPopup>
-              <DialogHeader>
-                <DialogTitle>記事を削除しますか？</DialogTitle>
-                <DialogDescription>この操作は元に戻せません。</DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose render={<Button type="button" variant="outline" size="sm" />}>
-                  キャンセル
-                </DialogClose>
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => {
-                    setDeleteConfirm(false);
-                    void handleDelete();
-                  }}
-                >
-                  削除する
-                </Button>
-              </DialogFooter>
-            </DialogPopup>
-          </DialogPortal>
+        <Dialog isOpen={deleteConfirm} onOpenChange={setDeleteConfirm}>
+          <DialogHeader>
+            <DialogTitle>記事を削除しますか？</DialogTitle>
+            <DialogDescription>この操作は元に戻せません。</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose type="button" variant="outline" size="sm">
+              キャンセル
+            </DialogClose>
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              onClick={() => {
+                setDeleteConfirm(false);
+                void handleDelete();
+              }}
+            >
+              削除する
+            </Button>
+          </DialogFooter>
         </Dialog>
       </div>
 

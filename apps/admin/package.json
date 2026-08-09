@@ -12,7 +12,6 @@
     "postinstall": "pnpm cf:typegen"
   },
   "dependencies": {
-    "@base-ui/react": "catalog:",
     "@mimifuwacc/parser": "workspace:*",
     "@mimifuwacc/ui": "workspace:*",
     "@opennextjs/cloudflare": "catalog:",
