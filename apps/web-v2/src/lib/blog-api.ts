@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { Schema } from "effect";
 
 export const BlogPostSummary = Schema.Struct({
@@ -50,7 +51,8 @@ const request = async <A, I>(
 ): Promise<A> => {
   const baseUrl = contentApiBaseUrl(requestUrl);
   const url = `${baseUrl}${path}`;
-  const response = await fetch(url);
+  const isLocal = ["localhost", "127.0.0.1", "::1"].includes(requestUrl.hostname.toLowerCase());
+  const response = isLocal ? await fetch(url) : await env.CONTENT_API.fetch(url);
   if (!response.ok) {
     const body = await response
       .json()

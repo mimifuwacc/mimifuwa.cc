@@ -52,6 +52,11 @@ from the incoming web hostname: localhost uses the local API, `mimifuwacc-devel.
 uses the devel API Worker, and production uses `api.mimifuwa.cc`. The hostname fallback means local
 and Cloudflare SSR requests still have a defined target when the build variable is absent.
 
+Deployed SSR requests reach `api-v2` through the `CONTENT_API` Cloudflare Service Binding. Do not
+replace this with a fetch to the API's public `workers.dev` URL: Worker-to-Worker requests through
+that public route can behave differently from browser requests. Local development keeps using the
+HTTP URL because `api-v2` runs as a separate local process.
+
 The Cloudflare configuration enables `nodejs_compat` because the Markdown toolchain imports supported
 Node compatibility modules. Keep runtime checks for an actual article in addition to `astro build`;
 the production build alone does not execute the Markdown route.
