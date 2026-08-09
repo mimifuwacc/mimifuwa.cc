@@ -4,9 +4,21 @@
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-08-05",
   "compatibility_flags": ["nodejs_compat"],
+  "services": [
+    {
+      "binding": "CONTENT_API",
+      "service": "mimifuwacc-api",
+    },
+  ],
   "env": {
     "devel": {
       "name": "mimifuwacc-devel",
+      "services": [
+        {
+          "binding": "CONTENT_API",
+          "service": "mimifuwacc-api-devel",
+        },
+      ],
     },
   },
 }
