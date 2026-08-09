@@ -30,6 +30,7 @@
     "react-dom": "catalog:",
     "react-icons": "catalog:",
     "react-router-dom": "^7.0.0",
+    "shadcn": "catalog:",
     "tailwind-merge": "catalog:",
     "tw-animate-css": "catalog:"
   },

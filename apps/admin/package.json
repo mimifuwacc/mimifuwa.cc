@@ -15,6 +15,7 @@
     "@base-ui/react": "catalog:",
     "@mimifuwacc/parser": "workspace:*",
     "@mimifuwacc/ui": "workspace:*",
+    "@opennextjs/cloudflare": "catalog:",
     "@tanstack/react-query": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
