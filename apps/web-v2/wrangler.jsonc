@@ -1,12 +1,12 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
-  "name": "mimifuwacc-web-v2",
+  "name": "mimifuwa-cc",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-08-05",
   "compatibility_flags": ["nodejs_compat"],
   "env": {
     "devel": {
-      "name": "mimifuwacc-web-v2-devel",
+      "name": "mimifuwacc-devel",
     },
   },
 }

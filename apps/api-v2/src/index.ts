@@ -11,6 +11,7 @@ import {
   updateAdminPost,
 } from "./admin-repository";
 import type { ApiErrorBody } from "./contracts";
+import { getOgImage } from "./og";
 import { getOgp } from "./ogp";
 import { getPost, listPosts, type Env } from "./repository";
 
@@ -61,6 +62,8 @@ app.get("/images/:path{.+}", async (context) => {
     },
   });
 });
+
+app.get("/og/:slug{.+}", (context) => getOgImage(context.env, context.req.param("slug")));
 
 app.get("/ogp", async (context) => {
   const url = context.req.query("url");

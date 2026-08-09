@@ -8,6 +8,9 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS",
   },
+  "vars": {
+    "API_V2_URL": "https://mimifuwacc-api-devel.m8c.workers.dev",
+  },
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",

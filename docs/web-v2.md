@@ -62,3 +62,18 @@ vp run --filter @mimifuwacc/web-v2 build
 
 With the development stack running, verify `/`, `/blogs`, `/links`, an existing nested article slug,
 a missing nested slug, and the `/blog/*` redirect.
+
+## Deployment cutover
+
+The v2 workers intentionally use the existing production and devel Worker names. Deploying replaces
+the old Worker code but keeps the D1 and R2 resources. CI applies the forward-only `api-v2` Drizzle
+migrations before deploying the API, then builds web and admin with an explicit public `API_V2_URL`.
+`api-v2` also owns `/og/*`; generated PNGs are cached in R2 and invalidated when an article is
+updated, archived, renamed, or deleted.
+
+`api-v2` additionally owns `/ogp`; this fetches external page metadata for progressively enhanced
+article link cards. It does not use D1 or R2 and must retain its public-target and redirect checks.
+
+Astro 6 selects the Wrangler environment at build time. Devel therefore sets
+`CLOUDFLARE_ENV=devel` for both build and deploy; do not restore the old `wrangler deploy --env`
+pattern. Production uses the default environment.

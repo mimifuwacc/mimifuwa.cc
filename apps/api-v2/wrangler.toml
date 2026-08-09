@@ -1,4 +1,4 @@
-name = "mimifuwacc-api-v2"
+name = "mimifuwacc-api"
 main = "src/index.ts"
 compatibility_date = "2026-05-15"
 compatibility_flags = ["nodejs_compat_v2"]
@@ -17,7 +17,7 @@ bucket_name = "mimifuwacc-blogs"
 ADMIN_SECRET = "local-development"
 
 [env.devel]
-name = "mimifuwacc-api-v2-devel"
+name = "mimifuwacc-api-devel"
 
 [env.devel.vars]
 ADMIN_SECRET = "local-development"
