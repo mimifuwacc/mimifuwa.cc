@@ -1,6 +1,7 @@
 ---
 import { parseToHtml } from "@mimifuwacc/parser";
 import Layout from "../../layouts/Layout.astro";
+import Icon from "../../components/Icon.astro";
 import { BlogApiError, getPost } from "../../lib/blog-api";
 import { addHeadingIds, formatDate, postOgImage, renderLinkFallbacks } from "../../lib/format";
 
@@ -23,13 +24,13 @@ const { html, headings } = addHeadingIds(renderLinkFallbacks(parsed.html));
   <div class="article-page container">
     <header class="article-header">
       <h1>{post.title}</h1>
-      <time datetime={post.date}>▣ {formatDate(post.date)}</time>
+      <time datetime={post.date}><Icon name="calendar" /> {formatDate(post.date)}</time>
       {post.tags.length > 0 && <div class="badges">{post.tags.map((tag) => <span class="badge">#{tag}</span>)}</div>}
     </header>
 
     {headings.length > 0 && (
       <details class="mobile-toc card">
-        <summary>目次 <span>⌄</span></summary>
+        <summary>目次 <Icon name="chevronDown" /></summary>
         <nav>{headings.map((heading) => <a class:list={[heading.level === 3 && "toc-child"]} href={`#${heading.id}`}>{heading.text}</a>)}</nav>
       </details>
     )}

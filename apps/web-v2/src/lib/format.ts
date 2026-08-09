@@ -59,7 +59,7 @@ export const renderLinkFallbacks = (html: string) =>
         const parsed = new URL(url);
         if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return source;
         const safeUrl = escapeHtml(parsed.toString());
-        return `<a class="embedded-link-card" href="${safeUrl}" target="_blank" rel="noopener noreferrer"><span><strong>${escapeHtml(parsed.hostname)}</strong><small>${safeUrl}</small></span><b aria-hidden="true">↗</b></a>`;
+        return `<a class="embedded-link-card" href="${safeUrl}" target="_blank" rel="noopener noreferrer"><span><strong>${escapeHtml(parsed.hostname)}</strong><small>${safeUrl}</small></span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>`;
       } catch {
         return source;
       }

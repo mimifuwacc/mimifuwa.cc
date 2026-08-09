@@ -1,4 +1,6 @@
 ---
+import Icon from "./Icon.astro";
+
 const year = new Date().getFullYear();
 ---
 
@@ -7,7 +9,7 @@ const year = new Date().getFullYear();
     <div>
       <a href="/" class="footer-brand">mimifuwa.cc</a>
       <button type="button" class="session-copy" data-copy-session aria-label="セッション ID をコピー">
-        <span data-session-id>session</span><span aria-hidden="true" data-copy-status>⌘</span>
+        <span data-session-id>session</span><Icon name="copy" class="copy-icon" /><Icon name="check" class="check-icon" />
       </button>
     </div>
     <div class="footer-links">
@@ -15,9 +17,9 @@ const year = new Date().getFullYear();
         <a href="/">Home</a><a href="/blogs">Blog</a><a href="/links">Links</a>
       </nav>
       <div class="social-links">
-        <a href="https://github.com/mimifuwacc" rel="me noopener" target="_blank">GitHub</a>
-        <a href="https://x.com/mimifuwacc" rel="me noopener" target="_blank">X</a>
-        <a href="mailto:mail@mimifuwa.cc">Email</a>
+        <a href="https://github.com/mimifuwacc" rel="me noopener" target="_blank" aria-label="GitHub"><Icon name="github" /></a>
+        <a href="https://x.com/mimifuwacc" rel="me noopener" target="_blank" aria-label="X"><Icon name="twitter" /></a>
+        <a href="mailto:mail@mimifuwa.cc" aria-label="Email"><Icon name="mail" /></a>
       </div>
     </div>
   </div>

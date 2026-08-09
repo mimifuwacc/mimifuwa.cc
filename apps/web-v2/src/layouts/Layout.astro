@@ -62,8 +62,6 @@ const imageUrl = new URL(image, Astro.site ?? Astro.url.origin);
         const open = menuButton.getAttribute("aria-expanded") !== "true";
         menuButton.setAttribute("aria-expanded", String(open));
         menuButton.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
-        const icon = menuButton.querySelector("span");
-        if (icon) icon.textContent = open ? "×" : "☰";
         if (mobileNav) mobileNav.hidden = !open;
       });
 
@@ -79,9 +77,8 @@ const imageUrl = new URL(image, Astro.site ?? Astro.url.origin);
       document.querySelectorAll<HTMLButtonElement>("[data-copy-session]").forEach((button) => {
         button.addEventListener("click", async () => {
           await navigator.clipboard.writeText(sessionId);
-          const status = button.querySelector<HTMLElement>("[data-copy-status]");
-          if (status) status.textContent = "✓";
-          window.setTimeout(() => { if (status) status.textContent = "⌘"; }, 2000);
+          button.dataset.copied = "true";
+          window.setTimeout(() => { delete button.dataset.copied; }, 2000);
         });
       });
     </script>

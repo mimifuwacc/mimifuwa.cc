@@ -1,13 +1,14 @@
 ---
 import { links } from "../../../../contents/links";
 import Section from "../components/Section.astro";
+import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Links | mimifuwa.cc" description="知り合いのオタクのサイトたちです">
   <Section id="links-page" title="Links" subtitle="知り合いのオタクのサイトたちです">
     <div class="links-list">
-      {links.map((link) => <a class="card link-card" href={link.url} target="_blank" rel="noopener"><div><strong>{link.name}</strong><small>{new URL(link.url).hostname.replace("www.", "")}</small><p>{link.description}</p></div><span aria-hidden="true">↗</span></a>)}
+      {links.map((link) => <a class="card link-card" href={link.url} target="_blank" rel="noopener"><div><strong>{link.name}</strong><small>{new URL(link.url).hostname.replace("www.", "")}</small><p>{link.description}</p></div><Icon name="external" /></a>)}
     </div>
   </Section>
 </Layout>
