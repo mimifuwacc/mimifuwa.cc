@@ -14,7 +14,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     # dotenvx: GitHub Secrets に載せるのは復号鍵だけ。CLOUDFLARE_* / ADMIN_SECRET /
-    # GRAPHQL_URL は暗号化済み .env.production から dotenvx run 経由で注入される。
+    # Cloudflare credentials / ADMIN_SECRET are injected from the encrypted env file.
     env:
       DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
     steps:
@@ -33,27 +33,32 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Migrate D1
-        working-directory: apps/api
+        working-directory: apps/api-v2
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs --remote
 
       - name: Set API secret (prod)
-        working-directory: apps/api
+        working-directory: apps/api-v2
         run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET'
 
       - name: Deploy API
-        working-directory: apps/api
+        working-directory: apps/api-v2
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.toml
 
       - name: Build web
-        working-directory: apps/web
+        working-directory: apps/web-v2
+        env:
+          API_V2_URL: https://api.mimifuwa.cc
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Deploy web
-        working-directory: apps/web
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.jsonc
+        working-directory: apps/web-v2
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy
 
       - name: Build admin
         working-directory: apps/admin
+        env:
+          API_V2_URL: https://api.mimifuwa.cc
+          NEXT_PUBLIC_API_V2_URL: https://api.mimifuwa.cc
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec opennextjs-cloudflare build
 
       - name: Set admin secret (prod)
