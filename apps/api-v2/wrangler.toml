@@ -7,18 +7,26 @@ compatibility_flags = ["nodejs_compat_v2"]
 binding = "DB"
 database_name = "mimifuwacc-blogs"
 database_id = "ac1c88bc-d531-49d9-a10c-dad6ff637972"
+migrations_dir = "drizzle"
 
 [[r2_buckets]]
 binding = "R2"
 bucket_name = "mimifuwacc-blogs"
 
+[vars]
+ADMIN_SECRET = "local-development"
+
 [env.devel]
 name = "mimifuwacc-api-v2-devel"
+
+[env.devel.vars]
+ADMIN_SECRET = "local-development"
 
 [[env.devel.d1_databases]]
 binding = "DB"
 database_name = "mimifuwacc-blogs-devel"
 database_id = "b526fab7-0431-4d97-8553-2a6cbc2bdfce"
+migrations_dir = "drizzle"
 
 [[env.devel.r2_buckets]]
 binding = "R2"

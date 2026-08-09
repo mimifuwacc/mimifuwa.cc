@@ -1,4 +1,3 @@
-/** A published post as exposed by the content API. Presentation artifacts are excluded. */
 export interface BlogPost {
   readonly slug: string;
   readonly title: string;
@@ -8,7 +7,6 @@ export interface BlogPost {
   readonly tags: readonly string[];
 }
 
-/** List items intentionally omit the potentially large Markdown body. */
 export type BlogPostSummary = Omit<BlogPost, "markdown">;
 
 export interface BlogPostPage {

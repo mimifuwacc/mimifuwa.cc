@@ -12,6 +12,6 @@
     "@dotenvx/dotenvx": "^1.71.0",
     "tsx": "^4.19.2",
     "vite-plus": "catalog:",
-    "wrangler": "^4.76.0"
+    "wrangler": "^4.119.0"
   }
 }

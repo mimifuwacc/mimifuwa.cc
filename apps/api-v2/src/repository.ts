@@ -1,25 +1,14 @@
-import type { BlogPost, BlogPostPage, BlogPostSummary } from "@mimifuwacc/blog-domain";
+import { and, count, desc, eq } from "drizzle-orm";
 import { Effect } from "effect";
+import type { BlogPost, BlogPostPage, BlogPostSummary } from "./contracts";
+import { createDb } from "./db";
+import { blogPosts, blogTags, tags } from "./db/schema";
 
 export interface Env {
   readonly DB: D1Database;
   readonly R2: R2Bucket;
-}
-
-interface PostRow {
-  readonly id: number;
-  readonly slug: string;
-  readonly title: string;
-  readonly excerpt: string;
-  readonly date: string;
-}
-
-interface CountRow {
-  readonly total: number;
-}
-
-interface TagRow {
-  readonly name: string;
+  readonly ADMIN_SECRET: string;
+  readonly API_BASE_URL?: string;
 }
 
 export class RepositoryError extends Error {
@@ -33,71 +22,80 @@ const fromPromise = <A>(run: () => Promise<A>) =>
   });
 
 const tagsFor = (env: Env, postId: number) =>
-  fromPromise(async () => {
-    const result = await env.DB.prepare(
-      `SELECT tags.name
-       FROM tags
-       INNER JOIN blog_tags ON blog_tags.tag_id = tags.id
-       WHERE blog_tags.blog_post_id = ?
-       ORDER BY tags.name`,
-    )
-      .bind(postId)
-      .all<TagRow>();
-    return result.results.map(({ name }) => name);
-  });
+  fromPromise(() =>
+    createDb(env.DB)
+      .select({ name: tags.name })
+      .from(tags)
+      .innerJoin(blogTags, eq(blogTags.tagId, tags.id))
+      .where(eq(blogTags.blogPostId, postId))
+      .orderBy(tags.name),
+  ).pipe(Effect.map((rows) => rows.map(({ name }) => name)));
 
 export const listPosts = (env: Env, limit: number): Effect.Effect<BlogPostPage, RepositoryError> =>
   Effect.gen(function* () {
-    const [rows, count] = yield* fromPromise(async () =>
+    const db = createDb(env.DB);
+    const published = and(eq(blogPosts.draft, false), eq(blogPosts.isPublished, true));
+    const [rows, [{ totalCount }]] = yield* fromPromise(() =>
       Promise.all([
-        env.DB.prepare(
-          `SELECT id, slug, title, excerpt, date
-           FROM blog_posts
-           WHERE draft = 0 AND is_published = 1
-           ORDER BY date DESC
-           LIMIT ?`,
-        )
-          .bind(limit)
-          .all<PostRow>(),
-        env.DB.prepare(
-          "SELECT COUNT(*) AS total FROM blog_posts WHERE draft = 0 AND is_published = 1",
-        ).first<CountRow>(),
+        db
+          .select({
+            id: blogPosts.id,
+            slug: blogPosts.slug,
+            title: blogPosts.title,
+            excerpt: blogPosts.excerpt,
+            date: blogPosts.date,
+          })
+          .from(blogPosts)
+          .where(published)
+          .orderBy(desc(blogPosts.date))
+          .limit(limit),
+        db.select({ totalCount: count() }).from(blogPosts).where(published),
       ]),
     );
 
     const posts = yield* Effect.forEach(
-      rows.results,
+      rows,
       (row) =>
-        Effect.map(
-          tagsFor(env, row.id),
-          (tags): BlogPostSummary => ({
-            slug: row.slug,
-            title: row.title,
-            excerpt: row.excerpt,
-            date: row.date,
-            tags,
-          }),
+        tagsFor(env, row.id).pipe(
+          Effect.map(
+            (postTags): BlogPostSummary => ({
+              slug: row.slug,
+              title: row.title,
+              excerpt: row.excerpt,
+              date: row.date,
+              tags: postTags,
+            }),
+          ),
         ),
       { concurrency: 8 },
     );
-
-    return { posts, totalCount: count?.total ?? 0 };
+    return { posts, totalCount };
   });
 
 export const getPost = (env: Env, slug: string): Effect.Effect<BlogPost | null, RepositoryError> =>
   Effect.gen(function* () {
-    const row = yield* fromPromise(() =>
-      env.DB.prepare(
-        `SELECT id, slug, title, excerpt, date
-         FROM blog_posts
-         WHERE slug = ? AND draft = 0 AND is_published = 1`,
-      )
-        .bind(slug)
-        .first<PostRow>(),
+    const [row] = yield* fromPromise(() =>
+      createDb(env.DB)
+        .select({
+          id: blogPosts.id,
+          slug: blogPosts.slug,
+          title: blogPosts.title,
+          excerpt: blogPosts.excerpt,
+          date: blogPosts.date,
+        })
+        .from(blogPosts)
+        .where(
+          and(
+            eq(blogPosts.slug, slug),
+            eq(blogPosts.draft, false),
+            eq(blogPosts.isPublished, true),
+          ),
+        )
+        .limit(1),
     );
     if (!row) return null;
 
-    const [markdownObject, tags] = yield* Effect.all([
+    const [markdownObject, postTags] = yield* Effect.all([
       fromPromise(() => env.R2.get(`posts/${slug}.md`)),
       tagsFor(env, row.id),
     ]);
@@ -109,7 +107,7 @@ export const getPost = (env: Env, slug: string): Effect.Effect<BlogPost | null, 
       title: row.title,
       excerpt: row.excerpt,
       date: row.date,
-      tags,
+      tags: postTags,
       markdown,
     };
   });

@@ -35,7 +35,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { checkSlugExists } from "@/lib/graphql/actions";
+import { checkSlugExists } from "@/lib/api/actions";
 import {
   AUTOSAVE_IDLE_MS,
   AUTOSAVE_SAVED_RESET_MS,

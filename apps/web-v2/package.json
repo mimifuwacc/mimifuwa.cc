@@ -10,10 +10,10 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.0.0",
-    "@mimifuwacc/blog-domain": "workspace:*",
+    "@astrojs/cloudflare": "13.1.0",
     "@mimifuwacc/parser": "workspace:*",
-    "astro": "^5.0.0"
+    "astro": "6.4.8",
+    "effect": "^3.17.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.0",
