@@ -1,0 +1,97 @@
+:root {
+  color-scheme: light dark;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  color: #e8e6e3;
+  background: #111210;
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+a {
+  color: inherit;
+}
+
+.site-header,
+main {
+  width: min(100% - 2rem, 52rem);
+  margin-inline: auto;
+}
+
+.site-header {
+  padding-block: 1.5rem;
+  border-bottom: 1px solid #30332d;
+  font-weight: 700;
+}
+
+main {
+  padding-block: 4rem;
+}
+.page-header,
+.article-header {
+  margin-bottom: 3rem;
+}
+.eyebrow,
+time,
+.tags {
+  color: #9ba391;
+}
+h1 {
+  max-width: 20ch;
+  font-size: clamp(2.2rem, 8vw, 4.5rem);
+  line-height: 1.02;
+}
+
+.post-list {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+.post-list a {
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid #30332d;
+  border-radius: 1rem;
+  text-decoration: none;
+}
+.post-list a:hover {
+  border-color: #94b27d;
+}
+.post-list h2 {
+  margin-block: 0.5rem;
+}
+.post-list p {
+  color: #c0c3bb;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.prose {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+.prose :where(h2, h3) {
+  margin-top: 2.5em;
+  line-height: 1.25;
+}
+.prose pre {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: #090a09;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+.prose a {
+  color: #b7d7a0;
+}
