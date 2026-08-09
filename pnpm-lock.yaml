@@ -359,6 +359,9 @@ importers:
       '@astrojs/cloudflare':
         specifier: 13.1.0
         version: 13.1.0(@types/node@24.13.2)(astro@6.4.8(@types/node@24.13.2)(aws4fetch@1.0.20)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.27.3)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(wrangler@4.119.0)(yaml@2.9.0)
+      '@lucide/astro':
+        specifier: ^1.29.0
+        version: 1.29.0(astro@6.4.8(@types/node@24.13.2)(aws4fetch@1.0.20)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))
       '@mimifuwacc/parser':
         specifier: workspace:*
         version: link:../../packages/parser
@@ -1939,6 +1942,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@lucide/astro@1.29.0':
+    resolution: {integrity: sha512-bUCIxIPV8NsDLSzad5G5evyBUqYchmaDHSQBFygRyyS0dAg/N+/88aRlresB8aJ3I27fRMyQdaL4Y5+IQMz3gA==}
+    peerDependencies:
+      astro: ^4 || ^5 || ^6 || ^7
 
   '@modelcontextprotocol/sdk@1.30.0':
     resolution: {integrity: sha512-xKd8OIzlqNzcqcNumGAa6g+PW2kjD5vrpcKOnfldAUPP3j7lnqMPwlTXQm8gF+UwH72z0lqaRbjr9hqGz0eITA==}
@@ -7607,6 +7615,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@lucide/astro@1.29.0(astro@6.4.8(@types/node@24.13.2)(aws4fetch@1.0.20)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))':
+    dependencies:
+      astro: 6.4.8(@types/node@24.13.2)(aws4fetch@1.0.20)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
   '@modelcontextprotocol/sdk@1.30.0(zod@3.25.76)':
     dependencies:
