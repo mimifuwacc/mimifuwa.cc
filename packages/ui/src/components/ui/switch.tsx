@@ -14,16 +14,18 @@ function Switch({
   children,
   ...props
 }: Omit<SwitchProps, "className"> & {
-  className?: string;
+  className?: SwitchProps["className"];
   size?: "sm" | "default";
 }) {
   return (
     <SwitchPrimitive
       data-slot="switch"
       data-size={size}
-      className={cn(
-        "peer group/switch inline-flex items-center gap-2 outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
-        className,
+      className={composeRenderProps(className, (resolvedClassName) =>
+        cn(
+          "peer group/switch inline-flex items-center gap-2 outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
+          resolvedClassName,
+        ),
       )}
       {...props}
     >

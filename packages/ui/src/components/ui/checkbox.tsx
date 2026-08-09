@@ -13,13 +13,15 @@ function Checkbox({
   className,
   children,
   ...props
-}: Omit<CheckboxProps, "className"> & { className?: string }) {
+}: Omit<CheckboxProps, "className"> & { className?: CheckboxProps["className"] }) {
   return (
     <CheckboxPrimitive
       data-slot="checkbox"
-      className={cn(
-        "peer relative flex size-4 shrink-0 items-center justify-center rounded-sm border border-input transition-colors outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-selected:border-primary data-selected:bg-primary data-selected:text-primary-foreground data-indeterminate:border-primary data-indeterminate:bg-primary data-indeterminate:text-primary-foreground",
-        className,
+      className={composeRenderProps(className, (resolvedClassName) =>
+        cn(
+          "peer relative flex size-4 shrink-0 items-center justify-center rounded-sm border border-input transition-colors outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-selected:border-primary data-selected:bg-primary data-selected:text-primary-foreground data-indeterminate:border-primary data-indeterminate:bg-primary data-indeterminate:text-primary-foreground",
+          resolvedClassName,
+        ),
       )}
       {...props}
     >
