@@ -1100,9 +1100,15 @@ img {
 }
 .twitter-embed {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 5rem;
   margin-block: 1.5rem;
+}
+.twitter-embed .twitter-tweet {
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 @media (min-width: 640px) {
   .embedded-link-image:not([hidden]) {
