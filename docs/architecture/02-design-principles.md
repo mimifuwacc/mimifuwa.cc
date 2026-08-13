@@ -29,12 +29,13 @@ React Component は DB や R2 に直接アクセスしない．Astro の Server 
 
 React 固有の UI State と Rendering は React に任せる．Effect で React の State や Rendering を置き換えない．
 
-```text
-External Effects   → Effect
-React UI State     → React
-Shared UI State    → Zustand
-Rendering          → React
-Scheduling         → React
+```mermaid
+flowchart LR
+  External[External Effects] --> Effect
+  UIState[React UI State] --> React
+  Shared[Shared UI State] --> Zustand
+  Rendering --> React
+  Scheduling --> React
 ```
 
 ### Effect に置くもの
@@ -59,27 +60,30 @@ Zustand Store に Fetch，Retry，Cancellation，Workflow，API Cache を実装�
 
 Astro はページ全体を HTML として生成する．React は操作が必要な部分だけに Island として追加する．
 
-```text
-Astro Page
-  ├── Static HTML
-  └── React Island
-          ├── Effect Adapter
-          └── Zustand vanilla store（必要な場合のみ）
+```mermaid
+flowchart TD
+  Page[Astro Page] --> Static[Static HTML]
+  Page --> Island[React Island]
+  Island --> Adapter[Effect Adapter]
+  Island --> Store[Zustand vanilla store]
 ```
 
 記事本文，見出し，Metadata のようにブラウザ上の状態を必要としないものは，React Island にしない．
 
 ## 5．依存方向を固定する
 
-```text
-Domain
-  ↓
-Effect Programs
-  ├── Server Adapters → Astro
-  └── Client Adapters → Features / Islands
-                              ├── React
-                              ├── Zustand
-                              └── @mimifuwacc/ui → React Aria → DOM
+```mermaid
+flowchart TD
+  Domain --> Programs[Effect Programs]
+  Programs --> Server[Server Adapters]
+  Server --> Astro
+  Programs --> Client[Client Adapters]
+  Client --> Features[Features / Islands]
+  Features --> React
+  Features --> Zustand
+  Features --> UI[@mimifuwacc/ui]
+  UI --> Aria[React Aria]
+  Aria --> DOM
 ```
 
 次の依存を禁止する．

@@ -31,12 +31,13 @@ type BlogPost = {
 
 Markdown の Parser / Renderer は，記事を保存する Repository や HTTP，Astro，React を知らない．
 
-```text
-Markdown
-   ↓ Parser
-Document
-   ↓ Interpreter
-HTML / RSS / Plain Text / OG Image
+```mermaid
+flowchart TD
+  Markdown -->|Parser| Document
+  Document -->|Interpreter| HTML[HTML]
+  Document --> RSS
+  Document --> Text[Plain Text]
+  Document --> OG[OG Image]
 ```
 
 Web 用の HTML は出力形式の一つである．
@@ -78,12 +79,13 @@ $$ key = Hash(Markdown, ParserVersion, RendererVersion) $$
 
 記事本文のような静的な Content は Server 側で HTML に解釈する．検索，編集，リアクションなどの操作が必要な部分だけが Client Island になる．
 
-```text
-Server:
-  Markdown -> Document -> HTML Document
-
-Client Island:
-  User Action -> Effect Program -> Result -> React View
+```mermaid
+flowchart TD
+  Markdown --> Document
+  Document --> HTML[HTML Document]
+  Action[User Action] --> Program[Effect Program]
+  Program --> Result
+  Result --> View[React View]
 ```
 
 Content の正本を Client Store に複製しない．Client 側で保持するのは，操作に必要な局所状態や，複数 Island 間で本当に共有する状態だけにする．

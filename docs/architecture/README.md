@@ -15,17 +15,11 @@
 
 ## 処理モデル
 
-```text
-Program
-  │ interpret
-  ▼
-Computation
-  │ schedule
-  ▼
-Candidate
-  │ commit
-  ▼
-UI
+```mermaid
+flowchart LR
+  Program -->|Interpret| Computation
+  Computation -->|Schedule| Candidate
+  Candidate -->|Commit| UI
 ```
 
 各層の担当を次のように分ける．

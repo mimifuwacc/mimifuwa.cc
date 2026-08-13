@@ -2,30 +2,20 @@
 
 ## 構成
 
-```text
-                         ┌── Astro SSR
-                         │
-                         ▼
-                    Domain Programs
-                         ▲
-                         │
-                    HTTP / GraphQL
-                         ▲
-                         │
-                         API
-
-Astro SSR
-  ├── Routing / SSR / HTML Document
-  ├── Static Content
-  └── React Islands
-          ├── Effect Adapter
-          ├── React View
-          └── Zustand vanilla store（必要な場合のみ）
-
-Server Layers
-  ├── D1
-  ├── R2
-  └── 外部 API
+```mermaid
+flowchart TD
+  Astro[Astro SSR] --> Domain[Domain Programs]
+  API[API] --> Domain
+  Astro --> Routing[Routing / SSR / HTML Document]
+  Astro --> Static[Static Content]
+  Astro --> Islands[React Islands]
+  Islands --> Adapter[Effect Adapter]
+  Islands --> View[React View]
+  Islands --> Store[Zustand vanilla store]
+  Domain --> Layers[Server Layers]
+  Layers --> D1
+  Layers --> R2
+  Layers --> External[External APIs]
 ```
 
 ## Repository の責務
@@ -42,23 +32,17 @@ Server Layers
 
 ## Server の処理
 
-```text
-Request
-  ↓
-Astro
-  ↓
-Domain Program
-  ↓
-Server Layer
-  ├── D1
-  ├── R2
-  └── 外部 API
-  ↓
-Markdown / Domain Data
-  ↓
-Parser
-  ↓
-HTML Document
+```mermaid
+flowchart TD
+  Request --> Astro
+  Astro --> Program[Domain Program]
+  Program --> Layer[Server Layer]
+  Layer --> D1
+  Layer --> R2
+  Layer --> External[External APIs]
+  Layer --> Data[Markdown / Domain Data]
+  Data --> Parser
+  Parser --> HTML[HTML Document]
 ```
 
 API は HTTP / GraphQL の inbound adapter である．Domain の所有者ではない．記事の正本は Markdown とし，Rendered HTML を Domain Representation にしない．
@@ -67,30 +51,28 @@ Web の SSR も，必要な場合は API を経由せず，Domain Program を Se
 
 ## Client Island の処理
 
-```text
-Static HTML
-  ↓ hydrate
-React Island
-  ↓
-Effect Program
-  ↓ Client Layer
-HTTP / Browser API
-  ↓
-Result
-  ├── Pending  → Suspense
-  ├── Failure  → Error Boundary
-  └── Success  → React View
+```mermaid
+flowchart TD
+  HTML[Static HTML] -->|Hydrate| Island[React Island]
+  Island --> Program[Effect Program]
+  Program --> Client[Client Layer]
+  Client --> APIs[HTTP / Browser API]
+  APIs --> Result
+  Result -->|Pending| Suspense
+  Result -->|Failure| Boundary[Error Boundary]
+  Result -->|Success| View[React View]
 ```
 
 Island は必要な箇所だけに限定する．静的な記事本文，見出し，Metadata は React Runtime を必要としない．
 
 Client Island 内の外部作用は，処理の規模に関係なく Effect Program にする．単純な処理だけを `fetch` や `useEffect` に直接書く例外は設けない．
 
-```text
-External Effects → Effect
-UI State         → React
-Rendering        → React
-Shared State     → Zustand
+```mermaid
+flowchart LR
+  External[External Effects] --> Effect
+  UIState[UI State] --> React
+  Rendering --> React
+  Shared[Shared State] --> Zustand
 ```
 
 ## Effect と React の Adapter
@@ -110,14 +92,11 @@ Adapter は Resource の Identity を安定させる必要がある．`render` �
 
 ## UI Package の境界
 
-```text
-React Aria primitives
-          ↓
-packages/ui
-          ↓
-@mimifuwacc/ui
-          ↓
-Application
+```mermaid
+flowchart TD
+  Aria[React Aria primitives] --> Package[packages/ui]
+  Package --> API[@mimifuwacc/ui]
+  API --> Application
 ```
 
 shadcn はコード生成の起点として使い，生成されたコードは `packages/ui` で管理する．Application は `@mimifuwacc/ui` だけを import し，React Aria の primitive を直接 import しない．`packages/ui` は application-specific type と domain-specific type の両方を import してはならない．`UserId` のような domain primitive も対象に含む．Feature 層で UI 用の primitive または UI 専用 props に変換してから渡す．
