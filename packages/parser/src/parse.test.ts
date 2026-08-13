@@ -32,6 +32,7 @@ describe("parseArticleToHtml", () => {
     expect(result.html).toContain('class="twitter-embed"');
     expect(result.html).toContain('data-twitter-url="https://twitter.com/example/status/123"');
     expect(result.html).toContain('class="twitter-tweet"');
+    expect(result.html).toContain('class="twitter-load"');
   });
 
   it("wraps code blocks once with copy controls and an optional filename", async () => {

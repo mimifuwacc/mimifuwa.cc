@@ -49,6 +49,7 @@ const renderTwitter = (node: Element, url: URL) => {
         text(normalized.toString()),
       ]),
     ]),
+    element("button", { className: ["twitter-load"], type: "button" }, [text("埋め込みを表示")]),
   ];
 };
 

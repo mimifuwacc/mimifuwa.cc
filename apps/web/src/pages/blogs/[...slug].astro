@@ -92,40 +92,48 @@ const ogpEndpoint = `${contentApiBaseUrl(Astro.url)}/ogp`;
 
   type TwitterWindow = Window & { twttr?: { widgets?: { load: (root?: HTMLElement) => void } } };
   const twitterWindow = window as TwitterWindow;
-  const renderTweets = () => {
-    const dark = document.documentElement.classList.contains("dark");
-    document.querySelectorAll<HTMLElement>("[data-twitter-url]").forEach((container) => {
-      const url = container.dataset.twitterUrl;
-      if (!url) return;
-      const blockquote = document.createElement("blockquote");
-      blockquote.className = "twitter-tweet";
-      blockquote.dataset.lang = "ja";
-      blockquote.dataset.theme = dark ? "dark" : "light";
-      const link = document.createElement("a");
-      link.href = `${url}?ref_src=twsrc%5Etfw`;
-      link.textContent = url;
-      blockquote.append(link);
-      container.replaceChildren(blockquote);
-      twitterWindow.twttr?.widgets?.load(container);
-    });
-  };
-  if (document.querySelector("[data-twitter-url]")) {
-    const existing = document.getElementById("twitter-wjs") as HTMLScriptElement | null;
-    if (twitterWindow.twttr?.widgets) renderTweets();
-    else if (existing) existing.addEventListener("load", renderTweets, { once: true });
-    else {
+  let twitterScript: Promise<void> | undefined;
+  const loadTwitterScript = () => {
+    if (twitterWindow.twttr?.widgets) return Promise.resolve();
+    if (twitterScript) return twitterScript;
+    twitterScript = new Promise((resolve, reject) => {
       const script = document.createElement("script");
       script.id = "twitter-wjs";
       script.src = "https://platform.twitter.com/widgets.js";
       script.async = true;
-      script.addEventListener("load", renderTweets, { once: true });
+      script.addEventListener("load", () => resolve(), { once: true });
+      script.addEventListener("error", () => reject(new Error("Twitter widget failed to load")), { once: true });
       document.body.append(script);
-    }
-    new MutationObserver(renderTweets).observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
     });
-  }
+    return twitterScript;
+  };
+  document.querySelectorAll<HTMLElement>("[data-twitter-url]").forEach((container) => {
+    const button = container.querySelector<HTMLButtonElement>(".twitter-load");
+    if (!button) return;
+    button.addEventListener("click", async () => {
+      const url = container.dataset.twitterUrl;
+      if (!url || container.classList.contains("is-expanded")) return;
+      button.disabled = true;
+      button.textContent = "読み込み中…";
+      try {
+        await loadTwitterScript();
+        const blockquote = document.createElement("blockquote");
+        blockquote.className = "twitter-tweet";
+        blockquote.dataset.lang = "ja";
+        blockquote.dataset.theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+        const link = document.createElement("a");
+        link.href = `${url}?ref_src=twsrc%5Etfw`;
+        link.textContent = url;
+        blockquote.append(link);
+        container.classList.add("is-expanded");
+        container.replaceChildren(blockquote);
+        twitterWindow.twttr?.widgets?.load(container);
+      } catch {
+        button.disabled = false;
+        button.textContent = "埋め込みを表示";
+      }
+    });
+  });
 
   document.querySelectorAll<HTMLButtonElement>(".code-copy").forEach((button) => {
     button.addEventListener("click", async () => {

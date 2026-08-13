@@ -45,7 +45,7 @@
   box-sizing: border-box;
 }
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 6rem;
 }
 body {
@@ -144,11 +144,17 @@ img {
   font-weight: 600;
 }
 .icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
   background: transparent;
   color: var(--muted-foreground);
   cursor: pointer;
-  padding: 0.25rem;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  line-height: 1;
   transition: color 0.15s;
 }
 .icon-button:hover {
@@ -294,7 +300,7 @@ img {
   min-height: 21rem;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, var(--muted) 70%, transparent);
+  background: var(--muted);
 }
 .hero-inner {
   display: flex;
@@ -321,11 +327,21 @@ img {
   font-size: 0.875rem;
 }
 .home-sheet {
+  isolation: isolate;
   position: relative;
   z-index: 10;
+  margin-top: -2rem;
   border-radius: 2rem 2rem 0 0;
+}
+.home-sheet::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
   background: var(--background);
-  box-shadow: 0 -10px 10px rgb(0 0 0 / 3%);
+  box-shadow: 0 -10px 20px rgb(0 0 0 / 5%);
+  content: "";
+  pointer-events: none;
 }
 .sheet-handle {
   position: absolute;
@@ -508,7 +524,7 @@ img {
 .timeline-dot {
   position: absolute;
   top: 0.25rem;
-  left: -1.85rem;
+  left: calc(-1.85rem - 1px);
   width: 0.75rem;
   height: 0.75rem;
   border: 2px solid var(--background);
@@ -1003,6 +1019,7 @@ img {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
+  height: 6rem;
   margin-block: 1.5rem;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
@@ -1017,16 +1034,17 @@ img {
 .embedded-link-content {
   display: flex;
   min-width: 0;
+  min-height: 0;
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  gap: 0.375rem;
-  padding: 1rem 1.25rem;
+  gap: 0.25rem;
+  padding: 0.75rem 1.25rem;
 }
 .embedded-link-title {
   overflow: hidden;
   font-size: 0.875rem;
-  line-height: 1.375;
+  line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: color 0.15s;
@@ -1035,17 +1053,19 @@ img {
   color: var(--primary);
 }
 .embedded-link-description {
-  display: -webkit-box;
+  display: block;
+  height: 1.25rem;
   overflow: hidden;
   color: var(--muted-foreground);
   font-size: 0.75rem;
-  line-height: 1.625;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  line-height: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .embedded-link-description[hidden],
 .embedded-link-image[hidden] {
-  display: none;
+  display: -webkit-box;
+  visibility: hidden;
 }
 .embedded-link-site {
   display: flex;
@@ -1082,7 +1102,9 @@ img {
   opacity: 1;
 }
 .embedded-link-image {
-  display: none;
+  display: flex;
+  width: 10rem;
+  min-height: 5rem;
   flex-shrink: 0;
   align-items: center;
   padding-right: 1rem;
@@ -1100,19 +1122,64 @@ img {
 }
 .twitter-embed {
   display: flex;
-  justify-content: flex-start;
-  min-height: 5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 6rem;
+  min-height: 4rem;
   margin-block: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+  padding: 1rem;
+  overflow: hidden;
+}
+.twitter-embed.is-expanded {
+  height: auto;
+  min-height: 6rem;
+  overflow: visible;
 }
 .twitter-embed .twitter-tweet {
-  visibility: hidden;
   margin: 0;
   padding: 0;
   border: 0;
 }
+.twitter-load {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--secondary);
+  padding: 0.25rem 0.75rem;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+.twitter-load:hover {
+  color: var(--foreground);
+}
 @media (min-width: 640px) {
-  .embedded-link-image:not([hidden]) {
+  .embedded-link-image[hidden] {
     display: flex;
+  }
+}
+@media (max-width: 639px) {
+  .embedded-link-card {
+    height: 7rem;
+  }
+  .embedded-link-description {
+    display: -webkit-box;
+    height: 2.5rem;
+    line-height: 1.25;
+    text-overflow: clip;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .embedded-link-image {
+    display: none;
+  }
+  .embedded-link-image[hidden] {
+    display: none;
   }
 }
 
