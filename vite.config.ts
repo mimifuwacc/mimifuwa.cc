@@ -146,7 +146,7 @@ export default defineConfig({
     overrides: [
       {
         // Astro injects this global into component frontmatter.
-        files: ["apps/web-v2/**/*.astro"],
+        files: ["apps/web/**/*.astro"],
         rules: {
           "no-undef": "off",
         },
@@ -178,7 +178,7 @@ export default defineConfig({
         },
       },
       {
-        files: ["apps/web/**/*.{ts,tsx}", "apps/admin/**/*.{ts,tsx}"],
+        files: ["apps/admin/**/*.{ts,tsx}"],
         rules: {
           "react/rules-of-hooks": "error",
           "react/exhaustive-deps": "warn",
@@ -192,10 +192,7 @@ export default defineConfig({
       },
       {
         // unified/hast/rehype-react を扱う層は AST と動的コンポーネントの性質上 any が避けられない
-        files: [
-          "packages/parser/**/*.{ts,tsx}",
-          "packages/ui/src/components/content/**/*.{ts,tsx}",
-        ],
+        files: ["packages/parser/**/*.{ts,tsx}", "apps/admin/src/components/content/**/*.{ts,tsx}"],
         rules: {
           "typescript/no-explicit-any": "off",
         },

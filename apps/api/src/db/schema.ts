@@ -32,11 +32,3 @@ export const blogTags = sqliteTable("blog_tags", {
     .notNull()
     .references(() => tags.id, { onDelete: "cascade" }),
 });
-
-// Types
-export type BlogPost = typeof blogPosts.$inferSelect;
-export type NewBlogPost = typeof blogPosts.$inferInsert;
-export type Tag = typeof tags.$inferSelect;
-export type NewTag = typeof tags.$inferInsert;
-export type BlogTag = typeof blogTags.$inferSelect;
-export type NewBlogTag = typeof blogTags.$inferInsert;

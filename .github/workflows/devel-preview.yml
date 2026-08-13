@@ -35,14 +35,14 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build web
-        working-directory: apps/web-v2
+        working-directory: apps/web
         env:
-          API_V2_URL: https://mimifuwacc-api-devel.m8c.workers.dev
+          API_URL: https://mimifuwacc-api-devel.m8c.workers.dev
           CLOUDFLARE_ENV: devel
         run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm run build
 
       - name: Deploy web to Cloudflare
-        working-directory: apps/web-v2
+        working-directory: apps/web
         env:
           CLOUDFLARE_ENV: devel
         run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec wrangler deploy
@@ -65,15 +65,15 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Migrate D1 (devel)
-        working-directory: apps/api-v2
+        working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-devel --env devel --remote
 
       - name: Set API secret (devel)
-        working-directory: apps/api-v2
+        working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.devel -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET --env devel'
 
       - name: Deploy API to Cloudflare
-        working-directory: apps/api-v2
+        working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec wrangler deploy --env devel
 
   deploy-admin:
@@ -96,8 +96,8 @@ jobs:
       - name: Build admin
         working-directory: apps/admin
         env:
-          API_V2_URL: https://mimifuwacc-api-devel.m8c.workers.dev
-          NEXT_PUBLIC_API_V2_URL: https://mimifuwacc-api-devel.m8c.workers.dev
+          API_URL: https://mimifuwacc-api-devel.m8c.workers.dev
+          NEXT_PUBLIC_API_URL: https://mimifuwacc-api-devel.m8c.workers.dev
         run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec opennextjs-cloudflare build
 
       - name: Set admin secret (devel)

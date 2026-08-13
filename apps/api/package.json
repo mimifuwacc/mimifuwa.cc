@@ -1,33 +1,23 @@
 {
   "name": "@mimifuwacc/api",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenvx run -f ../../env/.env -- tsx watch src/dev-server.ts",
-    "dev:cf": "wrangler dev src/index.ts --local --port 8000",
+    "dev": "wrangler dev --persist-to .wrangler/state --var API_ADMIN_SECRET:local-development",
+    "dev:remote": "dotenvx run -f ../../env/.env.devel -- wrangler dev --env devel --remote",
     "deploy": "wrangler deploy",
-    "typecheck": "tsc --noEmit",
-    "cf:typegen": "wrangler types --env-interface Env env.d.ts"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@cloudflare/pages-plugin-vercel-og": "^0.1.2",
-    "@mimifuwacc/parser": "workspace:*",
     "drizzle-orm": "^0.45.2",
-    "graphql": "catalog:",
-    "graphql-yoga": "catalog:",
+    "effect": "^3.17.0",
     "hono": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
-    "@hono/node-server": "^2.0.3",
-    "@resvg/resvg-js": "^2.6.2",
-    "@types/react": "catalog:",
-    "react": "catalog:",
-    "satori": "^0.26.0",
     "typescript": "catalog:",
-    "vitest": "catalog:",
-    "wrangler": "catalog:",
-    "vite-plus": "catalog:"
+    "wrangler": "catalog:"
   }
 }
