@@ -1120,43 +1120,6 @@ img {
   object-fit: contain;
   box-shadow: none;
 }
-.twitter-embed {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.5rem;
-  height: 6rem;
-  min-height: 4rem;
-  margin-block: 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
-  background: var(--card);
-  padding: 1rem;
-  overflow: hidden;
-}
-.twitter-embed.is-expanded {
-  height: auto;
-  min-height: 6rem;
-  overflow: visible;
-}
-.twitter-embed .twitter-tweet {
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.twitter-load {
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--secondary);
-  padding: 0.25rem 0.75rem;
-  color: var(--muted-foreground);
-  cursor: pointer;
-  font-size: 0.75rem;
-}
-.twitter-load:hover {
-  color: var(--foreground);
-}
 @media (min-width: 640px) {
   .embedded-link-image[hidden] {
     display: flex;

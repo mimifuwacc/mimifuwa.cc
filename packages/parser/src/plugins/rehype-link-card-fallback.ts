@@ -34,23 +34,12 @@ const externalLinkIcon = () =>
   );
 
 const renderTwitter = (node: Element, url: URL) => {
-  const normalized = new URL(url.toString());
-  if (normalized.hostname === "x.com" || normalized.hostname === "www.x.com") {
-    normalized.hostname = "twitter.com";
-  }
-  normalized.search = "";
-  normalized.hash = "";
+  const match = url.pathname.match(/^\/(?:[^/]+)\/status\/(\d+)/i);
+  if (!match) return;
 
   node.tagName = "div";
-  node.properties = { className: ["twitter-embed"], dataTwitterUrl: normalized.toString() };
-  node.children = [
-    element("blockquote", { className: ["twitter-tweet"], dataLang: "ja" }, [
-      element("a", { href: `${normalized.toString()}?ref_src=twsrc%5Etfw` }, [
-        text(normalized.toString()),
-      ]),
-    ]),
-    element("button", { className: ["twitter-load"], type: "button" }, [text("埋め込みを表示")]),
-  ];
+  node.properties = { className: ["twitter-embed-placeholder"], dataTwitterId: match[1] };
+  node.children = [];
 };
 
 const renderLink = (node: Element, url: URL) => {

@@ -1,6 +1,7 @@
 ---
 import { parseArticleToHtml } from "@mimifuwacc/parser";
 import { CalendarDays, ChevronDown } from "@lucide/astro";
+import ArticleBody from "../../components/ArticleBody.astro";
 import Layout from "../../layouts/Layout.astro";
 import { BlogApiError, contentApiBaseUrl, getPost } from "../../lib/blog-api";
 import { formatDate, postOgImage } from "../../lib/format";
@@ -36,7 +37,7 @@ const ogpEndpoint = `${contentApiBaseUrl(Astro.url)}/ogp`;
     )}
 
     <div class="article-layout">
-      <article class="prose" data-ogp-endpoint={ogpEndpoint} set:html={html} />
+      <article class="prose" data-ogp-endpoint={ogpEndpoint}><ArticleBody html={html} /></article>
       {headings.length > 0 && (
         <aside class="desktop-toc">
           <nav class="card" aria-label="目次">
@@ -89,51 +90,6 @@ const ogpEndpoint = `${contentApiBaseUrl(Astro.url)}/ogp`;
       }
     });
   }
-
-  type TwitterWindow = Window & { twttr?: { widgets?: { load: (root?: HTMLElement) => void } } };
-  const twitterWindow = window as TwitterWindow;
-  let twitterScript: Promise<void> | undefined;
-  const loadTwitterScript = () => {
-    if (twitterWindow.twttr?.widgets) return Promise.resolve();
-    if (twitterScript) return twitterScript;
-    twitterScript = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.id = "twitter-wjs";
-      script.src = "https://platform.twitter.com/widgets.js";
-      script.async = true;
-      script.addEventListener("load", () => resolve(), { once: true });
-      script.addEventListener("error", () => reject(new Error("Twitter widget failed to load")), { once: true });
-      document.body.append(script);
-    });
-    return twitterScript;
-  };
-  document.querySelectorAll<HTMLElement>("[data-twitter-url]").forEach((container) => {
-    const button = container.querySelector<HTMLButtonElement>(".twitter-load");
-    if (!button) return;
-    button.addEventListener("click", async () => {
-      const url = container.dataset.twitterUrl;
-      if (!url || container.classList.contains("is-expanded")) return;
-      button.disabled = true;
-      button.textContent = "読み込み中…";
-      try {
-        await loadTwitterScript();
-        const blockquote = document.createElement("blockquote");
-        blockquote.className = "twitter-tweet";
-        blockquote.dataset.lang = "ja";
-        blockquote.dataset.theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
-        const link = document.createElement("a");
-        link.href = `${url}?ref_src=twsrc%5Etfw`;
-        link.textContent = url;
-        blockquote.append(link);
-        container.classList.add("is-expanded");
-        container.replaceChildren(blockquote);
-        twitterWindow.twttr?.widgets?.load(container);
-      } catch {
-        button.disabled = false;
-        button.textContent = "埋め込みを表示";
-      }
-    });
-  });
 
   document.querySelectorAll<HTMLButtonElement>(".code-copy").forEach((button) => {
     button.addEventListener("click", async () => {

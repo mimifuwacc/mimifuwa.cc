@@ -1,0 +1,31 @@
+---
+import Tweet from "astro-tweet";
+
+interface Props {
+  html: string;
+}
+
+const { html } = Astro.props;
+const ignoreTweetError = () => undefined;
+const placeholderPattern = /<div class="twitter-embed-placeholder" data-twitter-id="([0-9]+)"><\/div>/g;
+const parts: Array<{ kind: "html"; value: string } | { kind: "tweet"; id: string }> = [];
+let cursor = 0;
+
+for (const match of html.matchAll(placeholderPattern)) {
+  const index = match.index ?? 0;
+  if (index > cursor) parts.push({ kind: "html", value: html.slice(cursor, index) });
+  parts.push({ kind: "tweet", id: match[1] });
+  cursor = index + match[0].length;
+}
+
+if (cursor < html.length) parts.push({ kind: "html", value: html.slice(cursor) });
+if (parts.length === 0) parts.push({ kind: "html", value: html });
+---
+
+{parts.map((part) =>
+  part.kind === "tweet" ? (
+    <Tweet id={part.id} onError={ignoreTweetError} />
+  ) : (
+    <Fragment set:html={part.value} />
+  )
+)}
