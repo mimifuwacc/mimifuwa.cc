@@ -4,8 +4,8 @@ import {
   FaCircleInfo,
   FaTriangleExclamation,
 } from "react-icons/fa6";
-import { cn } from "../../lib/utils";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { cn } from "@mimifuwacc/ui/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@mimifuwacc/ui/components/ui/alert";
 
 export type InfoType = "info" | "success" | "warning" | "dangerous";
 

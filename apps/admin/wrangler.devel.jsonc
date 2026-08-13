@@ -9,7 +9,7 @@
     "binding": "ASSETS",
   },
   "vars": {
-    "API_V2_URL": "https://mimifuwacc-api-devel.m8c.workers.dev",
+    "API_URL": "https://mimifuwacc-api-devel.m8c.workers.dev",
   },
   "services": [
     {

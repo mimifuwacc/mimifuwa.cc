@@ -9,7 +9,7 @@
     "binding": "ASSETS",
   },
   "vars": {
-    "API_V2_URL": "https://api.mimifuwa.cc",
+    "API_URL": "https://api.mimifuwa.cc",
   },
   "services": [
     {

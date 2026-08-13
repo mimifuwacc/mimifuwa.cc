@@ -1,48 +1,24 @@
 {
-  "name": "web-v2",
+  "name": "@mimifuwacc/web",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenvx run -f ../../env/.env -- vp dev",
-    "dev:cf": "wrangler dev",
-    "build": "vp build",
-    "preview": "vp preview",
-    "deploy": "vp build && wrangler deploy",
-    "typecheck": "tsc --noEmit"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check"
   },
   "dependencies": {
-    "@fontsource-variable/geist": "^5.2.9",
-    "@fontsource-variable/inter": "^5.2.8",
-    "@fontsource-variable/oxanium": "^5.2.8",
+    "@astrojs/cloudflare": "13.1.0",
+    "@lucide/astro": "^1.29.0",
     "@mimifuwacc/parser": "workspace:*",
-    "@mimifuwacc/ui": "workspace:*",
-    "@tanstack/react-query": "catalog:",
-    "class-variance-authority": "catalog:",
-    "clsx": "catalog:",
-    "framer-motion": "catalog:",
-    "graphql": "catalog:",
-    "graphql-request": "catalog:",
-    "highlight.js": "catalog:",
-    "lucide-react": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-icons": "catalog:",
-    "react-router-dom": "^7.0.0",
-    "shadcn": "catalog:",
-    "tailwind-merge": "catalog:",
-    "tw-animate-css": "catalog:"
+    "astro": "6.4.8",
+    "effect": "^3.17.0",
+    "highlight.js": "catalog:"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "^6.0.2",
-    "haribote": "^0.1.0",
-    "tailwindcss": "catalog:",
-    "typescript": "catalog:",
-    "vite": "catalog:",
-    "vite-plus": "catalog:",
-    "wrangler": "catalog:"
+    "@astrojs/check": "^0.9.0",
+    "typescript": "catalog:"
   }
 }

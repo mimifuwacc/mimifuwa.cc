@@ -22,12 +22,12 @@ const ApiErrorBody = Schema.Struct({
 });
 
 export const contentApiBaseUrl = (requestUrl: URL) => {
-  const configuredUrl = import.meta.env.API_V2_URL?.trim();
+  const configuredUrl = import.meta.env.API_URL?.trim();
   if (configuredUrl) return configuredUrl.replace(/\/$/, "");
 
   const hostname = requestUrl.hostname.toLowerCase();
   if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
-    return (import.meta.env.API_V2_URL ?? "http://localhost:8787").replace(/\/$/, "");
+    return (import.meta.env.API_URL ?? "http://localhost:8787").replace(/\/$/, "");
   }
   if (hostname === "mimifuwacc-devel.m8c.workers.dev") {
     return "https://mimifuwacc-api-devel.m8c.workers.dev";

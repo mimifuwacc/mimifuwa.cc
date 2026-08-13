@@ -33,32 +33,32 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Migrate D1
-        working-directory: apps/api-v2
+        working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs --remote
 
       - name: Set API secret (prod)
-        working-directory: apps/api-v2
+        working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET'
 
       - name: Deploy API
-        working-directory: apps/api-v2
+        working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.toml
 
       - name: Build web
-        working-directory: apps/web-v2
+        working-directory: apps/web
         env:
-          API_V2_URL: https://api.mimifuwa.cc
+          API_URL: https://api.mimifuwa.cc
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Deploy web
-        working-directory: apps/web-v2
+        working-directory: apps/web
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy
 
       - name: Build admin
         working-directory: apps/admin
         env:
-          API_V2_URL: https://api.mimifuwa.cc
-          NEXT_PUBLIC_API_V2_URL: https://api.mimifuwa.cc
+          API_URL: https://api.mimifuwa.cc
+          NEXT_PUBLIC_API_URL: https://api.mimifuwa.cc
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec opennextjs-cloudflare build
 
       - name: Set admin secret (prod)

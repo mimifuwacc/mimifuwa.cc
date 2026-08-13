@@ -1,6 +1,6 @@
 "use client";
 
-import ContentRenderer from "@mimifuwacc/ui/components/content-renderer";
+import ContentRenderer from "./content-renderer";
 import { parseToHtml } from "@mimifuwacc/parser";
 import { useEffect, useState, useTransition } from "react";
 

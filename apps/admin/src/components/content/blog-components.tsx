@@ -1,8 +1,8 @@
 import type { ComponentType, ReactNode } from "react";
 import { isValidElement } from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@mimifuwacc/ui/lib/utils";
 import LinkCard from "../link-card";
-import { Separator } from "../ui/separator";
+import { Separator } from "@mimifuwacc/ui/components/ui/separator";
 import { CodeBlock } from "./code-block";
 import { InfoCard, type InfoType } from "./info-card";
 import { TwitterCard } from "./twitter-card";

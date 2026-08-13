@@ -1,9 +1,5 @@
 import { drizzle } from "drizzle-orm/d1";
-import type { Env } from "../types";
 import * as schema from "./schema";
 
-export function createDB(env: Env) {
-  return drizzle(env.DB, { schema });
-}
-
-export type DB = ReturnType<typeof createDB>;
+export const createDb = (database: D1Database) => drizzle(database, { schema });
+export type Database = ReturnType<typeof createDb>;

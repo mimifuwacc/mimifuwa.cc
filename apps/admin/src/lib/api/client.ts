@@ -1,11 +1,11 @@
 import type { Post, PostInput, PostPage } from "./types";
 
-const API_URL = process.env.API_V2_URL ?? "http://localhost:8787";
+const API_URL = process.env.API_URL ?? "http://localhost:8787";
 
 const slugPath = (slug: string) => slug.split("/").map(encodeURIComponent).join("/");
 
 const request = async <A>(path: string, init?: RequestInit): Promise<A> => {
-  const secret = process.env.API_V2_ADMIN_SECRET ?? "local-development";
+  const secret = process.env.API_ADMIN_SECRET ?? "local-development";
   const headers = new Headers(init?.headers);
   headers.set("content-type", "application/json");
   headers.set("x-admin-secret", secret);
