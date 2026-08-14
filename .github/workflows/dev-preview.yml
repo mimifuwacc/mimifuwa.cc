@@ -1,9 +1,9 @@
-name: Devel Preview
+name: Dev Preview
 
 on:
   push:
     branches:
-      - devel
+      - dev
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ permissions:
 # dotenvx: GitHub Secrets に載せるのは復号鍵だけ。CLOUDFLARE_* / ADMIN_SECRET /
 # Cloudflare credentials / ADMIN_SECRET are injected from the encrypted env file.
 env:
-  DOTENV_PRIVATE_KEY_DEVEL: ${{ secrets.DOTENV_PRIVATE_KEY_DEVEL }}
+  DOTENV_PRIVATE_KEY_DEV: ${{ secrets.DOTENV_PRIVATE_KEY_DEV }}
 
 jobs:
   deploy-web:
@@ -37,15 +37,15 @@ jobs:
       - name: Build web
         working-directory: apps/web
         env:
-          API_URL: https://mimifuwacc-api-devel.m8c.workers.dev
-          CLOUDFLARE_ENV: devel
-        run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm run build
+          API_URL: https://mimifuwacc-api-dev.m8c.workers.dev
+          CLOUDFLARE_ENV: dev
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
 
       - name: Deploy web to Cloudflare
         working-directory: apps/web
         env:
-          CLOUDFLARE_ENV: devel
-        run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec wrangler deploy
+          CLOUDFLARE_ENV: dev
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy
 
   deploy-api:
     runs-on: ubuntu-latest
@@ -64,17 +64,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Migrate D1 (devel)
+      - name: Migrate D1 (dev)
         working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-devel --env devel --remote
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-dev --env dev --remote
 
-      - name: Set API secret (devel)
+      - name: Set API secret (dev)
         working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.devel -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET --env devel'
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET --env dev'
 
       - name: Deploy API to Cloudflare
         working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec wrangler deploy --env devel
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy --env dev
 
   deploy-admin:
     runs-on: ubuntu-latest
@@ -96,14 +96,14 @@ jobs:
       - name: Build admin
         working-directory: apps/admin
         env:
-          API_URL: https://mimifuwacc-api-devel.m8c.workers.dev
-          NEXT_PUBLIC_API_URL: https://mimifuwacc-api-devel.m8c.workers.dev
-        run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec opennextjs-cloudflare build
+          API_URL: https://mimifuwacc-api-dev.m8c.workers.dev
+          NEXT_PUBLIC_API_URL: https://mimifuwacc-api-dev.m8c.workers.dev
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec opennextjs-cloudflare build
 
-      - name: Set admin secret (devel)
+      - name: Set admin secret (dev)
         working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.devel -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.devel.jsonc'
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.dev.jsonc'
 
       - name: Deploy admin to Cloudflare
         working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.devel -- pnpm exec wrangler deploy --config wrangler.devel.jsonc
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy --config wrangler.dev.jsonc

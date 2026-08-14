@@ -11,12 +11,12 @@
     },
   ],
   "env": {
-    "devel": {
-      "name": "mimifuwacc-devel",
+    "dev": {
+      "name": "mimifuwacc-dev",
       "services": [
         {
           "binding": "CONTENT_API",
-          "service": "mimifuwacc-api-devel",
+          "service": "mimifuwacc-api-dev",
         },
       ],
     },

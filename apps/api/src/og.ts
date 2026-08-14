@@ -87,7 +87,7 @@ export const getOgImage = async (env: Env, slug: string): Promise<Response> => {
   if (result._tag === "Left") return new Response(null, { status: 503 });
   if (!result.right) {
     return Response.redirect(
-      "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/og.png",
+      "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/og.png",
       302,
     );
   }

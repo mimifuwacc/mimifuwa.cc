@@ -3,7 +3,7 @@ name: Deploy and Release
 on:
   push:
     branches:
-      - main
+      - release
   workflow_dispatch:
 
 permissions:

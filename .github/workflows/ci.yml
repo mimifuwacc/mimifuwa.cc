@@ -3,8 +3,8 @@ name: CI
 on:
   pull_request:
     branches:
-      - devel
-      - main
+      - dev
+      - release
   workflow_dispatch:
 
 jobs:
