@@ -61,8 +61,8 @@ export const contentApiBaseUrl = (requestUrl: URL) => {
   if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
     return (import.meta.env.API_URL ?? "http://localhost:8787").replace(/\/$/, "");
   }
-  if (hostname === "mimifuwacc-devel.m8c.workers.dev") {
-    return "https://mimifuwacc-api-devel.m8c.workers.dev";
+  if (hostname === "mimifuwacc-dev.m8c.workers.dev") {
+    return "https://mimifuwacc-api-dev.m8c.workers.dev";
   }
   return "https://api.mimifuwa.cc";
 };
