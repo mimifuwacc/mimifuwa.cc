@@ -467,10 +467,12 @@ img {
 }
 .badge {
   display: inline-flex;
+  align-items: center;
   border-radius: 999px;
   background: var(--secondary);
   padding: 0.2rem 0.5rem;
   font-size: 0.72rem;
+  line-height: 1;
   white-space: nowrap;
 }
 .badge-outline {
