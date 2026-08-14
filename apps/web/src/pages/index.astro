@@ -28,7 +28,7 @@ import { getPosts } from "../lib/blog-api";
 const { posts } = await getPosts(Astro.url, 6);
 const workImage = (url: string, image?: string) => {
   if (image?.startsWith("/"))
-    return `https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public${image}`;
+    return `https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public${image}`;
   if (image) return image;
   const match = url.match(/github\.com\/([^/]+)\/([^/?]+)/);
   return match
@@ -41,7 +41,7 @@ const workImage = (url: string, image?: string) => {
   <section class="hero">
     <div class="hero-inner" data-parallax>
       <img
-        src="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/mimifuwacc.png"
+        src="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/mimifuwacc.png"
         alt="mimifuwacc"
         class="hero-avatar"
       />
@@ -73,7 +73,7 @@ const workImage = (url: string, image?: string) => {
           <article class="card content-card profile-card">
             <div class="profile-heading">
               <img
-                src="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/mimifuwacc.png"
+                src="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/mimifuwacc.png"
                 alt="mimifuwacc"
               />
               <div>

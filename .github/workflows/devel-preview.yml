@@ -3,7 +3,7 @@ name: Devel Preview
 on:
   push:
     branches:
-      - devel
+      - dev
   workflow_dispatch:
 
 permissions:
