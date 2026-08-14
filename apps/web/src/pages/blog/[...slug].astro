@@ -1,3 +1,6 @@
 ---
-return Astro.redirect(Astro.params.slug ? `/blogs/${Astro.params.slug}` : "/blogs", 308);
+return Astro.redirect(
+  Astro.params.slug ? `/blogs/${Astro.params.slug}` : "/blogs",
+  308,
+);
 ---

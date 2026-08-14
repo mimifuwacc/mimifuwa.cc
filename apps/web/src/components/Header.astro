@@ -7,22 +7,63 @@ const nav = [
   { href: "/blogs", label: "Blog" },
   { href: "/links", label: "Links" },
 ];
-const active = (href: string) => path === href || (href !== "/" && path.startsWith(`${href}/`));
+const active = (href: string) =>
+  path === href || (href !== "/" && path.startsWith(`${href}/`));
 ---
 
 <header class="site-header">
   <div class="header-inner container-wide">
     <a href="/" class="brand">mimifuwa.cc</a>
     <nav class="desktop-nav" aria-label="メインナビゲーション">
-      {nav.map((item) => <a href={item.href} aria-current={active(item.href) ? "page" : undefined}>{item.label}</a>)}
-      <button class="icon-button theme-toggle" type="button" aria-label="テーマを切り替える"><Moon class="icon theme-moon" /><Sun class="icon theme-sun" /></button>
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={active(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <button
+        class="icon-button theme-toggle"
+        type="button"
+        aria-label="テーマを切り替える"
+        ><Moon class="icon theme-moon" /><Sun class="icon theme-sun" /></button
+      >
     </nav>
     <div class="mobile-actions">
-      <button class="icon-button theme-toggle" type="button" aria-label="テーマを切り替える"><Moon class="icon theme-moon" /><Sun class="icon theme-sun" /></button>
-      <button class="icon-button menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false"><Menu class="icon menu-open-icon" /><X class="icon menu-close-icon" /></button>
+      <button
+        class="icon-button theme-toggle"
+        type="button"
+        aria-label="テーマを切り替える"
+        ><Moon class="icon theme-moon" /><Sun class="icon theme-sun" /></button
+      >
+      <button
+        class="icon-button menu-toggle"
+        type="button"
+        aria-label="メニューを開く"
+        aria-expanded="false"
+        ><Menu class="icon menu-open-icon" /><X
+          class="icon menu-close-icon"
+        /></button
+      >
     </div>
   </div>
-  <nav class="mobile-nav container-wide" aria-label="モバイルナビゲーション" hidden>
-    {nav.map((item) => <a href={item.href} aria-current={active(item.href) ? "page" : undefined}>{item.label}</a>)}
+  <nav
+    class="mobile-nav container-wide"
+    aria-label="モバイルナビゲーション"
+    hidden
+  >
+    {
+      nav.map((item) => (
+        <a
+          href={item.href}
+          aria-current={active(item.href) ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))
+    }
   </nav>
 </header>
