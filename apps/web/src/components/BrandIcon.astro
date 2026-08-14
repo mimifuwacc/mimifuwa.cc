@@ -24,4 +24,9 @@ const { name, class: className } = Astro.props;
 const icon = icons[name];
 ---
 
-<svg class:list={["icon", className]} viewBox={icon.viewBox} fill="currentColor" aria-hidden="true"><path d={icon.path} /></svg>
+<svg
+  class:list={["icon", className]}
+  viewBox={icon.viewBox}
+  fill="currentColor"
+  aria-hidden="true"><path d={icon.path}></path></svg
+>
