@@ -1242,7 +1242,7 @@ img {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  height: 6rem;
+  height: 7rem;
   margin-block: 1.5rem;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
@@ -1262,11 +1262,11 @@ img {
   flex-direction: column;
   justify-content: center;
   gap: 0.25rem;
-  padding: 0.75rem 1.25rem;
+  padding: 1rem 1.25rem;
 }
 .embedded-link-title {
   overflow: hidden;
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1280,7 +1280,7 @@ img {
   height: 1.25rem;
   overflow: hidden;
   color: var(--muted-foreground);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.25rem;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1326,20 +1326,20 @@ img {
 }
 .embedded-link-image {
   display: flex;
-  width: 10rem;
-  min-height: 5rem;
+  width: auto;
+  min-height: 0;
   flex-shrink: 0;
-  align-items: center;
-  padding-right: 1rem;
+  align-items: stretch;
+  border-inline-start: 1px solid var(--border);
 }
 .embedded-link-image img {
   width: auto;
-  max-width: 9rem;
-  height: auto;
-  max-height: 5rem;
+  max-width: 14rem;
+  height: 100%;
+  max-height: none;
   margin: 0;
   border: 0;
-  border-radius: 0.125rem;
+  border-radius: 0;
   object-fit: contain;
   box-shadow: none;
 }
