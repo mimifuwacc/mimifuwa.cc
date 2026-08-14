@@ -66,7 +66,7 @@ jobs:
 
       - name: Migrate D1 (dev)
         working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-devel --env dev --remote
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-dev --env dev --remote
 
       - name: Set API secret (dev)
         working-directory: apps/api
