@@ -12,7 +12,7 @@ export default defineConfig({
       },
     },
     ssr: {
-      noExternal: ["astro-tweet", "date-fns"],
+      noExternal: ["date-fns"],
     },
   },
 });

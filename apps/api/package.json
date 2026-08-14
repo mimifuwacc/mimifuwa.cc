@@ -18,6 +18,8 @@
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
     "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vite-plus": "catalog:",
     "wrangler": "catalog:"
   }
 }

@@ -14,6 +14,7 @@
   --primary-foreground: oklch(0.984 0.019 200.873);
   --secondary: oklch(0.967 0.001 286.375);
   --border: oklch(0.922 0 0);
+  --twitter-blue: #1da1f2;
   --radius: 0.875rem;
   font-family:
     Inter,
@@ -44,12 +45,23 @@
 * {
   box-sizing: border-box;
 }
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  transition: none !important;
+}
 html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   scroll-behavior: auto;
   scroll-padding-top: 6rem;
 }
 body {
+  width: 100%;
+  max-width: 100%;
   margin: 0;
+  overflow-x: clip;
   background: var(--background);
   color: var(--foreground);
 }
@@ -82,6 +94,9 @@ img {
   max-width: 100%;
 }
 .page-shell {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -737,6 +752,8 @@ img {
 }
 .article-layout {
   display: flex;
+  min-width: 0;
+  max-width: 100%;
   gap: 3rem;
 }
 .article-layout article {
@@ -814,8 +831,11 @@ img {
 }
 
 .prose {
+  min-width: 0;
+  max-width: 100%;
   font-size: 1rem;
   line-height: 1.85;
+  overflow-wrap: anywhere;
 }
 .prose :where(h2, h3) {
   margin-top: 2.5em;
@@ -1015,6 +1035,203 @@ img {
   border-color: #3a9b62;
   background: color-mix(in srgb, #3a9b62 8%, transparent);
 }
+.cached-tweet {
+  display: block;
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  max-width: min(550px, 100%);
+  margin: 1.5rem auto;
+  padding: 0.9rem 1rem;
+  overflow: hidden;
+  color: var(--foreground);
+  font:
+    400 0.95rem/1.35 system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  text-decoration: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.cached-tweet-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.cached-tweet-avatar {
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.cached-tweet-author {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.cached-tweet-author strong,
+.cached-tweet-author span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cached-tweet-author span,
+.cached-tweet-footer,
+.cached-tweet-missing small {
+  color: var(--muted-foreground);
+}
+
+.cached-tweet-brand {
+  display: inline-flex;
+  align-self: flex-start;
+  color: var(--twitter-blue);
+}
+
+.cached-tweet-twitter-icon {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.cached-tweet-text {
+  margin: 0.9rem 0;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.cached-tweet-text a {
+  color: var(--twitter-blue);
+  text-decoration: none;
+}
+
+.cached-tweet-text a:hover {
+  text-decoration: underline;
+}
+
+.cached-tweet-link-card {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0.75rem 0;
+  overflow: hidden;
+  color: var(--foreground) !important;
+  text-decoration: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.cached-tweet-link-card > img {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  max-height: 20rem;
+  margin: 0;
+  object-fit: cover;
+  border-radius: 0;
+  aspect-ratio: 1.91 / 1;
+}
+
+.cached-tweet-link-card-content {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.7rem 0.8rem;
+}
+
+.cached-tweet-link-card-content small,
+.cached-tweet-link-card-content > span {
+  color: var(--muted-foreground);
+}
+
+.cached-tweet-link-card-content strong,
+.cached-tweet-link-card-content > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cached-tweet-media {
+  display: grid;
+  min-width: 0;
+  max-width: 100%;
+  max-height: 520px;
+  margin: 0.75rem 0;
+  overflow: hidden;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.cached-tweet-media-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cached-tweet-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  margin: 0;
+  object-fit: cover;
+}
+
+.cached-tweet-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding-top: 0.65rem;
+  font-size: 0.82rem;
+  border-top: 1px solid var(--border);
+}
+
+.cached-tweet-metrics {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cached-tweet-metrics > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.cached-tweet-metrics svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--muted-foreground);
+  stroke-width: 1.8;
+}
+
+.cached-tweet-footer a {
+  margin-left: auto;
+  color: var(--twitter-blue);
+}
+
+.cached-tweet-missing {
+  display: flex;
+  flex-direction: column;
+}
+
+.cached-tweet-missing:hover {
+  background: var(--muted);
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+}
+
 .embedded-link-card {
   display: flex;
   align-items: stretch;
@@ -1155,6 +1372,16 @@ img {
   }
 }
 @media (max-width: 768px) {
+  .article-layout {
+    display: block;
+    width: 100%;
+  }
+  .article-layout > .prose {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    contain: inline-size;
+  }
   .desktop-nav {
     display: none;
   }

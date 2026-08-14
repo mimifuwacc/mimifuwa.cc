@@ -49,8 +49,11 @@ const imageUrl = new URL(image, Astro.site ?? Astro.url.origin);
     </div>
     <script>
       const setTheme = () => {
-        const dark = document.documentElement.classList.toggle("dark");
+        const root = document.documentElement;
+        root.classList.add("theme-changing");
+        const dark = root.classList.toggle("dark");
         localStorage.setItem("theme", dark ? "dark" : "light");
+        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("theme-changing")));
       };
       document.querySelectorAll<HTMLButtonElement>(".theme-toggle").forEach((button) => {
         button.addEventListener("click", setTheme);

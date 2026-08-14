@@ -37,7 +37,7 @@ const ogpEndpoint = `${contentApiBaseUrl(Astro.url)}/ogp`;
     )}
 
     <div class="article-layout">
-      <article class="prose" data-ogp-endpoint={ogpEndpoint}><ArticleBody html={html} /></article>
+      <article class="prose" data-ogp-endpoint={ogpEndpoint}><ArticleBody html={html} requestUrl={Astro.url} /></article>
       {headings.length > 0 && (
         <aside class="desktop-toc">
           <nav class="card" aria-label="目次">

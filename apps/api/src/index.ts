@@ -13,6 +13,7 @@ import {
 import type { ApiErrorBody } from "./contracts";
 import { getOgImage } from "./og";
 import { getOgp } from "./ogp";
+import { getTwitterEmbed } from "./embed-cache";
 import { getPost, listPosts, type Env } from "./repository";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -34,6 +35,27 @@ app.use("/admin/*", async (context, next) => {
 });
 
 app.get("/health", (context) => context.json({ status: "ok" }));
+
+app.get("/embeds/twitter/:id", async (context) => {
+  const id = context.req.param("id");
+  if (!/^\d{1,40}$/.test(id)) {
+    return context.json({ error: "invalid_request", message: "Invalid tweet id" }, 400);
+  }
+  const result = await Effect.runPromise(
+    Effect.either(getTwitterEmbed(context.env, context.executionCtx, id)),
+  );
+  if (result._tag === "Left") {
+    console.error(`Unable to fetch tweet ${id}`, result.left);
+    return context.json(
+      { error: "upstream_unavailable", message: "Unable to load or cache this tweet" },
+      502,
+    );
+  }
+  return context.json(result.right.tweet, 200, {
+    "cache-control": "public, max-age=300, s-maxage=3600",
+    "x-embed-cache": result.right.cache,
+  });
+});
 
 app.post("/upload/image", async (context) => {
   const file = (await context.req.formData()).get("file");
