@@ -5,11 +5,19 @@
   "packageManager": "pnpm@11.7.0",
   "scripts": {
     "dev": "pnpm --parallel --filter @mimifuwacc/api --filter @mimifuwacc/web --filter @mimifuwacc/admin run dev",
+    "format": "vp fmt --write && prettier --write \"apps/**/*.astro\"",
+    "format:check": "vp fmt --check && prettier --check \"apps/**/*.astro\"",
+    "lint:astro": "eslint \"apps/**/*.astro\"",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.71.0",
+    "eslint": "^10.8.1",
+    "eslint-plugin-astro": "^3.1.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
     "tsx": "^4.19.2",
+    "typescript-eslint": "^8.67.0",
     "vite-plus": "catalog:",
     "wrangler": "^4.119.0"
   }
