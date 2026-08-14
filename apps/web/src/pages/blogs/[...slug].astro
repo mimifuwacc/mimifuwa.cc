@@ -1,0 +1,114 @@
+---
+import { parseArticleToHtml } from "@mimifuwacc/parser";
+import { CalendarDays, ChevronDown } from "@lucide/astro";
+import ArticleBody from "../../components/ArticleBody.astro";
+import Layout from "../../layouts/Layout.astro";
+import { BlogApiError, contentApiBaseUrl, getPost } from "../../lib/blog-api";
+import { formatDate, postOgImage } from "../../lib/format";
+
+const slug = Astro.params.slug;
+if (!slug) return Astro.redirect("/blogs");
+
+let post;
+try {
+  post = await getPost(Astro.url, slug);
+} catch (error) {
+  if (error instanceof BlogApiError && error.status === 404) return Astro.rewrite("/404");
+  throw error;
+}
+
+const { html, headings } = await parseArticleToHtml(post.markdown);
+const ogpEndpoint = `${contentApiBaseUrl(Astro.url)}/ogp`;
+---
+
+<Layout title={`${post.title} | mimifuwa.cc`} description={post.excerpt} image={postOgImage(post.slug)}>
+  <div class="article-page container">
+    <header class="article-header">
+      <h1>{post.title}</h1>
+      <time datetime={post.date}><CalendarDays class="icon" /> {formatDate(post.date)}</time>
+      {post.tags.length > 0 && <div class="badges">{post.tags.map((tag) => <span class="badge">#{tag}</span>)}</div>}
+    </header>
+
+    {headings.length > 0 && (
+      <details class="mobile-toc card">
+        <summary>目次 <ChevronDown class="icon" /></summary>
+        <nav>{headings.map((heading) => <a class:list={[heading.level === 3 && "toc-child"]} href={`#${heading.id}`}>{heading.text}</a>)}</nav>
+      </details>
+    )}
+
+    <div class="article-layout">
+      <article class="prose" data-ogp-endpoint={ogpEndpoint}><ArticleBody html={html} requestUrl={Astro.url} /></article>
+      {headings.length > 0 && (
+        <aside class="desktop-toc">
+          <nav class="card" aria-label="目次">
+            <strong>目次</strong>
+            {headings.map((heading) => <a data-toc-link={heading.id} class:list={[heading.level === 3 && "toc-child"]} href={`#${heading.id}`}>{heading.text}</a>)}
+          </nav>
+        </aside>
+      )}
+    </div>
+  </div>
+</Layout>
+
+<script>
+  interface OgpData {
+    title?: string;
+    description?: string;
+    image?: string;
+  }
+
+  const article = document.querySelector<HTMLElement>(".prose[data-ogp-endpoint]");
+  const endpoint = article?.dataset.ogpEndpoint;
+  if (endpoint) {
+    document.querySelectorAll<HTMLAnchorElement>("[data-ogp-url]").forEach(async (card) => {
+      const url = card.dataset.ogpUrl;
+      if (!url) return;
+      try {
+        const response = await fetch(`${endpoint}?url=${encodeURIComponent(url)}`);
+        if (!response.ok) return;
+        const data = (await response.json()) as OgpData;
+        const title = card.querySelector<HTMLElement>(".embedded-link-title");
+        const description = card.querySelector<HTMLElement>(".embedded-link-description");
+        const imageContainer = card.querySelector<HTMLElement>(".embedded-link-image");
+        const image = imageContainer?.querySelector<HTMLImageElement>("img");
+        if (title && data.title) title.textContent = data.title;
+        if (description && data.description) {
+          description.textContent = data.description;
+          description.hidden = false;
+        }
+        if (imageContainer && image && data.image) {
+          const imageUrl = new URL(data.image);
+          if (imageUrl.protocol === "http:" || imageUrl.protocol === "https:") {
+            image.src = imageUrl.toString();
+            image.alt = data.title ?? "";
+            image.addEventListener("error", () => { imageContainer.hidden = true; }, { once: true });
+            imageContainer.hidden = false;
+          }
+        }
+      } catch {
+        // The server-rendered hostname remains as the fallback.
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".code-copy").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const code = button.closest(".code-block")?.querySelector("code")?.textContent;
+      if (code === undefined) return;
+      await navigator.clipboard.writeText(code);
+      const label = button.querySelector("span");
+      if (label) label.textContent = "Copied!";
+      window.setTimeout(() => { if (label) label.textContent = "Copy"; }, 2000);
+    });
+  });
+
+  const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]")];
+  const headings = links.map((link) => document.getElementById(link.dataset.tocLink ?? "")).filter(Boolean) as HTMLElement[];
+  const update = () => {
+    let current = headings[0]?.id;
+    for (const heading of headings) if (heading.getBoundingClientRect().top <= 120) current = heading.id;
+    links.forEach((link) => link.classList.toggle("active", link.dataset.tocLink === current));
+  };
+  addEventListener("scroll", update, { passive: true });
+  update();
+</script>

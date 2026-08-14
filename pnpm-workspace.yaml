@@ -1,12 +1,13 @@
+minimumReleaseAge: 4320
+
 packages:
   - "apps/*"
   - "packages/*"
 
 onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
+  - "@tailwindcss/oxide"
   - core-js-pure
   - esbuild
-  - lefthook
   - msw
   - sharp
   - workerd
@@ -26,26 +27,50 @@ catalog:
   shadcn: "^4.7.0"
 
   # UI primitives
-  "@base-ui/react": "^1.5.0"
+  react-aria-components: "^1.20.0"
   "@tanstack/react-query": "^5.0.0"
   class-variance-authority: "^0.7.1"
   clsx: "^2.1.1"
   tailwind-merge: "^3.6.0"
   lucide-react: "^1.16.0"
   react-icons: "^5.5.0"
-  framer-motion: "^11.0.0"
+  framer-motion: "^12.0.0"
 
   # GraphQL
-  graphql: "^16.13.2"
+  graphql: "^17.0.0"
   graphql-request: "^7.4.0"
   graphql-yoga: "^5.13.1"
 
   # Cloudflare / infra
   hono: "^4.6.20"
-  wrangler: "^4.76.0"
+  wrangler: "^4.119.0"
   "@cloudflare/workers-types": "^4.20250521.0"
   "@opennextjs/cloudflare": "^1.18.0"
 
   # Misc shared
   highlight.js: "^11.11.1"
-  typescript: "^5.8.3"
+  typescript: "^6.0.0"
+  # Keep the three Vite+ packages on the same release. Floating `latest` made an
+  # unrelated workspace install rewrite the toolchain in the lockfile.
+  vite: npm:@voidzero-dev/vite-plus-core@0.1.24
+  vitest: npm:@voidzero-dev/vite-plus-test@0.1.24
+  vite-plus: 0.1.24
+
+overrides:
+  vite: "catalog:"
+  vitest: "catalog:"
+  # graphql 17 は Workers のグローバルスコープ制約に違反する（parse が禁止操作を呼ぶ）。
+  # graphql-yoga も 17 非対応（peer は ^15 || ^16）なので、transitive が 17 を掴むのを防ぐため 16 に固定。
+  graphql: "^16.13.2"
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: "*"
+    vitest: "*"
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true

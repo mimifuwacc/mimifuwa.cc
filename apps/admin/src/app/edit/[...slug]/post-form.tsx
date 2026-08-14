@@ -2,19 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import { PostEditor } from "@/components/post-editor";
-import { deletePost, updatePost } from "@/lib/graphql/actions";
+import { deletePost, updatePost } from "@/lib/api/actions";
 
 interface Post {
-  id: string;
+  id: number;
   slug: string;
   title: string;
   excerpt: string;
-  content: string;
   markdown: string;
   date: string;
   draft: boolean;
   isPublished: boolean;
-  tags: Array<{ id: string; name: string }>;
+  tags: string[];
 }
 
 export function PostForm({ post }: { post: Post }) {
@@ -27,8 +26,8 @@ export function PostForm({ post }: { post: Post }) {
       initialSlug={post.slug}
       initialTitle={post.title}
       initialExcerpt={post.excerpt}
-      initialContent={post.markdown || post.content}
-      initialTags={post.tags.map((t) => t.name).join(", ")}
+      initialContent={post.markdown}
+      initialTags={post.tags.join(", ")}
       initialDate={post.date ? new Date(post.date).toISOString().split("T")[0] : ""}
       initialDraft={post.draft}
       initialIsPublished={post.isPublished}

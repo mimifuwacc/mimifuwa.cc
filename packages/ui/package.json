@@ -11,16 +11,14 @@
     "./lib/utils": "./src/lib/utils.ts"
   },
   "dependencies": {
-    "@mimifuwacc/parser": "workspace:*",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "lucide-react": "catalog:",
+    "react-aria-components": "catalog:",
     "react-icons": "catalog:",
     "tailwind-merge": "catalog:"
   },
   "peerDependencies": {
-    "@base-ui/react": "catalog:",
-    "@tanstack/react-query": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

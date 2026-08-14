@@ -4,8 +4,7 @@ import { Button } from "@mimifuwacc/ui/components/ui/button";
 import { ImageIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_GRAPHQL_URL?.replace("/graphql", "") ?? "http://localhost:8787";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8787";
 
 interface ImageUploadButtonProps {
   onInsert: (markdown: string) => void;
@@ -44,7 +43,7 @@ export function ImageUploadButton({ onInsert }: ImageUploadButtonProps) {
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) handleFile(file);
+          if (file) void handleFile(file);
           e.target.value = "";
         }}
       />
@@ -53,7 +52,7 @@ export function ImageUploadButton({ onInsert }: ImageUploadButtonProps) {
         variant="outline"
         size="sm"
         disabled={uploading}
-        onClick={() => inputRef.current?.click()}
+        onPress={() => inputRef.current?.click()}
       >
         <ImageIcon className="size-3.5" />
         {uploading ? "アップロード中..." : "画像"}

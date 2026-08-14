@@ -2,38 +2,15 @@
   "name": "@mimifuwacc/monorepo",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@11.7.0",
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
-    "commitlint": "commitlint"
-  },
-  "pnpm": {
-    "overrides": {
-      "react": "^19.2.0",
-      "react-dom": "^19.2.0"
-    }
+    "dev": "pnpm --parallel --filter @mimifuwacc/api --filter @mimifuwacc/web --filter @mimifuwacc/admin run dev",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^4.1.1",
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
-    "@commitlint/format": "^19.8.1",
-    "@eslint/js": "^10.0.1",
-    "conventional-changelog-atom": "^5.0.0",
-    "eslint": "^9.39.4",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "lefthook": "^1.13.0",
-    "prettier": "^3.8.3",
+    "@dotenvx/dotenvx": "^1.71.0",
     "tsx": "^4.19.2",
-    "turbo": "^2.9.3",
-    "typescript-eslint": "^8.59.4",
-    "wrangler": "^4.76.0"
+    "vite-plus": "catalog:",
+    "wrangler": "^4.119.0"
   }
 }

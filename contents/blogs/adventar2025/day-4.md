@@ -20,23 +20,24 @@ https://github.com/mimifuwacc/rsc-boundary-marker
 こんな感じのClient Componentがあるとします。
 
 ```tsx
-"use client"
+"use client";
 
 export default function Button() {
-  return <button>Click me</button>
+  return <button>Click me</button>;
 }
 ```
 
 このコンポーネントをサーバーサイドから呼ぶと、`'use client'` というマーカーが表示されButtonがClient Componentであることを示します。
+
 ```tsx
-import Button from './components/Button'
+import Button from "./components/Button";
 
 export default function Page() {
   return (
     <div>
       <Button /> 'use client'
     </div>
-  )
+  );
 }
 ```
 
@@ -62,6 +63,7 @@ https://mimifuwacc.hatenablog.com/entry/2025/09/05/165930
 それでは早速実装を見ていきましょう。
 
 ### 環境を作る
+
 まず、`yo` と `generator-code` を入れていきます。私はグローバルにnpmのツールを入れるときは `bun` を使うという謎のこだわりを持っているので、`bun` で入れました。
 
 ```bash
@@ -84,6 +86,7 @@ yo code
 ```json
 "main": "./dist/extension.js",
 ```
+
 と指定されています。まず、`activate` 関数ですが、これはVSCodeのActions Eventsが呼ばれた時に実行されます。ここで初期設定やイベントリスナーの追加などを行います。
 
 https://code.visualstudio.com/api/references/activation-events
@@ -99,6 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
 また、対になるものとして `deactivate` 関数がありますが、これはVSCodeが終了するときに実行されます。今回は特に終了時にやることはないので、何も書きません。早速 `activate` の中身を見ていきます。
 
 まず、Client Componentの横に表示するマーカーを定義しています。
+
 ```ts
 const decorationType = vscode.window.createTextEditorDecorationType({
   after: {
@@ -125,7 +129,6 @@ const updateDecorations = () => {
 
 最後に、アクティブなエディタが変更された時(`onDidChangeActiveTextEditor`) とテキストが編集されたとき(`onDidChangeTextDocument`) にマーカーをアップデートするように登録して完了です。
 
-
 ```ts
 vscode.window.onDidChangeActiveTextEditor(
   (editor) => {
@@ -135,7 +138,7 @@ vscode.window.onDidChangeActiveTextEditor(
     }
   },
   null,
-  context.subscriptions
+  context.subscriptions,
 );
 
 vscode.workspace.onDidChangeTextDocument(
@@ -145,13 +148,14 @@ vscode.workspace.onDidChangeTextDocument(
     }
   },
   null,
-  context.subscriptions
+  context.subscriptions,
 );
 
 updateDecorations();
 ```
 
 ### `isUseClientDirective` を見る
+
 まず、そのファイルがClient Componentであるかどうかを判断する関数 `isUseClientDirective` を見ていきます。Reactの公式ドキュメントによると、`'use client'` のディレクティブはファイルの先頭 (コメントは除く) に記述されるとあるので、その通りに実装しています。
 
 https://react.dev/reference/rsc/use-client
@@ -171,15 +175,16 @@ const ast = parser.parse(content, {
 // Check for 'use client' directive
 return ast.program.directives.some(
   (directive: any) =>
-    directive.value.type === "DirectiveLiteral" &&
-    directive.value.value === "use client"
+    directive.value.type === "DirectiveLiteral" && directive.value.value === "use client",
 );
 ```
 
 ### `findClientComponentUsages` を見る
+
 さて、Client Componentを使用しているかをチェックし、マーカーをおくべき場所を返す関数 `findClientComponentUsages` の中身を見ていきましょう。ここが拡張機能の本質です。
 
 そもそもClient Component内でチェックする意味はありませんから、あらかじめ弾いておきます。
+
 ```ts
 const content = document.getText();
 
@@ -198,6 +203,7 @@ const ast = parser.parse(document.getText(), {
 ```
 
 以下このASTを探っていきます。まず、importされているコンポーネントを取得します。
+
 ```ts
 const clientComponentImports: { localName: string; source: string }[] = [];
 const usageRanges: vscode.Range[] = [];
@@ -225,10 +231,7 @@ for (const filePath of possiblePaths) {
 
       if (isUseClientDirective(fileContent)) {
         nodePath.node.specifiers.forEach((specifier) => {
-          if (
-            specifier.type === "ImportDefaultSpecifier" ||
-            specifier.type === "ImportSpecifier"
-          ) {
+          if (specifier.type === "ImportDefaultSpecifier" || specifier.type === "ImportSpecifier") {
             clientComponentImports.push({
               localName: specifier.local.name,
               source,
@@ -270,9 +273,7 @@ traverse(ast, {
   JSXElement(nodePath) {
     if (nodePath.node.openingElement.name.type === "JSXIdentifier") {
       const componentName = nodePath.node.openingElement.name.name;
-      if (
-        clientComponentImports.some((imp) => imp.localName === componentName)
-      ) {
+      if (clientComponentImports.some((imp) => imp.localName === componentName)) {
         if (nodePath.node.closingElement) {
           // Check if opening and closing tags are on the same line
           const openingTagEnd = nodePath.node.openingElement.loc!.end;
@@ -282,27 +283,15 @@ traverse(ast, {
             if (openingTagEnd.line !== closingTagStart.line) {
               // If tags are on different lines, place after opening tag
               return new vscode.Range(
-                new vscode.Position(
-                  openingTagEnd.line - 1,
-                  openingTagEnd.column
-                ),
-                new vscode.Position(
-                  openingTagEnd.line - 1,
-                  openingTagEnd.column
-                )
+                new vscode.Position(openingTagEnd.line - 1, openingTagEnd.column),
+                new vscode.Position(openingTagEnd.line - 1, openingTagEnd.column),
               );
             } else {
               // If tags are on the same line, place after closing tag
               const closingTagEnd = nodePath.node.closingElement.loc!.end;
               return new vscode.Range(
-                new vscode.Position(
-                  closingTagEnd.line - 1,
-                  closingTagEnd.column
-                ),
-                new vscode.Position(
-                  closingTagEnd.line - 1,
-                  closingTagEnd.column
-                )
+                new vscode.Position(closingTagEnd.line - 1, closingTagEnd.column),
+                new vscode.Position(closingTagEnd.line - 1, closingTagEnd.column),
               );
             }
           })();
@@ -313,7 +302,7 @@ traverse(ast, {
           const openingTagEnd = nodePath.node.openingElement.loc!.end;
           const range = new vscode.Range(
             new vscode.Position(openingTagEnd.line - 1, openingTagEnd.column),
-            new vscode.Position(openingTagEnd.line - 1, openingTagEnd.column)
+            new vscode.Position(openingTagEnd.line - 1, openingTagEnd.column),
           );
           usageRanges.push(range);
         }
@@ -330,6 +319,7 @@ return usageRanges;
 ```
 
 ## 作ってみて
+
 完成したので、VSCode拡張機能のマーケットプレースに登録し、公開してみました (今見てみたら31ダウンロードされていた)。CI/CDだったり、Semantic Releaseなども組んでみましたが、うまくできている気がしないので手が空いたら修正しようと思っています (本当に？)。
 
 https://marketplace.visualstudio.com/items?itemName=mimifuwacc.rsc-boundary-marker

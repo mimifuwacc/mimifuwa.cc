@@ -3,7 +3,7 @@
 import { Button } from "@mimifuwacc/ui/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { deletePost } from "@/lib/graphql/actions";
+import { deletePost } from "@/lib/api/actions";
 
 interface DeleteButtonProps {
   slug: string;
@@ -31,7 +31,7 @@ export function DeleteButton({ slug }: DeleteButtonProps) {
   }
 
   return (
-    <Button variant="destructive" size="sm" onClick={handleDelete} disabled={isDeleting}>
+    <Button variant="destructive" size="sm" onPress={handleDelete} disabled={isDeleting}>
       {isDeleting ? "削除中..." : "Delete"}
     </Button>
   );

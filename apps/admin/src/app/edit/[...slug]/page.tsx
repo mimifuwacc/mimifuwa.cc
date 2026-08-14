@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
-import { client } from "@/lib/graphql/client";
-import { GET_POST } from "@/lib/graphql/queries";
-import type { GetPostResponse } from "@/lib/graphql/types";
+import { adminApi } from "@/lib/api/client";
 import { PostForm } from "./post-form";
 
 export default async function EditPostPage({ params }: { params: Promise<{ slug: string[] }> }) {
@@ -17,8 +15,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ slug:
 
 async function getPost(slug: string) {
   try {
-    const data = await client.request<GetPostResponse>(GET_POST, { slug });
-    return data.adminPost;
+    return await adminApi.getPost(slug);
   } catch {
     return null;
   }

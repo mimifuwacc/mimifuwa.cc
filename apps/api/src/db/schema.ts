@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const blogPosts = sqliteTable("blog_posts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -33,10 +33,17 @@ export const blogTags = sqliteTable("blog_tags", {
     .references(() => tags.id, { onDelete: "cascade" }),
 });
 
-// Types
-export type BlogPost = typeof blogPosts.$inferSelect;
-export type NewBlogPost = typeof blogPosts.$inferInsert;
-export type Tag = typeof tags.$inferSelect;
-export type NewTag = typeof tags.$inferInsert;
-export type BlogTag = typeof blogTags.$inferSelect;
-export type NewBlogTag = typeof blogTags.$inferInsert;
+export const embedCache = sqliteTable(
+  "embed_cache",
+  {
+    provider: text("provider").notNull(),
+    cacheKey: text("cache_key").notNull(),
+    sourceUrl: text("source_url").notNull(),
+    payloadJson: text("payload_json").notNull(),
+    fetchedAt: integer("fetched_at", { mode: "timestamp" }).notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.provider, table.cacheKey] }),
+    index("embed_cache_fetched_at_idx").on(table.fetchedAt),
+  ],
+);

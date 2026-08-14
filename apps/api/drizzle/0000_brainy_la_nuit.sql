@@ -11,7 +11,8 @@ CREATE TABLE `blog_posts` (
 	`updated_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `blog_posts_slug_unique` ON `blog_posts` (`slug`);--> statement-breakpoint
+CREATE UNIQUE INDEX `blog_posts_slug_unique` ON `blog_posts` (`slug`);
+--> statement-breakpoint
 CREATE TABLE `blog_tags` (
 	`blog_post_id` integer NOT NULL,
 	`tag_id` integer NOT NULL,
