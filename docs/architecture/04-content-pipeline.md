@@ -89,3 +89,23 @@ flowchart TD
 ```
 
 Content の正本を Client Store に複製しない．Client 側で保持するのは，操作に必要な局所状態や，複数 Island 間で本当に共有する状態だけにする．
+
+## Twitter Embed Cache
+
+単独行の Twitter 投稿 URL は，Markdown Parser が埋め込み用の placeholder へ変換する．Web は Content API の `GET /embeds/twitter/:id` から投稿データを取得し，Astro Component で HTML を生成する．`widgets.js`，iframe，Client 側からの Twitter API 呼び出しは使用しない．
+
+Content API は，Twitter から最後に正常取得できたレスポンスを D1 の `embed_cache` テーブルに保存する．
+
+- 取得から7日以内ならキャッシュをそのまま返す．
+- 7日を過ぎていれば，保存済みのデータを返してからバックグラウンドで更新する．
+- 更新に失敗しても，保存済みのデータは削除・上書きしない．
+- キャッシュがない投稿を取得できなかった場合だけエラーを返す．
+
+`x-embed-cache` レスポンスヘッダーには，キャッシュの状態に応じて `miss`，`hit`，`stale` のいずれかを設定する．
+
+ローカル DB の作成時と API のデプロイ前には，D1 マイグレーションを適用する．
+
+```sh
+vp exec wrangler d1 migrations apply mimifuwacc-blogs --local --config apps/api/wrangler.toml
+vp exec wrangler d1 migrations apply mimifuwacc-blogs --remote --config apps/api/wrangler.toml
+```

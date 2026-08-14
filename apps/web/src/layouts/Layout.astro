@@ -49,8 +49,11 @@ const imageUrl = new URL(image, Astro.site ?? Astro.url.origin);
     </div>
     <script>
       const setTheme = () => {
-        const dark = document.documentElement.classList.toggle("dark");
+        const root = document.documentElement;
+        root.classList.add("theme-changing");
+        const dark = root.classList.toggle("dark");
         localStorage.setItem("theme", dark ? "dark" : "light");
+        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("theme-changing")));
       };
       document.querySelectorAll<HTMLButtonElement>(".theme-toggle").forEach((button) => {
         button.addEventListener("click", setTheme);
@@ -65,18 +68,10 @@ const imageUrl = new URL(image, Astro.site ?? Astro.url.origin);
         if (mobileNav) mobileNav.hidden = !open;
       });
 
-      const storageKey = "mimifuwa-session-id";
-      let sessionId = sessionStorage.getItem(storageKey);
-      if (!sessionId) {
-        sessionId = crypto.randomUUID();
-        sessionStorage.setItem(storageKey, sessionId);
-      }
-      document.querySelectorAll<HTMLElement>("[data-session-id]").forEach((node) => {
-        node.textContent = sessionId;
-      });
-      document.querySelectorAll<HTMLButtonElement>("[data-copy-session]").forEach((button) => {
+      const uuid = "fa6c2a8f-27b1-4611-a0f5-19b0d6c20612";
+      document.querySelectorAll<HTMLButtonElement>("[data-copy-uuid]").forEach((button) => {
         button.addEventListener("click", async () => {
-          await navigator.clipboard.writeText(sessionId);
+          await navigator.clipboard.writeText(uuid);
           button.dataset.copied = "true";
           window.setTimeout(() => { delete button.dataset.copied; }, 2000);
         });

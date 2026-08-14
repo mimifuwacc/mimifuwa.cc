@@ -29,9 +29,9 @@ describe("parseArticleToHtml", () => {
   it("emits a Twitter widget target instead of a generic link card", async () => {
     const result = await parseArticleToHtml("https://x.com/example/status/123?ref=source");
 
-    expect(result.html).toContain('class="twitter-embed"');
-    expect(result.html).toContain('data-twitter-url="https://twitter.com/example/status/123"');
-    expect(result.html).toContain('class="twitter-tweet"');
+    expect(result.html).toContain('class="twitter-embed-placeholder"');
+    expect(result.html).toContain('data-twitter-id="123"');
+    expect(result.html).not.toContain("widgets.js");
   });
 
   it("wraps code blocks once with copy controls and an optional filename", async () => {

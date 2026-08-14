@@ -1,6 +1,7 @@
 ---
 import { parseArticleToHtml } from "@mimifuwacc/parser";
 import { CalendarDays, ChevronDown } from "@lucide/astro";
+import ArticleBody from "../../components/ArticleBody.astro";
 import Layout from "../../layouts/Layout.astro";
 import { BlogApiError, contentApiBaseUrl, getPost } from "../../lib/blog-api";
 import { formatDate, postOgImage } from "../../lib/format";
@@ -36,7 +37,7 @@ const ogpEndpoint = `${contentApiBaseUrl(Astro.url)}/ogp`;
     )}
 
     <div class="article-layout">
-      <article class="prose" data-ogp-endpoint={ogpEndpoint} set:html={html} />
+      <article class="prose" data-ogp-endpoint={ogpEndpoint}><ArticleBody html={html} requestUrl={Astro.url} /></article>
       {headings.length > 0 && (
         <aside class="desktop-toc">
           <nav class="card" aria-label="目次">
@@ -87,43 +88,6 @@ const ogpEndpoint = `${contentApiBaseUrl(Astro.url)}/ogp`;
       } catch {
         // The server-rendered hostname remains as the fallback.
       }
-    });
-  }
-
-  type TwitterWindow = Window & { twttr?: { widgets?: { load: (root?: HTMLElement) => void } } };
-  const twitterWindow = window as TwitterWindow;
-  const renderTweets = () => {
-    const dark = document.documentElement.classList.contains("dark");
-    document.querySelectorAll<HTMLElement>("[data-twitter-url]").forEach((container) => {
-      const url = container.dataset.twitterUrl;
-      if (!url) return;
-      const blockquote = document.createElement("blockquote");
-      blockquote.className = "twitter-tweet";
-      blockquote.dataset.lang = "ja";
-      blockquote.dataset.theme = dark ? "dark" : "light";
-      const link = document.createElement("a");
-      link.href = `${url}?ref_src=twsrc%5Etfw`;
-      link.textContent = url;
-      blockquote.append(link);
-      container.replaceChildren(blockquote);
-      twitterWindow.twttr?.widgets?.load(container);
-    });
-  };
-  if (document.querySelector("[data-twitter-url]")) {
-    const existing = document.getElementById("twitter-wjs") as HTMLScriptElement | null;
-    if (twitterWindow.twttr?.widgets) renderTweets();
-    else if (existing) existing.addEventListener("load", renderTweets, { once: true });
-    else {
-      const script = document.createElement("script");
-      script.id = "twitter-wjs";
-      script.src = "https://platform.twitter.com/widgets.js";
-      script.async = true;
-      script.addEventListener("load", renderTweets, { once: true });
-      document.body.append(script);
-    }
-    new MutationObserver(renderTweets).observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
     });
   }
 
