@@ -19,8 +19,18 @@ const maxTags = 3;
     <p>{post.excerpt}</p>
     <div class="blog-card-meta">
       <div class="badges">
-        {post.tags.slice(0, maxTags).map((tag) => <span class="badge">#{tag}</span>)}
-        {post.tags.length > maxTags && <span class="badge badge-outline">+{post.tags.length - maxTags}</span>}
+        {
+          post.tags
+            .slice(0, maxTags)
+            .map((tag) => <span class="badge">#{tag}</span>)
+        }
+        {
+          post.tags.length > maxTags && (
+            <span class="badge badge-outline">
+              +{post.tags.length - maxTags}
+            </span>
+          )
+        }
       </div>
       <time datetime={post.date}>{formatDate(post.date)}</time>
     </div>

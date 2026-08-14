@@ -11,25 +11,34 @@ interface Props {
 const { tweet, id } = Astro.props;
 const url = tweet?.url ?? `https://twitter.com/i/status/${id}`;
 const date = tweet?.createdAt
-  ? new Intl.DateTimeFormat("ja-JP", { dateStyle: "medium", timeStyle: "short" }).format(
-      new Date(tweet.createdAt),
-    )
+  ? new Intl.DateTimeFormat("ja-JP", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(new Date(tweet.createdAt))
   : undefined;
 const metric = (value: number | undefined) =>
   new Intl.NumberFormat("ja-JP", { notation: "compact" }).format(value ?? 0);
 const hiddenTextUrls = [
-  ...(tweet?.linkCard?.imageUrl && tweet.linkCard.sourceUrl ? [tweet.linkCard.sourceUrl] : []),
-  ...(tweet?.media.flatMap((media) => (media.sourceUrl ? [media.sourceUrl] : [])) ?? []),
+  ...(tweet?.linkCard?.imageUrl && tweet.linkCard.sourceUrl
+    ? [tweet.linkCard.sourceUrl]
+    : []),
+  ...(tweet?.media.flatMap((media) =>
+    media.sourceUrl ? [media.sourceUrl] : [],
+  ) ?? []),
 ];
 const displayedText = hiddenTextUrls
-  .reduce((text, hiddenUrl) => text.replaceAll(hiddenUrl, ""), tweet?.text ?? "")
+  .reduce(
+    (text, hiddenUrl) => text.replaceAll(hiddenUrl, ""),
+    tweet?.text ?? "",
+  )
   .trimEnd();
 const linkPattern = /https?:\/\/[^\s]+|#[\p{L}\p{N}_]+/gu;
 const textParts: Array<{ value: string; href?: string }> = [];
 let textCursor = 0;
 for (const match of displayedText.matchAll(linkPattern)) {
   const index = match.index ?? 0;
-  if (index > textCursor) textParts.push({ value: displayedText.slice(textCursor, index) });
+  if (index > textCursor)
+    textParts.push({ value: displayedText.slice(textCursor, index) });
   const value = match[0];
   textParts.push({
     value,
@@ -39,47 +48,79 @@ for (const match of displayedText.matchAll(linkPattern)) {
   });
   textCursor = index + value.length;
 }
-if (textCursor < displayedText.length) textParts.push({ value: displayedText.slice(textCursor) });
+if (textCursor < displayedText.length)
+  textParts.push({ value: displayedText.slice(textCursor) });
 ---
 
 {
   tweet ? (
-    <article class="cached-tweet" data-cached-embed="twitter" data-tweet-id={id}>
+    <article
+      class="cached-tweet"
+      data-cached-embed="twitter"
+      data-tweet-id={id}
+    >
       <header class="cached-tweet-header">
         {tweet.author.avatarUrl && (
-          <img class="cached-tweet-avatar" src={tweet.author.avatarUrl} alt="" width="48" height="48" loading="lazy" />
+          <img
+            class="cached-tweet-avatar"
+            src={tweet.author.avatarUrl}
+            alt=""
+            width="48"
+            height="48"
+            loading="lazy"
+          />
         )}
         <div class="cached-tweet-author">
           <strong>{tweet.author.name}</strong>
           <span>@{tweet.author.username}</span>
         </div>
-        <span class="cached-tweet-brand" aria-label="Twitter"><BrandIcon name="twitter" class="cached-tweet-twitter-icon" /></span>
+        <span class="cached-tweet-brand" aria-label="Twitter">
+          <BrandIcon name="twitter" class="cached-tweet-twitter-icon" />
+        </span>
       </header>
       {displayedText && (
         <p class="cached-tweet-text">
           {textParts.map((part) =>
             part.href ? (
-              <a href={part.href} target="_blank" rel="noopener noreferrer">{part.value}</a>
+              <a href={part.href} target="_blank" rel="noopener noreferrer">
+                {part.value}
+              </a>
             ) : (
               part.value
-            )
+            ),
           )}
         </p>
       )}
       {tweet.linkCard && (
-        <a class="cached-tweet-link-card" href={tweet.linkCard.url} target="_blank" rel="noopener noreferrer">
+        <a
+          class="cached-tweet-link-card"
+          href={tweet.linkCard.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {tweet.linkCard.imageUrl && (
-            <img src={tweet.linkCard.imageUrl} alt={tweet.linkCard.imageAlt ?? ""} loading="lazy" />
+            <img
+              src={tweet.linkCard.imageUrl}
+              alt={tweet.linkCard.imageAlt ?? ""}
+              loading="lazy"
+            />
           )}
           <span class="cached-tweet-link-card-content">
             {tweet.linkCard.domain && <small>{tweet.linkCard.domain}</small>}
             <strong>{tweet.linkCard.title}</strong>
-            {tweet.linkCard.description && <span>{tweet.linkCard.description}</span>}
+            {tweet.linkCard.description && (
+              <span>{tweet.linkCard.description}</span>
+            )}
           </span>
         </a>
       )}
       {tweet.media.length > 0 && (
-        <div class:list={["cached-tweet-media", tweet.media.length > 1 && "cached-tweet-media-grid"]}>
+        <div
+          class:list={[
+            "cached-tweet-media",
+            tweet.media.length > 1 && "cached-tweet-media-grid",
+          ]}
+        >
           {tweet.media.slice(0, 4).map((media) => (
             <img src={media.url} alt={media.alt} loading="lazy" />
           ))}
@@ -88,24 +129,45 @@ if (textCursor < displayedText.length) textParts.push({ value: displayedText.sli
       <footer class="cached-tweet-footer">
         {date && <time datetime={tweet.createdAt}>{date}</time>}
         <span class="cached-tweet-metrics">
-          <span class="cached-tweet-action-reply" aria-label={`返信 ${tweet.metrics.replies ?? 0}`} title="返信">
+          <span
+            class="cached-tweet-action-reply"
+            aria-label={`返信 ${tweet.metrics.replies ?? 0}`}
+            title="返信"
+          >
             <MessageCircle aria-hidden="true" />
             <span>{metric(tweet.metrics.replies)}</span>
           </span>
-          <span class="cached-tweet-action-retweet" aria-label={`リツイート ${tweet.metrics.retweets ?? 0}`} title="リツイート">
+          <span
+            class="cached-tweet-action-retweet"
+            aria-label={`リツイート ${tweet.metrics.retweets ?? 0}`}
+            title="リツイート"
+          >
             <Repeat2 aria-hidden="true" />
             <span>{metric(tweet.metrics.retweets)}</span>
           </span>
-          <span class="cached-tweet-action-like" aria-label={`いいね ${tweet.metrics.likes ?? 0}`} title="いいね">
+          <span
+            class="cached-tweet-action-like"
+            aria-label={`いいね ${tweet.metrics.likes ?? 0}`}
+            title="いいね"
+          >
             <Heart aria-hidden="true" />
             <span>{metric(tweet.metrics.likes)}</span>
           </span>
         </span>
-        <a href={url} target="_blank" rel="noopener noreferrer">Twitter で表示</a>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          Twitter で表示
+        </a>
       </footer>
     </article>
   ) : (
-    <a class="cached-tweet cached-tweet-missing" data-cached-embed="twitter-missing" data-tweet-id={id} href={url} target="_blank" rel="noopener noreferrer">
+    <a
+      class="cached-tweet cached-tweet-missing"
+      data-cached-embed="twitter-missing"
+      data-tweet-id={id}
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <strong>ポストを Twitter で表示</strong>
       <small>埋め込みを取得できませんでした</small>
     </a>

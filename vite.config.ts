@@ -235,5 +235,7 @@ export default defineConfig({
   staged: {
     "*.{ts,tsx,js,jsx}": "vp lint --fix",
     "*.{ts,tsx,js,jsx,json,css,md}": "vp fmt --write",
+    "*.astro": "prettier --write",
+    "**/*.astro": "eslint",
   },
 });
