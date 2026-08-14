@@ -12,21 +12,8 @@ import {
 import { adminApi } from "@/lib/api/client";
 import { DeleteButton } from "./delete-button";
 
-async function getPosts() {
-  try {
-    return await adminApi.listPosts();
-  } catch {
-    return {
-      posts: [],
-      totalCount: 0,
-    };
-  }
-}
-
 export default async function HomePage() {
-  const data = await getPosts();
-
-  const { posts, totalCount } = data;
+  const { posts, totalCount } = await adminApi.listPosts();
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
