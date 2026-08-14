@@ -5,9 +5,12 @@
   "packageManager": "pnpm@11.7.0",
   "scripts": {
     "dev": "pnpm --parallel --filter @mimifuwacc/api --filter @mimifuwacc/web --filter @mimifuwacc/admin run dev",
-    "format": "vp fmt --write && prettier --write \"apps/**/*.astro\"",
+    "format": "vp run format:fix",
     "format:check": "vp fmt --check && prettier --check \"apps/**/*.astro\"",
-    "lint:astro": "eslint \"apps/**/*.astro\"",
+    "format:fix": "vp fmt --write && prettier --write \"apps/**/*.astro\"",
+    "lint": "vp run lint:check",
+    "lint:check": "vp lint && eslint \"apps/**/*.astro\"",
+    "lint:fix": "vp lint --fix && eslint --fix \"apps/**/*.astro\"",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
