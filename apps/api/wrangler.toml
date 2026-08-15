@@ -1,6 +1,7 @@
 name = "mimifuwacc-api"
 main = "src/index.ts"
 workers_dev = false
+preview_urls = false
 compatibility_date = "2026-05-15"
 compatibility_flags = ["nodejs_compat_v2"]
 
@@ -23,6 +24,7 @@ bucket_name = "mimifuwacc-blogs"
 [env.dev]
 name = "mimifuwacc-api-dev"
 workers_dev = false
+preview_urls = false
 
 [[env.dev.routes]]
 pattern = "api-dev.mimifuwa.cc"

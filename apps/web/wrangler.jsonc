@@ -3,6 +3,7 @@
   "name": "mimifuwacc",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "workers_dev": false,
+  "preview_urls": false,
   "compatibility_date": "2026-08-05",
   "compatibility_flags": ["nodejs_compat"],
   "routes": [{ "pattern": "mimifuwa.cc", "custom_domain": true }],
@@ -16,6 +17,7 @@
     "dev": {
       "name": "mimifuwacc-dev",
       "workers_dev": false,
+      "preview_urls": false,
       "routes": [
         {
           "pattern": "web-dev.mimifuwa.cc",

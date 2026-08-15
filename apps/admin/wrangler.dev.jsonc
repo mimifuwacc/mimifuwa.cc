@@ -3,6 +3,7 @@
   "main": "@tanstack/react-start/server-entry",
   "name": "mimifuwacc-admin-dev",
   "workers_dev": false,
+  "preview_urls": false,
   "compatibility_date": "2026-03-20",
   "compatibility_flags": ["nodejs_compat"],
   "routes": [{ "pattern": "admin-dev.mimifuwa.cc", "custom_domain": true }],
