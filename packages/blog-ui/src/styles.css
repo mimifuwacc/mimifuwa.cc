@@ -494,6 +494,10 @@
   color: var(--foreground) !important;
   text-decoration: none;
 }
+.prose a.embedded-link-card,
+.prose a.embedded-link-card:hover {
+  text-decoration: none;
+}
 .embedded-link-card:hover {
   background: color-mix(in srgb, var(--muted) 30%, transparent);
 }

@@ -15,7 +15,7 @@ const apiBaseUrl = () => {
   const configured = import.meta.env.VITE_API_URL?.trim();
   if (configured) return configured.replace(/\/$/, "");
   if (typeof location === "undefined") {
-    return process.env.API_URL?.replace(/\/$/, "") ?? "http://localhost:8787";
+    return "http://localhost:8787";
   }
   if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
     return "http://localhost:8787";

@@ -7,7 +7,9 @@ const request = async <A>(path: string, init?: RequestInit): Promise<A> => {
   // The local API is started by Wrangler with API_ADMIN_SECRET=local-development.
   const isDev = import.meta.env.DEV;
   const secret = isDev ? "local-development" : (process.env.ADMIN_SECRET ?? "");
-  const apiUrl = isDev ? "http://localhost:8787" : (process.env.API_URL ?? "http://localhost:8787");
+  const apiUrl = isDev
+    ? "http://localhost:8787"
+    : (import.meta.env.VITE_API_URL ?? "http://localhost:8787");
   const headers = new Headers(init?.headers);
   headers.set("content-type", "application/json");
   headers.set("x-admin-secret", secret);

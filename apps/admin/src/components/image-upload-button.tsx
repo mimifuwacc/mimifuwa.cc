@@ -2,7 +2,11 @@ import { Button } from "@mimifuwacc/ui/components/ui/button";
 import { ImageIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8787";
+const apiBaseUrl = () => {
+  const configured = import.meta.env.VITE_API_URL?.trim();
+  if (configured) return configured.replace(/\/$/, "");
+  return "http://localhost:8787";
+};
 
 interface ImageUploadButtonProps {
   onInsert: (markdown: string) => void;
@@ -17,7 +21,7 @@ export function ImageUploadButton({ onInsert }: ImageUploadButtonProps) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch(`${API_BASE}/upload/image`, { method: "POST", body: fd });
+      const res = await fetch(`${apiBaseUrl()}/upload/image`, { method: "POST", body: fd });
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: "Upload failed" }));
         throw new Error((err as { error?: string }).error ?? "Upload failed");
