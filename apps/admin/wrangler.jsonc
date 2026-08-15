@@ -1,20 +1,10 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
+  "main": "@tanstack/react-start/server-entry",
   "name": "mimifuwacc-admin",
   "compatibility_date": "2026-03-20",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-  "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS",
-  },
+  "compatibility_flags": ["nodejs_compat"],
   "vars": {
     "API_URL": "https://api.mimifuwa.cc",
   },
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "mimifuwacc-admin",
-    },
-  ],
 }

@@ -1,6 +1,5 @@
 import { Badge } from "@mimifuwacc/ui/components/ui/badge";
-import { buttonVariants } from "@mimifuwacc/ui/components/ui/button-variants";
-import { cn } from "@mimifuwacc/ui/lib/utils";
+import { Button } from "@mimifuwacc/ui/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,12 +8,17 @@ import {
   TableHeader,
   TableRow,
 } from "@mimifuwacc/ui/components/ui/table";
-import { adminApi } from "@/lib/api/client";
-import { DeleteButton } from "./delete-button";
+import { cn } from "@mimifuwacc/ui/lib/utils";
+import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
+import { deletePost, listPosts } from "../lib/server-functions";
+import { buttonVariants } from "../lib/button-variants";
 
-export default async function HomePage() {
-  const { posts, totalCount } = await adminApi.listPosts();
+export const Route = createFileRoute("/")({ loader: () => listPosts(), component: HomePage });
 
+function HomePage() {
+  const { posts, totalCount } = Route.useLoaderData();
+  const router = useRouter();
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
@@ -22,11 +26,10 @@ export default async function HomePage() {
           <h2 className="text-xl font-semibold">Posts</h2>
           <p className="text-sm text-muted-foreground mt-0.5">{totalCount} 件</p>
         </div>
-        <a href="/new" className={cn(buttonVariants())}>
+        <Link to="/new" className={cn(buttonVariants())}>
           New Post
-        </a>
+        </Link>
       </div>
-
       <div className="rounded-xl border border-border bg-card overflow-hidden">
         <Table>
           <TableHeader>
@@ -49,14 +52,15 @@ export default async function HomePage() {
               posts.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell>
-                    <a
-                      href={`/edit/${post.slug}`}
+                    <Link
+                      to="/edit/$slug"
+                      params={{ slug: post.slug }}
                       className="font-medium text-primary hover:text-primary/80 transition-colors"
                     >
                       {post.title || (
                         <span className="text-muted-foreground italic">(タイトル未定)</span>
                       )}
-                    </a>
+                    </Link>
                     <p className="text-xs text-muted-foreground mt-0.5">{post.slug}</p>
                   </TableCell>
                   <TableCell>
@@ -83,13 +87,14 @@ export default async function HomePage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <a
-                        href={`/edit/${post.slug}`}
+                      <Link
+                        to="/edit/$slug"
+                        params={{ slug: post.slug }}
                         className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
                       >
                         Edit
-                      </a>
-                      <DeleteButton slug={post.slug} />
+                      </Link>
+                      <DeleteButton slug={post.slug} onDeleted={() => router.invalidate()} />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -99,5 +104,28 @@ export default async function HomePage() {
         </Table>
       </div>
     </div>
+  );
+}
+
+function DeleteButton({ slug, onDeleted }: { slug: string; onDeleted: () => void }) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  return (
+    <Button
+      variant="destructive"
+      size="sm"
+      disabled={isDeleting}
+      onPress={async () => {
+        if (!confirm("この記事を削除しますか？")) return;
+        setIsDeleting(true);
+        try {
+          await deletePost({ data: slug });
+          onDeleted();
+        } finally {
+          setIsDeleting(false);
+        }
+      }}
+    >
+      {isDeleting ? "削除中..." : "Delete"}
+    </Button>
   );
 }

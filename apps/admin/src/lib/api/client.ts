@@ -1,15 +1,17 @@
 import type { Post, PostInput, PostPage } from "./types";
 
-const API_URL = process.env.API_URL ?? "http://localhost:8787";
-
 const slugPath = (slug: string) => slug.split("/").map(encodeURIComponent).join("/");
 
 const request = async <A>(path: string, init?: RequestInit): Promise<A> => {
-  const secret = process.env.ADMIN_SECRET ?? "local-development";
+  // Never let the encrypted deployment secret get sent to the local API.
+  // The local API is started by Wrangler with API_ADMIN_SECRET=local-development.
+  const isDev = import.meta.env.DEV;
+  const secret = isDev ? "local-development" : (process.env.ADMIN_SECRET ?? "");
+  const apiUrl = isDev ? "http://localhost:8787" : (process.env.API_URL ?? "http://localhost:8787");
   const headers = new Headers(init?.headers);
   headers.set("content-type", "application/json");
   headers.set("x-admin-secret", secret);
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(`${apiUrl}${path}`, {
     ...init,
     cache: "no-store",
     headers,

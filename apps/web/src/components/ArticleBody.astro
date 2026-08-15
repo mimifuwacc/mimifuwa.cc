@@ -1,5 +1,6 @@
 ---
 import CachedTweet from "./CachedTweet.astro";
+import { splitArticleHtml } from "@mimifuwacc/blog-ui";
 import { getTwitterEmbed } from "../lib/blog-api";
 
 interface Props {
@@ -8,27 +9,12 @@ interface Props {
 }
 
 const { html, requestUrl } = Astro.props;
-const placeholderPattern =
-  /<div class="twitter-embed-placeholder" data-twitter-id="([0-9]+)"><\/div>/g;
-const parts: Array<
-  { kind: "html"; value: string } | { kind: "tweet"; id: string }
-> = [];
-let cursor = 0;
-
-for (const match of html.matchAll(placeholderPattern)) {
-  const index = match.index ?? 0;
-  if (index > cursor)
-    parts.push({ kind: "html", value: html.slice(cursor, index) });
-  parts.push({ kind: "tweet", id: match[1] });
-  cursor = index + match[0].length;
-}
-
-if (cursor < html.length)
-  parts.push({ kind: "html", value: html.slice(cursor) });
-if (parts.length === 0) parts.push({ kind: "html", value: html });
+const parts = splitArticleHtml(html);
 
 const tweetIds = [
-  ...new Set(parts.flatMap((part) => (part.kind === "tweet" ? [part.id] : []))),
+  ...new Set(
+    parts.flatMap((part) => (part.kind === "twitter" ? [part.id] : [])),
+  ),
 ];
 const cachedTweets = new Map(
   await Promise.all(
@@ -41,7 +27,7 @@ const cachedTweets = new Map(
 
 {
   parts.map((part) =>
-    part.kind === "tweet" ? (
+    part.kind === "twitter" ? (
       <CachedTweet id={part.id} tweet={cachedTweets.get(part.id)} />
     ) : (
       <Fragment set:html={part.value} />

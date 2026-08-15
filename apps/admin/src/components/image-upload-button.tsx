@@ -1,10 +1,8 @@
-"use client";
-
 import { Button } from "@mimifuwacc/ui/components/ui/button";
 import { ImageIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8787";
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8787";
 
 interface ImageUploadButtonProps {
   onInsert: (markdown: string) => void;

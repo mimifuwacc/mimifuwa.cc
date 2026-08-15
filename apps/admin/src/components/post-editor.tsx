@@ -1,8 +1,6 @@
-"use client";
-
 import { Alert, AlertDescription } from "@mimifuwacc/ui/components/ui/alert";
 import { Button } from "@mimifuwacc/ui/components/ui/button";
-import { buttonVariants } from "@mimifuwacc/ui/components/ui/button-variants";
+import { buttonVariants } from "../lib/button-variants";
 import {
   Dialog,
   DialogClose,
@@ -33,7 +31,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { checkSlugExists } from "@/lib/api/actions";
+import { checkSlugExists } from "../lib/server-functions";
 import {
   AUTOSAVE_IDLE_MS,
   AUTOSAVE_SAVED_RESET_MS,
@@ -41,7 +39,7 @@ import {
   SLUG_CHECK_DEBOUNCE_MS,
   SNAPSHOT_DEBOUNCE_MS,
   UNDO_STACK_LIMIT,
-} from "@/lib/constants";
+} from "../lib/constants";
 import { ImageUploadButton } from "./image-upload-button";
 import { MarkdownPreview } from "./markdown-preview";
 import { useDebounce } from "./use-debounce";
@@ -353,7 +351,7 @@ export function PostEditor({
       return;
     }
     let active = true;
-    void checkSlugExists(debouncedSlug).then((exists) => {
+    void checkSlugExists({ data: debouncedSlug }).then((exists) => {
       // 古いチェック結果は反映しない
       if (active) setSlugError(exists ? "このslugは既に使われています" : null);
     });
@@ -852,7 +850,14 @@ export function PostEditor({
       </div>
 
       {/* エディタ + プレビュー */}
-      <div className="flex-1 min-h-0 flex overflow-hidden">
+      <div
+        className={cn(
+          "min-h-0 flex-1 grid overflow-hidden",
+          viewMode === "split"
+            ? "grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)]"
+            : "grid-cols-[minmax(0,1fr)]",
+        )}
+      >
         {(viewMode === "edit" || viewMode === "split") && (
           <textarea
             ref={contentRef}
@@ -881,13 +886,13 @@ export function PostEditor({
               if (e.key === "Enter") flushAndSave();
             }}
             placeholder="本文を Markdown で書く..."
-            className="flex-1 min-h-0 resize-none p-6 font-mono text-sm leading-7 bg-background border-none outline-none focus:outline-none placeholder:text-muted-foreground/30 overflow-y-auto"
+            className="min-w-0 w-full min-h-0 resize-none p-6 font-mono text-sm leading-7 bg-background border-none outline-none focus:outline-none placeholder:text-muted-foreground/30 overflow-y-auto"
           />
         )}
         {viewMode === "split" && <div className="w-px bg-border shrink-0" />}
         {(viewMode === "preview" || viewMode === "split") && (
-          <div className="flex-1 min-h-0 overflow-y-auto p-6 bg-background">
-            <div className="max-w-2xl mx-auto">
+          <div className="min-w-0 w-full min-h-0 overflow-y-auto p-6 bg-background">
+            <div className="mx-auto w-full min-w-0 max-w-[63rem]">
               <MarkdownPreview markdown={debouncedContent} />
             </div>
           </div>
