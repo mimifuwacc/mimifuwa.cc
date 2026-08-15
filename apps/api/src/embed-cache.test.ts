@@ -64,6 +64,7 @@ describe("normalizeTweet", () => {
           {
             media_url_https: "https://pbs.twimg.com/media.jpg",
             ext_alt_text: "description",
+            original_info: { width: 1200, height: 1600 },
           },
         ],
       }),
@@ -83,6 +84,8 @@ describe("normalizeTweet", () => {
           url: "https://pbs.twimg.com/media.jpg",
           alt: "description",
           sourceUrl: "https://t.co/media",
+          width: 1200,
+          height: 1600,
         },
       ],
       linkCard: {

@@ -227,6 +227,8 @@ export default defineConfig({
       "**/.wrangler/**",
       "**/.direnv/**",
       "**/coverage/**",
+      // TanStack Router が自動生成するため、手動フォーマットの対象外にする。
+      "apps/admin/src/routeTree.gen.ts",
       "pnpm-lock.yaml",
       "**/*.tsbuildinfo",
     ],

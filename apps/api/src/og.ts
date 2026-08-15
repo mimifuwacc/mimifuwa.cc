@@ -8,6 +8,7 @@ const headers = {
   "cache-control": "public, max-age=31536000, immutable",
 };
 let font: ArrayBuffer | undefined;
+let avatar: string | undefined;
 
 const loadFont = async () => {
   if (font) return font;
@@ -19,7 +20,20 @@ const loadFont = async () => {
   return font;
 };
 
-const element = (title: string, tags: readonly string[]) => ({
+const loadAvatar = async () => {
+  if (avatar) return avatar;
+  const response = await fetch(
+    "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/mimifuwacc.png",
+  );
+  if (!response.ok) throw new Error("Unable to load the avatar");
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  avatar = `data:image/png;base64,${btoa(binary)}`;
+  return avatar;
+};
+
+const element = (title: string, tags: readonly string[], avatarUrl?: string) => ({
   type: "div",
   props: {
     style: {
@@ -70,8 +84,23 @@ const element = (title: string, tags: readonly string[]) => ({
       {
         type: "div",
         props: {
-          style: { display: "flex", color: "#475569", fontSize: 24 },
-          children: "id:mimifuwacc",
+          style: { display: "flex", alignItems: "center", gap: 12, color: "#475569", fontSize: 24 },
+          children: [
+            ...(avatarUrl
+              ? [
+                  {
+                    type: "img",
+                    props: {
+                      src: avatarUrl,
+                      width: 40,
+                      height: 40,
+                      style: { borderRadius: 9999 },
+                    },
+                  },
+                ]
+              : []),
+            "id:mimifuwacc",
+          ],
         },
       },
     ],
@@ -79,7 +108,7 @@ const element = (title: string, tags: readonly string[]) => ({
 });
 
 export const getOgImage = async (env: Env, slug: string): Promise<Response> => {
-  const key = `og/${slug}.png`;
+  const key = `og/v2/${slug}.png`;
   const cached = await env.R2.get(key);
   if (cached) return new Response(cached.body, { headers });
 
@@ -87,17 +116,24 @@ export const getOgImage = async (env: Env, slug: string): Promise<Response> => {
   if (result._tag === "Left") return new Response(null, { status: 503 });
   if (!result.right) {
     return Response.redirect(
-      "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/og.png",
+      "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/og.png",
       302,
     );
   }
 
   try {
-    const image = new ImageResponse(element(result.right.title, result.right.tags) as never, {
-      width: 1200,
-      height: 630,
-      fonts: [{ name: "Noto Sans JP", data: await loadFont(), weight: 700 }],
-    });
+    const image = new ImageResponse(
+      element(
+        result.right.title,
+        result.right.tags,
+        await loadAvatar().catch(() => undefined),
+      ) as never,
+      {
+        width: 1200,
+        height: 630,
+        fonts: [{ name: "Noto Sans JP", data: await loadFont(), weight: 700 }],
+      },
+    );
     const bytes = await image.arrayBuffer();
     await env.R2.put(key, bytes, { httpMetadata: { contentType: "image/png" } });
     return new Response(bytes, { headers });

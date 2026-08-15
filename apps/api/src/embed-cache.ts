@@ -109,6 +109,18 @@ export const normalizeTweet = (
     if (!item || typeof item !== "object") return [];
     const value = item as Record<string, unknown>;
     if (typeof value.media_url_https !== "string") return [];
+    const originalInfo =
+      value.original_info && typeof value.original_info === "object"
+        ? (value.original_info as Record<string, unknown>)
+        : undefined;
+    const width =
+      typeof originalInfo?.width === "number" && originalInfo.width > 0
+        ? originalInfo.width
+        : undefined;
+    const height =
+      typeof originalInfo?.height === "number" && originalInfo.height > 0
+        ? originalInfo.height
+        : undefined;
     const entity = mediaEntities[index];
     const sourceUrl =
       entity && typeof entity === "object" && "url" in entity && typeof entity.url === "string"
@@ -119,6 +131,8 @@ export const normalizeTweet = (
         url: value.media_url_https,
         alt: typeof value.ext_alt_text === "string" ? value.ext_alt_text : "",
         ...(sourceUrl ? { sourceUrl } : {}),
+        ...(width ? { width } : {}),
+        ...(height ? { height } : {}),
       },
     ];
   });

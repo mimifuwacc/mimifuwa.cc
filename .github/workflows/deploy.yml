@@ -3,7 +3,7 @@ name: Deploy and Release
 on:
   push:
     branches:
-      - main
+      - release
   workflow_dispatch:
 
 permissions:
@@ -46,8 +46,6 @@ jobs:
 
       - name: Build web
         working-directory: apps/web
-        env:
-          API_URL: https://api.mimifuwa.cc
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Deploy web
@@ -56,10 +54,7 @@ jobs:
 
       - name: Build admin
         working-directory: apps/admin
-        env:
-          API_URL: https://api.mimifuwa.cc
-          NEXT_PUBLIC_API_URL: https://api.mimifuwa.cc
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec opennextjs-cloudflare build
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Set admin secret (prod)
         working-directory: apps/admin
@@ -67,7 +62,7 @@ jobs:
 
       - name: Deploy admin
         working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.jsonc
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config dist/server/wrangler.json
 
   release:
     needs: deploy

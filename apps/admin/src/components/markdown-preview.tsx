@@ -1,7 +1,5 @@
-"use client";
-
 import ContentRenderer from "./content-renderer";
-import { parseToHtml } from "@mimifuwacc/parser";
+import { parseArticleToHtml } from "@mimifuwacc/parser";
 import { useEffect, useState, useTransition } from "react";
 
 export function MarkdownPreview({ markdown }: { markdown: string }) {
@@ -15,7 +13,7 @@ export function MarkdownPreview({ markdown }: { markdown: string }) {
       return;
     }
     let active = true;
-    void parseToHtml(markdown).then(({ html: result }) => {
+    void parseArticleToHtml(markdown).then(({ html: result }) => {
       // 古い（破棄済みの）パース結果は反映しない
       if (active) startTransition(() => setHtml(result));
     });
@@ -24,5 +22,9 @@ export function MarkdownPreview({ markdown }: { markdown: string }) {
     };
   }, [markdown]);
 
-  return <ContentRenderer html={html} />;
+  return (
+    <div className="prose">
+      <ContentRenderer html={html} />
+    </div>
+  );
 }

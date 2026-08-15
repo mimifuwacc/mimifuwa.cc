@@ -2,6 +2,7 @@
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import "../styles/global.css";
+import "@mimifuwacc/blog-ui/styles.css";
 
 interface Props {
   title?: string;
@@ -12,7 +13,7 @@ interface Props {
 const {
   title = "mimifuwa.cc",
   description = "mimifuwacc のポートフォリオとブログ",
-  image = "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/og.png",
+  image = "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/og.png",
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const imageUrl = new URL(image, Astro.site ?? Astro.url.origin);
@@ -28,7 +29,7 @@ const imageUrl = new URL(image, Astro.site ?? Astro.url.origin);
     <link rel="canonical" href={canonical} />
     <link
       rel="icon"
-      href="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/devel/apps/web/public/favicon.svg"
+      href="https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/favicon.svg"
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="mimifuwa.cc" />

@@ -3,8 +3,8 @@ name: CI
 on:
   pull_request:
     branches:
-      - devel
-      - main
+      - dev
+      - release
   workflow_dispatch:
 
 jobs:
@@ -20,10 +20,16 @@ jobs:
           cache: true
           run-install: true
 
-      # format + lint + 型チェック
-      - run: vp check
+      # Oxfmt と Astro 用 Prettier
+      - run: vp run format:check
+
+      # Oxc/TypeScript lint と Astro 用 ESLint
+      - run: vp run lint
 
       # 各パッケージの tsc による型チェック
       - run: vp run -r typecheck
+
+      # web / admin の本番ビルド
+      - run: vp run -r build
 
       - run: vp test run --passWithNoTests

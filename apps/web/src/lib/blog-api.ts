@@ -1,37 +1,7 @@
 import { env } from "cloudflare:workers";
+import type { TwitterEmbed } from "@mimifuwacc/blog-ui";
 import { Effect, Schema } from "effect";
-
-export interface TwitterEmbed {
-  readonly provider: "twitter";
-  readonly id: string;
-  readonly url: string;
-  readonly text: string;
-  readonly createdAt?: string;
-  readonly author: {
-    readonly name: string;
-    readonly username: string;
-    readonly avatarUrl?: string;
-  };
-  readonly media: readonly {
-    readonly url: string;
-    readonly alt: string;
-    readonly sourceUrl?: string;
-  }[];
-  readonly linkCard?: {
-    readonly url: string;
-    readonly sourceUrl?: string;
-    readonly title: string;
-    readonly description?: string;
-    readonly domain?: string;
-    readonly imageUrl?: string;
-    readonly imageAlt?: string;
-  };
-  readonly metrics: {
-    readonly likes?: number;
-    readonly replies?: number;
-    readonly retweets?: number;
-  };
-}
+export type { TwitterEmbed } from "@mimifuwacc/blog-ui";
 
 export const BlogPostSummary = Schema.Struct({
   slug: Schema.String,
@@ -54,15 +24,12 @@ const ApiErrorBody = Schema.Struct({
 });
 
 export const contentApiBaseUrl = (requestUrl: URL) => {
-  const configuredUrl = import.meta.env.API_URL?.trim();
+  const configuredUrl = import.meta.env.VITE_API_URL?.trim();
   if (configuredUrl) return configuredUrl.replace(/\/$/, "");
 
   const hostname = requestUrl.hostname.toLowerCase();
   if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
-    return (import.meta.env.API_URL ?? "http://localhost:8787").replace(/\/$/, "");
-  }
-  if (hostname === "mimifuwacc-devel.m8c.workers.dev") {
-    return "https://mimifuwacc-api-devel.m8c.workers.dev";
+    return "http://localhost:8787";
   }
   return "https://api.mimifuwa.cc";
 };

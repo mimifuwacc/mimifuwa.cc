@@ -1,7 +1,8 @@
 /// <reference types="astro/client" />
 
 interface ImportMetaEnv {
-  readonly API_URL?: string;
+  readonly DEV: boolean;
+  readonly VITE_API_URL?: string;
 }
 
 interface ImportMeta {

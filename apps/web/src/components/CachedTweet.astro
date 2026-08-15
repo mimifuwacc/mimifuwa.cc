@@ -1,5 +1,11 @@
 ---
 import type { TwitterEmbed } from "../lib/blog-api";
+import {
+  formatTweetDate,
+  formatTweetMetric,
+  tweetTextParts,
+  visibleTweetText,
+} from "@mimifuwacc/blog-ui";
 import { Heart, MessageCircle, Repeat2 } from "@lucide/astro";
 import BrandIcon from "./BrandIcon.astro";
 
@@ -10,46 +16,9 @@ interface Props {
 
 const { tweet, id } = Astro.props;
 const url = tweet?.url ?? `https://twitter.com/i/status/${id}`;
-const date = tweet?.createdAt
-  ? new Intl.DateTimeFormat("ja-JP", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(tweet.createdAt))
-  : undefined;
-const metric = (value: number | undefined) =>
-  new Intl.NumberFormat("ja-JP", { notation: "compact" }).format(value ?? 0);
-const hiddenTextUrls = [
-  ...(tweet?.linkCard?.imageUrl && tweet.linkCard.sourceUrl
-    ? [tweet.linkCard.sourceUrl]
-    : []),
-  ...(tweet?.media.flatMap((media) =>
-    media.sourceUrl ? [media.sourceUrl] : [],
-  ) ?? []),
-];
-const displayedText = hiddenTextUrls
-  .reduce(
-    (text, hiddenUrl) => text.replaceAll(hiddenUrl, ""),
-    tweet?.text ?? "",
-  )
-  .trimEnd();
-const linkPattern = /https?:\/\/[^\s]+|#[\p{L}\p{N}_]+/gu;
-const textParts: Array<{ value: string; href?: string }> = [];
-let textCursor = 0;
-for (const match of displayedText.matchAll(linkPattern)) {
-  const index = match.index ?? 0;
-  if (index > textCursor)
-    textParts.push({ value: displayedText.slice(textCursor, index) });
-  const value = match[0];
-  textParts.push({
-    value,
-    href: value.startsWith("#")
-      ? `https://twitter.com/hashtag/${encodeURIComponent(value.slice(1))}`
-      : value,
-  });
-  textCursor = index + value.length;
-}
-if (textCursor < displayedText.length)
-  textParts.push({ value: displayedText.slice(textCursor) });
+const date = formatTweetDate(tweet?.createdAt);
+const displayedText = tweet ? visibleTweetText(tweet) : "";
+const textParts = tweetTextParts(displayedText);
 ---
 
 {
@@ -119,10 +88,17 @@ if (textCursor < displayedText.length)
           class:list={[
             "cached-tweet-media",
             tweet.media.length > 1 && "cached-tweet-media-grid",
+            `cached-tweet-media-${Math.min(tweet.media.length, 4)}`,
           ]}
         >
           {tweet.media.slice(0, 4).map((media) => (
-            <img src={media.url} alt={media.alt} loading="lazy" />
+            <img
+              src={media.url}
+              alt={media.alt}
+              width={media.width}
+              height={media.height}
+              loading="lazy"
+            />
           ))}
         </div>
       )}
@@ -135,7 +111,7 @@ if (textCursor < displayedText.length)
             title="返信"
           >
             <MessageCircle aria-hidden="true" />
-            <span>{metric(tweet.metrics.replies)}</span>
+            <span>{formatTweetMetric(tweet.metrics.replies)}</span>
           </span>
           <span
             class="cached-tweet-action-retweet"
@@ -143,7 +119,7 @@ if (textCursor < displayedText.length)
             title="リツイート"
           >
             <Repeat2 aria-hidden="true" />
-            <span>{metric(tweet.metrics.retweets)}</span>
+            <span>{formatTweetMetric(tweet.metrics.retweets)}</span>
           </span>
           <span
             class="cached-tweet-action-like"
@@ -151,7 +127,7 @@ if (textCursor < displayedText.length)
             title="いいね"
           >
             <Heart aria-hidden="true" />
-            <span>{metric(tweet.metrics.likes)}</span>
+            <span>{formatTweetMetric(tweet.metrics.likes)}</span>
           </span>
         </span>
         <a href={url} target="_blank" rel="noopener noreferrer">

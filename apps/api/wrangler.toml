@@ -1,7 +1,13 @@
 name = "mimifuwacc-api"
 main = "src/index.ts"
+workers_dev = false
+preview_urls = false
 compatibility_date = "2026-05-15"
 compatibility_flags = ["nodejs_compat_v2"]
+
+[[routes]]
+pattern = "api.mimifuwa.cc"
+custom_domain = true
 
 [[d1_databases]]
 binding = "DB"
@@ -15,15 +21,21 @@ bucket_name = "mimifuwacc-blogs"
 
 # API_ADMIN_SECRET is configured with `wrangler secret put` for deployed environments.
 # Local development passes a non-production value from the package script.
-[env.devel]
-name = "mimifuwacc-api-devel"
+[env.dev]
+name = "mimifuwacc-api-dev"
+workers_dev = false
+preview_urls = false
 
-[[env.devel.d1_databases]]
+[[env.dev.routes]]
+pattern = "api-dev.mimifuwa.cc"
+custom_domain = true
+
+[[env.dev.d1_databases]]
 binding = "DB"
-database_name = "mimifuwacc-blogs-devel"
+database_name = "mimifuwacc-blogs-dev"
 database_id = "b526fab7-0431-4d97-8553-2a6cbc2bdfce"
 migrations_dir = "drizzle"
 
-[[env.devel.r2_buckets]]
+[[env.dev.r2_buckets]]
 binding = "R2"
-bucket_name = "mimifuwacc-blogs-devel"
+bucket_name = "mimifuwacc-blogs-dev"
