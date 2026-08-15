@@ -38,7 +38,6 @@ jobs:
         working-directory: apps/web
         env:
           API_URL: https://mimifuwacc-api-dev.m8c.workers.dev
-          CLOUDFLARE_CONFIG_PATH: wrangler.dev.jsonc
           CLOUDFLARE_ENV: dev
         run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
 
@@ -99,11 +98,18 @@ jobs:
         working-directory: apps/admin
         env:
           API_URL: https://mimifuwacc-api-dev.m8c.workers.dev
+          CLOUDFLARE_CONFIG_PATH: wrangler.dev.jsonc
         run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
 
       - name: Set admin secret (dev)
         working-directory: apps/admin
         run: pnpm exec dotenvx run -f ../../env/.env.dev -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.dev.jsonc'
+
+      - name: Verify admin dev worker config
+        working-directory: apps/admin
+        run: |
+          grep -q '"name":"mimifuwacc-admin-dev"' dist/server/wrangler.json
+          grep -q 'mimifuwacc-api-dev.m8c.workers.dev' dist/server/wrangler.json
 
       - name: Deploy admin to Cloudflare
         working-directory: apps/admin
