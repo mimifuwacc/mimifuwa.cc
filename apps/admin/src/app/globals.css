@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "highlight.js/styles/github.css";
+@import "@mimifuwacc/blog-ui/styles.css";
 
 @source "../../../../packages/ui/src";
 
@@ -72,13 +73,50 @@
   --code-copy-hover: #24292f;
   --radius: 0.875rem;
   --header-h: 3rem;
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --card: var(--color-card);
+  --muted: var(--color-muted);
+  --muted-foreground: var(--color-muted-foreground);
+  --primary: var(--color-primary);
+  --border: var(--color-border);
+  --twitter-blue: #1da1f2;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --color-background: oklch(0.2 0 0);
+  --color-foreground: oklch(0.95 0 0);
+  --color-card: oklch(0.25 0 0);
+  --color-card-foreground: oklch(0.95 0 0);
+  --color-muted: oklch(0.3 0 0);
+  --color-muted-foreground: oklch(0.65 0 0);
+  --color-border: oklch(1 0 0 / 12%);
+  --code-bg: #0d1117;
+  --code-copy-color: #8b949e;
+  --code-copy-hover: #e6edf3;
+  --background: oklch(0.2 0 0);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.25 0 0);
+  --muted: oklch(0.3 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --border: oklch(1 0 0 / 12%);
 }
 
 @layer base {
+  html,
+  body {
+    height: 100%;
+  }
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground font-sans;
+    overflow: hidden;
   }
+}
+
+.article-html-fragment {
+  display: contents;
 }

@@ -1,37 +1,7 @@
 import { env } from "cloudflare:workers";
+import type { TwitterEmbed } from "@mimifuwacc/blog-ui";
 import { Effect, Schema } from "effect";
-
-export interface TwitterEmbed {
-  readonly provider: "twitter";
-  readonly id: string;
-  readonly url: string;
-  readonly text: string;
-  readonly createdAt?: string;
-  readonly author: {
-    readonly name: string;
-    readonly username: string;
-    readonly avatarUrl?: string;
-  };
-  readonly media: readonly {
-    readonly url: string;
-    readonly alt: string;
-    readonly sourceUrl?: string;
-  }[];
-  readonly linkCard?: {
-    readonly url: string;
-    readonly sourceUrl?: string;
-    readonly title: string;
-    readonly description?: string;
-    readonly domain?: string;
-    readonly imageUrl?: string;
-    readonly imageAlt?: string;
-  };
-  readonly metrics: {
-    readonly likes?: number;
-    readonly replies?: number;
-    readonly retweets?: number;
-  };
-}
+export type { TwitterEmbed } from "@mimifuwacc/blog-ui";
 
 export const BlogPostSummary = Schema.Struct({
   slug: Schema.String,

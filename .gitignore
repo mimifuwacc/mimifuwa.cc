@@ -11,6 +11,8 @@ out
 .open-next
 .astro
 .wrangler
+.pnpm-store
+.tanstack
 
 # turbo
 .turbo

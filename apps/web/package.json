@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/cloudflare": "13.1.0",
     "@lucide/astro": "^1.29.0",
+    "@mimifuwacc/blog-ui": "workspace:*",
     "@mimifuwacc/parser": "workspace:*",
     "astro": "6.4.8",
     "effect": "^3.17.0",

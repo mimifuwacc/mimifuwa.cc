@@ -58,8 +58,7 @@ jobs:
         working-directory: apps/admin
         env:
           API_URL: https://api.mimifuwa.cc
-          NEXT_PUBLIC_API_URL: https://api.mimifuwa.cc
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec opennextjs-cloudflare build
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Set admin secret (prod)
         working-directory: apps/admin

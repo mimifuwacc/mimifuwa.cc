@@ -97,8 +97,7 @@ jobs:
         working-directory: apps/admin
         env:
           API_URL: https://mimifuwacc-api-dev.m8c.workers.dev
-          NEXT_PUBLIC_API_URL: https://mimifuwacc-api-dev.m8c.workers.dev
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec opennextjs-cloudflare build
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
 
       - name: Set admin secret (dev)
         working-directory: apps/admin
