@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenvx run -f ../../env/.env -- sh -c 'ADMIN_SECRET=local-development API_URL=http://localhost:8787 CLOUDFLARE_INCLUDE_PROCESS_ENV=true vp exec vite --port 4000'",
-    "build": "vp exec vite build && tsc --noEmit",
-    "preview": "vp exec vite preview",
+    "dev": "dotenvx run -f ../../env/.env -- sh -c 'ADMIN_SECRET=local-development API_URL=http://localhost:8787 CLOUDFLARE_INCLUDE_PROCESS_ENV=true vp dev --port 4000'",
+    "build": "vp build && tsc --noEmit",
+    "preview": "vp preview",
     "deploy": "pnpm build && wrangler deploy",
     "typecheck": "tsc --noEmit",
     "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
