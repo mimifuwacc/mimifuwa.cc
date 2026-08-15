@@ -30,9 +30,6 @@ catalogs:
     clsx:
       specifier: ^2.1.1
       version: 2.1.1
-    highlight.js:
-      specifier: ^11.11.1
-      version: 11.11.1
     hono:
       specifier: ^4.6.20
       version: 4.12.25
@@ -129,7 +126,7 @@ importers:
         version: 2.1.1
       highlight.js:
         specifier: 'catalog:'
-        version: 11.11.1
+        version: 11.11.2
       lucide-react:
         specifier: 'catalog:'
         version: 1.20.0(react@19.2.7)
@@ -236,7 +233,7 @@ importers:
         version: 3.22.1
       highlight.js:
         specifier: 'catalog:'
-        version: 11.11.1
+        version: 11.11.2
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.0
@@ -252,7 +249,7 @@ importers:
         version: 9.0.5
       highlight.js:
         specifier: 'catalog:'
-        version: 11.11.1
+        version: 11.11.2
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -3750,8 +3747,8 @@ packages:
   hastscript@9.0.1:
     resolution: {integrity: sha512-g7df9rMFX/SPi34tyGCyUBREQoKkapwdY/T04Qn9TDWfHhAYt4/I0gMVirzK5wEzeUqIjEB+LXC/ypb7Aqno5w==}
 
-  highlight.js@11.11.1:
-    resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
+  highlight.js@11.11.2:
+    resolution: {integrity: sha512-oaXMACAU0kzOMXBjWpNcX+vlwSBCIAiZ9BHa7gA15NOTtT2L/l8OSZDuqS2XppOhZBPJ7hm4o8ep2kyuip2uEQ==}
     engines: {node: '>=12.0.0'}
 
   hono@4.12.25:
@@ -8961,7 +8958,7 @@ snapshots:
       property-information: 7.2.0
       space-separated-tokens: 2.0.2
 
-  highlight.js@11.11.1: {}
+  highlight.js@11.11.2: {}
 
   hono@4.12.25: {}
 
@@ -9198,7 +9195,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
       devlop: 1.1.0
-      highlight.js: 11.11.1
+      highlight.js: 11.11.2
 
   lru-cache@10.4.3: {}
 
