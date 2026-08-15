@@ -66,7 +66,7 @@ jobs:
 
       - name: Deploy admin
         working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.jsonc
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config dist/server/wrangler.json
 
   release:
     needs: deploy

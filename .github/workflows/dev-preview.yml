@@ -38,6 +38,7 @@ jobs:
         working-directory: apps/web
         env:
           API_URL: https://mimifuwacc-api-dev.m8c.workers.dev
+          CLOUDFLARE_CONFIG_PATH: wrangler.dev.jsonc
           CLOUDFLARE_ENV: dev
         run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
 
@@ -106,4 +107,4 @@ jobs:
 
       - name: Deploy admin to Cloudflare
         working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy --config wrangler.dev.jsonc
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy --config dist/server/wrangler.json
