@@ -24,12 +24,12 @@ const ApiErrorBody = Schema.Struct({
 });
 
 export const contentApiBaseUrl = (requestUrl: URL) => {
-  const configuredUrl = (import.meta.env.VITE_API_URL ?? import.meta.env.API_URL)?.trim();
+  const configuredUrl = import.meta.env.VITE_API_URL?.trim();
   if (configuredUrl) return configuredUrl.replace(/\/$/, "");
 
   const hostname = requestUrl.hostname.toLowerCase();
   if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
-    return (import.meta.env.API_URL ?? "http://localhost:8787").replace(/\/$/, "");
+    return "http://localhost:8787";
   }
   return "https://api.mimifuwa.cc";
 };
