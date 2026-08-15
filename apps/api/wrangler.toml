@@ -1,7 +1,12 @@
 name = "mimifuwacc-api"
 main = "src/index.ts"
+workers_dev = false
 compatibility_date = "2026-05-15"
 compatibility_flags = ["nodejs_compat_v2"]
+
+[[routes]]
+pattern = "api.mimifuwa.cc"
+custom_domain = true
 
 [[d1_databases]]
 binding = "DB"
@@ -17,6 +22,11 @@ bucket_name = "mimifuwacc-blogs"
 # Local development passes a non-production value from the package script.
 [env.dev]
 name = "mimifuwacc-api-dev"
+workers_dev = false
+
+[[env.dev.routes]]
+pattern = "api-dev.mimifuwa.cc"
+custom_domain = true
 
 [[env.dev.d1_databases]]
 binding = "DB"

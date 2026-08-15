@@ -21,7 +21,7 @@ const apiBaseUrl = () => {
     return "http://localhost:8787";
   }
   return location.hostname.includes("-dev.")
-    ? "https://mimifuwacc-api-dev.m8c.workers.dev"
+    ? "https://api-dev.mimifuwa.cc"
     : "https://api.mimifuwa.cc";
 };
 
