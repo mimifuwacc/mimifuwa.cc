@@ -46,7 +46,6 @@ jobs:
 
       - name: Build web
         working-directory: apps/web
-        env:
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Deploy web
@@ -55,7 +54,6 @@ jobs:
 
       - name: Build admin
         working-directory: apps/admin
-        env:
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Set admin secret (prod)
