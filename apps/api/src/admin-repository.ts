@@ -146,7 +146,12 @@ export const updateAdminPost = async (env: Env, currentSlug: string, input: Admi
       httpMetadata: { contentType: "text/markdown; charset=UTF-8" },
     }),
     replaceTags(env, row.id, input.tags),
-    env.R2.delete([`og/${currentSlug}.png`, `og/${input.slug}.png`]),
+    env.R2.delete([
+      `og/${currentSlug}.png`,
+      `og/${input.slug}.png`,
+      `og/v2/${currentSlug}.png`,
+      `og/v2/${input.slug}.png`,
+    ]),
   ]);
   if (existing.r2Key !== r2Key) await env.R2.delete(existing.r2Key);
   return toAdminPost(env, row);
@@ -158,7 +163,7 @@ export const deleteAdminPost = async (env: Env, slug: string) => {
   if (!row) return false;
   await Promise.all([
     db.delete(blogPosts).where(eq(blogPosts.id, row.id)),
-    env.R2.delete([row.r2Key, `posts/${slug}.html`, `og/${slug}.png`]),
+    env.R2.delete([row.r2Key, `posts/${slug}.html`, `og/${slug}.png`, `og/v2/${slug}.png`]),
   ]);
   return true;
 };
@@ -169,7 +174,7 @@ export const archiveAdminPost = async (env: Env, slug: string) => {
     .set({ isPublished: false, updatedAt: new Date() })
     .where(eq(blogPosts.slug, slug))
     .returning();
-  if (row) await env.R2.delete(`og/${slug}.png`);
+  if (row) await env.R2.delete([`og/${slug}.png`, `og/v2/${slug}.png`]);
   return row !== undefined;
 };
 
