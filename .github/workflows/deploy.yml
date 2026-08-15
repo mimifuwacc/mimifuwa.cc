@@ -47,8 +47,6 @@ jobs:
       - name: Build web
         working-directory: apps/web
         env:
-          API_URL: https://api.mimifuwa.cc
-          VITE_API_URL: https://api.mimifuwa.cc
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Deploy web
@@ -58,8 +56,6 @@ jobs:
       - name: Build admin
         working-directory: apps/admin
         env:
-          API_URL: https://api.mimifuwa.cc
-          VITE_API_URL: https://api.mimifuwa.cc
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
 
       - name: Set admin secret (prod)

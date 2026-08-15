@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "dotenvx run -f ../../env/.env -- astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "typecheck": "astro check"
