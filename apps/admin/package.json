@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenvx run -f ../../env/.env -- sh -c 'ADMIN_SECRET=local-development API_URL=http://localhost:8787 CLOUDFLARE_INCLUDE_PROCESS_ENV=true vp dev --port 4000'",
+    "dev": "dotenvx run -f ../../env/.env -- sh -c 'ADMIN_SECRET=local-development API_URL=http://localhost:8787 VITE_API_URL=http://localhost:8787 CLOUDFLARE_INCLUDE_PROCESS_ENV=true vp dev --port 4000'",
     "build": "vp build && tsc --noEmit",
     "preview": "vp preview",
     "deploy": "pnpm build && wrangler deploy --config dist/server/wrangler.json",

@@ -38,6 +38,7 @@ jobs:
         working-directory: apps/web
         env:
           API_URL: https://api-dev.mimifuwa.cc
+          VITE_API_URL: https://api-dev.mimifuwa.cc
           CLOUDFLARE_ENV: dev
         run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
 
@@ -98,6 +99,7 @@ jobs:
         working-directory: apps/admin
         env:
           API_URL: https://api-dev.mimifuwa.cc
+          VITE_API_URL: https://api-dev.mimifuwa.cc
           CLOUDFLARE_CONFIG_PATH: wrangler.dev.jsonc
         run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
 
