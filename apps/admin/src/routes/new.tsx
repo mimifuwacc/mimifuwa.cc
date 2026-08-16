@@ -24,7 +24,7 @@ function NewPostPage() {
 
 function toInput(data: PostEditorData): PostInput {
   return {
-    slug: data.slug ?? "",
+    slug: data.slug?.trim() ?? "",
     title: data.title,
     excerpt: data.excerpt,
     markdown: data.content,
