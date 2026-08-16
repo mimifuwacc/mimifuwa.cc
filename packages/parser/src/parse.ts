@@ -15,6 +15,7 @@ import rehypeHeadingIds, { type ArticleHeading } from "./plugins/rehype-heading-
 import rehypeLinkCard from "./plugins/rehype-link-card";
 import rehypeLinkCardFallback from "./plugins/rehype-link-card-fallback";
 import rehypeSplitTaskLists from "./plugins/rehype-split-task-lists";
+import remarkMessage from "./plugins/remark-message";
 
 export interface ParsedResult {
   frontmatter: Record<string, unknown>;
@@ -25,6 +26,7 @@ const markdownProcessor = () =>
     .use(remarkParse)
     .use(remarkFrontmatter)
     .use(remarkGfm)
+    .use(remarkMessage)
     .use(remarkRehype)
     .use(rehypeCodeFilename)
     .use(rehypeHighlight)
@@ -113,6 +115,7 @@ export async function parseToReact(markdown: string): Promise<{
     .use(remarkParse)
     .use(remarkFrontmatter)
     .use(remarkGfm)
+    .use(remarkMessage)
     .use(remarkRehype)
     .use(rehypeHighlight)
     .use(rehypeCustom)
@@ -145,6 +148,7 @@ export async function parseToReactWithComponents(
     .use(remarkParse)
     .use(remarkFrontmatter)
     .use(remarkGfm)
+    .use(remarkMessage)
     .use(remarkRehype)
     .use(rehypeHighlight)
     .use(rehypeCustom)

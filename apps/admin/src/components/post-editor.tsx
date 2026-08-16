@@ -157,6 +157,7 @@ export function PostEditor({
   function scheduleAutoSave(data: typeof formData) {
     if (!data.draft) return;
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    if (!data.slug.trim()) return;
     autoSaveTimer.current = setTimeout(async () => {
       const hash = getCurrentHash(data);
       if (hash === lastSavedHash.current) return;
@@ -261,6 +262,12 @@ export function PostEditor({
   // asDraft: true = MD のみ, false = MD+HTML
   // publishedOverride: 指定時は isPublished を上書き
   async function handleSave(asDraft: boolean, publishedOverride?: boolean) {
+    if (!formData.slug.trim()) {
+      setSlugError("slugを入力してください");
+      setMetaExpanded(true);
+      toast.error("slugを入力してください");
+      return;
+    }
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     setIsSaving(true);
     setError(null);
@@ -346,7 +353,10 @@ export function PostEditor({
   const debouncedSlug = useDebounce(formData.slug, SLUG_CHECK_DEBOUNCE_MS);
 
   useEffect(() => {
-    if (!debouncedSlug || debouncedSlug === initialSlug) {
+    if (!debouncedSlug) {
+      return;
+    }
+    if (debouncedSlug === initialSlug) {
       setSlugError(null);
       return;
     }

@@ -1,8 +1,12 @@
 <%= ENV['PR_TITLE'] %>
 
-## 確認事項
+## dev環境
 
-- [ ] devでの動作チェック
+| サービス | URL                           |
+| -------- | ----------------------------- |
+| Web      | https://web-dev.mimifuwa.cc   |
+| Admin    | https://admin-dev.mimifuwa.cc |
+| API      | https://api-dev.mimifuwa.cc   |
 
 ## 更新内容
 

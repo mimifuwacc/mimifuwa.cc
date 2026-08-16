@@ -45,11 +45,32 @@ describe("parseArticleToHtml", () => {
   });
 
   it("handles ordinary and info blockquotes without relying on child indexes", async () => {
-    const result = await parseArticleToHtml("> ordinary\n\n> [!WARNING] Be careful");
+    const result = await parseArticleToHtml("> ordinary\n\n> [!WARNING] 注意 Be careful");
 
     expect(result.html).toContain("<blockquote>");
     expect(result.html).toContain('data-component-type="info-card"');
     expect(result.html).toContain('data-info-type="warning"');
+    expect(result.html).toContain("注意 Be careful");
+  });
+
+  it("renders :::message blocks with multiple paragraphs", async () => {
+    const result = await parseArticleToHtml(
+      ":::message\n\n説明の段落です。\n\nhttps://example.com\n\n:::",
+    );
+
+    expect(result.html).toContain('data-component-type="info-card"');
+    expect(result.html).toContain('data-info-type="info"');
+    expect(result.html).toContain("説明の段落です。");
+    expect(result.html).toContain('class="embedded-link-card"');
+    expect(result.html).not.toContain(":::message");
+  });
+
+  it("renders :::message alert blocks as danger cards", async () => {
+    const result = await parseArticleToHtml(":::message alert\n\n警告メッセージ\n\n:::");
+
+    expect(result.html).toContain('data-component-type="info-card"');
+    expect(result.html).toContain('data-info-type="danger"');
+    expect(result.html).toContain("警告メッセージ");
   });
 });
 
