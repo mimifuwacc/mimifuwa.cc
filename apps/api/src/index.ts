@@ -18,6 +18,10 @@ import { getPost, listPosts, type Env } from "./repository";
 
 const app = new Hono<{ Bindings: Env }>();
 
+const publicContentCache = {
+  "cache-control": "public, max-age=300, s-maxage=21600, stale-while-revalidate=86400",
+};
+
 app.use(
   "*",
   cors({
@@ -28,6 +32,7 @@ app.use(
 );
 
 app.use("/admin/*", async (context, next) => {
+  context.header("cache-control", "no-store");
   if (context.req.header("x-admin-secret") !== context.env.API_ADMIN_SECRET) {
     return context.json({ error: "unauthorized", message: "Unauthorized" }, 401);
   }
@@ -114,7 +119,7 @@ app.get("/posts", async (context) => {
       500,
     );
   }
-  return context.json(result.right);
+  return context.json(result.right, 200, publicContentCache);
 });
 
 app.get("/posts/:slug{.+}", async (context) => {
@@ -130,7 +135,7 @@ app.get("/posts/:slug{.+}", async (context) => {
   if (!result.right) {
     return context.json<ApiErrorBody>({ error: "not_found", message: "Post not found" }, 404);
   }
-  return context.json(result.right);
+  return context.json(result.right, 200, publicContentCache);
 });
 
 app.get("/admin/posts", async (context) => context.json(await listAdminPosts(context.env)));

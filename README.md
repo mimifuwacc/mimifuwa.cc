@@ -37,3 +37,5 @@ Astro ファイルは Prettier、TypeScript / TSX ファイルは Vite+ の Oxfm
 本番ブランチは `release`、開発ブランチは `dev` です。Cloudflare Workers の開発環境には `dev`、本番環境には `production` の Wrangler 設定を使います。
 
 管理画面は TanStack Start の Cloudflare Workers 出力を `wrangler deploy` で公開します。秘密鍵は `DOTENV_PRIVATE_KEY` と `DOTENV_PRIVATE_KEY_DEV` で管理します。
+
+本番の公開ページと記事 API は Cloudflare Workers Cache に入り、記事の作成・更新・削除・非公開化時に対象 URL を purge します。デプロイ前に、Cache Purge 権限だけを持つ Cloudflare API token を `CACHE_PURGE_API_TOKEN` として `env/.env.production` に登録してください。デプロイ時に zone ID は自動取得され、Worker secret として設定されます。
