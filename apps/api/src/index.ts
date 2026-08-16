@@ -197,6 +197,7 @@ const readAdminInput = async (request: Request): Promise<AdminPostInput | null> 
   const input = value as Record<string, unknown>;
   if (
     typeof input.slug !== "string" ||
+    input.slug.trim().length === 0 ||
     typeof input.title !== "string" ||
     typeof input.excerpt !== "string" ||
     typeof input.markdown !== "string" ||

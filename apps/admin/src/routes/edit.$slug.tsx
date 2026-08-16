@@ -40,7 +40,7 @@ function EditPostPage() {
 
 function toInput(data: PostEditorData, fallbackSlug: string): PostInput {
   return {
-    slug: data.slug || fallbackSlug,
+    slug: data.slug?.trim() || fallbackSlug,
     title: data.title,
     excerpt: data.excerpt,
     markdown: data.content,
