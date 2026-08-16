@@ -19,6 +19,9 @@ jobs:
   deploy-web:
     needs: deploy-api
     runs-on: ubuntu-latest
+    environment:
+      name: dev-web
+      url: https://web-dev.mimifuwa.cc
     steps:
       - uses: actions/checkout@v7
 
@@ -48,6 +51,9 @@ jobs:
 
   deploy-api:
     runs-on: ubuntu-latest
+    environment:
+      name: dev-api
+      url: https://api-dev.mimifuwa.cc
     steps:
       - uses: actions/checkout@v7
 
@@ -78,6 +84,9 @@ jobs:
   deploy-admin:
     needs: deploy-api
     runs-on: ubuntu-latest
+    environment:
+      name: dev-admin
+      url: https://admin-dev.mimifuwa.cc
     steps:
       - uses: actions/checkout@v7
 
