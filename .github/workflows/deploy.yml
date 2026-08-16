@@ -13,6 +13,9 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://mimifuwa.cc
     # dotenvx: GitHub Secrets に載せるのは復号鍵だけ。CLOUDFLARE_* / ADMIN_SECRET /
     # Cloudflare credentials / ADMIN_SECRET are injected from the encrypted env file.
     env:
