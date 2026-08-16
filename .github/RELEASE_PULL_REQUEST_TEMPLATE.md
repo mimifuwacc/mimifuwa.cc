@@ -2,11 +2,11 @@
 
 ## dev環境
 
-| サービス | URL                           |
-| -------- | ----------------------------- |
-| Web      | https://web-dev.mimifuwa.cc   |
-| Admin    | https://admin-dev.mimifuwa.cc |
-| API      | https://api-dev.mimifuwa.cc   |
+| Service | URL                           |
+| ------- | ----------------------------- |
+| Web     | https://web-dev.mimifuwa.cc   |
+| Admin   | https://admin-dev.mimifuwa.cc |
+| API     | https://api-dev.mimifuwa.cc   |
 
 ## 更新内容
 
