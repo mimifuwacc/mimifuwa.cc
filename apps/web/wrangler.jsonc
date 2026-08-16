@@ -6,6 +6,9 @@
   "preview_urls": false,
   "compatibility_date": "2026-08-05",
   "compatibility_flags": ["nodejs_compat"],
+  "cache": {
+    "enabled": true,
+  },
   "routes": [{ "pattern": "mimifuwa.cc", "custom_domain": true }],
   "services": [
     {
@@ -18,6 +21,9 @@
       "name": "mimifuwacc-dev",
       "workers_dev": false,
       "preview_urls": false,
+      "cache": {
+        "enabled": false,
+      },
       "routes": [
         {
           "pattern": "web-dev.mimifuwa.cc",
