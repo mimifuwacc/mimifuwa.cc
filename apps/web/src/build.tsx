@@ -618,6 +618,11 @@ const writePage = async (path: string, value: string) => {
   const target = join(outputRoot, path, "index.html");
   await mkdir(resolve(target, ".."), { recursive: true });
   await writeFile(target, value);
+  // Vite preview falls back to the root document for `/blogs` instead of
+  // resolving `/blogs/index.html`; keep a flat alias so extensionless routes
+  // behave the same locally and on a static host.
+  await mkdir(resolve(outputRoot, path, ".."), { recursive: true });
+  await writeFile(join(outputRoot, `${path}.html`), value);
 };
 
 const main = async () => {
