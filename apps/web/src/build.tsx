@@ -3,6 +3,7 @@ import { join, resolve } from "node:path";
 
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
+import { Button } from "react-aria-components";
 
 import {
   articleSlug,
@@ -17,9 +18,24 @@ import { links } from "../../../contents/links";
 import { works } from "../../../contents/works";
 import globalStyles from "./styles/global.css?raw";
 import blogStyles from "@mimifuwacc/blog-ui/styles.css?raw";
-import highlightStyles from "highlight.js/styles/github.css?raw";
+import { actionButton } from "./styles/vanilla.css";
 
-const styles = `${globalStyles.replace('@import "highlight.js/styles/github.css";', "")}\n${highlightStyles}\n${blogStyles}`;
+const vanillaStyles = `.${actionButton} {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.35rem 0.6rem;
+}
+.${actionButton}:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}`;
+
+const styles = `${globalStyles}\n${blogStyles}\n${vanillaStyles}`;
 
 const outputRoot = resolve(process.env.MIMIFUWACC_WEB_OUTPUT_ROOT ?? "dist");
 const uuid = "fa6c2a8f-27b1-4611-a0f5-19b0d6c20612";
@@ -71,9 +87,9 @@ const Footer = () => (
         <a href="/" className="footer-brand">
           mimifuwa.cc
         </a>
-        <button className="session-copy" data-copy-uuid type="button">
+        <Button className={`session-copy ${actionButton}`} data-copy-uuid>
           <span data-uuid>{uuid}</span>
-        </button>
+        </Button>
       </div>
       <div className="footer-links">
         <nav aria-label="フッターナビゲーション">
@@ -180,9 +196,9 @@ const Home = ({ articles }: { articles: ArticleSource[] }) => (
         <h1>
           <span>mimifuwa.cc</span>
         </h1>
-        <button className="session-copy hero-session" data-copy-uuid type="button">
+        <Button className={`session-copy hero-session ${actionButton}`} data-copy-uuid>
           {uuid}
-        </button>
+        </Button>
       </div>
     </section>
     <div className="home-sheet">

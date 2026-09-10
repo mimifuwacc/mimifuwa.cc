@@ -44,7 +44,8 @@ describe("parseArticleToHtml", () => {
     expect(result.html).toContain('class="code-block-header"');
     expect(result.html).toContain('class="code-filename">index.ts</span>');
     expect(result.html).toContain('class="code-copy"');
-    expect(result.html).toContain('<pre><code class="hljs language-ts">');
+    expect(result.html).toContain('<pre class="shiki');
+    expect(result.html).toContain('class="language-ts"');
   });
 
   it("handles ordinary and info blockquotes without relying on child indexes", async () => {

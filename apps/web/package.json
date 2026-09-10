@@ -13,15 +13,16 @@
     "@mimifuwacc/blog-ui": "workspace:*",
     "@mimifuwacc/parser": "workspace:*",
     "@ox-content/napi": "^2.90.0",
-    "effect": "^3.17.0",
-    "highlight.js": "catalog:",
+    "@vanilla-extract/css": "^1.21.2",
     "react": "catalog:",
+    "react-aria-components": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "@types/node": "^24.10.0",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@types/node": "^24.10.0",
+    "@vanilla-extract/vite-plugin": "^5.1.1",
     "typescript": "catalog:",
     "vite-plus": "catalog:"
   }

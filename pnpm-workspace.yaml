@@ -36,7 +36,6 @@ catalog:
   "@cloudflare/workers-types": "^4.20250521.0"
 
   # Misc shared
-  highlight.js: "^11.11.1"
   typescript: "^6.0.0"
   # Keep the three Vite+ packages on the same release. Floating `latest` made an
   # unrelated workspace install rewrite the toolchain in the lockfile.

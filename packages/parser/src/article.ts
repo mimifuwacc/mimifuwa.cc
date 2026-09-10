@@ -8,6 +8,7 @@ import rehypeCodeFilename from "./plugins/rehype-code-filename";
 import rehypeInfoCard from "./plugins/rehype-info-card";
 import rehypeLinkCard from "./plugins/rehype-link-card";
 import rehypeLinkCardFallback from "./plugins/rehype-link-card-fallback";
+import rehypeShiki from "./plugins/rehype-shiki";
 import rehypeSplitTaskLists from "./plugins/rehype-split-task-lists";
 
 export interface ArticleHeading {
@@ -29,6 +30,7 @@ export async function parseArticleToHtml(markdown: string): Promise<{
   const file = await unified()
     .use(rehypeParse, { fragment: true })
     .use(rehypeCodeFilename)
+    .use(rehypeShiki)
     .use(rehypeCodeBlock)
     .use(rehypeCustom)
     .use(rehypeLinkCardFallback)

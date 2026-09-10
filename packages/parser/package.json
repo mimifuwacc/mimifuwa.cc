@@ -20,8 +20,6 @@
   "dependencies": {
     "@ox-content/napi": "^2.90.0",
     "hast-util-to-html": "^9.0.1",
-    "highlight.js": "catalog:",
-    "rehype-highlight": "^7.0.2",
     "rehype-parse": "^9.0.1",
     "rehype-react": "^8.0.0",
     "rehype-stringify": "^10.0.1",
@@ -29,6 +27,7 @@
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
+    "shiki": "^4.4.3",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.3",
