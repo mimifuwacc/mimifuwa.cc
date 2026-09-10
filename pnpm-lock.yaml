@@ -6,9 +6,66 @@ settings:
 
 catalogs:
   default:
+    '@cloudflare/workers-types':
+      specifier: ^4.20250521.0
+      version: 4.20260617.1
+    '@tailwindcss/postcss':
+      specifier: ^4.1.13
+      version: 4.3.1
+    '@tanstack/react-query':
+      specifier: ^5.0.0
+      version: 5.101.0
+    '@types/react':
+      specifier: ^19.2.15
+      version: 19.2.17
+    '@types/react-dom':
+      specifier: ^19.2.3
+      version: 19.2.3
+    class-variance-authority:
+      specifier: ^0.7.1
+      version: 0.7.1
+    clsx:
+      specifier: ^2.1.1
+      version: 2.1.1
+    highlight.js:
+      specifier: ^11.11.1
+      version: 11.11.1
+    hono:
+      specifier: ^4.6.20
+      version: 4.12.25
+    lucide-react:
+      specifier: ^1.16.0
+      version: 1.20.0
+    react:
+      specifier: ^19.2.0
+      version: 19.2.7
+    react-aria-components:
+      specifier: ^1.20.0
+      version: 1.20.0
+    react-dom:
+      specifier: ^19.2.0
+      version: 19.2.7
+    react-icons:
+      specifier: ^5.5.0
+      version: 5.6.0
+    tailwind-merge:
+      specifier: ^3.6.0
+      version: 3.6.0
+    tailwindcss:
+      specifier: ^4.1.13
+      version: 4.3.1
+    tw-animate-css:
+      specifier: ^1.4.0
+      version: 1.4.0
+    typescript:
+      specifier: ^6.0.0
+      version: 6.0.3
     vite-plus:
       specifier: 0.1.24
       version: 0.1.24
+    wrangler:
+      specifier: ^4.121.0
+      version: 4.121.0
 
 overrides:
   vite: npm:@voidzero-dev/vite-plus-core@0.1.24
@@ -45,7 +102,7 @@ importers:
         version: 0.1.24(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
       wrangler:
         specifier: ^4.121.0
-        version: 4.121.0
+        version: 4.121.0(@cloudflare/workers-types@4.20260617.1)
 
   apps/admin:
     dependencies:
@@ -254,6 +311,12 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
     devDependencies:
+      '@ox-content/napi':
+        specifier: ^2.90.0
+        version: 2.90.0
+      '@ox-content/wasm':
+        specifier: ^2.90.0
+        version: 2.90.0
       '@types/hast':
         specifier: ^3.0.4
         version: 3.0.4
@@ -1425,6 +1488,51 @@ packages:
 
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
+
+  '@ox-content/binding-darwin-arm64@2.90.0':
+    resolution: {integrity: sha512-9629ZejhKVqm0fDItGGysnkHeFa+mc8mFM/mQrry8amSmj5DO/SaYTU7/GxQvlMYZJ+zgoqa9eWq3NbRMjuuew==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@ox-content/binding-darwin-x64@2.90.0':
+    resolution: {integrity: sha512-KupCFp7Xe10cPFavsV85T+v1nmk28c5Ij0qVT/Ac1JOYmgGjuB6I2S1t82kobIirRYSvIZG0sdXccTfHiUQsYw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@ox-content/binding-linux-arm64-gnu@2.90.0':
+    resolution: {integrity: sha512-BnnhbLU5BxG4qNnh/izLhKcq8HFcy+jKJNXXsHk/mYkhKzWUxh7pJqsmFS/2LkoBTTBt0GuSlZGyYonibz2+ow==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@ox-content/binding-linux-arm64-musl@2.90.0':
+    resolution: {integrity: sha512-knshEM7FTRIoClTEGZXCIroWWC3y6QMeRX+24KeFuO4kpcJ5x3An01F0Bai1sxJoiuGu5+EDKhLYgJCMCJVU/A==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@ox-content/binding-linux-x64-gnu@2.90.0':
+    resolution: {integrity: sha512-Na/oYUReWfEK24fdxhRQmIZx8Y6mgOoqypa6jtFDhgVfmeFYlOvmy0uso6/oD4lNUItDSOTZ8xRokOR4qtzvcw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@ox-content/binding-linux-x64-musl@2.90.0':
+    resolution: {integrity: sha512-NR0d5fObrhebuSYKiOlSnielSJAs6vPNZw4nk+qAMqZrgZkSdQ8FzhdgIoUUhBBG0m8tjI78+oKtYN9POdOoqA==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@ox-content/binding-win32-x64-msvc@2.90.0':
+    resolution: {integrity: sha512-ZcbOvUb84DBDgLS/P43g2aDR5WRMceksRWk/HNZJX7QCtW4iM914YPK3Y65IhkP2brPnC6xJmZ3ZLqXvidtwsA==}
+    cpu: [x64]
+    os: [win32]
+
+  '@ox-content/napi@2.90.0':
+    resolution: {integrity: sha512-HgwiSxJEQD7odk7eBfoDRy0sUpOIDSRfN9T+0f/mSdV7bpkPsFwfRnqCf8J20GsiXfQHjyQVBusACYflT4quaA==}
+
+  '@ox-content/wasm@2.90.0':
+    resolution: {integrity: sha512-IjoHThEuwhp7gYgKh7eYPBnCy4Tgpi6wht7MAYXBp4hIdmnUwhniT+V1oHyDp61bvRHgskpIsAnzJeN1E63ENA==}
 
   '@oxc-project/runtime@0.133.0':
     resolution: {integrity: sha512-PkvjA1Lq5++V5S1E6Patr92ZVcieE6EalDr1VJTqv4BnjZdOUC4W3p8k1wMXSd5/2aFP4b/A6N5sg2Bkzcr9vQ==}
@@ -5654,6 +5762,39 @@ snapshots:
 
   '@oslojs/encoding@1.1.0': {}
 
+  '@ox-content/binding-darwin-arm64@2.90.0':
+    optional: true
+
+  '@ox-content/binding-darwin-x64@2.90.0':
+    optional: true
+
+  '@ox-content/binding-linux-arm64-gnu@2.90.0':
+    optional: true
+
+  '@ox-content/binding-linux-arm64-musl@2.90.0':
+    optional: true
+
+  '@ox-content/binding-linux-x64-gnu@2.90.0':
+    optional: true
+
+  '@ox-content/binding-linux-x64-musl@2.90.0':
+    optional: true
+
+  '@ox-content/binding-win32-x64-msvc@2.90.0':
+    optional: true
+
+  '@ox-content/napi@2.90.0':
+    optionalDependencies:
+      '@ox-content/binding-darwin-arm64': 2.90.0
+      '@ox-content/binding-darwin-x64': 2.90.0
+      '@ox-content/binding-linux-arm64-gnu': 2.90.0
+      '@ox-content/binding-linux-arm64-musl': 2.90.0
+      '@ox-content/binding-linux-x64-gnu': 2.90.0
+      '@ox-content/binding-linux-x64-musl': 2.90.0
+      '@ox-content/binding-win32-x64-msvc': 2.90.0
+
+  '@ox-content/wasm@2.90.0': {}
+
   '@oxc-project/runtime@0.133.0': {}
 
   '@oxc-project/types@0.133.0': {}
@@ -9105,22 +9246,6 @@ snapshots:
       '@cloudflare/workerd-linux-64': 1.20260804.1
       '@cloudflare/workerd-linux-arm64': 1.20260804.1
       '@cloudflare/workerd-windows-64': 1.20260804.1
-
-  wrangler@4.121.0:
-    dependencies:
-      '@cloudflare/kv-asset-handler': 0.5.0
-      '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260804.1)
-      blake3-wasm: 2.1.5
-      esbuild: 0.28.1
-      miniflare: 5.20260804.1-alpha
-      path-to-regexp: 6.3.0
-      unenv: 2.0.0-rc.24
-      workerd: 1.20260804.1
-    optionalDependencies:
-      fsevents: 2.3.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
 
   wrangler@4.121.0(@cloudflare/workers-types@4.20260617.1):
     dependencies:
