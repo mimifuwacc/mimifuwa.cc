@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { assertProductionArticle, contentRoot, loadArticles } from "./content";
+import { assertArticleStatus, contentRoot, loadArticles } from "./content";
+import { buildStaticSite, startPreview } from "./site";
 
 const args = process.argv.slice(2);
 const command = args[0] ?? "help";
@@ -23,7 +24,18 @@ const main = async () => {
     return;
   }
 
-  if (command !== "check" && command !== "list" && command !== "preview") {
+  if (command === "preview") {
+    await startPreview();
+    return;
+  }
+
+  if (command === "build") {
+    const result = await buildStaticSite();
+    console.info(`Built ${result.count} articles in ${result.root}`);
+    return;
+  }
+
+  if (command !== "check" && command !== "list") {
     printHelp();
     process.exitCode = 1;
     return;
@@ -34,9 +46,7 @@ const main = async () => {
 
   for (const article of articles) {
     if (command === "check") {
-      if (article.frontmatter.status !== "draft" && article.frontmatter.status !== "published") {
-        assertProductionArticle(article);
-      }
+      assertArticleStatus(article);
     }
 
     const status = article.frontmatter.status ?? "missing-status";

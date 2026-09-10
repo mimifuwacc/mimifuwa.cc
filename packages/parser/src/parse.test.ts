@@ -20,6 +20,7 @@ describe("parseArticleToHtml", () => {
     const result = await parseArticleToHtml("https://example.com/path?a=1&b=2");
 
     expect(result.html).toContain('class="embedded-link-card"');
+    expect(result.html).toContain('style="aspect-ratio: 1.91 / 1"');
     expect(result.html).toContain('data-ogp-url="https://example.com/path?a=1&#x26;b=2"');
     expect(result.html).toContain('rel="noopener noreferrer"');
     expect(result.html).toContain("example.com");
@@ -31,6 +32,8 @@ describe("parseArticleToHtml", () => {
 
     expect(result.html).toContain('class="twitter-embed-placeholder"');
     expect(result.html).toContain('data-twitter-id="123"');
+    expect(result.html).toContain('data-embed="twitter"');
+    expect(result.html).toContain('style="aspect-ratio: 1 / 1"');
     expect(result.html).not.toContain("widgets.js");
   });
 

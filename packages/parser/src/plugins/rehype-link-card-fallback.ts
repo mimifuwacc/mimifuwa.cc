@@ -38,7 +38,12 @@ const renderTwitter = (node: Element, url: URL) => {
   if (!match) return;
 
   node.tagName = "div";
-  node.properties = { className: ["twitter-embed-placeholder"], dataTwitterId: match[1] };
+  node.properties = {
+    className: ["twitter-embed-placeholder"],
+    "data-embed": "twitter",
+    "data-twitter-id": match[1],
+    style: "aspect-ratio: 1 / 1",
+  };
   node.children = [];
 };
 
@@ -49,6 +54,7 @@ const renderLink = (node: Element, url: URL) => {
     dataOgpUrl: url.toString(),
     href: url.toString(),
     rel: ["noopener", "noreferrer"],
+    style: "aspect-ratio: 1.91 / 1",
     target: "_blank",
   };
   node.children = [

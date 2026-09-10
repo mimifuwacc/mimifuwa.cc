@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 
-import { parseArticleToHtml } from "@mimifuwacc/parser";
+import { parseArticleToHtml } from "@mimifuwacc/parser/article";
 import { VFile } from "vfile";
 import { matter } from "vfile-matter";
 
@@ -28,6 +28,17 @@ export interface LoadedArticle extends ArticleSource {
   html: string;
   headings: Awaited<ReturnType<typeof parseArticleToHtml>>["headings"];
 }
+
+export const articleSlug = (article: ArticleSource) => {
+  if (typeof article.frontmatter.slug === "string" && article.frontmatter.slug.length > 0) {
+    return article.frontmatter.slug.replace(/^\/+|\/+$/g, "");
+  }
+
+  return article.relativePath
+    .replace(/^articles\//, "")
+    .replace(/\.md$/, "")
+    .replace(/^blogs\//, "blogs/");
+};
 
 const contentRootFromEnvironment = () => {
   if (process.env.MIMIFUWACC_CONTENT_ROOT) {
@@ -101,6 +112,12 @@ export const renderArticle = async (article: ArticleSource): Promise<LoadedArtic
 export const assertProductionArticle = (article: ArticleSource) => {
   if (article.frontmatter.status !== "published") {
     throw new Error(`${article.relativePath}: production articles must declare status: published`);
+  }
+};
+
+export const assertArticleStatus = (article: ArticleSource) => {
+  if (article.frontmatter.status !== "draft" && article.frontmatter.status !== "published") {
+    throw new Error(`${article.relativePath}: status must be draft or published`);
   }
 };
 
