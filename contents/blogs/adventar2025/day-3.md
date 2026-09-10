@@ -2,6 +2,7 @@
 title: "英語の授業を受けていたらSMCの勉強が始まった"
 excerpt: "ハーフダチョウ研究会Advent Calendar 2025 3日目の記事です。"
 date: 2025-12-08
+status: published
 tags: ["adventar2025", "技術"]
 ---
 

@@ -2,6 +2,7 @@
 title: "VSCodeの拡張機能を作ってみた"
 excerpt: "ハーフダチョウ研究会Advent Calendar 2025 4日目の記事です。"
 date: 2025-12-10
+status: published
 tags: ["adventar2025", "技術"]
 ---
 

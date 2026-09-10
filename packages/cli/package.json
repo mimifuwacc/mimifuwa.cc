@@ -1,0 +1,26 @@
+{
+  "name": "@mimifuwacc/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "mimifuwacc": "./dist/index.js"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./content": "./dist/content.js"
+  },
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mimifuwacc/parser": "workspace:*",
+    "vfile": "^6.0.3",
+    "vfile-matter": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

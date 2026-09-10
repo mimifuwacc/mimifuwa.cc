@@ -2,6 +2,7 @@
 title: "NowPlayingを少しおしゃれにする Part2"
 excerpt: "ハーフダチョウ研究会Advent Calendar 2025 2日目の記事です。"
 date: 2025-12-02
+status: published
 tags: ["adventar2025", "技術"]
 ---
 
