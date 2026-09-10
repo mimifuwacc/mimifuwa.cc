@@ -3,7 +3,6 @@ import { join, resolve } from "node:path";
 
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
-import { Button } from "react-aria-components";
 
 import {
   articleSlug,
@@ -40,6 +39,86 @@ const styles = `${globalStyles}\n${blogStyles}\n${vanillaStyles}`;
 const outputRoot = resolve(process.env.MIMIFUWACC_WEB_OUTPUT_ROOT ?? "dist");
 const uuid = "fa6c2a8f-27b1-4611-a0f5-19b0d6c20612";
 
+const Icon = ({ name, className = "icon" }: { name: string; className?: string }) => {
+  const paths: Record<string, ReactNode> = {
+    arrowRight: <path d="M5 12h14m-6-6 6 6-6 6" />,
+    arrowUpRight: <path d="M7 17 17 7M7 7h10v10" />,
+    award: <path d="m12 15 3.5 5-3.5-1-3.5 1 3.5-5Zm5-6A5 5 0 1 1 7 9a5 5 0 0 1 10 0Z" />,
+    badgeCheck: <path d="m9 12 2 2 4-4m5 2a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />,
+    check: <path d="m5 12 4 4L19 6" />,
+    chevronRight: <path d="m9 18 6-6-6-6" />,
+    clock: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </>
+    ),
+    copy: (
+      <>
+        <rect x="9" y="9" width="10" height="10" rx="1" />
+        <path d="M5 15V5a1 1 0 0 1 1-1h10" />
+      </>
+    ),
+    externalLink: (
+      <>
+        <path d="M14 5h5v5M19 5l-8 8" />
+        <path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+      </>
+    ),
+    mail: (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3 7 9 6 9-6" />
+      </>
+    ),
+    menu: <path d="M4 6h16M4 12h16M4 18h16" />,
+    moon: <path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z" />,
+    smile: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01" />
+      </>
+    ),
+    sun: (
+      <>
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+      </>
+    ),
+    wrench: (
+      <path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17a2 2 0 1 0 3 3l5.5-5.5a4 4 0 0 0 5.2-5.2L15 11l-3-3 2.7-1.7Z" />
+    ),
+    x: <path d="m6 6 12 12M18 6 6 18" />,
+  };
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {paths[name]}
+    </svg>
+  );
+};
+
+const BrandIcon = ({ name }: { name: string }) => (
+  <span className="brand-icon" aria-hidden="true">
+    {name === "zenn" ? "Z" : name === "twitter" ? "𝕏" : "⌘"}
+  </span>
+);
+
+const workImage = (url: string, image?: string) => {
+  if (image?.startsWith("/")) return image;
+  if (image) return image;
+  const match = url.match(/github\.com\/([^/]+)\/([^/?]+)/);
+  return match ? `https://opengraph.githubassets.com/1/${match[1]}/${match[2]}` : undefined;
+};
+
 const titleOf = (article: ArticleSource) =>
   typeof article.frontmatter.title === "string" ? article.frontmatter.title : articleSlug(article);
 
@@ -74,8 +153,48 @@ const Header = ({ path }: { path: string }) => {
               {label}
             </a>
           ))}
+          <button
+            className="icon-button theme-toggle"
+            type="button"
+            aria-label="テーマを切り替える"
+          >
+            <Icon name="moon" className="icon theme-moon" />
+            <Icon name="sun" className="icon theme-sun" />
+          </button>
         </nav>
+        <div className="mobile-actions">
+          <button
+            className="icon-button theme-toggle"
+            type="button"
+            aria-label="テーマを切り替える"
+          >
+            <Icon name="moon" className="icon theme-moon" />
+            <Icon name="sun" className="icon theme-sun" />
+          </button>
+          <button
+            className="icon-button menu-toggle"
+            type="button"
+            aria-label="メニューを開く"
+            aria-expanded="false"
+          >
+            <Icon name="menu" className="icon menu-open-icon" />
+            <Icon name="x" className="icon menu-close-icon" />
+          </button>
+        </div>
       </div>
+      <nav className="mobile-nav container-wide" aria-label="モバイルナビゲーション" hidden>
+        {nav.map(([href, label]) => (
+          <a
+            href={href}
+            aria-current={
+              path === href || (href !== "/" && path.startsWith(`${href}/`)) ? "page" : undefined
+            }
+            key={href}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
     </header>
   );
 };
@@ -87,9 +206,16 @@ const Footer = () => (
         <a href="/" className="footer-brand">
           mimifuwa.cc
         </a>
-        <Button className={`session-copy ${actionButton}`} data-copy-uuid>
+        <button
+          className={`session-copy ${actionButton}`}
+          type="button"
+          data-copy-uuid
+          aria-label="UUID をコピー"
+        >
           <span data-uuid>{uuid}</span>
-        </Button>
+          <Icon name="copy" className="icon copy-icon" />
+          <Icon name="check" className="icon check-icon" />
+        </button>
       </div>
       <div className="footer-links">
         <nav aria-label="フッターナビゲーション">
@@ -98,13 +224,25 @@ const Footer = () => (
           <a href="/links">Links</a>
         </nav>
         <div className="social-links">
-          <a href="https://github.com/mimifuwacc" rel="me noopener noreferrer" target="_blank">
-            GitHub
+          <a
+            href="https://github.com/mimifuwacc"
+            rel="me noopener noreferrer"
+            target="_blank"
+            aria-label="GitHub"
+          >
+            <BrandIcon name="github" />
           </a>
-          <a href="https://twitter.com/mimifuwacc" rel="me noopener noreferrer" target="_blank">
-            Twitter
+          <a
+            href="https://twitter.com/mimifuwacc"
+            rel="me noopener noreferrer"
+            target="_blank"
+            aria-label="Twitter"
+          >
+            <BrandIcon name="twitter" />
           </a>
-          <a href="mailto:mail@mimifuwa.cc">Mail</a>
+          <a href="mailto:mail@mimifuwa.cc" aria-label="Email">
+            <Icon name="mail" />
+          </a>
         </div>
       </div>
     </div>
@@ -141,7 +279,7 @@ const Layout = ({
       </div>
       <script
         dangerouslySetInnerHTML={{
-          __html: `document.querySelectorAll('[data-copy-uuid]').forEach((b)=>b.addEventListener('click',()=>navigator.clipboard?.writeText('${uuid}')));`,
+          __html: `(()=>{const d=document.documentElement;const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&matchMedia('(prefers-color-scheme: dark)').matches))d.classList.add('dark');document.querySelectorAll('.theme-toggle').forEach(b=>b.addEventListener('click',()=>{d.classList.toggle('dark');localStorage.setItem('theme',d.classList.contains('dark')?'dark':'light')}));const menu=document.querySelector('.menu-toggle'),nav=document.querySelector('.mobile-nav');menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));if(nav)nav.hidden=!open});document.querySelectorAll('[data-copy-uuid]').forEach((b)=>b.addEventListener('click',async()=>{await navigator.clipboard?.writeText('${uuid}');b.setAttribute('data-copied','true');setTimeout(()=>b.removeAttribute('data-copied'),1200)}));const p=document.querySelector('[data-parallax]');if(p&&!matchMedia('(prefers-reduced-motion: reduce)').matches)addEventListener('scroll',()=>{p.style.transform='translateY('+(-Math.min(scrollY,400)*.15)+'px)'},{passive:true})})();`,
         }}
       />
     </body>
@@ -171,7 +309,13 @@ const Section = ({
 
 const BlogCard = ({ article }: { article: ArticleSource }) => (
   <a href={`/${articleSlug(article)}`} className="blog-card card">
-    <div className="blog-card-image" />
+    <div className="blog-card-image">
+      <img
+        src={`https://api.mimifuwa.cc/og/${articleSlug(article).replace(/^blogs\//, "")}`}
+        alt={titleOf(article)}
+        loading="lazy"
+      />
+    </div>
     <div className="blog-card-body">
       <p>{textOf(article.frontmatter.excerpt)}</p>
       <div className="blog-card-meta">
@@ -183,7 +327,7 @@ const BlogCard = ({ article }: { article: ArticleSource }) => (
               </span>
             ))}
         </div>
-        <time>{textOf(article.frontmatter.date)}</time>
+        <time dateTime={textOf(article.frontmatter.date)}>{textOf(article.frontmatter.date)}</time>
       </div>
     </div>
   </a>
@@ -192,34 +336,99 @@ const BlogCard = ({ article }: { article: ArticleSource }) => (
 const Home = ({ articles }: { articles: ArticleSource[] }) => (
   <>
     <section className="hero">
-      <div className="hero-inner">
-        <h1>
-          <span>mimifuwa.cc</span>
-        </h1>
-        <Button className={`session-copy hero-session ${actionButton}`} data-copy-uuid>
-          {uuid}
-        </Button>
+      <div className="hero-inner" data-parallax>
+        <img
+          className="hero-avatar"
+          src="/mimifuwacc.png"
+          alt="mimifuwacc"
+          width="128"
+          height="128"
+        />
+        <div>
+          <h1>
+            <span>mimifuwa.cc</span>
+          </h1>
+          <button
+            className={`session-copy hero-session ${actionButton}`}
+            type="button"
+            data-copy-uuid
+            aria-label="UUID をコピー"
+          >
+            <span data-uuid>{uuid}</span>
+            <Icon name="copy" className="icon copy-icon" />
+            <Icon name="check" className="icon check-icon" />
+          </button>
+        </div>
       </div>
     </section>
     <div className="home-sheet">
+      <div className="sheet-handle" />
       <Section title="About Me" subtitle="mimifuwacc について...">
         <div className="about-grid">
           <div className="card-stack">
             <article className="card content-card profile-card">
-              <h2>mimifuwacc</h2>
-              <p>電気通信大学 情報理工学域 コンピュータサイエンスプログラム</p>
-              <p>Webアプリケーションエンジニア．大学ではアセンブリの形式検証に取り組んでいます．</p>
+              <div className="profile-heading">
+                <img src="/mimifuwacc.png" alt="mimifuwacc" width="64" height="64" />
+                <div>
+                  <h2>
+                    mimifuwacc <small>ˈmiːmi</small>
+                  </h2>
+                  <p>
+                    電気通信大学 情報理工学域
+                    <br />
+                    コンピュータサイエンスプログラム
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <p>
+                Webアプリケーションエンジニア．大学ではアセンブリの形式検証に取り組んでいます．ヰ世界情緒とラノベが好き．
+              </p>
+              <div className="button-row">
+                <a
+                  className="pill-button profile-link"
+                  href="https://github.com/mimifuwacc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <BrandIcon name="github" /> GitHub
+                </a>
+                <a
+                  className="pill-button profile-link"
+                  href="https://twitter.com/mimifuwacc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <BrandIcon name="twitter" /> Twitter
+                </a>
+                <a
+                  className="pill-button profile-link"
+                  href="https://zenn.dev/mimifuwacc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <BrandIcon name="zenn" /> Zenn
+                </a>
+              </div>
             </article>
             <article className="card content-card">
-              <h2>Certifications</h2>
+              <h2>
+                <Icon name="award" /> Certifications
+              </h2>
+              <hr />
               <ul className="plain-list">
                 {certifications.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item}>
+                    <Icon name="badgeCheck" /> {item}
+                  </li>
                 ))}
               </ul>
             </article>
             <article className="card content-card">
-              <h2>Skills</h2>
+              <h2>
+                <Icon name="wrench" /> Skills
+              </h2>
+              <hr />
               <div className="skills">
                 {allSkills.map((skill) => (
                   <img
@@ -235,11 +444,16 @@ const Home = ({ articles }: { articles: ArticleSource[] }) => (
               </div>
             </article>
             <article className="card content-card">
-              <h2>Hobby</h2>
+              <h2>
+                <Icon name="smile" /> Hobby
+              </h2>
+              <hr />
               <div className="hobbies">
                 {hobbies.map((hobby) => (
                   <div key={hobby.name}>
-                    <h3>{hobby.name}</h3>
+                    <h3>
+                      <Icon name="chevronRight" /> {hobby.name}
+                    </h3>
                     {hobby.items && (
                       <div className="badges">
                         {hobby.items.map((item) => (
@@ -255,10 +469,14 @@ const Home = ({ articles }: { articles: ArticleSource[] }) => (
             </article>
           </div>
           <article className="card content-card timeline-card">
-            <h2>Timeline</h2>
+            <h2>
+              <Icon name="clock" /> Timeline
+            </h2>
+            <hr />
             <div className="timeline">
               {timelineData.map((event) => (
                 <div className="timeline-event" key={`${event.date}-${event.title}`}>
+                  <span className="timeline-dot" aria-hidden="true" />
                   <span className="badge badge-outline">{event.date}</span>
                   <h3>{event.title}</h3>
                   {event.description && <p>{event.description}</p>}
@@ -269,6 +487,14 @@ const Home = ({ articles }: { articles: ArticleSource[] }) => (
         </div>
       </Section>
       <Section title="Works" subtitle="作成したアプリ・サービスなど">
+        <a
+          className="section-link"
+          href="https://github.com/mimifuwacc"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <BrandIcon name="github" /> 他のプロジェクトを見る <Icon name="arrowUpRight" />
+        </a>
         <div className="works-grid">
           {works.map((work) => (
             <a
@@ -278,8 +504,13 @@ const Home = ({ articles }: { articles: ArticleSource[] }) => (
               rel="noopener noreferrer"
               key={work.title}
             >
+              {workImage(work.url, work.image) && (
+                <img src={workImage(work.url, work.image)} alt={work.title} loading="lazy" />
+              )}
               <div>
-                <h2>{work.title}</h2>
+                <h2>
+                  {work.title} <Icon name="externalLink" />
+                </h2>
                 <p>{work.description}</p>
               </div>
             </a>
@@ -287,6 +518,9 @@ const Home = ({ articles }: { articles: ArticleSource[] }) => (
         </div>
       </Section>
       <Section title="Blogs" subtitle="主に趣味について書いています">
+        <a className="section-link" href="/blogs">
+          すべての記事を見る <Icon name="arrowRight" />
+        </a>
         <div className="blog-grid">
           {articles.slice(0, 6).map((article) => (
             <BlogCard article={article} key={articleSlug(article)} />
