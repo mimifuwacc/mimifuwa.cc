@@ -24,12 +24,12 @@ flowchart LR
 
 各層の担当を次のように分ける．
 
-| 層         | 担当する責務                                                          |
-| ---------- | --------------------------------------------------------------------- |
-| Content    | Markdown を正本として管理する                                         |
-| Effect     | Computation，依存性，失敗，Concurrency                                |
-| Zustand    | Shared Mutable State                                                  |
-| React      | Temporal Rendering，Suspense，Transition，Commit                      |
-| React Aria | Interaction，Accessibility，Focus，Keyboard                           |
-| CSS        | Visual Presentation                                                   |
-| Astro      | Delivery と Composition Boundary。Routing，SSR，HTML Document，Island |
+| 層         | 担当する責務                                     |
+| ---------- | ------------------------------------------------ |
+| Content    | Markdown を正本として管理する                    |
+| Effect     | Computation，依存性，失敗，Concurrency           |
+| Zustand    | Shared Mutable State                             |
+| React      | Temporal Rendering，Suspense，Transition，Commit |
+| React Aria | Interaction，Accessibility，Focus，Keyboard      |
+| CSS        | Visual Presentation                              |
+| Vite SSG   | Build-time routing，HTML Document，静的配信      |

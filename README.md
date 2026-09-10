@@ -1,17 +1,16 @@
 # mimifuwa.cc
 
-個人ブログと記事管理画面を含む monorepo です。
+個人サイトと記事 renderer を含む monorepo です。
 
 ## アプリケーション
 
-- `apps/web`: Astro で構築したブログ本体。記事や静的コンテンツを中心に、必要な箇所だけ React island を使います。
-- `apps/admin`: TanStack Start / TanStack Router / React で構築する記事管理画面。URL と route tree を中心に、loader と server function で API に接続します。
-- `apps/api`: Cloudflare Workers + Hono の API。
+- `apps/web`: React + Vite で静的 HTML を生成するサイト本体。
+- `packages/cli`: private content repository を preview / check / SSG build する `@mimifuwacc/cli` (`mimifuwacc`)。
+- 記事は private repository `mimifuwacc/mimifuwa.cc-content` から CI で checkout して静的生成します。
 - `packages/parser`: Markdown と記事メタデータの解析。
-- `packages/blog-ui`: 記事本文・リンクカード・Twitter カードの表示契約、共通 CSS、表示用の純粋関数。
-- `packages/ui`: ブログと管理画面で共有する UI コンポーネント。
+- `packages/blog-ui`: 記事本文・リンクカード・Twitter カードの表示契約と共通 CSS。
 
-ブログと管理画面ではフレームワークを統一しません。Document first のブログには Astro、Application first の管理画面には TanStack Start を使い、Domain / Effect / UI の境界を共有します。
+公開サイトは build-time に Markdown を HTML へ変換する SSG です。記事の編集や未公開記事の preview は private content repository と `mimifuwacc` CLI で行います。
 
 ## 開発
 
@@ -20,7 +19,7 @@ vp install
 vp run dev
 ```
 
-個別に起動する場合は `vp run -F @mimifuwacc/admin dev` など、対象パッケージのスクリプトを実行してください。
+記事をローカルで preview する場合は、content repository のルートを指定して `mimifuwacc preview` を実行します。
 
 ## 確認
 
@@ -30,10 +29,10 @@ vp test
 vp run -r build
 ```
 
-Astro ファイルは Prettier、TypeScript / TSX ファイルは Vite+ の Oxfmt を使います。
+Formatter と linter は Vite+ (`vp fmt` / `vp lint`) に統一しています。
 
 ## デプロイ
 
 本番ブランチは `release`、開発ブランチは `dev` です。Cloudflare Workers の開発環境には `dev`、本番環境には `production` の Wrangler 設定を使います。
 
-管理画面は TanStack Start の Cloudflare Workers 出力を `wrangler deploy` で公開します。秘密鍵は `DOTENV_PRIVATE_KEY` と `DOTENV_PRIVATE_KEY_DEV` で管理します。
+Web は Cloudflare Workers Static Assets として `dist` を `wrangler deploy` します。CI は read-only の `CONTENT_REPOSITORY_TOKEN` で private content repository を一時 checkout します。

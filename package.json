@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "pnpm@11.7.0",
   "scripts": {
-    "dev": "pnpm --parallel --filter @mimifuwacc/api --filter @mimifuwacc/web --filter @mimifuwacc/admin run dev",
+    "dev": "vp run --filter @mimifuwacc/web dev",
     "format": "vp run format:fix",
     "format:check": "vp fmt --check",
     "format:fix": "vp fmt --write",

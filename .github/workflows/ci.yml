@@ -29,7 +29,7 @@ jobs:
       # 各パッケージの tsc による型チェック
       - run: vp run -r typecheck
 
-      # web / admin の本番ビルド
+      # web の本番ビルド
       - run: vp run -r build
 
       - run: vp test run --passWithNoTests

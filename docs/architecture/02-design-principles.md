@@ -8,7 +8,7 @@ $$ Computation \neq State \neq Rendering \neq Interaction \neq Presentation $$
 
 | 層         | 担当する処理                                                                |
 | ---------- | --------------------------------------------------------------------------- |
-| Astro      | Routing，Request Handling，SSR / SSG，HTML Document，Island Boundary        |
+| Vite SSG   | Build-time routing，SSG，HTML Document，静的配信                            |
 | Effect     | 非同期処理，依存性，エラー，Retry，Timeout，Cancellation，Resource Lifetime |
 | Zustand    | 複数の独立した Island で共有する Mutable Client State                       |
 | React      | Render，Suspense，Transition，Reconciliation，Commit                        |
@@ -17,11 +17,11 @@ $$ Computation \neq State \neq Rendering \neq Interaction \neq Presentation $$
 
 ## 2．Domain と UI を分離する
 
-Domain Program は React，Astro，DB，R2，HTTP を直接 import しない．実行環境は Effect の Layer や Adapter で与える．
+Domain Program は React，Vite，DB，R2，HTTP を直接 import しない．実行環境は Effect の Layer や Adapter で与える．
 
-UI Package は Effect，Zustand，API Client，application-specific type，domain-specific type を import しない．`UserId` のような domain primitive も禁止する．`packages/ui` は React Aria を使って UI primitive を実装し，Feature 層で domain type を UI 用の primitive または UI 専用 props に変換してから `@mimifuwacc/ui` に渡す．
+UI 層は Effect，API Client，application-specific type，domain-specific type を import しない．`UserId` のような domain primitive も禁止する．操作が必要な UI は React Aria を使い，Feature 層で domain type を UI 用の primitive または UI 専用 props に変換する．
 
-React Component は DB や R2 に直接アクセスしない．Astro の Server Boundary または Client Adapter を経由する．
+React Component は DB や R2 に直接アクセスしない．SSG build の content adapter または明示的な Client Adapter を経由する．
 
 ## 3．状態の所有者を明確にする
 
@@ -58,11 +58,11 @@ Zustand Store に Fetch，Retry，Cancellation，Workflow，API Cache を実装�
 
 ## 4．静的な HTML に React を読み込まない
 
-Astro はページ全体を HTML として生成する．React は操作が必要な部分だけに Island として追加する．
+Vite SSG はページ全体を HTML として生成する．React は static markup を基本とし，操作が必要な部分だけ client script / island として追加する．
 
 ```mermaid
 flowchart TD
-  Page[Astro Page] --> Static[Static HTML]
+  Page[Vite SSG Page] --> Static[Static HTML]
   Page --> Island[React Island]
   Island --> Adapter[Effect Adapter]
   Island --> Store[Zustand vanilla store]
@@ -76,24 +76,24 @@ flowchart TD
 flowchart TD
   Domain --> Programs[Effect Programs]
   Programs --> Server[Server Adapters]
-  Server --> Astro
+  Build --> Vite
   Programs --> Client[Client Adapters]
   Client --> Features[Features / Islands]
   Features --> React
   Features --> Zustand
-  Features --> UI[@mimifuwacc/ui]
+  Features --> ReactAria[React Aria]
   UI --> Aria[React Aria]
   Aria --> DOM
 ```
 
 次の依存を禁止する．
 
-- Domain → React / Astro
+- Domain → React / Vite SSG
 - `packages/ui` → Effect / Zustand / API / Domain
 - Zustand Store → Domain Workflow
 - React Component → DB / R2
-- Astro Component → Client Store
+- Static HTML → Client Adapter
 
 ## 6．実験的な Adapter を必須にしない
 
-Effect と Suspense / Transition を接続する `ReactM` や Resource Adapter は，既存のブログ表示に必須ではない．導入する場合も，Markdown，Astro SSR，静的 HTML が成立した後に追加する．
+Effect と Suspense / Transition を接続する Resource Adapter は，既存のブログ表示に必須ではない．導入する場合も，Markdown，ox-content，静的 HTML が成立した後に追加する．

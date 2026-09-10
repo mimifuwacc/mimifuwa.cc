@@ -171,21 +171,8 @@ export default defineConfig({
         },
       },
       {
-        files: ["apps/admin/**/*.{ts,tsx}"],
-        rules: {
-          "react/rules-of-hooks": "error",
-          "react/exhaustive-deps": "warn",
-          "react/only-export-components": [
-            "warn",
-            {
-              allowConstantExport: true,
-            },
-          ],
-        },
-      },
-      {
         // unified/hast/rehype-react を扱う層は AST と動的コンポーネントの性質上 any が避けられない
-        files: ["packages/parser/**/*.{ts,tsx}", "apps/admin/src/components/content/**/*.{ts,tsx}"],
+        files: ["packages/parser/**/*.{ts,tsx}"],
         rules: {
           "typescript/no-explicit-any": "off",
         },
@@ -215,14 +202,11 @@ export default defineConfig({
       "**/build/**",
       "**/out/**",
       "**/.next/**",
-      "**/.astro/**",
       "**/.vite/**",
       "**/.open-next/**",
       "**/.wrangler/**",
       "**/.direnv/**",
       "**/coverage/**",
-      // TanStack Router が自動生成するため、手動フォーマットの対象外にする。
-      "apps/admin/src/routeTree.gen.ts",
       "pnpm-lock.yaml",
       "**/*.tsbuildinfo",
     ],
