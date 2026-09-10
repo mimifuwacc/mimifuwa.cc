@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vp dev",
+    "dev": "vp build && node .vite/build.js && vp preview --host 127.0.0.1 --port 5173 --strictPort --outDir dist",
     "build": "vp build && node .vite/build.js",
-    "preview": "vite preview",
+    "preview": "vp preview --outDir dist",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
