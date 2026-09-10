@@ -1,5 +1,5 @@
 import { createServer, type Server } from "node:http";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import {
@@ -71,6 +71,7 @@ export const buildStaticSite = async () => {
   for (const article of allArticles) assertArticleStatus(article);
 
   const root = outputRoot();
+  await rm(root, { recursive: true, force: true });
   await mkdir(root, { recursive: true });
   await writeFile(join(root, "index.html"), indexDocument(articles));
 

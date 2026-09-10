@@ -89,7 +89,7 @@ flowchart TD
 次の依存を禁止する．
 
 - Domain → React / Vite SSG
-- `packages/ui` → Effect / Zustand / API / Domain
+- `packages/blog-ui` → Effect / Zustand / API / Domain
 - Zustand Store → Domain Workflow
 - React Component → DB / R2
 - Static HTML → Client Adapter

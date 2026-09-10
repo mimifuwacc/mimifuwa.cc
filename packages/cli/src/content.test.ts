@@ -31,6 +31,8 @@ describe("content visibility", () => {
     );
     process.env.MIMIFUWACC_CONTENT_ROOT = root;
     process.env.MIMIFUWACC_OUTPUT_ROOT = output;
+    await mkdir(join(output, "draft"), { recursive: true });
+    await writeFile(join(output, "draft", "index.html"), "stale draft output");
 
     expect(await loadArticles()).toHaveLength(2);
     expect(await loadArticles({ visibility: "published" })).toHaveLength(1);

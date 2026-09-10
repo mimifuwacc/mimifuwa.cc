@@ -1,4 +1,4 @@
-import { cp, mkdir, writeFile } from "node:fs/promises";
+import { cp, mkdir, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import { renderToStaticMarkup } from "react-dom/server";
@@ -389,6 +389,7 @@ const writePage = async (path: string, value: string) => {
 const main = async () => {
   const articles = await loadArticles({ visibility: "published" });
   for (const article of await loadArticles()) assertArticleStatus(article);
+  await rm(outputRoot, { recursive: true, force: true });
   await mkdir(outputRoot, { recursive: true });
   await writeFile(join(outputRoot, "styles.css"), styles);
   await cp(resolve("public"), join(outputRoot, "public"), { recursive: true, force: true }).catch(
