@@ -1,17 +1,10 @@
-import { cp, mkdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
 
-import {
-  formatTweetDate,
-  formatTweetMetric,
-  splitArticleHtml,
-  tweetTextParts,
-  visibleTweetText,
-  type TwitterEmbed,
-} from "@mimifuwacc/blog-ui";
+import { splitArticleHtml } from "@mimifuwacc/blog-ui";
 import {
   articleSlug,
   assertArticleStatus,
@@ -127,136 +120,86 @@ const workImage = (url: string, image?: string) => {
   return match ? `https://opengraph.githubassets.com/1/${match[1]}/${match[2]}` : undefined;
 };
 
-const CachedTweet = ({ id, tweet }: { id: string; tweet?: TwitterEmbed }) => {
-  const url = tweet?.url ?? `https://twitter.com/i/status/${id}`;
-  if (!tweet) {
-    return (
-      <a
-        className="cached-tweet cached-tweet-missing"
-        data-cached-embed="twitter-missing"
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <strong>ポストを Twitter で表示</strong>
-        <small>埋め込みを取得できませんでした</small>
-      </a>
-    );
-  }
+const escapeHtml = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 
-  const text = visibleTweetText(tweet);
-  return (
-    <article className="cached-tweet" data-cached-embed="twitter" data-tweet-id={id}>
-      <header className="cached-tweet-header">
-        {tweet.author.avatarUrl && (
-          <img
-            className="cached-tweet-avatar"
-            src={tweet.author.avatarUrl}
-            alt=""
-            width="48"
-            height="48"
-            loading="lazy"
-          />
-        )}
-        <div className="cached-tweet-author">
-          <strong>{tweet.author.name}</strong>
-          <span>@{tweet.author.username}</span>
-        </div>
-        <span className="cached-tweet-brand" aria-label="Twitter">
-          𝕏
-        </span>
-      </header>
-      {text && (
-        <p className="cached-tweet-text">
-          {tweetTextParts(text).map((part, index) =>
-            part.href ? (
-              <a
-                href={part.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                key={`${part.value}-${index}`}
-              >
-                {part.value}
-              </a>
-            ) : (
-              <span key={`${part.value}-${index}`}>{part.value}</span>
-            ),
-          )}
-        </p>
-      )}
-      {tweet.linkCard && (
-        <a
-          className="cached-tweet-link-card"
-          href={tweet.linkCard.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {tweet.linkCard.imageUrl && (
-            <img src={tweet.linkCard.imageUrl} alt={tweet.linkCard.imageAlt ?? ""} loading="lazy" />
-          )}
-          <span className="cached-tweet-link-card-content">
-            {tweet.linkCard.domain && <small>{tweet.linkCard.domain}</small>}
-            <strong>{tweet.linkCard.title}</strong>
-            {tweet.linkCard.description && <span>{tweet.linkCard.description}</span>}
-          </span>
-        </a>
-      )}
-      {tweet.media.length > 0 && (
-        <div
-          className={`cached-tweet-media cached-tweet-media-${Math.min(tweet.media.length, 4)}${tweet.media.length > 1 ? " cached-tweet-media-grid" : ""}`}
-        >
-          {tweet.media.slice(0, 4).map((media) => (
-            <img
-              src={media.url}
-              alt={media.alt}
-              width={media.width}
-              height={media.height}
-              loading="lazy"
-              key={media.url}
-            />
-          ))}
-        </div>
-      )}
-      <footer className="cached-tweet-footer">
-        {tweet.createdAt && (
-          <time dateTime={tweet.createdAt}>{formatTweetDate(tweet.createdAt)}</time>
-        )}
-        <span className="cached-tweet-metrics">
-          <span>返信 {formatTweetMetric(tweet.metrics.replies)}</span>
-          <span>RT {formatTweetMetric(tweet.metrics.retweets)}</span>
-          <span>♡ {formatTweetMetric(tweet.metrics.likes)}</span>
-        </span>
-        <a href={url} target="_blank" rel="noopener noreferrer">
-          Twitter で表示
-        </a>
-      </footer>
-    </article>
-  );
+type OgpData = { title?: string; description?: string; image?: string };
+type OgpCache = Record<string, { fetchedAt: number; data: OgpData }>;
+const ogpCachePath = resolve(process.env.MIMIFUWACC_OGP_CACHE ?? ".mimifuwacc-cache/ogp.json");
+const ogpCacheTtl = 7 * 24 * 60 * 60 * 1000;
+
+const loadOgpCache = async (): Promise<OgpCache> => {
+  try {
+    return JSON.parse(await readFile(ogpCachePath, "utf8")) as OgpCache;
+  } catch {
+    return {};
+  }
 };
 
-const renderArticleBody = async (html: string) => {
+const saveOgpCache = async (cache: OgpCache) => {
+  await mkdir(resolve(ogpCachePath, ".."), { recursive: true });
+  await writeFile(ogpCachePath, `${JSON.stringify(cache, null, 2)}\n`);
+};
+
+const hydrateLinkCards = async (html: string, cache: OgpCache) => {
+  const pattern = /<a class="embedded-link-card"[^>]*data-ogp-url="([^"]+)"[^>]*>[\s\S]*?<\/a>/g;
+  let result = html;
+  const matches = [...html.matchAll(pattern)];
+  for (const match of matches) {
+    const sourceUrl = match[1];
+    try {
+      const cached = cache[sourceUrl];
+      let ogp = cached && Date.now() - cached.fetchedAt < ogpCacheTtl ? cached.data : undefined;
+      if (!ogp) {
+        const response = await fetch(
+          `https://api.mimifuwa.cc/ogp?url=${encodeURIComponent(sourceUrl)}`,
+        );
+        if (!response.ok) continue;
+        ogp = (await response.json()) as OgpData;
+        cache[sourceUrl] = { fetchedAt: Date.now(), data: ogp };
+      }
+      let card = match[0];
+      if (ogp.title) {
+        card = card.replace(
+          /(<strong class="embedded-link-title">)[^<]*(<\/strong>)/,
+          `$1${escapeHtml(ogp.title)}$2`,
+        );
+      }
+      if (ogp.description) {
+        card = card.replace(
+          /<small class="embedded-link-description" hidden><\/small>/,
+          `<small class="embedded-link-description">${escapeHtml(ogp.description)}</small>`,
+        );
+      }
+      if (ogp.image) {
+        card = card.replace(
+          /<span class="embedded-link-image" hidden><img alt="" loading="lazy"><\/span>/,
+          `<span class="embedded-link-image"><img alt="${escapeHtml(ogp.title ?? "")}" loading="lazy" src="${escapeHtml(ogp.image)}"></span>`,
+        );
+      }
+      result = result.replace(match[0], card);
+    } catch {
+      // Keep the parser's hostname-only card when OGP is unavailable.
+    }
+  }
+  return result;
+};
+
+const renderArticleBody = async (html: string, cache: OgpCache) => {
   const parts = splitArticleHtml(html);
-  const tweets = new Map<string, TwitterEmbed | undefined>();
-  await Promise.all(
-    parts
-      .filter((part): part is { kind: "twitter"; id: string } => part.kind === "twitter")
-      .map(async (part) => {
-        try {
-          const base = process.env.MIMIFUWACC_EMBED_API_URL ?? "https://api.mimifuwa.cc";
-          const response = await fetch(`${base.replace(/\/$/, "")}/embeds/twitter/${part.id}`);
-          tweets.set(part.id, response.ok ? ((await response.json()) as TwitterEmbed) : undefined);
-        } catch {
-          tweets.set(part.id, undefined);
-        }
-      }),
-  );
-  return parts
+  const body = parts
     .map((part) =>
       part.kind === "twitter"
-        ? renderToStaticMarkup(<CachedTweet id={part.id} tweet={tweets.get(part.id)} />)
+        ? `<blockquote class="twitter-tweet" data-dnt="true"><a href="https://twitter.com/i/status/${part.id}">https://twitter.com/i/status/${part.id}</a></blockquote>`
         : part.value,
     )
     .join("");
+  return hydrateLinkCards(body, cache);
 };
 
 const titleOf = (article: ArticleSource) =>
@@ -410,6 +353,7 @@ const Layout = ({
       <meta property="og:description" content={description} />
       <title>{title}</title>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
+      <script async src="https://platform.twitter.com/widgets.js" />
     </head>
     <body>
       <div className="page-shell">
@@ -419,7 +363,7 @@ const Layout = ({
       </div>
       <script
         dangerouslySetInnerHTML={{
-          __html: `(()=>{const d=document.documentElement;const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&matchMedia('(prefers-color-scheme: dark)').matches))d.classList.add('dark');document.querySelectorAll('.theme-toggle').forEach(b=>b.addEventListener('click',()=>{d.classList.toggle('dark');localStorage.setItem('theme',d.classList.contains('dark')?'dark':'light')}));const menu=document.querySelector('.menu-toggle'),nav=document.querySelector('.mobile-nav');menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));if(nav)nav.hidden=!open});document.querySelectorAll('[data-copy-uuid]').forEach((b)=>b.addEventListener('click',async()=>{await navigator.clipboard?.writeText('${uuid}');b.setAttribute('data-copied','true');setTimeout(()=>b.removeAttribute('data-copied'),1200)}));const p=document.querySelector('[data-parallax]');if(p&&!matchMedia('(prefers-reduced-motion: reduce)').matches)addEventListener('scroll',()=>{p.style.transform='translateY('+(-Math.min(scrollY,400)*.15)+'px)'},{passive:true})})();`,
+          __html: `(()=>{const d=document.documentElement;const saved=localStorage.getItem('theme');if(saved==='dark'||(!saved&&matchMedia('(prefers-color-scheme: dark)').matches))d.classList.add('dark');document.querySelectorAll('.theme-toggle').forEach(b=>b.addEventListener('click',()=>{d.classList.toggle('dark');localStorage.setItem('theme',d.classList.contains('dark')?'dark':'light')}));const menu=document.querySelector('.menu-toggle'),nav=document.querySelector('.mobile-nav');menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));if(nav)nav.hidden=!open});document.querySelectorAll('[data-copy-uuid]').forEach((b)=>b.addEventListener('click',async()=>{await navigator.clipboard?.writeText('${uuid}');b.setAttribute('data-copied','true');setTimeout(()=>b.removeAttribute('data-copied'),1200)}));const p=document.querySelector('[data-parallax]');if(p&&!matchMedia('(prefers-reduced-motion: reduce)').matches)addEventListener('scroll',()=>{p.style.transform='translateY('+(-Math.min(scrollY,400)*.15)+'px)'},{passive:true});document.querySelectorAll('[data-ogp-url]').forEach(async c=>{try{const r=await fetch('https://api.mimifuwa.cc/ogp?url='+encodeURIComponent(c.dataset.ogpUrl||''));if(!r.ok)return;const o=await r.json();const t=c.querySelector('.embedded-link-title'),d=c.querySelector('.embedded-link-description'),i=c.querySelector('.embedded-link-image'),m=i?.querySelector('img');if(t&&o.title)t.textContent=o.title;if(d&&o.description){d.textContent=o.description;d.hidden=false}if(i&&m&&o.image){m.src=o.image;m.alt=o.title||'';i.hidden=false}}catch{}})})();`,
         }}
       />
     </body>
@@ -767,6 +711,7 @@ const writePage = async (path: string, value: string) => {
 
 const main = async () => {
   const articles = await loadArticles({ visibility: "published" });
+  const ogpCache = await loadOgpCache();
   for (const article of await loadArticles()) assertArticleStatus(article);
   await rm(outputRoot, { recursive: true, force: true });
   await mkdir(outputRoot, { recursive: true });
@@ -808,7 +753,7 @@ const main = async () => {
   );
   for (const article of articles) {
     const rendered = await renderArticle(article);
-    const articleHtml = await renderArticleBody(rendered.html);
+    const articleHtml = await renderArticleBody(rendered.html, ogpCache);
     await writePage(
       articleSlug(article),
       html(
@@ -818,6 +763,7 @@ const main = async () => {
       ),
     );
   }
+  await saveOgpCache(ogpCache);
 };
 
 await main();
