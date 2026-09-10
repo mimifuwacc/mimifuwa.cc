@@ -5,6 +5,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
 
 import {
+  formatTweetDate,
+  formatTweetMetric,
+  splitArticleHtml,
+  tweetTextParts,
+  visibleTweetText,
+  type TwitterEmbed,
+} from "@mimifuwacc/blog-ui";
+import {
   articleSlug,
   assertArticleStatus,
   loadArticles,
@@ -117,6 +125,138 @@ const workImage = (url: string, image?: string) => {
   if (image) return image;
   const match = url.match(/github\.com\/([^/]+)\/([^/?]+)/);
   return match ? `https://opengraph.githubassets.com/1/${match[1]}/${match[2]}` : undefined;
+};
+
+const CachedTweet = ({ id, tweet }: { id: string; tweet?: TwitterEmbed }) => {
+  const url = tweet?.url ?? `https://twitter.com/i/status/${id}`;
+  if (!tweet) {
+    return (
+      <a
+        className="cached-tweet cached-tweet-missing"
+        data-cached-embed="twitter-missing"
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <strong>ポストを Twitter で表示</strong>
+        <small>埋め込みを取得できませんでした</small>
+      </a>
+    );
+  }
+
+  const text = visibleTweetText(tweet);
+  return (
+    <article className="cached-tweet" data-cached-embed="twitter" data-tweet-id={id}>
+      <header className="cached-tweet-header">
+        {tweet.author.avatarUrl && (
+          <img
+            className="cached-tweet-avatar"
+            src={tweet.author.avatarUrl}
+            alt=""
+            width="48"
+            height="48"
+            loading="lazy"
+          />
+        )}
+        <div className="cached-tweet-author">
+          <strong>{tweet.author.name}</strong>
+          <span>@{tweet.author.username}</span>
+        </div>
+        <span className="cached-tweet-brand" aria-label="Twitter">
+          𝕏
+        </span>
+      </header>
+      {text && (
+        <p className="cached-tweet-text">
+          {tweetTextParts(text).map((part, index) =>
+            part.href ? (
+              <a
+                href={part.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={`${part.value}-${index}`}
+              >
+                {part.value}
+              </a>
+            ) : (
+              <span key={`${part.value}-${index}`}>{part.value}</span>
+            ),
+          )}
+        </p>
+      )}
+      {tweet.linkCard && (
+        <a
+          className="cached-tweet-link-card"
+          href={tweet.linkCard.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {tweet.linkCard.imageUrl && (
+            <img src={tweet.linkCard.imageUrl} alt={tweet.linkCard.imageAlt ?? ""} loading="lazy" />
+          )}
+          <span className="cached-tweet-link-card-content">
+            {tweet.linkCard.domain && <small>{tweet.linkCard.domain}</small>}
+            <strong>{tweet.linkCard.title}</strong>
+            {tweet.linkCard.description && <span>{tweet.linkCard.description}</span>}
+          </span>
+        </a>
+      )}
+      {tweet.media.length > 0 && (
+        <div
+          className={`cached-tweet-media cached-tweet-media-${Math.min(tweet.media.length, 4)}${tweet.media.length > 1 ? " cached-tweet-media-grid" : ""}`}
+        >
+          {tweet.media.slice(0, 4).map((media) => (
+            <img
+              src={media.url}
+              alt={media.alt}
+              width={media.width}
+              height={media.height}
+              loading="lazy"
+              key={media.url}
+            />
+          ))}
+        </div>
+      )}
+      <footer className="cached-tweet-footer">
+        {tweet.createdAt && (
+          <time dateTime={tweet.createdAt}>{formatTweetDate(tweet.createdAt)}</time>
+        )}
+        <span className="cached-tweet-metrics">
+          <span>返信 {formatTweetMetric(tweet.metrics.replies)}</span>
+          <span>RT {formatTweetMetric(tweet.metrics.retweets)}</span>
+          <span>♡ {formatTweetMetric(tweet.metrics.likes)}</span>
+        </span>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          Twitter で表示
+        </a>
+      </footer>
+    </article>
+  );
+};
+
+const renderArticleBody = async (html: string) => {
+  const parts = splitArticleHtml(html);
+  const tweets = new Map<string, TwitterEmbed | undefined>();
+  await Promise.all(
+    parts
+      .filter((part): part is { kind: "twitter"; id: string } => part.kind === "twitter")
+      .map(async (part) => {
+        try {
+          const base = process.env.MIMIFUWACC_EMBED_API_URL ?? "https://api.mimifuwa.cc";
+          const response = await fetch(`${base.replace(/\/$/, "")}/embeds/twitter/${part.id}`);
+          tweets.set(part.id, response.ok ? ((await response.json()) as TwitterEmbed) : undefined);
+        } catch {
+          tweets.set(part.id, undefined);
+        }
+      }),
+  );
+  return parts
+    .map((part) =>
+      part.kind === "twitter"
+        ? renderToStaticMarkup(<CachedTweet id={part.id} tweet={tweets.get(part.id)} />)
+        : part.value,
+    )
+    .join("");
 };
 
 const titleOf = (article: ArticleSource) =>
@@ -668,11 +808,12 @@ const main = async () => {
   );
   for (const article of articles) {
     const rendered = await renderArticle(article);
+    const articleHtml = await renderArticleBody(rendered.html);
     await writePage(
       articleSlug(article),
       html(
         <Layout path={`/${articleSlug(article)}`} title={`${titleOf(article)} | mimifuwa.cc`}>
-          <Article article={article} html={rendered.html} headings={rendered.headings} />
+          <Article article={article} html={articleHtml} headings={rendered.headings} />
         </Layout>,
       ),
     );
