@@ -46,9 +46,10 @@ const contentRootFromEnvironment = () => {
   }
 
   const candidates = [
-    resolve("contents"),
     resolve("../mimifuwa.cc-content"),
     resolve("../../mimifuwa.cc-content"),
+    resolve("../../../mimifuwa.cc-content"),
+    resolve("contents"),
     resolve("../../contents"),
     resolve("../../../contents"),
   ];
