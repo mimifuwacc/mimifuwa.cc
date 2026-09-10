@@ -1,5 +1,3 @@
-/// <reference types="astro/client" />
-
 interface ImportMetaEnv {
   readonly DEV: boolean;
   readonly VITE_API_URL?: string;
@@ -21,4 +19,8 @@ interface ContentApiFetcher {
 
 declare module "cloudflare:workers" {
   export const env: Cloudflare.Env;
+}
+declare module "*.css?raw" {
+  const content: string;
+  export default content;
 }
