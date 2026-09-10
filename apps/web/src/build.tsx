@@ -4,7 +4,14 @@ import { join, resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactNode } from "react";
 
-import { splitArticleHtml } from "@mimifuwacc/blog-ui";
+import {
+  formatTweetDate,
+  formatTweetMetric,
+  splitArticleHtml,
+  tweetTextParts,
+  type TwitterEmbed,
+  visibleTweetText,
+} from "@mimifuwacc/blog-ui";
 import {
   articleSlug,
   assertArticleStatus,
@@ -146,6 +153,34 @@ const saveOgpCache = async (cache: OgpCache) => {
   await writeFile(ogpCachePath, `${JSON.stringify(cache, null, 2)}\n`);
 };
 
+const renderStaticTweet = (id: string, tweet?: TwitterEmbed) => {
+  const url = tweet?.url ?? `https://x.com/i/web/status/${id}`;
+  if (!tweet) {
+    return `<a class="ox-tweet cached-tweet cached-tweet-missing" href="${url}" target="_blank" rel="noopener noreferrer"><strong>ポストを X で表示</strong><small>埋め込みを取得できませんでした</small></a>`;
+  }
+  const text = visibleTweetText(tweet);
+  const textHtml = tweetTextParts(text)
+    .map((part) =>
+      part.href
+        ? `<a href="${escapeHtml(part.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(part.value)}</a>`
+        : escapeHtml(part.value),
+    )
+    .join("");
+  const mediaHtml = tweet.media.length
+    ? `<div class="cached-tweet-media cached-tweet-media-${Math.min(tweet.media.length, 4)}${tweet.media.length > 1 ? " cached-tweet-media-grid" : ""}">${tweet.media
+        .slice(0, 4)
+        .map(
+          (media) =>
+            `<img src="${escapeHtml(media.url)}" alt="${escapeHtml(media.alt)}" loading="lazy">`,
+        )
+        .join("")}</div>`
+    : "";
+  const linkHtml = tweet.linkCard
+    ? `<a class="cached-tweet-link-card" href="${escapeHtml(tweet.linkCard.url)}" target="_blank" rel="noopener noreferrer">${tweet.linkCard.imageUrl ? `<img src="${escapeHtml(tweet.linkCard.imageUrl)}" alt="${escapeHtml(tweet.linkCard.imageAlt ?? "")}" loading="lazy">` : ""}<span class="cached-tweet-link-card-content">${tweet.linkCard.domain ? `<small>${escapeHtml(tweet.linkCard.domain)}</small>` : ""}<strong>${escapeHtml(tweet.linkCard.title)}</strong>${tweet.linkCard.description ? `<span>${escapeHtml(tweet.linkCard.description)}</span>` : ""}</span></a>`
+    : "";
+  return `<figure class="ox-tweet ox-tweet--fetched ox-tweet--full cached-tweet" data-tweet-id="${id}"><header class="cached-tweet-header">${tweet.author.avatarUrl ? `<img class="cached-tweet-avatar" src="${escapeHtml(tweet.author.avatarUrl)}" alt="" width="48" height="48" loading="lazy">` : ""}<div class="cached-tweet-author"><strong>${escapeHtml(tweet.author.name)}</strong><span>@${escapeHtml(tweet.author.username)}</span></div><a class="cached-tweet-brand" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="View on X">𝕏</a></header>${textHtml ? `<p class="cached-tweet-text">${textHtml}</p>` : ""}${linkHtml}${mediaHtml}<footer class="cached-tweet-footer"><time datetime="${tweet.createdAt ?? ""}">${tweet.createdAt ? escapeHtml(formatTweetDate(tweet.createdAt) ?? "") : ""}</time><span class="cached-tweet-metrics"><span>返信 ${formatTweetMetric(tweet.metrics.replies)}</span><span>RT ${formatTweetMetric(tweet.metrics.retweets)}</span><span>♡ ${formatTweetMetric(tweet.metrics.likes)}</span></span><a href="${url}" target="_blank" rel="noopener noreferrer">X で表示</a></footer></figure>`;
+};
+
 const hydrateLinkCards = async (html: string, cache: OgpCache) => {
   const pattern = /<a class="embedded-link-card"[^>]*data-ogp-url="([^"]+)"[^>]*>[\s\S]*?<\/a>/g;
   let result = html;
@@ -192,11 +227,22 @@ const hydrateLinkCards = async (html: string, cache: OgpCache) => {
 
 const renderArticleBody = async (html: string, cache: OgpCache) => {
   const parts = splitArticleHtml(html);
+  const tweets = new Map<string, TwitterEmbed | undefined>();
+  await Promise.all(
+    parts
+      .filter((part): part is { kind: "twitter"; id: string } => part.kind === "twitter")
+      .map(async ({ id }) => {
+        try {
+          const response = await fetch(`https://api.mimifuwa.cc/embeds/twitter/${id}`);
+          tweets.set(id, response.ok ? ((await response.json()) as TwitterEmbed) : undefined);
+        } catch {
+          tweets.set(id, undefined);
+        }
+      }),
+  );
   const body = parts
     .map((part) =>
-      part.kind === "twitter"
-        ? `<blockquote class="twitter-tweet" data-dnt="true"><a href="https://twitter.com/i/status/${part.id}">https://twitter.com/i/status/${part.id}</a></blockquote>`
-        : part.value,
+      part.kind === "twitter" ? renderStaticTweet(part.id, tweets.get(part.id)) : part.value,
     )
     .join("");
   return hydrateLinkCards(body, cache);
@@ -353,7 +399,6 @@ const Layout = ({
       <meta property="og:description" content={description} />
       <title>{title}</title>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <script async src="https://platform.twitter.com/widgets.js" />
     </head>
     <body>
       <div className="page-shell">
