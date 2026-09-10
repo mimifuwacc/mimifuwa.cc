@@ -45,7 +45,13 @@ const contentRootFromEnvironment = () => {
     return resolve(process.env.MIMIFUWACC_CONTENT_ROOT);
   }
 
-  const candidates = [resolve("contents"), resolve("../../contents"), resolve("../../../contents")];
+  const candidates = [
+    resolve("contents"),
+    resolve("../mimifuwa.cc-content"),
+    resolve("../../mimifuwa.cc-content"),
+    resolve("../../contents"),
+    resolve("../../../contents"),
+  ];
   return candidates.find((candidate) => existsSync(candidate)) ?? candidates[0];
 };
 
