@@ -4,7 +4,7 @@ export default defineConfig({
   build: {
     ssr: "src/index.ts",
     rollupOptions: {
-      external: [/^node:/],
+      external: [/^node:/, /^@ox-content\/napi$/],
       output: {
         entryFileNames: "index.js",
         inlineDynamicImports: true,

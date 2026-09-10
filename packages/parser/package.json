@@ -18,6 +18,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ox-content/napi": "^2.90.0",
     "hast-util-to-html": "^9.0.1",
     "highlight.js": "catalog:",
     "rehype-highlight": "^7.0.2",
@@ -34,8 +35,6 @@
     "vfile-matter": "^5.0.1"
   },
   "devDependencies": {
-    "@ox-content/napi": "^2.90.0",
-    "@ox-content/wasm": "^2.90.0",
     "@types/hast": "^3.0.4",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

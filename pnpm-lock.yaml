@@ -58,6 +58,9 @@ importers:
       '@mimifuwacc/parser':
         specifier: workspace:*
         version: link:../../packages/parser
+      '@ox-content/napi':
+        specifier: ^2.90.0
+        version: 2.90.0
       effect:
         specifier: ^3.17.0
         version: 3.22.1
@@ -98,6 +101,9 @@ importers:
       '@mimifuwacc/parser':
         specifier: workspace:*
         version: link:../parser
+      '@ox-content/napi':
+        specifier: ^2.90.0
+        version: 2.90.0
       vfile:
         specifier: ^6.0.3
         version: 6.0.3
@@ -117,6 +123,9 @@ importers:
 
   packages/parser:
     dependencies:
+      '@ox-content/napi':
+        specifier: ^2.90.0
+        version: 2.90.0
       hast-util-to-html:
         specifier: ^9.0.1
         version: 9.0.5
@@ -166,12 +175,6 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
     devDependencies:
-      '@ox-content/napi':
-        specifier: ^2.90.0
-        version: 2.90.0
-      '@ox-content/wasm':
-        specifier: ^2.90.0
-        version: 2.90.0
       '@types/hast':
         specifier: ^3.0.4
         version: 3.0.4
@@ -665,9 +668,6 @@ packages:
 
   '@ox-content/napi@2.90.0':
     resolution: {integrity: sha512-HgwiSxJEQD7odk7eBfoDRy0sUpOIDSRfN9T+0f/mSdV7bpkPsFwfRnqCf8J20GsiXfQHjyQVBusACYflT4quaA==}
-
-  '@ox-content/wasm@2.90.0':
-    resolution: {integrity: sha512-IjoHThEuwhp7gYgKh7eYPBnCy4Tgpi6wht7MAYXBp4hIdmnUwhniT+V1oHyDp61bvRHgskpIsAnzJeN1E63ENA==}
 
   '@oxc-project/runtime@0.133.0':
     resolution: {integrity: sha512-PkvjA1Lq5++V5S1E6Patr92ZVcieE6EalDr1VJTqv4BnjZdOUC4W3p8k1wMXSd5/2aFP4b/A6N5sg2Bkzcr9vQ==}
@@ -2577,8 +2577,6 @@ snapshots:
       '@ox-content/binding-linux-x64-gnu': 2.90.0
       '@ox-content/binding-linux-x64-musl': 2.90.0
       '@ox-content/binding-win32-x64-msvc': 2.90.0
-
-  '@ox-content/wasm@2.90.0': {}
 
   '@oxc-project/runtime@0.133.0': {}
 

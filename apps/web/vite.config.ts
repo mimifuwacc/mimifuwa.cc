@@ -5,6 +5,7 @@ export default defineConfig({
     ssr: "src/build.tsx",
     outDir: ".vite",
     rollupOptions: {
+      external: [/^node:/, /^@ox-content\/napi$/],
       output: {
         entryFileNames: "build.js",
       },
