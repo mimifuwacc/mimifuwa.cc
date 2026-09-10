@@ -101,9 +101,6 @@ importers:
 
   packages/cli:
     dependencies:
-      '@mimifuwacc/parser':
-        specifier: workspace:*
-        version: link:../parser
       '@ox-content/napi':
         specifier: ^2.90.0
         version: 2.90.0
@@ -114,6 +111,9 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
     devDependencies:
+      '@mimifuwacc/parser':
+        specifier: workspace:*
+        version: link:../parser
       '@types/node':
         specifier: ^24.10.0
         version: 24.13.2
