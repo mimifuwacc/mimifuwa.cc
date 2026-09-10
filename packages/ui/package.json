@@ -11,6 +11,7 @@
     "./lib/utils": "./src/lib/utils.ts"
   },
   "dependencies": {
+    "@vanilla-extract/css": "^1.21.2",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "lucide-react": "catalog:",

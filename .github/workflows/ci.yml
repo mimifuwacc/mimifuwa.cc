@@ -20,10 +20,10 @@ jobs:
           cache: true
           run-install: true
 
-      # Oxfmt と Astro 用 Prettier
+      # Oxfmt と Prettier
       - run: vp run format:check
 
-      # Oxc/TypeScript lint と Astro 用 ESLint
+      # Oxc/TypeScript lint
       - run: vp run lint
 
       # 各パッケージの tsc による型チェック

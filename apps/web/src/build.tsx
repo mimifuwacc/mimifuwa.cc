@@ -310,6 +310,14 @@ const Links = () => (
   </Section>
 );
 
+const NotFound = () => (
+  <Section title="404" subtitle="お探しのページは存在しません">
+    <a className="pill-button" href="/">
+      ホームへ戻る
+    </a>
+  </Section>
+);
+
 const Article = ({
   article,
   html,
@@ -375,6 +383,14 @@ const main = async () => {
     html(
       <Layout path="/">
         <Home articles={articles} />
+      </Layout>,
+    ),
+  );
+  await writeFile(
+    join(outputRoot, "404.html"),
+    html(
+      <Layout path="/404" title="ページが見つかりません | mimifuwa.cc">
+        <NotFound />
       </Layout>,
     ),
   );

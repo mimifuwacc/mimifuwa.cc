@@ -35,9 +35,9 @@ export async function parseArticleToHtml(markdown: string): Promise<{
     .use(rehypeHighlight)
     .use(rehypeCodeBlock)
     .use(rehypeHeadingIds, headings)
+    .use(rehypeCustom)
     .use(rehypeLinkCardFallback)
     .use(rehypeStringify)
-    .use(rehypeCustom)
     .process(markdownFile(markdown));
 
   return {

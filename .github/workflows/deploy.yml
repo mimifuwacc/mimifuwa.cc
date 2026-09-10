@@ -5,6 +5,8 @@ on:
     branches:
       - release
   workflow_dispatch:
+  repository_dispatch:
+    types: [content-published]
 
 permissions:
   contents: write
@@ -23,6 +25,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Checkout private content
+        uses: actions/checkout@v7
+        with:
+          repository: mimifuwacc/mimifuwa.cc-content
+          token: ${{ secrets.CONTENT_REPOSITORY_TOKEN }}
+          path: .content
+          persist-credentials: false
+
       - name: Install pnpm
         uses: pnpm/action-setup@v6
 
@@ -35,37 +45,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Migrate D1
-        working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs --remote
-
-      - name: Set API secret (prod)
-        working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET'
-
-      - name: Deploy API
-        working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.toml
-
       - name: Build web
         working-directory: apps/web
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
+        env:
+          MIMIFUWACC_CONTENT_ROOT: ${{ github.workspace }}/.content
+        run: pnpm run build
 
       - name: Deploy web
         working-directory: apps/web
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy
-
-      - name: Build admin
-        working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
-
-      - name: Set admin secret (prod)
-        working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.jsonc'
-
-      - name: Deploy admin
-        working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config dist/server/wrangler.json
+        run: pnpm exec wrangler deploy --config wrangler.jsonc --env=""
 
   release:
     needs: deploy

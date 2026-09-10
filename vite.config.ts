@@ -145,13 +145,6 @@ export default defineConfig({
     },
     overrides: [
       {
-        // Astro injects this global into component frontmatter.
-        files: ["apps/web/**/*.astro"],
-        rules: {
-          "no-undef": "off",
-        },
-      },
-      {
         files: ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
         rules: {
           "constructor-super": "off",
@@ -223,6 +216,7 @@ export default defineConfig({
       "**/out/**",
       "**/.next/**",
       "**/.astro/**",
+      "**/.vite/**",
       "**/.open-next/**",
       "**/.wrangler/**",
       "**/.direnv/**",
@@ -237,7 +231,5 @@ export default defineConfig({
   staged: {
     "*.{ts,tsx,js,jsx}": "vp lint --fix",
     "*.{ts,tsx,js,jsx,json,css,md}": "vp fmt --write",
-    "*.astro": "prettier --write",
-    "**/*.astro": "eslint",
   },
 });

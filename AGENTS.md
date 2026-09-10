@@ -14,3 +14,8 @@ Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.de
 - [ ] If setup, runtime, or package-manager behavior looks wrong, run `vp env doctor` and include its output when asking for help.
 
 <!--VITE PLUS END-->
+
+## Pull requests
+
+- AI-generated pull request titles and descriptions must be written in Japanese unless the user requests another language.
+- Keep template headings and HTML comments in English when they are intended as authoring guidance.

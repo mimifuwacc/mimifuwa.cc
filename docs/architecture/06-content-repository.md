@@ -58,6 +58,11 @@ App token or deploy key, runs the static build, and deploys only generated
 files. The private checkout is ephemeral and is never committed to the public
 repository.
 
+The public repository workflows expect a secret named
+`CONTENT_REPOSITORY_TOKEN`. Its token must have read-only access to
+`mimifuwacc/mimifuwa.cc-content` and no access to the public repository's write
+operations.
+
 Publishing is a content-repository event: merging a content PR dispatches a
 build of `mimifuwacc/mimifuwa.cc`. A public-site source change also triggers
 the same build, using the pinned content revision configured by CI.

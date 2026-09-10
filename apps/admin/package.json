@@ -16,9 +16,9 @@
     "@mimifuwacc/blog-ui": "workspace:*",
     "@mimifuwacc/parser": "workspace:*",
     "@mimifuwacc/ui": "workspace:*",
+    "@tanstack/react-query": "catalog:",
     "@tanstack/react-router": "1.170.0",
     "@tanstack/react-start": "1.168.0",
-    "@tanstack/react-query": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "highlight.js": "catalog:",
@@ -32,16 +32,17 @@
     "tw-animate-css": "catalog:"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "1.51.2",
     "@cloudflare/workers-types": "catalog:",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "^24",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@cloudflare/vite-plugin": "1.51.2",
+    "@vanilla-extract/vite-plugin": "^5.2.6",
     "@vitejs/plugin-react": "6.0.0",
-    "vite": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "wrangler": "catalog:"
   }
 }
