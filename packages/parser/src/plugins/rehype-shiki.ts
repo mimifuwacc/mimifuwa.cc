@@ -1,24 +1,29 @@
 import type { Element, Root, Text } from "hast";
 import rehypeParse from "rehype-parse";
-import { createHighlighter } from "shiki";
+import { createHighlighter, type BundledLanguage } from "shiki";
 import { unified } from "unified";
 import { visit } from "unist-util-visit";
 
-const highlighter = createHighlighter({
-  langs: [
-    "bash",
-    "css",
-    "html",
-    "javascript",
-    "json",
-    "markdown",
-    "shellscript",
-    "tsx",
-    "typescript",
-    "yaml",
-  ],
-  themes: ["github-light"],
-});
+const highlighter = createHighlighter({ langs: [], themes: ["github-light"] });
+const loadedLanguages = new Map<string, Promise<void>>();
+
+const ensureLanguage = async (language: string) => {
+  if (language === "text") return;
+
+  const existing = loadedLanguages.get(language);
+  if (existing) return existing;
+
+  const loading = highlighter.then((instance) =>
+    instance.loadLanguage(language as BundledLanguage),
+  );
+  loadedLanguages.set(language, loading);
+  try {
+    await loading;
+  } catch (error) {
+    loadedLanguages.delete(language);
+    throw error;
+  }
+};
 
 const textContent = (node: Element | Text): string => {
   if (node.type === "text") return node.value;
@@ -52,6 +57,7 @@ const rehypeShiki = () => async (tree: Root) => {
     const filename = pre.properties?.["data-filename"];
 
     try {
+      await ensureLanguage(lang);
       const highlighted = (await highlighter).codeToHtml(source, {
         lang,
         theme: "github-light",
