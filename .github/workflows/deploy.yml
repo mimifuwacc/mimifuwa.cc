@@ -43,6 +43,15 @@ jobs:
         working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET'
 
+      - name: Set cache purge token (prod)
+        working-directory: apps/api
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'test -n "$CACHE_PURGE_API_TOKEN" || { echo "CACHE_PURGE_API_TOKEN is required" >&2; exit 1; }; echo "$CACHE_PURGE_API_TOKEN" | pnpm exec wrangler secret put CACHE_PURGE_API_TOKEN'
+
+      - name: Set cache purge zone (prod)
+        working-directory: apps/api
+        run: >-
+          pnpm exec dotenvx run -f ../../env/.env.production -- sh -c 'zone_id=$(curl --fail-with-body --silent --show-error -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4/zones?name=mimifuwa.cc&status=active" | jq -r ".result[0].id"); test -n "$zone_id" && test "$zone_id" != "null" || { echo "Unable to find the mimifuwa.cc zone" >&2; exit 1; }; echo "$zone_id" | pnpm exec wrangler secret put CLOUDFLARE_ZONE_ID'
+
       - name: Deploy API
         working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.toml

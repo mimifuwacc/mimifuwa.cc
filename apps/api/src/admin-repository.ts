@@ -1,6 +1,7 @@
 import { and, count, desc, eq } from "drizzle-orm";
 import { createDb } from "./db";
 import { blogPosts, blogTags, tags } from "./db/schema";
+import { purgePublicCache } from "./cache-purge";
 import type { Env } from "./repository";
 
 export interface AdminPostInput {
@@ -104,6 +105,11 @@ export const createAdminPost = async (env: Env, input: AdminPostInput) => {
     }),
     replaceTags(env, row.id, input.tags),
   ]);
+  try {
+    await purgePublicCache(env, [row.slug]);
+  } catch (error) {
+    console.error(error);
+  }
   return toAdminPost(env, row);
 };
 
@@ -154,6 +160,11 @@ export const updateAdminPost = async (env: Env, currentSlug: string, input: Admi
     ]),
   ]);
   if (existing.r2Key !== r2Key) await env.R2.delete(existing.r2Key);
+  try {
+    await purgePublicCache(env, [currentSlug, row.slug]);
+  } catch (error) {
+    console.error(error);
+  }
   return toAdminPost(env, row);
 };
 
@@ -165,6 +176,11 @@ export const deleteAdminPost = async (env: Env, slug: string) => {
     db.delete(blogPosts).where(eq(blogPosts.id, row.id)),
     env.R2.delete([row.r2Key, `posts/${slug}.html`, `og/${slug}.png`, `og/v2/${slug}.png`]),
   ]);
+  try {
+    await purgePublicCache(env, [slug]);
+  } catch (error) {
+    console.error(error);
+  }
   return true;
 };
 
@@ -175,6 +191,13 @@ export const archiveAdminPost = async (env: Env, slug: string) => {
     .where(eq(blogPosts.slug, slug))
     .returning();
   if (row) await env.R2.delete([`og/${slug}.png`, `og/v2/${slug}.png`]);
+  if (row) {
+    try {
+      await purgePublicCache(env, [slug]);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return row !== undefined;
 };
 
