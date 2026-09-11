@@ -10,9 +10,11 @@ out
 .next
 .open-next
 .astro
+.vite
 .wrangler
 .pnpm-store
 .tanstack
+.mimifuwacc-cache
 
 # turbo
 .turbo

@@ -10,20 +10,26 @@ permissions:
   contents: write
   id-token: write
 
-# dotenvx: GitHub Secrets に載せるのは復号鍵だけ。CLOUDFLARE_* / ADMIN_SECRET /
-# Cloudflare credentials / ADMIN_SECRET are injected from the encrypted env file.
+# dotenvx decrypts the committed environment file using the GitHub secret.
 env:
   DOTENV_PRIVATE_KEY_DEV: ${{ secrets.DOTENV_PRIVATE_KEY_DEV }}
 
 jobs:
   deploy-web:
-    needs: deploy-api
     runs-on: ubuntu-latest
     environment:
       name: dev
       url: https://web-dev.mimifuwa.cc
     steps:
       - uses: actions/checkout@v7
+
+      - name: Checkout private content
+        uses: actions/checkout@v7
+        with:
+          repository: mimifuwacc/mimifuwa.cc-content
+          token: ${{ secrets.CONTENT_REPOSITORY_TOKEN }}
+          path: .content
+          persist-credentials: false
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
@@ -41,75 +47,11 @@ jobs:
         working-directory: apps/web
         env:
           CLOUDFLARE_ENV: dev
+          MIMIFUWACC_CONTENT_ROOT: ${{ github.workspace }}/.content
         run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
 
       - name: Deploy web to Cloudflare
         working-directory: apps/web
         env:
           CLOUDFLARE_ENV: dev
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy
-
-  deploy-api:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Migrate D1 (dev)
-        working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-dev --env dev --remote
-
-      - name: Set API secret (dev)
-        working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET --env dev'
-
-      - name: Deploy API to Cloudflare
-        working-directory: apps/api
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy --env dev
-
-  deploy-admin:
-    needs: deploy-api
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build admin
-        working-directory: apps/admin
-        env:
-          CLOUDFLARE_CONFIG_PATH: wrangler.dev.jsonc
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
-
-      - name: Set admin secret (dev)
-        working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- sh -c 'echo "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.dev.jsonc'
-
-      - name: Verify admin dev worker config
-        working-directory: apps/admin
-        run: grep -q '"name":"mimifuwacc-admin-dev"' dist/server/wrangler.json
-
-      - name: Deploy admin to Cloudflare
-        working-directory: apps/admin
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy --config dist/server/wrangler.json
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy --config wrangler.jsonc --env dev

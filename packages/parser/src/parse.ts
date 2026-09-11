@@ -1,4 +1,3 @@
-import rehypeHighlight from "rehype-highlight";
 import rehypeStringify from "rehype-stringify";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
@@ -14,6 +13,7 @@ import rehypeInfoCard from "./plugins/rehype-info-card";
 import rehypeHeadingIds, { type ArticleHeading } from "./plugins/rehype-heading-ids";
 import rehypeLinkCard from "./plugins/rehype-link-card";
 import rehypeLinkCardFallback from "./plugins/rehype-link-card-fallback";
+import rehypeShiki from "./plugins/rehype-shiki";
 import rehypeSplitTaskLists from "./plugins/rehype-split-task-lists";
 import remarkMessage from "./plugins/remark-message";
 
@@ -29,7 +29,7 @@ const markdownProcessor = () =>
     .use(remarkMessage)
     .use(remarkRehype)
     .use(rehypeCodeFilename)
-    .use(rehypeHighlight)
+    .use(rehypeShiki)
     .use(rehypeCustom);
 
 const markdownFile = (markdown: string) => {
@@ -91,7 +91,7 @@ export async function parseHtmlToReact(
   const file = await unified()
     .use(rehypeParse, { fragment: true })
     .use(rehypeCodeFilename)
-    .use(rehypeHighlight)
+    .use(rehypeShiki)
     .use(rehypeReact, {
       jsx,
       jsxs,
@@ -117,7 +117,7 @@ export async function parseToReact(markdown: string): Promise<{
     .use(remarkGfm)
     .use(remarkMessage)
     .use(remarkRehype)
-    .use(rehypeHighlight)
+    .use(rehypeShiki)
     .use(rehypeCustom)
     .use(rehypeReact, { jsx, jsxs, Fragment } as any)
     .process(markdown);
@@ -150,7 +150,7 @@ export async function parseToReactWithComponents(
     .use(remarkGfm)
     .use(remarkMessage)
     .use(remarkRehype)
-    .use(rehypeHighlight)
+    .use(rehypeShiki)
     .use(rehypeCustom)
     .use(rehypeReact, { jsx, jsxs, Fragment, components } as any)
     .process(markdown);

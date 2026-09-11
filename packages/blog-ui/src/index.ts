@@ -37,7 +37,7 @@ export type ArticlePart =
   | { readonly kind: "twitter"; readonly id: string };
 
 const twitterPlaceholder =
-  /<div class="twitter-embed-placeholder" data-twitter-id="([0-9]+)"><\/div>/g;
+  /<div class="twitter-embed-placeholder"[^>]*data-twitter-id="([0-9]+)"[^>]*><\/div>/g;
 
 export function splitArticleHtml(html: string): readonly ArticlePart[] {
   const parts: ArticlePart[] = [];

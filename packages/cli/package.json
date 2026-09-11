@@ -1,0 +1,33 @@
+{
+  "name": "@mimifuwacc/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "mimifuwacc": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./content": "./dist/content.js"
+  },
+  "scripts": {
+    "build": "vp build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ox-content/napi": "^2.90.0",
+    "vfile": "^6.0.3",
+    "vfile-matter": "^5.0.1"
+  },
+  "devDependencies": {
+    "@mimifuwacc/parser": "workspace:*",
+    "@types/node": "^24.10.0",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

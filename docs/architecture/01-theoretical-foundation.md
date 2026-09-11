@@ -19,7 +19,7 @@ $$ Program \xrightarrow{Interpret} Computation \xrightarrow{Schedule} Candidate 
 | Shared Mutable State              | Zustand    |
 | Rendering と Scheduling           | React      |
 | Accessibility と User Interaction | React Aria |
-| Delivery と Composition Boundary  | Astro      |
+| Delivery と Composition Boundary  | Vite SSG   |
 | Visual Presentation               | CSS        |
 
 この表以降は，出典記事の要約ではなく，このリポジトリの実装方針である．

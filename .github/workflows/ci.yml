@@ -20,16 +20,26 @@ jobs:
           cache: true
           run-install: true
 
-      # Oxfmt と Astro 用 Prettier
+      # Oxfmt
       - run: vp run format:check
 
-      # Oxc/TypeScript lint と Astro 用 ESLint
+      # Oxc/TypeScript lint
       - run: vp run lint
+
+      - name: Checkout private content
+        uses: actions/checkout@v7
+        with:
+          repository: mimifuwacc/mimifuwa.cc-content
+          token: ${{ secrets.CONTENT_REPOSITORY_TOKEN }}
+          path: .content
+          persist-credentials: false
 
       # 各パッケージの tsc による型チェック
       - run: vp run -r typecheck
 
-      # web / admin の本番ビルド
+      # web の本番ビルド
       - run: vp run -r build
+        env:
+          MIMIFUWACC_CONTENT_ROOT: ${{ github.workspace }}/.content
 
       - run: vp test run --passWithNoTests

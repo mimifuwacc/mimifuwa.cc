@@ -12,7 +12,7 @@ export default defineConfig({
       "**/.next/**",
       "**/cypress/**",
       "**/.{idea,git,cache,output,temp}/**",
-      "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*",
+      "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*",
     ],
   },
   lint: {
@@ -145,13 +145,6 @@ export default defineConfig({
     },
     overrides: [
       {
-        // Astro injects this global into component frontmatter.
-        files: ["apps/web/**/*.astro"],
-        rules: {
-          "no-undef": "off",
-        },
-      },
-      {
         files: ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
         rules: {
           "constructor-super": "off",
@@ -178,21 +171,8 @@ export default defineConfig({
         },
       },
       {
-        files: ["apps/admin/**/*.{ts,tsx}"],
-        rules: {
-          "react/rules-of-hooks": "error",
-          "react/exhaustive-deps": "warn",
-          "react/only-export-components": [
-            "warn",
-            {
-              allowConstantExport: true,
-            },
-          ],
-        },
-      },
-      {
         // unified/hast/rehype-react を扱う層は AST と動的コンポーネントの性質上 any が避けられない
-        files: ["packages/parser/**/*.{ts,tsx}", "apps/admin/src/components/content/**/*.{ts,tsx}"],
+        files: ["packages/parser/**/*.{ts,tsx}"],
         rules: {
           "typescript/no-explicit-any": "off",
         },
@@ -222,13 +202,11 @@ export default defineConfig({
       "**/build/**",
       "**/out/**",
       "**/.next/**",
-      "**/.astro/**",
+      "**/.vite/**",
       "**/.open-next/**",
       "**/.wrangler/**",
       "**/.direnv/**",
       "**/coverage/**",
-      // TanStack Router が自動生成するため、手動フォーマットの対象外にする。
-      "apps/admin/src/routeTree.gen.ts",
       "pnpm-lock.yaml",
       "**/*.tsbuildinfo",
     ],
@@ -237,7 +215,5 @@ export default defineConfig({
   staged: {
     "*.{ts,tsx,js,jsx}": "vp lint --fix",
     "*.{ts,tsx,js,jsx,json,css,md}": "vp fmt --write",
-    "*.astro": "prettier --write",
-    "**/*.astro": "eslint",
   },
 });
