@@ -9,6 +9,10 @@ export interface Env {
   readonly R2: R2Bucket;
   readonly API_ADMIN_SECRET: string;
   readonly API_BASE_URL?: string;
+  readonly API_ORIGIN?: string;
+  readonly BLOG_ORIGIN?: string;
+  readonly CACHE_PURGE_API_TOKEN?: string;
+  readonly CLOUDFLARE_ZONE_ID?: string;
 }
 
 export class RepositoryError extends Error {

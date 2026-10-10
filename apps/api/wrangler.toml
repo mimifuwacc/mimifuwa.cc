@@ -5,6 +5,9 @@ preview_urls = false
 compatibility_date = "2026-05-15"
 compatibility_flags = ["nodejs_compat_v2"]
 
+[cache]
+enabled = true
+
 [[routes]]
 pattern = "api.mimifuwa.cc"
 custom_domain = true
@@ -39,3 +42,14 @@ migrations_dir = "drizzle"
 [[env.dev.r2_buckets]]
 binding = "R2"
 bucket_name = "mimifuwacc-blogs-dev"
+
+[env.dev.cache]
+enabled = false
+
+[vars]
+API_ORIGIN = "https://api.mimifuwa.cc"
+BLOG_ORIGIN = "https://mimifuwa.cc"
+
+[env.dev.vars]
+API_ORIGIN = "https://api-dev.mimifuwa.cc"
+BLOG_ORIGIN = "https://web-dev.mimifuwa.cc"
