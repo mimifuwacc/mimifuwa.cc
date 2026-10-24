@@ -590,7 +590,7 @@ kbd {
 @media (max-width: 48rem) {
   .container,
   .container-wide {
-    width: min(calc(100% - 1.25rem), 80rem);
+    width: min(calc(100% - 2rem), 80rem);
   }
 
   .desktop-nav {
