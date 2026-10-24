@@ -67,7 +67,6 @@ defineProps<{
 @media (max-width: 48rem) {
   .section {
     padding-block: 3rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--soft-border) 35%, var(--background));
   }
 
   .section-heading {
