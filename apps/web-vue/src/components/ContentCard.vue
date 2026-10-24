@@ -22,3 +22,41 @@ defineProps<{
     <slot />
   </article>
 </template>
+
+<style scoped>
+.content-card {
+  min-width: 0;
+  padding: 0;
+}
+
+.content-card-heading {
+  margin-bottom: 1rem;
+}
+
+.content-card-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.content-card-title > .icon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--muted-foreground);
+}
+
+.content-card-title h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.card-label {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+</style>
