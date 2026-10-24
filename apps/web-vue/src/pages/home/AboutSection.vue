@@ -43,7 +43,11 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 
           <ContentCard title="Certifications" icon="award">
             <ul class="certification-list">
-              <li v-for="item in certifications" :key="item">{{ item }}</li>
+              <li v-for="item in certifications" :key="item.title">
+                <strong>{{ item.title }}</strong>
+                <span v-if="item.status" class="certification-status">{{ item.status }}</span>
+                <time class="certification-date">{{ item.date }}</time>
+              </li>
             </ul>
           </ContentCard>
 
@@ -215,32 +219,75 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .certification-list {
-  gap: 0.35rem;
+  gap: 0.55rem;
 }
 
 .certification-list li {
-  color: var(--muted-foreground);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.55rem;
+}
+
+.certification-list strong {
   font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.certification-date,
+.certification-status {
+  width: fit-content;
+  padding: 0.08rem 0.3rem;
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.certification-date {
+  color: var(--muted-foreground);
+  border: 1px solid var(--soft-border);
+}
+
+.certification-status {
+  color: var(--background);
+  background: var(--foreground);
 }
 
 .award-list {
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .award-list li {
   display: grid;
-  gap: 0.15rem;
+  grid-template-columns: 6.25rem minmax(0, 1fr);
+  align-items: start;
+  gap: 0.25rem 0.85rem;
 }
 
-.award-list time,
 .award-list span {
   color: var(--muted-foreground);
   font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.award-list time {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: fit-content;
+  padding: 0.12rem 0.35rem;
+  color: var(--background);
+  background: var(--foreground);
+  font-size: 0.7rem;
+  line-height: 1.5;
 }
 
 .award-list strong {
+  grid-column: 2;
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.award-list span {
+  grid-column: 2;
 }
 
 @media (max-width: 48rem) {
@@ -252,6 +299,18 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   .timeline-event {
     grid-template-columns: minmax(5.5rem, 0.35fr) minmax(0, 1fr);
     gap: 0.25rem 0.8rem;
+  }
+
+  .award-list li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .award-list time,
+  .award-list strong,
+  .award-list span {
+    grid-column: 1;
+    grid-row: auto;
   }
 }
 </style>
