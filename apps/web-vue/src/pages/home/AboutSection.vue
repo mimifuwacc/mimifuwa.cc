@@ -90,7 +90,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 .profile-feature {
   display: grid;
   grid-template-columns: 5rem minmax(0, 1fr);
-  align-items: start;
+  align-items: center;
   gap: 0.75rem 1.25rem;
 }
 
