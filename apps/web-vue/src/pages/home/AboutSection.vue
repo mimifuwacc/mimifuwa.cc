@@ -91,7 +91,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   display: grid;
   grid-template-columns: 5rem minmax(0, 1fr);
   align-items: center;
-  gap: 0.75rem 1.25rem;
+  gap: 1.75rem 1.25rem;
 }
 
 .profile-avatar {
