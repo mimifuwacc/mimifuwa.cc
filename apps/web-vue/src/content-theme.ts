@@ -1,5 +1,10 @@
-import { raw, usePageProps, useSiteConfig } from "@ox-content/vite-plugin";
-import type { NavGroup, NavItem, ThemeComponent, ThemeProps } from "@ox-content/vite-plugin";
+export interface ArticlePage {
+  title: string;
+  navTitle: string;
+  description?: string;
+  html: string;
+  url: string;
+}
 
 const siteUrl = "https://mimifuwa.cc";
 
@@ -13,87 +18,63 @@ const escapeHtml = (value: string) =>
 
 const normalizePath = (path: string) => path.replace(/\/index(?:\.html)?$/, "/");
 
-const renderNavItem = (item: NavItem, currentPath: string) => {
-  const href = normalizePath(item.href || item.path);
-  const isActive = normalizePath(href) === normalizePath(currentPath);
-
-  return `<a class="sidebar-link${isActive ? " is-active" : ""}" href="${escapeHtml(href)}"${isActive ? ' aria-current="page"' : ""}>${escapeHtml(item.title)}</a>`;
-};
-
-const renderNavGroup = (group: NavGroup, currentPath: string) =>
-  `<section class="sidebar-group"><h2>${escapeHtml(group.title)}</h2><nav aria-label="${escapeHtml(group.title)}">${group.items
-    .map((item) => renderNavItem(item, currentPath))
+const renderNavigation = (articles: ArticlePage[], currentUrl: string) =>
+  `<section class="sidebar-group"><h2>Blogs</h2><nav aria-label="Blogs">${articles
+    .map((article) => {
+      const active = article.url === currentUrl;
+      return `<a class="sidebar-link${active ? " is-active" : ""}" href="${escapeHtml(article.url)}"${active ? ' aria-current="page"' : ""}>${escapeHtml(article.navTitle)}</a>`;
+    })
     .join("")}</nav></section>`;
 
-export const createMimifuwaTheme = (styles: string): ThemeComponent => {
-  const Theme = ({ children }: ThemeProps) => {
-    const page = usePageProps();
-    const site = useSiteConfig();
-    const pageTitle = escapeHtml(page.title);
-    const title = `${pageTitle} | mimifuwa.cc`;
-    const description = page.description
-      ? `<meta name="description" content="${escapeHtml(page.description)}">`
-      : "";
-    const canonical = new URL(normalizePath(page.url), siteUrl).toString();
-    const image = new URL(`${normalizePath(page.url)}og-image.png`, siteUrl).toString();
-    const nav = site.nav.map((group) => renderNavGroup(group, page.url)).join("");
-    const content = children.__html;
-    const script = `
-      const root = document.documentElement;
-      const storedTheme = localStorage.getItem("theme");
-      const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
-      root.dataset.theme = storedTheme || (prefersDark ? "dark" : "light");
+export const renderMimifuwaPage = (page: ArticlePage, articles: ArticlePage[], styles: string) => {
+  const title = `${escapeHtml(page.title)} | mimifuwa.cc`;
+  const canonical = new URL(normalizePath(page.url), siteUrl).toString();
+  const description = page.description
+    ? `<meta name="description" content="${escapeHtml(page.description)}">`
+    : "";
+  const script = `
+    const root = document.documentElement;
+    const storedTheme = localStorage.getItem("theme");
+    const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = storedTheme || (prefersDark ? "dark" : "light");
+    const dialog = document.querySelector("#search-dialog");
+    const input = document.querySelector("#search-input");
+    const results = document.querySelector("#search-results");
+    const openSearch = () => { dialog.showModal(); input.focus(); };
+    document.querySelector("#search-open").addEventListener("click", openSearch);
+    document.querySelector("#search-close").addEventListener("click", () => dialog.close());
+    document.querySelector("#theme-toggle").addEventListener("click", () => {
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", root.dataset.theme);
+    });
+    document.querySelector("#menu-toggle").addEventListener("click", () => {
+      document.querySelector("#site-sidebar").classList.toggle("is-open");
+    });
+    document.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault(); openSearch();
+      }
+    });
+    let documents = [];
+    fetch("/search-index.json").then((response) => response.json())
+      .then((index) => { documents = index.documents || []; }).catch(() => {});
+    input.addEventListener("input", () => {
+      const query = input.value.trim().toLocaleLowerCase();
+      const matches = query ? documents.filter((item) =>
+        (item.title + " " + item.body).toLocaleLowerCase().includes(query),
+      ).slice(0, 20) : [];
+      results.replaceChildren(...matches.map((entry) => {
+        const link = document.createElement("a");
+        const resultTitle = document.createElement("strong");
+        const excerpt = document.createElement("span");
+        link.className = "search-result"; link.href = entry.url;
+        resultTitle.textContent = entry.title; excerpt.textContent = entry.body.slice(0, 160);
+        link.append(resultTitle, excerpt); return link;
+      }));
+    });
+  `;
 
-      const dialog = document.querySelector("#search-dialog");
-      const input = document.querySelector("#search-input");
-      const results = document.querySelector("#search-results");
-      const openSearch = () => {
-        dialog.showModal();
-        input.focus();
-      };
-      document.querySelector("#search-open").addEventListener("click", openSearch);
-      document.querySelector("#search-close").addEventListener("click", () => dialog.close());
-      document.querySelector("#theme-toggle").addEventListener("click", () => {
-        root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
-        localStorage.setItem("theme", root.dataset.theme);
-      });
-      document.querySelector("#menu-toggle").addEventListener("click", () => {
-        document.querySelector("#site-sidebar").classList.toggle("is-open");
-      });
-      document.addEventListener("keydown", (event) => {
-        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-          event.preventDefault();
-          openSearch();
-        }
-      });
-
-      let documents = [];
-      fetch("/search-index.json")
-        .then((response) => response.json())
-        .then((index) => { documents = index.documents || []; })
-        .catch(() => {});
-      input.addEventListener("input", () => {
-        const query = input.value.trim().toLocaleLowerCase();
-        const matches = query
-          ? documents.filter((document) =>
-              (document.title + " " + document.body).toLocaleLowerCase().includes(query),
-            ).slice(0, 20)
-          : [];
-        results.replaceChildren(...matches.map((entry) => {
-          const link = document.createElement("a");
-          const title = document.createElement("strong");
-          const excerpt = document.createElement("span");
-          link.className = "search-result";
-          link.href = entry.url.replace(/index$/, "");
-          title.textContent = entry.title;
-          excerpt.textContent = entry.body.slice(0, 160);
-          link.append(title, excerpt);
-          return link;
-        }));
-      });
-    `;
-
-    return raw(`<!doctype html>
+  return `<!doctype html>
 <html lang="ja" data-theme="light">
   <head>
     <meta charset="UTF-8">
@@ -101,13 +82,6 @@ export const createMimifuwaTheme = (styles: string): ThemeComponent => {
     <meta name="color-scheme" content="light dark">
     ${description}
     <link rel="canonical" href="${escapeHtml(canonical)}">
-    <meta property="og:type" content="article">
-    <meta property="og:site_name" content="mimifuwa.cc">
-    <meta property="og:title" content="${title}">
-    <meta property="og:image" content="${escapeHtml(image)}">
-    <meta property="og:url" content="${escapeHtml(canonical)}">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="${escapeHtml(image)}">
     <title>${title}</title>
     <style>${styles}</style>
   </head>
@@ -121,11 +95,10 @@ export const createMimifuwaTheme = (styles: string): ThemeComponent => {
         <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle theme">◐</button>
       </div>
     </header>
-    <aside class="site-sidebar" id="site-sidebar"><a class="sidebar-home" href="/blogs/">Blogs</a>${nav}</aside>
+    <aside class="site-sidebar" id="site-sidebar"><a class="sidebar-home" href="/blogs/">Blogs</a>${renderNavigation(articles, page.url)}</aside>
     <main class="reading-layout">
       <article class="article">
-        <header class="article-header"><p class="eyebrow">Blog</p><h1>${pageTitle}</h1></header>
-        <div class="article-content">${content}</div>
+        <div class="article-content">${page.html}</div>
       </article>
     </main>
     <dialog class="search-dialog" id="search-dialog" aria-label="Search articles">
@@ -135,8 +108,24 @@ export const createMimifuwaTheme = (styles: string): ThemeComponent => {
     <footer class="site-footer">© mimifuwa.cc</footer>
     <script>${script}</script>
   </body>
-</html>`);
-  };
-
-  return Theme;
+</html>`;
 };
+
+export const renderBlogIndex = (articles: ArticlePage[]) =>
+  `<p>Articles about technology and personal projects.</p><ul>${articles
+    .map(
+      (article) => `<li><a href="${escapeHtml(article.url)}">${escapeHtml(article.title)}</a></li>`,
+    )
+    .join("")}</ul>`;
+
+export const markdownToText = (html: string) =>
+  html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/\s+/g, " ")
+    .trim();
