@@ -27,14 +27,13 @@ import WorkCard from "../../components/WorkCard.vue";
 <style scoped>
 .works-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2.25rem 1.5rem;
 }
 
-@media (max-width: 56rem) {
+@media (min-width: 48.001rem) and (max-width: 70rem) {
   .works-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.25rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -43,6 +42,11 @@ import WorkCard from "../../components/WorkCard.vue";
 }
 
 @media (max-width: 48rem) {
+  .works-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
   .works-action-desktop {
     display: none;
   }
