@@ -99,9 +99,16 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
             title: asString(frontmatter.title) ?? titleize(fileName),
             navTitle: asString(frontmatter.navTitle) ?? titleize(fileName),
             description: asString(frontmatter.description) ?? asString(frontmatter.excerpt),
+            date:
+              frontmatter.date instanceof Date
+                ? frontmatter.date.toISOString().slice(0, 10)
+                : asString(frontmatter.date),
+            tags: Array.isArray(frontmatter.tags)
+              ? frontmatter.tags.filter((tag): tag is string => typeof tag === "string")
+              : [],
             html: result.html,
             url: articleUrl(contentDir, filePath),
-            date:
+            sortDate:
               frontmatter.date instanceof Date
                 ? frontmatter.date.getTime()
                 : Date.parse(String(frontmatter.date ?? "")),
@@ -110,9 +117,10 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
       );
       return rendered
         .sort(
-          (left, right) => right.date - left.date || left.title.localeCompare(right.title, "ja"),
+          (left, right) =>
+            right.sortDate - left.sortDate || left.title.localeCompare(right.title, "ja"),
         )
-        .map(({ date: _date, ...article }) => article);
+        .map(({ sortDate: _sortDate, ...article }) => article);
     })();
     return articlesPromise;
   };
@@ -144,6 +152,14 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
       })),
     };
     await writeFile(resolve(directory, "search-index.json"), JSON.stringify(searchIndex));
+    const blogList = articles.map(({ title, description, date, tags, url }) => ({
+      title,
+      description,
+      date,
+      tags,
+      url,
+    }));
+    await writeFile(resolve(directory, "blog-list.json"), JSON.stringify(blogList));
     return pages;
   };
 
@@ -172,6 +188,11 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
           if (pathname === "/search-index.json") {
             response.setHeader("content-type", "application/json; charset=utf-8");
             response.end(await readFile(resolve(outDir, ".preview-content/search-index.json")));
+            return;
+          }
+          if (pathname === "/blog-list.json") {
+            response.setHeader("content-type", "application/json; charset=utf-8");
+            response.end(await readFile(resolve(outDir, ".preview-content/blog-list.json")));
             return;
           }
           const pages = await loadArticles();

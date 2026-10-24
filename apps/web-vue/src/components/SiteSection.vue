@@ -3,6 +3,7 @@ defineProps<{
   id?: string;
   title: string;
   subtitle?: string;
+  headingLevel?: "h1" | "h2";
 }>();
 </script>
 
@@ -11,7 +12,7 @@ defineProps<{
     <header class="section-heading">
       <div>
         <p class="section-kicker">mimifuwa.cc</p>
-        <h1>{{ title }}</h1>
+        <component :is="headingLevel ?? 'h2'">{{ title }}</component>
       </div>
       <p v-if="subtitle" class="section-subtitle">{{ subtitle }}</p>
       <slot name="action" />

@@ -2,6 +2,8 @@ export interface ArticlePage {
   title: string;
   navTitle: string;
   description?: string;
+  date?: string;
+  tags?: string[];
   html: string;
   url: string;
 }
