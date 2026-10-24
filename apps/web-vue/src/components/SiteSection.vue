@@ -65,23 +65,6 @@ defineProps<{
   text-transform: uppercase;
 }
 
-:slotted(.section-link) {
-  display: inline-flex;
-  min-height: 2.75rem;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.8rem;
-  color: var(--background);
-  background: var(--foreground);
-  text-decoration: none;
-}
-
-:slotted(.section-link:hover) {
-  color: var(--background);
-  background: var(--muted-foreground);
-}
-
 @media (max-width: 48rem) {
   .section {
     padding-block: 3rem;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ArrowUpRight } from "@lucide/vue";
 import { works } from "../../../../../contents/works";
+import Button from "../../components/Button.vue";
 import SiteSection from "../../components/SiteSection.vue";
 import WorkCard from "../../components/WorkCard.vue";
 </script>
@@ -13,9 +14,9 @@ import WorkCard from "../../components/WorkCard.vue";
     subtitle="Apps, services, and tools I have made."
   >
     <template #action>
-      <a class="section-link" href="https://github.com/mimifuwacc" target="_blank" rel="noopener">
+      <Button href="https://github.com/mimifuwacc" external>
         More projects <ArrowUpRight class="icon" aria-hidden="true" />
-      </a>
+      </Button>
     </template>
     <div class="works-grid">
       <WorkCard v-for="work in works" :key="work.title" :work="work" />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import BlogCard from "../../components/BlogCard.vue";
+import Button from "../../components/Button.vue";
 import SiteSection from "../../components/SiteSection.vue";
 import type { BlogSummary } from "../../types/blog";
 
@@ -26,7 +27,7 @@ onMounted(async () => {
     subtitle="Notes on software, projects, and everyday things."
   >
     <template #action>
-      <a class="section-link" href="/blogs/">All articles <span aria-hidden="true">→</span></a>
+      <Button href="/blogs/">All articles <span aria-hidden="true">→</span></Button>
     </template>
     <div class="blog-grid">
       <BlogCard v-for="post in posts" :key="post.url" :post="post" />

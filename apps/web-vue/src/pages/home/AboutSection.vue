@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ArrowUpRight } from "@lucide/vue";
 import { awards, certifications, timelineData } from "../../../../../contents/about";
+import Button from "../../components/Button.vue";
 import ContentCard from "../../components/ContentCard.vue";
 import SiteSection from "../../components/SiteSection.vue";
 
@@ -19,17 +20,17 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
             <h3>mimifuwacc <small>ˈmiːmi</small></h3>
             <p>電気通信大学 情報理工学域 I類 コンピュータサイエンスプログラム</p>
           </div>
-          <div class="profile-socials">
-            <a href="https://github.com/mimifuwacc" target="_blank" rel="noopener">
-              GitHub <ArrowUpRight class="icon" aria-hidden="true" />
-            </a>
-            <a href="https://twitter.com/mimifuwacc" target="_blank" rel="noopener">
-              Twitter <ArrowUpRight class="icon" aria-hidden="true" />
-            </a>
-            <a href="https://zenn.dev/mimifuwacc" target="_blank" rel="noopener">
-              Zenn <ArrowUpRight class="icon" aria-hidden="true" />
-            </a>
-          </div>
+        </div>
+        <div class="profile-socials">
+          <Button href="https://github.com/mimifuwacc" external>
+            GitHub <ArrowUpRight class="icon" aria-hidden="true" />
+          </Button>
+          <Button href="https://twitter.com/mimifuwacc" external>
+            Twitter <ArrowUpRight class="icon" aria-hidden="true" />
+          </Button>
+          <Button href="https://zenn.dev/mimifuwacc" external>
+            Zenn <ArrowUpRight class="icon" aria-hidden="true" />
+          </Button>
         </div>
       </article>
 
@@ -91,7 +92,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   display: grid;
   grid-template-columns: 5rem minmax(0, 1fr);
   align-items: start;
-  gap: 1.25rem;
+  gap: 0.75rem 1.25rem;
 }
 
 .profile-avatar {
@@ -102,8 +103,6 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .profile-copy {
-  display: grid;
-  gap: 0.75rem;
   min-width: 0;
 }
 
@@ -127,29 +126,15 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .profile-socials {
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 1.25rem;
+  gap: 0.5rem;
 }
 
-.profile-socials a {
-  display: inline-flex;
-  min-height: 2.75rem;
-  align-items: center;
-  gap: 0.4rem;
-  padding-inline: 0.75rem;
-  color: var(--background);
-  background: var(--foreground);
-  border: 1px solid var(--foreground);
-  text-decoration: none;
-  transition:
-    color 150ms ease,
-    background-color 150ms ease;
-}
-
-.profile-socials a:hover {
-  color: var(--foreground);
-  background: var(--background);
+.profile-socials :deep(.button) {
+  width: 6.25rem;
+  min-height: 2.5rem;
 }
 
 .about-columns {
