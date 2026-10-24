@@ -60,12 +60,11 @@ onMounted(async () => {
             <img :src="avatar" alt="mimifuwacc" />
             <div>
               <h3>mimifuwacc <small>ˈmiːmi</small></h3>
-              <p>University of Electro-Communications · Computer Science</p>
+              <p>電気通信大学 情報理工学域 I類 コンピュータサイエンスプログラム</p>
             </div>
           </div>
           <p class="profile-bio">
-            Web application engineer. I work on formal verification of assembly languages at
-            university, and enjoy music and light novels.
+            Webアプリケーションエンジニアです。大学ではアセンブリ言語の形式検証に取り組み、音楽やライトノベルが好きです。
           </p>
           <div class="button-row">
             <a

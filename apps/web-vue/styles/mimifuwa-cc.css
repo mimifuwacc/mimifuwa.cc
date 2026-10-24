@@ -633,8 +633,18 @@ kbd {
 }
 
 .about-intro {
-  padding-bottom: clamp(2rem, 5vw, 3.5rem);
-  border-bottom: 1px solid var(--soft-border);
+  position: relative;
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.about-intro::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 2px;
+  background: var(--foreground);
+  content: "";
 }
 
 .about-columns {
@@ -642,7 +652,7 @@ kbd {
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   align-items: start;
   gap: clamp(3rem, 7vw, 6rem);
-  padding-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: clamp(2.25rem, 4vw, 3.5rem);
 }
 
 .about-primary,
@@ -655,8 +665,6 @@ kbd {
 .content-card {
   min-width: 0;
   padding: 0;
-  border-top: 1px solid var(--soft-border);
-  padding-top: 1.25rem;
 }
 
 .content-card-heading {
@@ -820,9 +828,9 @@ kbd {
 .timeline-event {
   display: grid;
   grid-template-columns: minmax(8rem, 0.28fr) minmax(0, 1fr);
-  gap: 0.25rem 1.5rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--soft-border) 45%, transparent);
+  gap: 0.35rem 1.5rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--soft-border) 28%, var(--background));
 }
 
 .timeline-event:first-child {
