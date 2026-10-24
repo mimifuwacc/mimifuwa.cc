@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowUpRight } from "@lucide/vue";
+import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
 import { awards, certifications, timelineData } from "../../../../../contents/about";
 import Button from "../../components/Button.vue";
 import ContentCard from "../../components/ContentCard.vue";
@@ -23,13 +23,10 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
         </div>
         <div class="profile-socials">
           <Button href="https://github.com/mimifuwacc" external>
-            GitHub <ArrowUpRight class="icon" aria-hidden="true" />
+            <IconGithub class="icon" /> GitHub
           </Button>
           <Button href="https://twitter.com/mimifuwacc" external>
-            Twitter <ArrowUpRight class="icon" aria-hidden="true" />
-          </Button>
-          <Button href="https://zenn.dev/mimifuwacc" external>
-            Zenn <ArrowUpRight class="icon" aria-hidden="true" />
+            <IconTwitter class="icon" /> Twitter
           </Button>
         </div>
       </article>
@@ -133,8 +130,11 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .profile-socials :deep(.button) {
-  width: 6.25rem;
-  min-height: 2.5rem;
+  width: 5.75rem;
+  min-height: 2.25rem;
+  gap: 0.4rem;
+  padding-inline: 0.55rem;
+  font-size: 0.85rem;
 }
 
 .about-columns {
