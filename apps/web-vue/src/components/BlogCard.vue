@@ -35,7 +35,6 @@ const formatDate = (date?: string) => {
 <style scoped>
 .blog-card {
   display: flex;
-  min-height: 100%;
   flex-direction: column;
   padding-top: 1.25rem;
   color: inherit;
@@ -45,7 +44,6 @@ const formatDate = (date?: string) => {
 
 .blog-card-body {
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: 0.6rem;
   padding: 0;

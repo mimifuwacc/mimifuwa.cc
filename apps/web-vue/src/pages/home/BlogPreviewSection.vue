@@ -21,10 +21,15 @@ onMounted(async () => {
 <template>
   <SiteSection v-if="posts.length" id="blog-section" eyebrow="02 / Writing" title="Blog">
     <template #action>
-      <Button href="/blogs/">All articles <span aria-hidden="true">→</span></Button>
+      <Button class="blog-action-desktop" href="/blogs/">
+        All articles <span aria-hidden="true">→</span>
+      </Button>
     </template>
     <div class="blog-grid">
       <BlogCard v-for="post in posts" :key="post.url" :post="post" />
+    </div>
+    <div class="blog-actions-mobile">
+      <Button href="/blogs/">All articles <span aria-hidden="true">→</span></Button>
     </div>
   </SiteSection>
 </template>
@@ -42,10 +47,30 @@ onMounted(async () => {
   }
 }
 
+.blog-actions-mobile {
+  display: none;
+}
+
 @media (max-width: 48rem) {
+  .blog-action-desktop {
+    display: none;
+  }
+
   .blog-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.75rem;
+  }
+
+  .blog-actions-mobile {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.75rem;
+  }
+
+  .blog-actions-mobile :deep(.button) {
+    min-height: 2.25rem;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
   }
 }
 </style>
