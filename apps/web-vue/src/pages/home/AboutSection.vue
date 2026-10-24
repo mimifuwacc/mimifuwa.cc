@@ -237,13 +237,15 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   font-weight: 600;
 }
 
-.certification-date {
+.certification-date,
+.award-list time {
   grid-column: 1;
   grid-row: 1 / span 2;
   width: fit-content;
   padding: 0.08rem 0.3rem;
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--foreground);
+  background: var(--background);
+  border: 1px solid var(--foreground);
   font-size: 0.7rem;
   line-height: 1.5;
 }
@@ -269,17 +271,6 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   color: var(--muted-foreground);
   font-size: 0.8rem;
   line-height: 1.55;
-}
-
-.award-list time {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  width: fit-content;
-  padding: 0.12rem 0.35rem;
-  color: var(--background);
-  background: var(--foreground);
-  font-size: 0.7rem;
-  line-height: 1.5;
 }
 
 .award-list strong {
