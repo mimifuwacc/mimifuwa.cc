@@ -62,6 +62,10 @@ const copyUuid = async () => {
   color: var(--muted-foreground);
 }
 
+.profile-uuid :deep(.uuid-copy:hover) {
+  color: var(--background);
+}
+
 .profile-uuid :deep(.uuid-copy .icon) {
   width: 0.85rem;
   height: 0.85rem;
