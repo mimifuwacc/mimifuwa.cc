@@ -44,9 +44,11 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
           <ContentCard title="Certifications" icon="award">
             <ul class="certification-list">
               <li v-for="item in certifications" :key="item.title">
-                <strong>{{ item.title }}</strong>
-                <span v-if="item.status" class="certification-status">{{ item.status }}</span>
                 <time class="certification-date">{{ item.date }}</time>
+                <strong>
+                  {{ item.title }}
+                  <span v-if="item.status" class="certification-status">{{ item.status }}</span>
+                </strong>
               </li>
             </ul>
           </ContentCard>
@@ -219,37 +221,37 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .certification-list {
-  gap: 0.55rem;
+  gap: 1rem;
 }
 
 .certification-list li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.55rem;
+  display: grid;
+  grid-template-columns: 6.25rem minmax(0, 1fr);
+  align-items: start;
+  gap: 0.25rem 0.85rem;
 }
 
 .certification-list strong {
+  grid-column: 2;
   font-size: 0.85rem;
   font-weight: 600;
 }
 
-.certification-date,
-.certification-status {
+.certification-date {
+  grid-column: 1;
+  grid-row: 1 / span 2;
   width: fit-content;
   padding: 0.08rem 0.3rem;
-  font-size: 0.68rem;
+  color: var(--background);
+  background: var(--foreground);
+  font-size: 0.7rem;
   line-height: 1.5;
 }
 
-.certification-date {
-  color: var(--muted-foreground);
-  border: 1px solid var(--soft-border);
-}
-
 .certification-status {
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 400;
 }
 
 .award-list {
@@ -306,9 +308,16 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
     gap: 0.35rem;
   }
 
+  .certification-list li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
   .award-list time,
   .award-list strong,
-  .award-list span {
+  .award-list span,
+  .certification-list time,
+  .certification-list strong {
     grid-column: 1;
     grid-row: auto;
   }
