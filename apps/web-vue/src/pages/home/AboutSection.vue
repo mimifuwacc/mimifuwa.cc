@@ -82,8 +82,10 @@ function timelineDateParts(date: string) {
                     <span>{{ part }}</span>
                   </template>
                 </time>
-                <h4>{{ event.title }}</h4>
-                <p v-if="event.description">{{ event.description }}</p>
+                <div class="timeline-copy">
+                  <h4>{{ event.title }}</h4>
+                  <p v-if="event.description">{{ event.description }}</p>
+                </div>
               </article>
             </div>
           </ContentCard>
@@ -218,8 +220,13 @@ function timelineDateParts(date: string) {
   font-size: 0.9rem;
 }
 
-.timeline-event p {
-  grid-column: 2;
+.timeline-copy {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.timeline-copy p {
   margin: 0;
   color: var(--muted-foreground);
   font-size: 0.8rem;
@@ -307,8 +314,7 @@ function timelineDateParts(date: string) {
     gap: 0.35rem;
   }
 
-  .timeline-event h4,
-  .timeline-event p {
+  .timeline-copy {
     grid-column: 1;
   }
 
