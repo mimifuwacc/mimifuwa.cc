@@ -11,7 +11,7 @@
     "mimifuwa": "./dist/cli.js"
   },
   "scripts": {
-    "build": "tsc --target ES2022 --module NodeNext --moduleResolution NodeNext --types node --skipLibCheck --outDir dist --rootDir src src/cli.ts",
+    "build": "tsc -p tsconfig.json",
     "prepack": "pnpm run build"
   },
   "devDependencies": {
