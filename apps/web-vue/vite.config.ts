@@ -2,6 +2,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import vue from "@vitejs/plugin-vue";
 import { defineTheme, defaultTheme, oxContent } from "@ox-content/vite-plugin";
+import { voidPlugin } from "void";
 import { defineConfig } from "vite-plus";
 
 const appDir = dirname(fileURLToPath(import.meta.url));
@@ -10,6 +11,7 @@ const contentDir =
 
 export default defineConfig({
   plugins: [
+    ...voidPlugin(),
     vue(),
     oxContent({
       srcDir: contentDir,

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "source": {
+    "name": "mimifuwa-cc-dev",
+    "routes": [
+      {
+        "pattern": "web-dev.mimifuwa.cc",
+        "custom_domain": true
+      }
+    ],
+    "r2_buckets": [
+      {
+        "binding": "STORAGE",
+        "bucket_name": "mimifuwa-cc-content-dev"
+      }
+    ]
+  },
+  "resolved": {
+    "name": "mimifuwa-cc-dev",
+    "r2_buckets": [
+      {
+        "binding": "STORAGE",
+        "bucket_name": "mimifuwa-cc-content-dev"
+      }
+    ],
+    "compatibility_date": "2026-02-24",
+    "routes": [
+      {
+        "pattern": "web-dev.mimifuwa.cc",
+        "custom_domain": true
+      }
+    ]
+  },
+  "text": "{\n  \"name\": \"mimifuwa-cc-dev\",\n  \"r2_buckets\": [\n    {\n      \"binding\": \"STORAGE\",\n      \"bucket_name\": \"mimifuwa-cc-content-dev\"\n    }\n  ],\n  \"compatibility_date\": \"2026-02-24\",\n  \"routes\": [\n    {\n      \"pattern\": \"web-dev.mimifuwa.cc\",\n      \"custom_domain\": true\n    }\n  ]\n}\n"
+}

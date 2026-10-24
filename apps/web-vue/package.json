@@ -11,7 +11,7 @@
     "build": "vp build",
     "preview": "vp preview",
     "typecheck": "tsc -p tsconfig.json",
-    "deploy": "void deploy --dir dist"
+    "deploy": "void deploy --platform cloudflare"
   },
   "dependencies": {
     "@ox-content/vite-plugin": "alpha",

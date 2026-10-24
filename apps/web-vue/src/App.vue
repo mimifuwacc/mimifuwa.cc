@@ -2,7 +2,7 @@
   <div class="site-shell">
     <header class="site-header">
       <RouterLink class="brand" to="/">mimifuwa.cc</RouterLink>
-      <nav aria-label="メインナビゲーション">
+      <nav aria-label="Main navigation">
         <a href="/">Home</a>
         <a href="/blogs/">Blog</a>
         <a href="https://github.com/mimifuwacc">GitHub</a>
