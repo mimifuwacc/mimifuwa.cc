@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ArrowUpRight } from "@lucide/vue";
 import type { WorkItem } from "../../../../contents/works";
+import InlineTagList from "./InlineTagList.vue";
 
 defineProps<{ work: WorkItem }>();
 </script>
@@ -12,6 +13,12 @@ defineProps<{ work: WorkItem }>();
       <ArrowUpRight class="icon" aria-hidden="true" />
     </div>
     <p>{{ work.description }}</p>
+    <InlineTagList
+      v-if="work.technologies?.length"
+      class="work-card-tags"
+      :items="work.technologies"
+      variant="outlined"
+    />
   </a>
 </template>
 
@@ -52,6 +59,10 @@ p {
   color: var(--muted-foreground);
   font-size: 0.875rem;
   line-height: 1.6;
+}
+
+.work-card-tags {
+  margin-top: 0.75rem;
 }
 
 .work-card:hover h3 {

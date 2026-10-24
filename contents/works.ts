@@ -1,6 +1,7 @@
 export interface WorkItem {
   title: string;
   description: string;
+  technologies?: string[];
   image?: string;
   url: string;
 }
@@ -10,6 +11,7 @@ export const works: WorkItem[] = [
     title: "mimifuwa.cc",
     description:
       "このサイトです．フロントエンドは React Router + haribote で，ブログ配信 API に hono，管理画面に Next.js を使用しています．",
+    technologies: ["React Router", "Hono", "Next.js", "haribote"],
     url: "https://mimifuwa.cc",
     image: "https://mimifuwa.cc/og.png",
   },
@@ -45,17 +47,20 @@ export const works: WorkItem[] = [
     title: "NowPlaying",
     description:
       "NowPlaying の Twitter への投稿をおしゃれにするツールです．ブラウザの拡張機能として動作します．",
+    technologies: ["Plasmo", "React"],
     url: "https://github.com/mimifuwacc/nowplaying",
   },
   {
     title: "RSC Boundary Marker",
     description:
       "ReactでServer ComponentsとClient Componentsの境界を視覚的に確認するためのVSCode拡張機能．",
+    technologies: ["React", "VS Code Extension API"],
     url: "https://github.com/mimifuwacc/rsc-boundary-marker",
   },
   {
     title: "haribote",
     description: "metadata だけを SSR する Vite プラグインです．このサイトでも使用しています．",
+    technologies: ["Vite"],
     url: "https://github.com/mimifuwacc/haribote",
   },
 ];
