@@ -13,23 +13,23 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   <SiteSection id="about-section" eyebrow="01 / About" title="About Me">
     <div class="about-content">
       <article class="profile-feature about-intro">
-        <div class="profile-heading">
-          <img :src="avatar" alt="mimifuwacc" />
-          <div>
+        <img class="profile-avatar" :src="avatar" alt="mimifuwacc" />
+        <div class="profile-copy">
+          <div class="profile-heading">
             <h3>mimifuwacc <small>ˈmiːmi</small></h3>
             <p>電気通信大学 情報理工学域 I類 コンピュータサイエンスプログラム</p>
           </div>
-        </div>
-        <div class="profile-socials">
-          <a href="https://github.com/mimifuwacc" target="_blank" rel="noopener">
-            GitHub <ArrowUpRight class="icon" aria-hidden="true" />
-          </a>
-          <a href="https://twitter.com/mimifuwacc" target="_blank" rel="noopener">
-            Twitter <ArrowUpRight class="icon" aria-hidden="true" />
-          </a>
-          <a href="https://zenn.dev/mimifuwacc" target="_blank" rel="noopener">
-            Zenn <ArrowUpRight class="icon" aria-hidden="true" />
-          </a>
+          <div class="profile-socials">
+            <a href="https://github.com/mimifuwacc" target="_blank" rel="noopener">
+              GitHub <ArrowUpRight class="icon" aria-hidden="true" />
+            </a>
+            <a href="https://twitter.com/mimifuwacc" target="_blank" rel="noopener">
+              Twitter <ArrowUpRight class="icon" aria-hidden="true" />
+            </a>
+            <a href="https://zenn.dev/mimifuwacc" target="_blank" rel="noopener">
+              Zenn <ArrowUpRight class="icon" aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </article>
 
@@ -84,35 +84,26 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .about-intro {
-  position: relative;
-  padding-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 0;
 }
 
-.about-intro::after {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 3rem;
-  height: 2px;
-  background: var(--foreground);
-  content: "";
-}
-
-.profile-heading {
-  display: flex;
-  align-items: center;
+.profile-feature {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  align-items: start;
   gap: 1.25rem;
 }
 
-.profile-heading img {
+.profile-avatar {
   width: 5rem;
   height: 5rem;
-  flex: 0 0 auto;
   border-radius: 50% !important;
   object-fit: cover;
 }
 
-.profile-heading > div {
+.profile-copy {
+  display: grid;
+  gap: 1rem;
   min-width: 0;
 }
 
@@ -165,15 +156,15 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   align-items: start;
-  gap: clamp(3rem, 7vw, 6rem);
-  padding-top: clamp(2.25rem, 4vw, 3.5rem);
+  gap: clamp(2rem, 4vw, 4rem);
+  padding-top: clamp(2rem, 3vw, 2.75rem);
 }
 
 .about-primary,
 .about-secondary {
   display: grid;
   align-content: start;
-  gap: clamp(2.5rem, 5vw, 4rem);
+  gap: 2.5rem;
 }
 
 .interests-list {
