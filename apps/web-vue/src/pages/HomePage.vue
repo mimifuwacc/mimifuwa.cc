@@ -136,8 +136,23 @@ onMounted(async () => {
     </SiteSection>
 
     <SiteSection
+      v-if="posts.length"
+      id="blog-section"
+      eyebrow="02 / Writing"
+      title="Blog"
+      subtitle="Notes on software, projects, and everyday things."
+    >
+      <template #action>
+        <a class="section-link" href="/blogs/">All articles <span aria-hidden="true">→</span></a>
+      </template>
+      <div class="blog-grid">
+        <BlogCard v-for="post in posts" :key="post.url" :post="post" />
+      </div>
+    </SiteSection>
+
+    <SiteSection
       id="works-section"
-      eyebrow="02 / Selected work"
+      eyebrow="03 / Selected work"
       title="Works"
       subtitle="Apps, services, and tools I have made."
     >
@@ -150,7 +165,10 @@ onMounted(async () => {
         <a
           v-for="work in works"
           :key="work.title"
-          class="work-card square-card"
+          :class="[
+            'work-card square-card',
+            { 'work-card--with-image': workImage(work.url, work.image) },
+          ]"
           :href="work.url"
           target="_blank"
           rel="noopener"
@@ -166,21 +184,6 @@ onMounted(async () => {
             <p>{{ work.description }}</p>
           </div>
         </a>
-      </div>
-    </SiteSection>
-
-    <SiteSection
-      v-if="posts.length"
-      id="blog-section"
-      eyebrow="03 / Writing"
-      title="Blog"
-      subtitle="Notes on software, projects, and everyday things."
-    >
-      <template #action>
-        <a class="section-link" href="/blogs/">All articles <span aria-hidden="true">→</span></a>
-      </template>
-      <div class="blog-grid">
-        <BlogCard v-for="post in posts" :key="post.url" :post="post" />
       </div>
     </SiteSection>
 
