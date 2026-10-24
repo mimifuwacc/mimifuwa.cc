@@ -11,6 +11,8 @@ out
 .open-next
 .astro
 .wrangler
+.cache
+.vite
 .pnpm-store
 .tanstack
 

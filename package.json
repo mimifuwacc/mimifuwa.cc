@@ -5,6 +5,7 @@
   "packageManager": "pnpm@11.7.0",
   "scripts": {
     "dev": "pnpm --parallel --filter @mimifuwacc/api --filter @mimifuwacc/web --filter @mimifuwacc/admin run dev",
+    "dev:vue": "pnpm --filter @mimifuwacc/web-vue run dev",
     "format": "vp run format:fix",
     "format:check": "vp fmt --check && prettier --check \"apps/**/*.astro\"",
     "format:fix": "vp fmt --write && prettier --write \"apps/**/*.astro\"",

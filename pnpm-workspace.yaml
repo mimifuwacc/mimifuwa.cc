@@ -70,6 +70,8 @@ peerDependencyRules:
     vitest: "*"
 
 allowBuilds:
+  better-sqlite3: true
   esbuild: true
+  puppeteer: false
   sharp: true
   workerd: true
