@@ -2,7 +2,6 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   // Vite+ supports `test` here; the current TS declaration merge rejects this field.
-  // @ts-expect-error Vite+ test configuration is valid at runtime.
   test: {
     // vitest のデフォルト除外 + .direnv（nix の devShell ディレクトリを走査させない）
     exclude: [
