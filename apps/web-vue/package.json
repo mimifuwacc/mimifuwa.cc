@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json",
     "deploy": "void deploy --dir dist"
   },
   "dependencies": {

@@ -27,6 +27,7 @@ export default defineConfig({
     },
     ignorePatterns: [
       "**/node_modules/**",
+      "apps/web-vue/**",
       "**/dist/**",
       "**/build/**",
       "**/out/**",
