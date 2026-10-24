@@ -1,74 +1,57 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { ArrowUpRight } from "@lucide/vue";
 import type { WorkItem } from "../../../../contents/works";
 
-const props = defineProps<{ work: WorkItem }>();
-
-const image = computed(() => {
-  if (props.work.image?.startsWith("/")) {
-    return `https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public${props.work.image}`;
-  }
-  if (props.work.image) return props.work.image;
-  const match = props.work.url.match(/github\.com\/([^/]+)\/([^/?]+)/);
-  return match ? `https://opengraph.githubassets.com/1/${match[1]}/${match[2]}` : undefined;
-});
+defineProps<{ work: WorkItem }>();
 </script>
 
 <template>
-  <a
-    :class="['work-card', { 'work-card--with-image': image }]"
-    :href="work.url"
-    target="_blank"
-    rel="noopener"
-  >
-    <img v-if="image" :src="image" :alt="work.title" loading="lazy" />
-    <div class="work-card-body">
-      <h3>{{ work.title }} <ArrowUpRight class="icon" aria-hidden="true" /></h3>
-      <p>{{ work.description }}</p>
+  <a class="work-card" :href="work.url" target="_blank" rel="noopener noreferrer">
+    <div class="work-card-heading">
+      <h3>{{ work.title }}</h3>
+      <ArrowUpRight class="icon" aria-hidden="true" />
     </div>
+    <p>{{ work.description }}</p>
   </a>
 </template>
 
 <style scoped>
 .work-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-  gap: 0 2rem;
-  padding-bottom: 1.5rem;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding-top: 1.25rem;
   color: inherit;
+  border-top: 1px solid color-mix(in srgb, var(--soft-border) 40%, var(--background));
   text-decoration: none;
 }
 
-.work-card--with-image {
-  grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
-}
-
-.work-card > img {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-.work-card-body {
+.work-card-heading {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 h3 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 700;
+  line-height: 1.4;
+}
+
+.work-card-heading .icon {
+  flex: 0 0 auto;
+  transition:
+    color 150ms ease,
+    transform 150ms ease;
 }
 
 p {
-  margin: 0;
+  margin: 0.6rem 0 0;
   color: var(--muted-foreground);
-  font-size: 0.9rem;
-  line-height: 1.7;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .work-card:hover h3 {
@@ -80,10 +63,20 @@ p {
   color: inherit;
 }
 
-@media (max-width: 48rem) {
-  .work-card--with-image {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.75rem;
+.work-card:hover .work-card-heading .icon,
+.work-card:focus-visible .work-card-heading .icon {
+  color: var(--foreground);
+  transform: translate(2px, -2px);
+}
+
+.work-card:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 0.3rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card-heading .icon {
+    transition: none;
   }
 }
 </style>
