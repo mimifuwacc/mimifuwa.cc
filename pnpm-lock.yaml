@@ -6,66 +6,9 @@ settings:
 
 catalogs:
   default:
-    '@cloudflare/workers-types':
-      specifier: ^4.20250521.0
-      version: 4.20260617.1
-    '@tailwindcss/postcss':
-      specifier: ^4.1.13
-      version: 4.3.1
-    '@tanstack/react-query':
-      specifier: ^5.0.0
-      version: 5.101.0
-    '@types/react':
-      specifier: ^19.2.15
-      version: 19.2.17
-    '@types/react-dom':
-      specifier: ^19.2.3
-      version: 19.2.3
-    class-variance-authority:
-      specifier: ^0.7.1
-      version: 0.7.1
-    clsx:
-      specifier: ^2.1.1
-      version: 2.1.1
-    highlight.js:
-      specifier: ^11.11.1
-      version: 11.11.1
-    hono:
-      specifier: ^4.6.20
-      version: 4.12.25
-    lucide-react:
-      specifier: ^1.16.0
-      version: 1.20.0
-    react:
-      specifier: ^19.2.0
-      version: 19.2.7
-    react-aria-components:
-      specifier: ^1.20.0
-      version: 1.20.0
-    react-dom:
-      specifier: ^19.2.0
-      version: 19.2.7
-    react-icons:
-      specifier: ^5.5.0
-      version: 5.6.0
-    tailwind-merge:
-      specifier: ^3.6.0
-      version: 3.6.0
-    tailwindcss:
-      specifier: ^4.1.13
-      version: 4.3.1
-    tw-animate-css:
-      specifier: ^1.4.0
-      version: 1.4.0
     typescript:
       specifier: ^6.0.0
       version: 6.0.3
-    vite-plus:
-      specifier: 0.1.24
-      version: 0.1.24
-    wrangler:
-      specifier: ^4.121.0
-      version: 4.121.0
 
 overrides:
   vite: npm:@voidzero-dev/vite-plus-core@0.1.24
@@ -256,6 +199,9 @@ importers:
 
   apps/web-vue:
     dependencies:
+      '@lucide/vue':
+        specifier: ^1.61.0
+        version: 1.61.0(vue@3.5.44(typescript@6.0.3))
       '@ox-content/vite-plugin':
         specifier: alpha
         version: 3.0.0-alpha.18(@babel/core@7.29.7)(@babel/template@7.29.7)(@types/react@19.2.17)(@vue/compiler-sfc@3.5.44)(katex@0.16.47)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(tailwindcss@4.3.1)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
@@ -2624,6 +2570,11 @@ packages:
     resolution: {integrity: sha512-bUCIxIPV8NsDLSzad5G5evyBUqYchmaDHSQBFygRyyS0dAg/N+/88aRlresB8aJ3I27fRMyQdaL4Y5+IQMz3gA==}
     peerDependencies:
       astro: ^4 || ^5 || ^6 || ^7
+
+  '@lucide/vue@1.61.0':
+    resolution: {integrity: sha512-XYclbwUQ6Mvf0UskBG9gJH91BdF3VK4Tt6Pv8PSntwPwNnf357PCQnma4TrzOEdwD49UYCtsTafpfytRIxm1cQ==}
+    peerDependencies:
+      vue: '>=3.0.1'
 
   '@mermaid-js/layout-elk@0.2.3':
     resolution: {integrity: sha512-m46RVGfvKK1PSMdAFGDz2nksI4jusEkFxvf0lb48bYWmqLQxZpjtpruiw29MbOy9rlWJtuMf9EzG9fAF8CVZbg==}
@@ -9607,6 +9558,10 @@ snapshots:
     dependencies:
       astro: 6.4.8(@types/node@24.13.2)(aws4fetch@1.0.20)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
+  '@lucide/vue@1.61.0(vue@3.5.44(typescript@6.0.3))':
+    dependencies:
+      vue: 3.5.44(typescript@6.0.3)
+
   '@mermaid-js/layout-elk@0.2.3(mermaid@11.17.2)':
     dependencies:
       d3: 7.9.0
@@ -10575,7 +10530,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.7
       '@babel/generator': 7.29.8
-      '@babel/parser': 7.29.8
+      '@babel/parser': 7.29.9
       '@babel/types': 7.29.8
       ansis: 4.3.1
       babel-dead-code-elimination: 1.0.12
@@ -10608,9 +10563,9 @@ snapshots:
       '@tanstack/start-server-core': 1.168.0
       cheerio: 1.2.0
       exsolve: 1.1.1
-      lightningcss: 1.32.0
+      lightningcss: 1.33.0
       pathe: 2.0.3
-      picomatch: 4.0.4
+      picomatch: 4.0.7
       seroval: 1.6.2
       source-map: 0.7.6
       srvx: 0.11.22
@@ -10649,9 +10604,9 @@ snapshots:
       '@tanstack/start-server-core': 1.168.0
       cheerio: 1.2.0
       exsolve: 1.1.1
-      lightningcss: 1.32.0
+      lightningcss: 1.33.0
       pathe: 2.0.3
-      picomatch: 4.0.4
+      picomatch: 4.0.7
       seroval: 1.6.2
       source-map: 0.7.6
       srvx: 0.11.22
@@ -11581,7 +11536,7 @@ snapshots:
   babel-dead-code-elimination@1.0.12:
     dependencies:
       '@babel/core': 7.29.7
-      '@babel/parser': 7.29.8
+      '@babel/parser': 7.29.9
       '@babel/traverse': 7.29.8
       '@babel/types': 7.29.8
     transitivePeerDependencies:
@@ -14781,7 +14736,7 @@ snapshots:
   unplugin@3.3.0(@voidzero-dev/vite-plus-core@0.1.24(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.1)(rolldown@1.2.14):
     dependencies:
       '@jridgewell/remapping': 2.3.5
-      picomatch: 4.0.4
+      picomatch: 4.0.7
       webpack-virtual-modules: 0.6.2
     optionalDependencies:
       esbuild: 0.28.1
@@ -14791,7 +14746,7 @@ snapshots:
   unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.2.14)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(yaml@2.9.1)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
-      picomatch: 4.0.4
+      picomatch: 4.0.7
       webpack-virtual-modules: 0.6.2
     optionalDependencies:
       esbuild: 0.28.1

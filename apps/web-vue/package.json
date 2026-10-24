@@ -14,6 +14,7 @@
     "deploy": "void deploy --dir dist"
   },
   "dependencies": {
+    "@lucide/vue": "^1.61.0",
     "@ox-content/vite-plugin": "alpha",
     "@vitejs/plugin-vue": "^6.0.1",
     "vue": "^3.5.0",

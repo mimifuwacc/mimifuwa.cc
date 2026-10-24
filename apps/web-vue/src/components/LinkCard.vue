@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ArrowUpRight } from "@lucide/vue";
 import type { LinkItem } from "../../../../contents/links";
 
 defineProps<{ link: LinkItem }>();
@@ -13,6 +14,6 @@ const hostname = (url: string) => new URL(url).hostname.replace(/^www\./, "");
       <small>{{ hostname(link.url) }}</small>
       <p>{{ link.description }}</p>
     </div>
-    <span aria-hidden="true">↗</span>
+    <ArrowUpRight class="icon" aria-hidden="true" />
   </a>
 </template>

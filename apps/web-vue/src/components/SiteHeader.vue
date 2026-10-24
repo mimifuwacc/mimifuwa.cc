@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import { Menu, Moon, Search, Sun, X } from "@lucide/vue";
 
 interface SearchDocument {
   title: string;
@@ -88,47 +89,54 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
           {{ item.label }}
         </a>
         <button
-          class="square-button search-trigger"
+          class="icon-button search-trigger"
           type="button"
           aria-label="Search articles"
           @click="searchOpen = true"
         >
-          Search <kbd>⌘K</kbd>
+          <Search class="icon" aria-hidden="true" />
+          <span>Search</span>
+          <kbd>⌘K</kbd>
         </button>
         <button
-          class="square-button theme-toggle"
+          class="icon-button theme-toggle"
           type="button"
           aria-label="Toggle color theme"
           @click="toggleTheme"
         >
-          {{ isDark ? "Light" : "Dark" }}
+          <Sun v-if="isDark" class="icon" aria-hidden="true" />
+          <Moon v-else class="icon" aria-hidden="true" />
+          <span class="visually-hidden">{{ isDark ? "Light theme" : "Dark theme" }}</span>
         </button>
       </nav>
       <div class="mobile-actions">
         <button
-          class="square-button"
+          class="icon-button search-trigger"
           type="button"
           aria-label="Search articles"
           @click="searchOpen = true"
         >
-          Search
+          <Search class="icon" aria-hidden="true" />
+          <span class="visually-hidden">Search</span>
         </button>
         <button
-          class="square-button theme-toggle"
+          class="icon-button theme-toggle"
           type="button"
           aria-label="Toggle color theme"
           @click="toggleTheme"
         >
-          {{ isDark ? "Light" : "Dark" }}
+          <Sun v-if="isDark" class="icon" aria-hidden="true" />
+          <Moon v-else class="icon" aria-hidden="true" />
         </button>
         <button
-          class="square-button menu-toggle"
+          class="icon-button menu-toggle"
           type="button"
           :aria-expanded="menuOpen"
           :aria-label="menuOpen ? 'Close menu' : 'Open menu'"
           @click="menuOpen = !menuOpen"
         >
-          {{ menuOpen ? "Close" : "Menu" }}
+          <X v-if="menuOpen" class="icon" aria-hidden="true" />
+          <Menu v-else class="icon" aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -160,7 +168,14 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
         aria-label="Search articles"
         autofocus
       />
-      <button class="square-button" type="button" @click="searchOpen = false">Close</button>
+      <button
+        class="icon-button"
+        type="button"
+        aria-label="Close search"
+        @click="searchOpen = false"
+      >
+        <X class="icon" aria-hidden="true" />
+      </button>
     </div>
     <div class="search-results">
       <a v-for="result in matches" :key="result.url" class="search-result" :href="result.url">

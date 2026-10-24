@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { ArrowUpRight } from "@lucide/vue";
 import { certifications, hobbies, timelineData } from "../../../../contents/about";
 import { allSkills } from "../../../../contents/skills";
 import { works } from "../../../../contents/works";
@@ -52,80 +53,52 @@ onMounted(async () => {
   </section>
 
   <div class="home-content">
-    <SiteSection id="about-section" title="About Me" subtitle="A little about me and what I do.">
-      <div class="about-grid">
-        <div class="card-stack">
-          <ContentCard title="Profile" label="About">
-            <div class="profile-heading">
-              <img :src="avatar" alt="mimifuwacc" />
-              <div>
-                <h3>mimifuwacc <small>ˈmiːmi</small></h3>
-                <p>University of Electro-Communications · Computer Science</p>
-              </div>
+    <SiteSection id="about-section" eyebrow="01 / About" title="About Me">
+      <div class="about-content">
+        <article class="profile-feature about-intro">
+          <div class="profile-heading">
+            <img :src="avatar" alt="mimifuwacc" />
+            <div>
+              <h3>mimifuwacc <small>ˈmiːmi</small></h3>
+              <p>University of Electro-Communications · Computer Science</p>
             </div>
-            <hr />
-            <p>
-              Web application engineer. I work on formal verification of assembly languages at
-              university, and enjoy music and light novels.
-            </p>
-            <div class="button-row">
-              <a
-                class="square-button"
-                href="https://github.com/mimifuwacc"
-                target="_blank"
-                rel="noopener"
-                >GitHub</a
-              >
-              <a
-                class="square-button"
-                href="https://twitter.com/mimifuwacc"
-                target="_blank"
-                rel="noopener"
-                >Twitter</a
-              >
-              <a
-                class="square-button"
-                href="https://zenn.dev/mimifuwacc"
-                target="_blank"
-                rel="noopener"
-                >Zenn</a
-              >
-            </div>
-          </ContentCard>
+          </div>
+          <p class="profile-bio">
+            Web application engineer. I work on formal verification of assembly languages at
+            university, and enjoy music and light novels.
+          </p>
+          <div class="button-row">
+            <a
+              class="profile-social"
+              href="https://github.com/mimifuwacc"
+              target="_blank"
+              rel="noopener"
+              >GitHub <ArrowUpRight class="icon" aria-hidden="true"
+            /></a>
+            <a
+              class="profile-social"
+              href="https://twitter.com/mimifuwacc"
+              target="_blank"
+              rel="noopener"
+              >Twitter <ArrowUpRight class="icon" aria-hidden="true"
+            /></a>
+            <a
+              class="profile-social"
+              href="https://zenn.dev/mimifuwacc"
+              target="_blank"
+              rel="noopener"
+              >Zenn <ArrowUpRight class="icon" aria-hidden="true"
+            /></a>
+          </div>
+        </article>
 
-          <ContentCard title="Certifications" label="Credentials">
-            <ul class="plain-list">
-              <li v-for="item in certifications" :key="item">{{ item }}</li>
-            </ul>
-          </ContentCard>
+        <ContentCard title="Skills" icon="wrench">
+          <ul class="skills-list" aria-label="Skills">
+            <li v-for="skill in allSkills" :key="skill.name">{{ skill.name }}</li>
+          </ul>
+        </ContentCard>
 
-          <ContentCard title="Skills" label="Technologies">
-            <div class="skills-grid">
-              <div
-                v-for="skill in allSkills"
-                :key="skill.name"
-                class="skill-item"
-                :title="skill.name"
-              >
-                <img :src="skill.image" :alt="skill.name" loading="lazy" />
-                <span>{{ skill.name }}</span>
-              </div>
-            </div>
-          </ContentCard>
-
-          <ContentCard title="Hobbies" label="Outside work">
-            <div class="hobby-list">
-              <div v-for="hobby in hobbies" :key="hobby.name" class="hobby-item">
-                <h4>{{ hobby.name }}</h4>
-                <div v-if="hobby.items" class="tag-list">
-                  <span v-for="item in hobby.items" :key="item" class="tag">{{ item }}</span>
-                </div>
-              </div>
-            </div>
-          </ContentCard>
-        </div>
-
-        <ContentCard title="Timeline" label="Milestones">
+        <ContentCard title="Timeline" icon="clock">
           <div class="timeline">
             <article
               v-for="event in timelineData"
@@ -138,13 +111,37 @@ onMounted(async () => {
             </article>
           </div>
         </ContentCard>
+
+        <div class="about-details">
+          <ContentCard title="Certifications" icon="award">
+            <ul class="certification-list">
+              <li v-for="item in certifications" :key="item">{{ item }}</li>
+            </ul>
+          </ContentCard>
+
+          <ContentCard title="Interests" icon="smile">
+            <div class="hobby-list">
+              <div v-for="hobby in hobbies" :key="hobby.name" class="hobby-item">
+                <h4>{{ hobby.name }}</h4>
+                <div v-if="hobby.items" class="tag-list">
+                  <span v-for="item in hobby.items" :key="item" class="tag">{{ item }}</span>
+                </div>
+              </div>
+            </div>
+          </ContentCard>
+        </div>
       </div>
     </SiteSection>
 
-    <SiteSection id="works-section" title="Works" subtitle="Selected apps, services, and projects.">
+    <SiteSection
+      id="works-section"
+      eyebrow="02 / Selected work"
+      title="Works"
+      subtitle="Apps, services, and tools I have made."
+    >
       <template #action>
         <a class="section-link" href="https://github.com/mimifuwacc" target="_blank" rel="noopener">
-          More projects <span aria-hidden="true">↗</span>
+          More projects <ArrowUpRight class="icon" aria-hidden="true" />
         </a>
       </template>
       <div class="works-grid">
@@ -163,7 +160,7 @@ onMounted(async () => {
             loading="lazy"
           />
           <div class="work-card-body">
-            <h3>{{ work.title }} <span aria-hidden="true">↗</span></h3>
+            <h3>{{ work.title }} <ArrowUpRight class="icon" aria-hidden="true" /></h3>
             <p>{{ work.description }}</p>
           </div>
         </a>
@@ -173,6 +170,7 @@ onMounted(async () => {
     <SiteSection
       v-if="posts.length"
       id="blog-section"
+      eyebrow="03 / Writing"
       title="Blog"
       subtitle="Notes on software, projects, and everyday things."
     >

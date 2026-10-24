@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { Check, Copy } from "@lucide/vue";
 
 const uuid = "fa6c2a8f-27b1-4611-a0f5-19b0d6c20612";
 const copied = ref(false);
@@ -17,8 +18,9 @@ const copyUuid = async () => {
       <div class="footer-identity">
         <a href="/" class="footer-brand">mimifuwa.cc</a>
         <button class="uuid-copy" type="button" @click="copyUuid">
-          <span>{{ copied ? "Copied" : uuid }}</span>
-          <span aria-hidden="true">{{ copied ? "✓" : "Copy" }}</span>
+          <span>{{ uuid }}</span>
+          <Check v-if="copied" class="icon" aria-label="Copied" />
+          <Copy v-else class="icon" aria-label="Copy UUID" />
         </button>
       </div>
       <div class="footer-links">
@@ -28,7 +30,9 @@ const copyUuid = async () => {
           <a href="/links">Links</a>
         </nav>
         <nav class="social-links" aria-label="Social links">
-          <a href="https://github.com/mimifuwacc" rel="me noopener" target="_blank">GitHub</a>
+          <a href="https://github.com/mimifuwacc" rel="me noopener" target="_blank"
+            ><span>GitHub</span><span aria-hidden="true">↗</span></a
+          >
           <a href="https://twitter.com/mimifuwacc" rel="me noopener" target="_blank">Twitter</a>
           <a href="mailto:mail@mimifuwa.cc">Email</a>
         </nav>
