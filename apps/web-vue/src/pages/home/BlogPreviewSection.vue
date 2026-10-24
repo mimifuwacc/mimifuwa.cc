@@ -58,13 +58,13 @@ onMounted(async () => {
 
   .blog-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 1.75rem;
+    gap: 1rem;
   }
 
   .blog-actions-mobile {
     display: flex;
     justify-content: flex-end;
-    margin-top: 1.75rem;
+    margin-top: 1.25rem;
   }
 
   .blog-actions-mobile :deep(.button) {
