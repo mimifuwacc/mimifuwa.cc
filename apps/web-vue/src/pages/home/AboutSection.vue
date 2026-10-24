@@ -103,7 +103,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 
 .profile-copy {
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   min-width: 0;
 }
 
@@ -156,15 +156,15 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   align-items: start;
-  gap: clamp(2rem, 4vw, 4rem);
-  padding-top: clamp(2rem, 3vw, 2.75rem);
+  gap: clamp(2rem, 3.5vw, 3.5rem);
+  padding-top: clamp(1.75rem, 3vw, 2.5rem);
 }
 
 .about-primary,
 .about-secondary {
   display: grid;
   align-content: start;
-  gap: 2.5rem;
+  gap: 2.25rem;
 }
 
 .interests-list {
@@ -193,8 +193,8 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 .timeline-event {
   display: grid;
   grid-template-columns: minmax(8rem, 0.28fr) minmax(0, 1fr);
-  gap: 0.35rem 1.5rem;
-  padding: 0.8rem 0;
+  gap: 0.3rem 1.25rem;
+  padding: 0.65rem 0;
   border-bottom: 1px solid color-mix(in srgb, var(--soft-border) 28%, var(--background));
 }
 
@@ -228,7 +228,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .certification-list {
-  gap: 0.6rem;
+  gap: 0.35rem;
 }
 
 .certification-list li {
@@ -237,7 +237,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .award-list {
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .award-list li {
@@ -259,7 +259,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 @media (max-width: 48rem) {
   .about-columns {
     grid-template-columns: minmax(0, 1fr);
-    gap: 2.5rem;
+    gap: 2rem;
   }
 
   .timeline-event {
