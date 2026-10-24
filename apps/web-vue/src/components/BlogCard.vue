@@ -27,7 +27,7 @@ const formatDate = (date?: string) => {
       <p v-if="post.description" class="blog-card-description">
         {{ post.description }}
       </p>
-      <InlineTagList v-if="post.tags?.length" :items="post.tags.slice(0, 3)" />
+      <InlineTagList v-if="post.tags?.length" :items="post.tags.slice(0, 3)" variant="outlined" />
     </div>
   </a>
 </template>
