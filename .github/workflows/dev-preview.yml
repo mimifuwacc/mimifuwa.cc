@@ -16,39 +16,6 @@ env:
   DOTENV_PRIVATE_KEY_DEV: ${{ secrets.DOTENV_PRIVATE_KEY_DEV }}
 
 jobs:
-  deploy-web:
-    needs: deploy-api
-    runs-on: ubuntu-latest
-    environment:
-      name: dev
-      url: https://web-dev.mimifuwa.cc
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build web
-        working-directory: apps/web
-        env:
-          CLOUDFLARE_ENV: dev
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm run build
-
-      - name: Deploy web to Cloudflare
-        working-directory: apps/web
-        env:
-          CLOUDFLARE_ENV: dev
-        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy
-
   deploy-api:
     runs-on: ubuntu-latest
     steps:
@@ -60,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version-file: .node-version
           cache: "pnpm"
 
       - name: Install dependencies
@@ -90,7 +57,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version-file: .node-version
           cache: "pnpm"
 
       - name: Install dependencies
@@ -113,3 +80,38 @@ jobs:
       - name: Deploy admin to Cloudflare
         working-directory: apps/admin
         run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec wrangler deploy --config dist/server/wrangler.json
+
+  deploy-vue:
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+      url: https://web-dev.mimifuwa.cc
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy Vue site to Void
+        working-directory: apps/web-vue
+        env:
+          MIMIFUWA_CC_DEPLOY_ENV: dev
+        run: pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec void deploy --platform cloudflare
+
+      - name: Set content publish token
+        working-directory: apps/web-vue
+        env:
+          MIMIFUWA_CC_DEPLOY_ENV: dev
+          VOID_CONTENT_PUBLISH_TOKEN: ${{ secrets.VOID_CONTENT_PUBLISH_TOKEN }}
+        run: |
+          test -n "$VOID_CONTENT_PUBLISH_TOKEN"
+          printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | pnpm exec dotenvx run -f ../../env/.env.dev -- pnpm exec void secret put CONTENT_PUBLISH_TOKEN

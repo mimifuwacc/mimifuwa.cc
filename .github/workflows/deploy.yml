@@ -29,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version-file: .node-version
           cache: "pnpm"
 
       - name: Install dependencies
@@ -47,14 +47,6 @@ jobs:
         working-directory: apps/api
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config wrangler.toml
 
-      - name: Build web
-        working-directory: apps/web
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
-
-      - name: Deploy web
-        working-directory: apps/web
-        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy
-
       - name: Build admin
         working-directory: apps/admin
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm run build
@@ -66,6 +58,21 @@ jobs:
       - name: Deploy admin
         working-directory: apps/admin
         run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec wrangler deploy --config dist/server/wrangler.json
+
+      - name: Deploy Vue site to Void
+        working-directory: apps/web-vue
+        env:
+          MIMIFUWA_CC_DEPLOY_ENV: release
+        run: pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec void deploy --platform cloudflare
+
+      - name: Set content publish token
+        working-directory: apps/web-vue
+        env:
+          MIMIFUWA_CC_DEPLOY_ENV: release
+          VOID_CONTENT_PUBLISH_TOKEN: ${{ secrets.VOID_CONTENT_PUBLISH_TOKEN }}
+        run: |
+          test -n "$VOID_CONTENT_PUBLISH_TOKEN"
+          printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | pnpm exec dotenvx run -f ../../env/.env.production -- pnpm exec void secret put CONTENT_PUBLISH_TOKEN
 
   release:
     needs: deploy
