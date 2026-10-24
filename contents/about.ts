@@ -5,7 +5,7 @@ export interface TimelineEvent {
 }
 
 export const certifications = [
-  { title: "情報処理安全確保支援士", status: " (未登録)", date: "2025年度秋" },
+  { title: "情報処理安全確保支援士 (未登録)", date: "2025年度秋" },
   { title: "応用情報技術者", date: "2024年度秋" },
   { title: "ITパスポート", date: "2020年度春" },
 ];

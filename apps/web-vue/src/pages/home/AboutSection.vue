@@ -45,10 +45,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
             <ul class="certification-list">
               <li v-for="item in certifications" :key="item.title">
                 <time class="certification-date">{{ item.date }}</time>
-                <strong>
-                  {{ item.title }}
-                  <span v-if="item.status" class="certification-status">{{ item.status }}</span>
-                </strong>
+                <strong>{{ item.title }}</strong>
               </li>
             </ul>
           </ContentCard>
@@ -233,7 +230,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 
 .certification-list strong {
   grid-column: 2;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
@@ -248,11 +245,6 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   border: 1px solid var(--foreground);
   font-size: 0.7rem;
   line-height: 1.5;
-}
-
-.certification-status {
-  color: inherit;
-  font: inherit;
 }
 
 .award-list {
@@ -288,6 +280,12 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
     gap: 2rem;
   }
 
+  .about-primary > .content-card + .content-card,
+  .about-secondary > .content-card {
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--soft-border) 40%, var(--background));
+  }
+
   .timeline-event {
     grid-template-columns: minmax(5.5rem, 0.35fr) minmax(0, 1fr);
     gap: 0.25rem 0.8rem;
@@ -300,7 +298,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 
   .certification-list li {
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.35rem;
+    gap: 0.45rem;
   }
 
   .award-list time,
