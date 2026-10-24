@@ -303,12 +303,6 @@ function timelineDateParts(date: string) {
     gap: 2rem;
   }
 
-  .about-primary > .content-card + .content-card,
-  .about-secondary > .content-card {
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--foreground);
-  }
-
   .timeline-event {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.35rem;
