@@ -92,43 +92,47 @@ onMounted(async () => {
           </div>
         </article>
 
-        <ContentCard title="Skills" icon="wrench">
-          <ul class="skills-list" aria-label="Skills">
-            <li v-for="skill in allSkills" :key="skill.name">{{ skill.name }}</li>
-          </ul>
-        </ContentCard>
+        <div class="about-columns">
+          <div class="about-primary">
+            <ContentCard title="Skills" icon="wrench">
+              <ul class="skills-list" aria-label="Skills">
+                <li v-for="skill in allSkills" :key="skill.name">{{ skill.name }}</li>
+              </ul>
+            </ContentCard>
 
-        <ContentCard title="Timeline" icon="clock">
-          <div class="timeline">
-            <article
-              v-for="event in timelineData"
-              :key="event.date + event.title"
-              class="timeline-event"
-            >
-              <time>{{ event.date }}</time>
-              <h4>{{ event.title }}</h4>
-              <p v-if="event.description">{{ event.description }}</p>
-            </article>
-          </div>
-        </ContentCard>
-
-        <div class="about-details">
-          <ContentCard title="Certifications" icon="award">
-            <ul class="certification-list">
-              <li v-for="item in certifications" :key="item">{{ item }}</li>
-            </ul>
-          </ContentCard>
-
-          <ContentCard title="Interests" icon="smile">
-            <div class="hobby-list">
-              <div v-for="hobby in hobbies" :key="hobby.name" class="hobby-item">
-                <h4>{{ hobby.name }}</h4>
-                <div v-if="hobby.items" class="tag-list">
-                  <span v-for="item in hobby.items" :key="item" class="tag">{{ item }}</span>
+            <ContentCard title="Interests" icon="smile">
+              <div class="hobby-list">
+                <div v-for="hobby in hobbies" :key="hobby.name" class="hobby-item">
+                  <h4>{{ hobby.name }}</h4>
+                  <div v-if="hobby.items" class="tag-list">
+                    <span v-for="item in hobby.items" :key="item" class="tag">{{ item }}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </ContentCard>
+            </ContentCard>
+          </div>
+
+          <div class="about-secondary">
+            <ContentCard title="Timeline" icon="clock">
+              <div class="timeline">
+                <article
+                  v-for="event in timelineData"
+                  :key="event.date + event.title"
+                  class="timeline-event"
+                >
+                  <time>{{ event.date }}</time>
+                  <h4>{{ event.title }}</h4>
+                  <p v-if="event.description">{{ event.description }}</p>
+                </article>
+              </div>
+            </ContentCard>
+
+            <ContentCard title="Certifications" icon="award">
+              <ul class="certification-list">
+                <li v-for="item in certifications" :key="item">{{ item }}</li>
+              </ul>
+            </ContentCard>
+          </div>
         </div>
       </div>
     </SiteSection>

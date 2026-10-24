@@ -629,9 +629,27 @@ kbd {
 }
 
 .about-content {
-  display: grid;
   max-width: 66rem;
-  gap: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.about-intro {
+  padding-bottom: clamp(2rem, 5vw, 3.5rem);
+  border-bottom: 1px solid var(--soft-border);
+}
+
+.about-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: clamp(3rem, 7vw, 6rem);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.about-primary,
+.about-secondary {
+  display: grid;
+  align-content: start;
+  gap: clamp(2.5rem, 5vw, 4rem);
 }
 
 .content-card {
@@ -838,17 +856,6 @@ kbd {
 .certification-list li {
   color: var(--muted-foreground);
   font-size: 0.85rem;
-}
-
-.about-details {
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: clamp(2rem, 6vw, 5rem);
-}
-
-.about-details .content-card {
-  border-top: 0;
-  padding-top: 0;
 }
 
 .works-grid,
@@ -1100,14 +1107,9 @@ kbd {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .about-details {
+  .about-columns {
     grid-template-columns: minmax(0, 1fr);
-    gap: 2rem;
-  }
-
-  .about-details .content-card + .content-card {
-    border-top: 1px solid var(--soft-border);
-    padding-top: 1.25rem;
+    gap: 2.5rem;
   }
 
   .timeline-event {
