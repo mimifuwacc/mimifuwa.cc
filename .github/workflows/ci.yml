@@ -5,6 +5,8 @@ on:
     branches:
       - dev
       - release
+      - feat/web-vue-ox-content
+      - feat/void-r2-content
   workflow_dispatch:
 
 jobs:
