@@ -283,7 +283,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   .about-primary > .content-card + .content-card,
   .about-secondary > .content-card {
     padding-top: 1.5rem;
-    border-top: 1px solid color-mix(in srgb, var(--soft-border) 40%, var(--background));
+    border-top: 1px solid var(--foreground);
   }
 
   .timeline-event {
