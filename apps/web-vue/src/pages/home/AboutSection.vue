@@ -4,6 +4,7 @@ import { awards, certifications, timelineData } from "../../../../../contents/ab
 import Button from "../../components/Button.vue";
 import ContentCard from "../../components/ContentCard.vue";
 import SiteSection from "../../components/SiteSection.vue";
+import ProfileUuid from "./ProfileUuid.vue";
 
 defineProps<{ avatar: string }>();
 
@@ -20,6 +21,7 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
             <h3>mimifuwacc <small>ˈmiːmi</small></h3>
             <p>電気通信大学 情報理工学域 I類 コンピュータサイエンスプログラム</p>
           </div>
+          <ProfileUuid />
         </div>
         <div class="profile-socials">
           <Button href="https://github.com/mimifuwacc" external>

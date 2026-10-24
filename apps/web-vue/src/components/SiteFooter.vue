@@ -1,27 +1,10 @@
-<script setup lang="ts">
-import { ref } from "vue";
-import { Check, Copy } from "@lucide/vue";
-
-const uuid = "fa6c2a8f-27b1-4611-a0f5-19b0d6c20612";
-const copied = ref(false);
-
-const copyUuid = async () => {
-  await navigator.clipboard.writeText(uuid);
-  copied.value = true;
-  window.setTimeout(() => (copied.value = false), 2000);
-};
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <footer class="site-footer">
     <div class="container-wide footer-inner">
       <div class="footer-identity">
         <a href="/" class="footer-brand">mimifuwa.cc</a>
-        <button class="uuid-copy" type="button" @click="copyUuid">
-          <span>{{ uuid }}</span>
-          <Check v-if="copied" class="icon" aria-label="Copied" />
-          <Copy v-else class="icon" aria-label="Copy UUID" />
-        </button>
       </div>
       <div class="footer-links">
         <nav aria-label="Footer navigation">
