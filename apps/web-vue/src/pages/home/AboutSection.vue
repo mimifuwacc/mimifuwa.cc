@@ -9,6 +9,13 @@ import ProfileUuid from "./ProfileUuid.vue";
 defineProps<{ avatar: string }>();
 
 const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
+
+function timelineDateParts(date: string) {
+  const rangeSeparator = date.indexOf("〜");
+  return rangeSeparator === -1
+    ? [date]
+    : [date.slice(0, rangeSeparator + 1), date.slice(rangeSeparator + 1)];
+}
 </script>
 
 <template>
@@ -69,7 +76,12 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
                 :key="event.date + event.title"
                 class="timeline-event"
               >
-                <time>{{ event.date }}</time>
+                <time>
+                  <template v-for="(part, index) in timelineDateParts(event.date)" :key="part">
+                    <wbr v-if="index > 0" />
+                    <span>{{ part }}</span>
+                  </template>
+                </time>
                 <h4>{{ event.title }}</h4>
                 <p v-if="event.description">{{ event.description }}</p>
               </article>
@@ -197,6 +209,10 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   font-size: 0.8rem;
 }
 
+.timeline-event time span {
+  white-space: nowrap;
+}
+
 .timeline-event h4 {
   margin: 0;
   font-size: 0.9rem;
@@ -287,8 +303,13 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
   }
 
   .timeline-event {
-    grid-template-columns: minmax(5.5rem, 0.35fr) minmax(0, 1fr);
-    gap: 0.25rem 0.8rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .timeline-event h4,
+  .timeline-event p {
+    grid-column: 1;
   }
 
   .award-list li {
