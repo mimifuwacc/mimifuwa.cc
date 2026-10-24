@@ -251,9 +251,8 @@ const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 }
 
 .certification-status {
-  color: var(--muted-foreground);
-  font-size: 0.75rem;
-  font-weight: 400;
+  color: inherit;
+  font: inherit;
 }
 
 .award-list {
