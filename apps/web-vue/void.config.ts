@@ -8,9 +8,10 @@ export default defineConfig({
   },
   cloudflare: {
     name: isDev ? "mimifuwa-cc-dev" : "mimifuwa-cc",
+    workers_dev: isDev,
     routes: [
       {
-        pattern: isDev ? "web-dev.mimifuwa.cc" : "mimifuwa.cc",
+        pattern: isDev ? "web-vue-dev.mimifuwa.cc" : "mimifuwa.cc",
         custom_domain: true,
       },
     ],
