@@ -1,12 +1,15 @@
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import vue from "@vitejs/plugin-vue";
-import { defineTheme, defaultTheme, oxContent } from "@ox-content/vite-plugin";
+import { oxContent } from "@ox-content/vite-plugin";
 import { defineConfig } from "vite-plus";
+import { createMimifuwaTheme } from "./src/content-theme";
 
 const appDir = dirname(fileURLToPath(import.meta.url));
 const contentDir =
   process.env.CONTENT_DIR ?? resolve(appDir, "../../../mimifuwa.cc-content/articles");
+const siteStyles = readFileSync(resolve(appDir, "styles/mimifuwa-cc.css"), "utf8");
 
 export default defineConfig({
   plugins: [
@@ -29,21 +32,8 @@ export default defineConfig({
         clean: false,
         siteName: "mimifuwa.cc",
         siteUrl: "https://mimifuwa.cc",
-        theme: defineTheme({
-          extends: defaultTheme,
-          colors: {
-            primary: "#d979a8",
-            background: "#fffafd",
-            backgroundAlt: "#fff2f8",
-            text: "#342a31",
-            textMuted: "#80717b",
-            border: "#f1dce7",
-          },
-          fonts: {
-            sans: '"Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif',
-            mono: '"SFMono-Regular", Consolas, monospace',
-          },
-        }),
+        render: createMimifuwaTheme(siteStyles),
+        readerChrome: false,
       },
     }),
   ],
