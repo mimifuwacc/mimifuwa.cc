@@ -73,22 +73,6 @@ h1 {
   text-decoration: none;
   font-weight: 700;
 }
-.note {
-  margin-bottom: 5rem;
-  padding: 1.5rem;
-  border: 1px solid #f1dce7;
-  border-radius: 1.25rem;
-  background: #fff2f8;
-}
-.note h2 {
-  margin-top: 0;
-  font-size: 1.1rem;
-}
-.note p {
-  margin-bottom: 0;
-  color: #6d5d67;
-  line-height: 1.8;
-}
 .not-found {
   padding-block: 7rem;
   text-align: center;
