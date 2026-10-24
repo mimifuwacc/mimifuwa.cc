@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { ArrowUpRight } from "@lucide/vue";
-import { certifications, hobbies, timelineData } from "../../../../contents/about";
-import { allSkills } from "../../../../contents/skills";
+import { awards, certifications, hobbies, timelineData } from "../../../../contents/about";
 import { works } from "../../../../contents/works";
 import BlogCard from "../components/BlogCard.vue";
 import ContentCard from "../components/ContentCard.vue";
@@ -17,6 +16,7 @@ interface BlogSummary {
 }
 
 const posts = ref<BlogSummary[]>([]);
+const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 const avatar =
   "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/mimifuwacc.png";
 
@@ -94,21 +94,26 @@ onMounted(async () => {
 
         <div class="about-columns">
           <div class="about-primary">
-            <ContentCard title="Skills" icon="wrench">
-              <ul class="skills-list" aria-label="Skills">
-                <li v-for="skill in allSkills" :key="skill.name">{{ skill.name }}</li>
+            <ContentCard title="Interests" icon="code">
+              <ul class="interests-list" aria-label="Technical interests">
+                <li v-for="interest in technicalInterests" :key="interest">{{ interest }}</li>
               </ul>
             </ContentCard>
 
-            <ContentCard title="Interests" icon="smile">
-              <div class="hobby-list">
-                <div v-for="hobby in hobbies" :key="hobby.name" class="hobby-item">
-                  <h4>{{ hobby.name }}</h4>
-                  <div v-if="hobby.items" class="tag-list">
-                    <span v-for="item in hobby.items" :key="item" class="tag">{{ item }}</span>
-                  </div>
-                </div>
-              </div>
+            <ContentCard title="Certifications" icon="award">
+              <ul class="certification-list">
+                <li v-for="item in certifications" :key="item">{{ item }}</li>
+              </ul>
+            </ContentCard>
+
+            <ContentCard title="Awards" icon="trophy">
+              <ul class="award-list">
+                <li v-for="item in awards" :key="item.date + item.title">
+                  <time>{{ item.date }}</time>
+                  <strong>{{ item.title }}</strong>
+                  <span>{{ item.description }}</span>
+                </li>
+              </ul>
             </ContentCard>
           </div>
 
@@ -125,12 +130,6 @@ onMounted(async () => {
                   <p v-if="event.description">{{ event.description }}</p>
                 </article>
               </div>
-            </ContentCard>
-
-            <ContentCard title="Certifications" icon="award">
-              <ul class="certification-list">
-                <li v-for="item in certifications" :key="item">{{ item }}</li>
-              </ul>
             </ContentCard>
           </div>
         </div>
@@ -183,6 +182,17 @@ onMounted(async () => {
       </template>
       <div class="blog-grid">
         <BlogCard v-for="post in posts" :key="post.url" :post="post" />
+      </div>
+    </SiteSection>
+
+    <SiteSection id="personal-interests-section" eyebrow="04 / Personal" title="Outside work">
+      <div class="hobby-list">
+        <div v-for="hobby in hobbies" :key="hobby.name" class="hobby-item">
+          <h3>{{ hobby.name }}</h3>
+          <div v-if="hobby.items" class="tag-list">
+            <span v-for="item in hobby.items" :key="item" class="tag">{{ item }}</span>
+          </div>
+        </div>
       </div>
     </SiteSection>
   </div>

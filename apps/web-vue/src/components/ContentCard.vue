@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Award, Clock, Smile, Wrench } from "@lucide/vue";
+import { Award, Clock, CodeXml, Trophy } from "@lucide/vue";
 
-const icons = { award: Award, clock: Clock, smile: Smile, wrench: Wrench };
+const icons = { award: Award, clock: Clock, code: CodeXml, trophy: Trophy };
 
 defineProps<{
   title?: string;

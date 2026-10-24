@@ -10,6 +10,20 @@ export const certifications = [
   "ITパスポート (2020年度春)",
 ];
 
+export const awards = [
+  {
+    date: "2023年8月",
+    title: "U☆PoC～UECアイディア実証コンテスト～",
+    description: "学際向けモバイルオーダーアプリで出展し，2つの企業賞を受賞しました",
+  },
+  {
+    date: "2024年8月",
+    title: "U☆PoC～UECアイディア実証コンテスト～",
+    description:
+      "電通大生向けサービス開発をきっかけとしたプロジェクトで出展し，3つの企業賞を受賞しました",
+  },
+];
+
 export const hobbies = [
   {
     name: "開発",
@@ -35,17 +49,6 @@ export const timelineData: TimelineEvent[] = [
   {
     date: "2023年4月",
     title: "電気通信大学 I類 入学",
-  },
-  {
-    date: "2023年8月",
-    title: "U☆PoC～UECアイディア実証コンテスト～2023",
-    description: "学際向けモバイルオーダーアプリなどで出展し，2つの企業賞を受賞しました",
-  },
-  {
-    date: "2024年8月",
-    title: "U☆PoC～UECアイディア実証コンテスト～2024",
-    description:
-      "電通大生向けサービス開発をきっかけとしたプロジェクトで出展し，3つの企業賞を受賞しました",
   },
   {
     date: "2024年11月",

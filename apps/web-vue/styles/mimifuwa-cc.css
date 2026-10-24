@@ -629,7 +629,7 @@ kbd {
 }
 
 .about-content {
-  max-width: 66rem;
+  width: 100%;
 }
 
 .about-intro {
@@ -766,7 +766,7 @@ kbd {
   background: transparent;
 }
 
-.skills-list {
+.interests-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem 1.35rem;
@@ -775,13 +775,13 @@ kbd {
   list-style: none;
 }
 
-.skills-list li {
+.interests-list li {
   color: var(--muted-foreground);
   font-size: 0.9rem;
   line-height: 2;
 }
 
-.skills-list li + li::before {
+.interests-list li + li::before {
   margin-right: 1.35rem;
   color: var(--soft-border);
   content: "·";
@@ -793,7 +793,7 @@ kbd {
   gap: 1rem 2.5rem;
 }
 
-.hobby-item h4 {
+.hobby-item h3 {
   margin: 0 0 0.45rem;
   font-size: 0.9rem;
 }
@@ -856,6 +856,30 @@ kbd {
 .certification-list li {
   color: var(--muted-foreground);
   font-size: 0.85rem;
+}
+
+.award-list {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.award-list li {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.award-list time,
+.award-list span {
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+}
+
+.award-list strong {
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .works-grid,
