@@ -151,6 +151,7 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
         body: markdownToText(article.html),
       })),
     };
+    await mkdir(directory, { recursive: true });
     await writeFile(resolve(directory, "search-index.json"), JSON.stringify(searchIndex));
     const blogList = articles.map(({ title, description, date, tags, url }) => ({
       title,
@@ -186,13 +187,35 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
         try {
           await refreshPromise;
           if (pathname === "/search-index.json") {
+            const pages = await loadArticles();
+            const articles = pages.filter((article) => article.url !== "/blogs/");
             response.setHeader("content-type", "application/json; charset=utf-8");
-            response.end(await readFile(resolve(outDir, ".preview-content/search-index.json")));
+            response.end(
+              JSON.stringify({
+                documents: articles.map((article) => ({
+                  title: article.title,
+                  url: article.url,
+                  body: markdownToText(article.html),
+                })),
+              }),
+            );
             return;
           }
           if (pathname === "/blog-list.json") {
+            const pages = await loadArticles();
+            const articles = pages.filter((article) => article.url !== "/blogs/");
             response.setHeader("content-type", "application/json; charset=utf-8");
-            response.end(await readFile(resolve(outDir, ".preview-content/blog-list.json")));
+            response.end(
+              JSON.stringify(
+                articles.map(({ title, description, date, tags, url }) => ({
+                  title,
+                  description,
+                  date,
+                  tags,
+                  url,
+                })),
+              ),
+            );
             return;
           }
           const pages = await loadArticles();
