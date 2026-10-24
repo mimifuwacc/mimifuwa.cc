@@ -7,6 +7,9 @@
   </section>
   <section class="note">
     <h2>新しい記事サイトを準備中</h2>
-    <p>記事は ox-content でビルドしています。Markdown を更新すると、プレビューと公開サイトに同じ見た目が反映されます。</p>
+    <p>
+      記事は ox-content でビルドしています。Markdown
+      を更新すると、プレビューと公開サイトに同じ見た目が反映されます。
+    </p>
   </section>
 </template>
