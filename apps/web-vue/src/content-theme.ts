@@ -37,18 +37,32 @@ export const renderMimifuwaPage = (page: ArticlePage, articles: ArticlePage[], s
     const storedTheme = localStorage.getItem("theme");
     const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
     root.dataset.theme = storedTheme || (prefersDark ? "dark" : "light");
+    document.querySelectorAll(".theme-toggle").forEach((button) => {
+      button.textContent = root.dataset.theme === "dark" ? "Light" : "Dark";
+    });
     const dialog = document.querySelector("#search-dialog");
     const input = document.querySelector("#search-input");
     const results = document.querySelector("#search-results");
     const openSearch = () => { dialog.showModal(); input.focus(); };
-    document.querySelector("#search-open").addEventListener("click", openSearch);
-    document.querySelector("#search-close").addEventListener("click", () => dialog.close());
-    document.querySelector("#theme-toggle").addEventListener("click", () => {
-      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
-      localStorage.setItem("theme", root.dataset.theme);
+    document.querySelectorAll(".search-open").forEach((button) => {
+      button.addEventListener("click", openSearch);
     });
-    document.querySelector("#menu-toggle").addEventListener("click", () => {
-      document.querySelector("#site-sidebar").classList.toggle("is-open");
+    document.querySelector("#search-close").addEventListener("click", () => dialog.close());
+    document.querySelectorAll(".theme-toggle").forEach((button) => {
+      button.addEventListener("click", () => {
+        root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+        localStorage.setItem("theme", root.dataset.theme);
+        document.querySelectorAll(".theme-toggle").forEach((toggle) => {
+          toggle.textContent = root.dataset.theme === "dark" ? "Light" : "Dark";
+        });
+      });
+    });
+    document.querySelector("#menu-toggle").addEventListener("click", (event) => {
+      const button = event.currentTarget;
+      const nav = document.querySelector("#mobile-nav");
+      const open = button.getAttribute("aria-expanded") !== "true";
+      button.setAttribute("aria-expanded", String(open));
+      nav.hidden = !open;
     });
     document.addEventListener("keydown", (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
@@ -72,6 +86,11 @@ export const renderMimifuwaPage = (page: ArticlePage, articles: ArticlePage[], s
         link.append(resultTitle, excerpt); return link;
       }));
     });
+    document.querySelector("#uuid-copy").addEventListener("click", async (event) => {
+      await navigator.clipboard.writeText("fa6c2a8f-27b1-4611-a0f5-19b0d6c20612");
+      event.currentTarget.querySelector("span:last-child").textContent = "Copied";
+      setTimeout(() => { event.currentTarget.querySelector("span:last-child").textContent = "Copy"; }, 2000);
+    });
   `;
 
   return `<!doctype html>
@@ -87,13 +106,22 @@ export const renderMimifuwaPage = (page: ArticlePage, articles: ArticlePage[], s
   </head>
   <body>
     <header class="site-header">
-      <button class="icon-button menu-toggle" id="menu-toggle" type="button" aria-label="Toggle navigation">☰</button>
-      <a class="brand" href="/">mimifuwa.cc</a>
-      <nav class="main-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/blogs/">Blog</a><a href="https://github.com/mimifuwacc">GitHub</a></nav>
-      <div class="header-actions">
-        <button class="search-button" id="search-open" type="button">Search <kbd>⌘K</kbd></button>
-        <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle theme">◐</button>
+      <div class="header-inner container-wide">
+        <a class="brand" href="/">mimifuwa.cc</a>
+        <nav class="desktop-nav" aria-label="Main navigation">
+          <a href="/">Home</a><a href="/blogs/" aria-current="page">Blog</a><a href="/links">Links</a>
+          <button class="square-button search-open" type="button">Search <kbd>⌘K</kbd></button>
+          <button class="square-button theme-toggle" type="button" aria-label="Toggle color theme">Dark</button>
+        </nav>
+        <div class="mobile-actions">
+          <button class="square-button search-open" type="button">Search</button>
+          <button class="square-button theme-toggle" type="button" aria-label="Toggle color theme">Dark</button>
+          <button class="square-button menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">Menu</button>
+        </div>
       </div>
+      <nav class="mobile-nav container-wide" id="mobile-nav" aria-label="Mobile navigation" hidden>
+        <a href="/">Home</a><a href="/blogs/" aria-current="page">Blog</a><a href="/links">Links</a>
+      </nav>
     </header>
     <aside class="site-sidebar" id="site-sidebar"><a class="sidebar-home" href="/blogs/">Blogs</a>${renderNavigation(articles, page.url)}</aside>
     <main class="reading-layout">
@@ -105,7 +133,13 @@ export const renderMimifuwaPage = (page: ArticlePage, articles: ArticlePage[], s
       <div class="search-dialog-header"><input id="search-input" type="search" placeholder="Search articles"><button id="search-close" type="button">Close</button></div>
       <div class="search-results" id="search-results"></div>
     </dialog>
-    <footer class="site-footer">© mimifuwa.cc</footer>
+    <footer class="site-footer article-footer">
+      <div class="container-wide footer-inner">
+        <div class="footer-identity"><a class="footer-brand" href="/">mimifuwa.cc</a><button class="uuid-copy" id="uuid-copy" type="button"><span>fa6c2a8f-27b1-4611-a0f5-19b0d6c20612</span><span>Copy</span></button></div>
+        <div class="footer-links"><nav aria-label="Footer navigation"><a href="/">Home</a><a href="/blogs/">Blog</a><a href="/links">Links</a></nav><nav class="social-links" aria-label="Social links"><a href="https://github.com/mimifuwacc">GitHub</a><a href="https://twitter.com/mimifuwacc">Twitter</a><a href="mailto:mail@mimifuwa.cc">Email</a></nav></div>
+      </div>
+      <p class="container-wide copyright">© mimifuwa.cc</p>
+    </footer>
     <script>${script}</script>
   </body>
 </html>`;

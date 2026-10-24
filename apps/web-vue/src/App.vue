@@ -1,14 +1,12 @@
 <template>
   <div class="site-shell">
-    <header class="site-header">
-      <RouterLink class="brand" to="/">mimifuwa.cc</RouterLink>
-      <nav aria-label="Main navigation">
-        <a href="/">Home</a>
-        <a href="/blogs/">Blog</a>
-        <a href="https://github.com/mimifuwacc">GitHub</a>
-      </nav>
-    </header>
+    <SiteHeader />
     <main><RouterView /></main>
-    <footer>© mimifuwa.cc</footer>
+    <SiteFooter />
   </div>
 </template>
+
+<script setup lang="ts">
+import SiteFooter from "./components/SiteFooter.vue";
+import SiteHeader from "./components/SiteHeader.vue";
+</script>

@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import "../styles/mimifuwa-cc.css";
 import { createRouter, createWebHistory } from "vue-router";
 import App from "./App.vue";
 import HomePage from "./pages/HomePage.vue";
