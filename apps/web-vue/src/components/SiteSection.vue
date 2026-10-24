@@ -25,7 +25,6 @@ defineProps<{
 <style scoped>
 .section {
   padding-block: clamp(4rem, 8vw, 7rem);
-  border-bottom: 1px solid color-mix(in srgb, var(--soft-border) 35%, var(--background));
 }
 
 .section-heading {
@@ -68,6 +67,7 @@ defineProps<{
 @media (max-width: 48rem) {
   .section {
     padding-block: 3rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--soft-border) 35%, var(--background));
   }
 
   .section-heading {

@@ -19,13 +19,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <SiteSection
-    v-if="posts.length"
-    id="blog-section"
-    eyebrow="02 / Writing"
-    title="Blog"
-    subtitle="Notes on software, projects, and everyday things."
-  >
+  <SiteSection v-if="posts.length" id="blog-section" eyebrow="02 / Writing" title="Blog">
     <template #action>
       <Button href="/blogs/">All articles <span aria-hidden="true">→</span></Button>
     </template>
@@ -39,7 +33,7 @@ onMounted(async () => {
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 2.75rem 1.5rem;
+  gap: 2.25rem 1.5rem;
 }
 
 @media (min-width: 48.001rem) and (max-width: 70rem) {
@@ -51,6 +45,7 @@ onMounted(async () => {
 @media (max-width: 48rem) {
   .blog-grid {
     grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
   }
 }
 </style>
