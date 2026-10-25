@@ -4,7 +4,14 @@ Vue Router provides the shared site layout, blog index and article pages, works 
 
 Local development uses the small fixture set in `packages/content-dev/articles`. The `mimifuwa.cc-content` CLI passes its own article directory through `CONTENT_DIR`, so content preview and publishing run the same Ox Content pipeline against the real articles.
 
-Set `CONTENT_PUBLISH_TOKEN` as a Void secret in each deployment environment. The matching GitHub Actions secret is used by `mimifuwa.cc-content` when publishing.
+GitHub Actions deploys the dev site when `dev` is updated and production when `release` is updated. Configure the `dev` and `production` GitHub Actions environments with these secrets:
+
+- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_API_TOKEN`
+- `VOID_CONTENT_PUBLISH_TOKEN`
+- `ADMIN_SECRET` and `VITE_API_URL` for the existing API and admin deployment jobs
+
+The deployment workflow writes `VOID_CONTENT_PUBLISH_TOKEN` to the Void Worker as `CONTENT_PUBLISH_TOKEN`. The matching token must also be configured in the `mimifuwa.cc-content` repository for publishing.
 
 ```sh
 vp run dev:vue
