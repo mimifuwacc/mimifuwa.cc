@@ -1,39 +1,33 @@
 # mimifuwa.cc
 
-個人ブログと記事管理画面を含む monorepo です。
-
-## アプリケーション
-
-- `apps/web`: Astro で構築したブログ本体。記事や静的コンテンツを中心に、必要な箇所だけ React island を使います。
-- `apps/admin`: TanStack Start / TanStack Router / React で構築する記事管理画面。URL と route tree を中心に、loader と server function で API に接続します。
-- `apps/api`: Cloudflare Workers + Hono の API。
-- `packages/parser`: Markdown と記事メタデータの解析。
-- `packages/blog-ui`: 記事本文・リンクカード・Twitter カードの表示契約、共通 CSS、表示用の純粋関数。
-- `packages/ui`: ブログと管理画面で共有する UI コンポーネント。
-
-ブログと管理画面ではフレームワークを統一しません。Document first のブログには Astro、Application first の管理画面には TanStack Start を使い、Domain / Effect / UI の境界を共有します。
+Vue で構築した個人サイトです。Void を使って Cloudflare Workers にデプロイし、記事と Works の本文は `mimifuwa.cc-content` から R2 に公開します。
 
 ## 開発
 
-```bash
+Node.js 24.21 以降を用意して、依存関係をインストールします。
+
+```sh
 vp install
 vp run dev
 ```
 
-個別に起動する場合は `vp run -F @mimifuwacc/admin dev` など、対象パッケージのスクリプトを実行してください。
+ローカルでは `packages/content-dev/articles` のサンプル記事を使います。別の Markdown ディレクトリを確認するときは `CONTENT_DIR` を指定できます。
+
+```sh
+CONTENT_DIR=/path/to/articles vp run dev
+```
+
+`mimifuwa.cc-content` の CLI から起動する場合は `mimifuwacc preview --content articles` を使います。詳細は [content preview](./packages/cli/README.md) を参照してください。
 
 ## 確認
 
-```bash
+```sh
 vp check
-vp test
 vp run -r build
 ```
 
-Astro ファイルは Prettier、TypeScript / TSX ファイルは Vite+ の Oxfmt を使います。
-
 ## デプロイ
 
-本番ブランチは `release`、開発ブランチは `dev` です。Cloudflare Workers の開発環境には `dev`、本番環境には `production` の Wrangler 設定を使います。
-
-管理画面は TanStack Start の Cloudflare Workers 出力を `wrangler deploy` で公開します。秘密鍵は `DOTENV_PRIVATE_KEY` と `DOTENV_PRIVATE_KEY_DEV` で管理します。
+- `dev` への push は開発環境へ自動デプロイします。
+- `release` への push は本番環境へ自動デプロイし、GitHub Release を作成します。
+- Cloudflare の認証情報と `VOID_CONTENT_PUBLISH_TOKEN` は GitHub Actions の `dev` / `production` 環境シークレットで管理します。

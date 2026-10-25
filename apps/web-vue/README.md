@@ -9,12 +9,11 @@ GitHub Actions deploys the dev site when `dev` is updated and production when `r
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_API_TOKEN`
 - `VOID_CONTENT_PUBLISH_TOKEN`
-- `ADMIN_SECRET` and `VITE_API_URL` for the existing API and admin deployment jobs
 
 The deployment workflow writes `VOID_CONTENT_PUBLISH_TOKEN` to the Void Worker as `CONTENT_PUBLISH_TOKEN`. The matching token must also be configured in the `mimifuwa.cc-content` repository for publishing.
 
 ```sh
-vp run dev:vue
+vp run dev
 vp run --filter @mimifuwacc/web-vue build
 vp run --filter @mimifuwacc/web-vue deploy
 ```

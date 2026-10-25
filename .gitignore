@@ -30,11 +30,7 @@ coverage
 # env
 .env*
 !.env.example
-# dotenvx: env/ 配下の暗号化済み env ファイルは commit する
-!env/.env
-!env/.env.production
-!env/.env.dev
-# 秘密鍵は絶対にコミットしない
+# ローカル用の秘密情報
 .env.keys
 .dev.vars
 

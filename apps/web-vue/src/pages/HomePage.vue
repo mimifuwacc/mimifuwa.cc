@@ -5,8 +5,7 @@ import HomeHero from "./home/HomeHero.vue";
 import OnRepeatSection from "./home/OnRepeatSection.vue";
 import WorksSection from "./home/WorksSection.vue";
 
-const avatar =
-  "https://raw.githubusercontent.com/mimifuwacc/mimifuwa.cc/dev/apps/web/public/mimifuwacc.png";
+const avatar = "/mimifuwacc.png";
 </script>
 
 <template>

@@ -7,7 +7,7 @@ type Action = "preview" | "build";
 
 const [requestedAction = "preview", ...args] = process.argv.slice(2);
 if (requestedAction !== "preview" && requestedAction !== "build") {
-  console.error("Usage: mimifuwa <preview|build> [--content <directory>] [--site <directory>]");
+  console.error("Usage: mimifuwacc <preview|build> [--content <directory>] [--site <directory>]");
   process.exit(2);
 }
 const action: Action = requestedAction;

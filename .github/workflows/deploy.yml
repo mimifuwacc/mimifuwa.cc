@@ -19,10 +19,8 @@ jobs:
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      API_ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
-      ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
-      VITE_API_URL: ${{ secrets.VITE_API_URL }}
       VOID_CONTENT_PUBLISH_TOKEN: ${{ secrets.VOID_CONTENT_PUBLISH_TOKEN }}
+      MIMIFUWA_CC_DEPLOY_ENV: release
     steps:
       - uses: actions/checkout@v7
 
@@ -38,40 +36,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Migrate D1
-        working-directory: apps/api
-        run: pnpm exec wrangler d1 migrations apply mimifuwacc-blogs --remote
-
-      - name: Set API secret (prod)
-        working-directory: apps/api
-        run: printf '%s' "$API_ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET
-
-      - name: Deploy API
-        working-directory: apps/api
-        run: pnpm exec wrangler deploy --config wrangler.toml
-
-      - name: Build admin
-        working-directory: apps/admin
-        run: pnpm run build
-
-      - name: Set admin secret (prod)
-        working-directory: apps/admin
-        run: printf '%s' "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.jsonc
-
-      - name: Deploy admin
-        working-directory: apps/admin
-        run: pnpm exec wrangler deploy --config dist/server/wrangler.json
-
       - name: Deploy Vue site to Void
         working-directory: apps/web-vue
-        env:
-          MIMIFUWA_CC_DEPLOY_ENV: release
         run: pnpm exec void deploy --platform cloudflare
 
       - name: Set content publish token
         working-directory: apps/web-vue
-        env:
-          MIMIFUWA_CC_DEPLOY_ENV: release
         run: |
           test -n "$VOID_CONTENT_PUBLISH_TOKEN"
           printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | pnpm exec void secret put CONTENT_PUBLISH_TOKEN

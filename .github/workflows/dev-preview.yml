@@ -11,83 +11,7 @@ permissions:
   id-token: write
 
 jobs:
-  deploy-api:
-    runs-on: ubuntu-latest
-    environment: dev
-    env:
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      API_ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Migrate D1 (dev)
-        working-directory: apps/api
-        run: pnpm exec wrangler d1 migrations apply mimifuwacc-blogs-dev --env dev --remote
-
-      - name: Set API secret (dev)
-        working-directory: apps/api
-        run: printf '%s' "$API_ADMIN_SECRET" | pnpm exec wrangler secret put API_ADMIN_SECRET --env dev
-
-      - name: Deploy API to Cloudflare
-        working-directory: apps/api
-        run: pnpm exec wrangler deploy --env dev
-
-  deploy-admin:
-    needs: deploy-api
-    runs-on: ubuntu-latest
-    environment: dev
-    env:
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
-      VITE_API_URL: ${{ secrets.VITE_API_URL }}
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build admin
-        working-directory: apps/admin
-        env:
-          CLOUDFLARE_CONFIG_PATH: wrangler.dev.jsonc
-        run: pnpm run build
-
-      - name: Set admin secret (dev)
-        working-directory: apps/admin
-        run: printf '%s' "$ADMIN_SECRET" | pnpm exec wrangler secret put ADMIN_SECRET --config wrangler.dev.jsonc
-
-      - name: Verify admin dev worker config
-        working-directory: apps/admin
-        run: grep -q '"name":"mimifuwacc-admin-dev"' dist/server/wrangler.json
-
-      - name: Deploy admin to Cloudflare
-        working-directory: apps/admin
-        run: pnpm exec wrangler deploy --config dist/server/wrangler.json
-
-  deploy-vue:
+  deploy:
     runs-on: ubuntu-latest
     environment:
       name: dev
@@ -96,6 +20,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       VOID_CONTENT_PUBLISH_TOKEN: ${{ secrets.VOID_CONTENT_PUBLISH_TOKEN }}
+      MIMIFUWA_CC_DEPLOY_ENV: dev
     steps:
       - uses: actions/checkout@v7
 
@@ -113,23 +38,10 @@ jobs:
 
       - name: Deploy Vue site to Void
         working-directory: apps/web-vue
-        env:
-          MIMIFUWA_CC_DEPLOY_ENV: dev
         run: pnpm exec void deploy --platform cloudflare
 
       - name: Set content publish token
         working-directory: apps/web-vue
-        env:
-          MIMIFUWA_CC_DEPLOY_ENV: dev
         run: |
           test -n "$VOID_CONTENT_PUBLISH_TOKEN"
           printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | pnpm exec void secret put CONTENT_PUBLISH_TOKEN
-
-      - name: Publish Web Vue preview URL
-        run: |
-          set -eu
-          response=$(curl --fail-with-body --silent --show-error \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain")
-          subdomain=$(printf '%s' "$response" | jq -er '.result.subdomain')
-          printf '## Web Vue preview\n\n- https://web-vue-dev.mimifuwa.cc/\n- https://mimifuwa-cc-dev.%s.workers.dev/\n' "$subdomain" >> "$GITHUB_STEP_SUMMARY"

@@ -1,7 +1,3 @@
 {
-  "recommendations": [
-    "astro-build.astro-vscode",
-    "esbenp.prettier-vscode",
-    "VoidZero.vite-plus-extension-pack"
-  ]
+  "recommendations": ["Vue.volar", "VoidZero.vite-plus-extension-pack"]
 }
