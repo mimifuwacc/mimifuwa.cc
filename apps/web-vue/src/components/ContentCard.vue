@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { Award, Clock, CodeXml, Trophy } from "@lucide/vue";
-
-const icons = { award: Award, clock: Clock, code: CodeXml, trophy: Trophy };
-
 defineProps<{
   title?: string;
   label?: string;
-  icon?: keyof typeof icons;
 }>();
 </script>
 
@@ -15,8 +10,9 @@ defineProps<{
     <header v-if="title || label" class="content-card-heading">
       <p v-if="label" class="card-label">{{ label }}</p>
       <div class="content-card-title">
-        <component :is="icons[icon]" v-if="icon" class="icon" aria-hidden="true" />
+        <span class="content-card-mark" aria-hidden="true">〈</span>
         <h3 v-if="title">{{ title }}</h3>
+        <span class="content-card-mark" aria-hidden="true">〉</span>
       </div>
     </header>
     <slot />
@@ -36,13 +32,17 @@ defineProps<{
 .content-card-title {
   display: flex;
   align-items: baseline;
-  gap: 0.6rem;
+  gap: 0.18rem;
 }
 
-.content-card-title > .icon {
-  width: 1rem;
-  height: 1rem;
+.content-card-mark {
   color: var(--muted-foreground);
+  font-size: 1.05em;
+  font-weight: 400;
+}
+
+.content-card-mark:first-child {
+  margin-left: -0.5em;
 }
 
 .content-card-title h3 {

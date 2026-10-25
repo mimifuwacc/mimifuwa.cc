@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ArrowUpRight } from "@lucide/vue";
-import type { WorkItem } from "../../../../contents/works";
+import { ArrowRight } from "@lucide/vue";
+import type { WorkItem } from "../types/work";
 import InlineTagList from "./InlineTagList.vue";
 
 defineProps<{ work: WorkItem }>();
 </script>
 
 <template>
-  <a class="work-card" :href="work.url" target="_blank" rel="noopener noreferrer">
+  <RouterLink class="work-card" :to="work.url">
     <div class="work-card-heading">
       <h3>{{ work.title }}</h3>
-      <ArrowUpRight class="icon" aria-hidden="true" />
+      <ArrowRight class="icon" aria-hidden="true" />
     </div>
     <p>{{ work.description }}</p>
     <InlineTagList
@@ -19,7 +19,7 @@ defineProps<{ work: WorkItem }>();
       :items="work.technologies"
       variant="outlined"
     />
-  </a>
+  </RouterLink>
 </template>
 
 <style scoped>
@@ -49,9 +49,7 @@ h3 {
 
 .work-card-heading .icon {
   flex: 0 0 auto;
-  transition:
-    color 150ms ease,
-    transform 150ms ease;
+  transition: color var(--ui-transition-duration) ease;
 }
 
 p {
@@ -77,7 +75,6 @@ p {
 .work-card:hover .work-card-heading .icon,
 .work-card:focus-visible .work-card-heading .icon {
   color: var(--foreground);
-  transform: translate(2px, -2px);
 }
 
 .work-card:focus-visible {

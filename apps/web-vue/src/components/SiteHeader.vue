@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { Menu, Moon, Search, Sun, X } from "@lucide/vue";
+import { Menu, Moon, Sun, X } from "@lucide/vue";
 
 interface SearchDocument {
   title: string;
@@ -17,9 +17,11 @@ const query = ref("");
 const documents = ref<SearchDocument[]>([]);
 const isDark = ref(false);
 const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/blogs/", label: "Blog" },
-  { href: "/links", label: "Links" },
+  { href: "/", label: "Top" },
+  { href: "/blogs/", label: "Blogs" },
+  { href: "/works/", label: "Works" },
+  { href: "/onrepeat/", label: "On Repeat" },
+  { href: "/mutuals/", label: "Mutuals" },
 ];
 
 const matches = computed(() => {
@@ -52,7 +54,7 @@ onMounted(async () => {
   document.documentElement.dataset.theme = isDark.value ? "dark" : "light";
 
   try {
-    const response = await fetch("/search-index.json");
+    const response = await fetch("/api/search-index");
     if (response.ok) {
       const index = (await response.json()) as { documents?: SearchDocument[] };
       documents.value = index.documents ?? [];
@@ -81,7 +83,9 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 <template>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="/">mimifuwa.cc</a>
+      <div class="header-brand-row">
+        <a class="brand" href="/">mimifuwa.cc</a>
+      </div>
       <nav class="desktop-nav" aria-label="Main navigation">
         <a
           v-for="item in navItems"
@@ -89,20 +93,10 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
           :href="item.href"
           :aria-current="isActive(item.href) ? 'page' : undefined"
         >
-          {{ item.label }}
+          <span>{{ item.label }}</span>
         </a>
       </nav>
-      <div class="header-utilities">
-        <button
-          class="icon-button search-trigger"
-          type="button"
-          aria-label="Search articles"
-          @click="searchOpen = true"
-        >
-          <Search class="icon" aria-hidden="true" />
-          <span>Search</span>
-          <kbd>⌘K</kbd>
-        </button>
+      <div class="header-theme">
         <button
           class="icon-button theme-toggle"
           type="button"
@@ -115,15 +109,6 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
         </button>
       </div>
       <div class="mobile-actions">
-        <button
-          class="icon-button search-trigger"
-          type="button"
-          aria-label="Search articles"
-          @click="searchOpen = true"
-        >
-          <Search class="icon" aria-hidden="true" />
-          <span class="visually-hidden">Search</span>
-        </button>
         <button
           class="icon-button theme-toggle"
           type="button"

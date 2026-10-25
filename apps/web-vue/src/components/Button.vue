@@ -46,18 +46,18 @@ withDefaults(
   text-decoration: none;
   cursor: pointer;
   transition:
-    color 150ms ease,
-    background-color 150ms ease;
+    color var(--ui-transition-duration) ease,
+    background-color var(--ui-transition-duration) ease;
 }
 
 .button--primary {
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--button-primary-color);
+  background: var(--button-primary-background);
 }
 
 .button--primary:hover {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--button-primary-hover-color);
+  background: var(--button-primary-hover-background);
 }
 
 .button--outline {

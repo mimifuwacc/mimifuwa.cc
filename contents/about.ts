@@ -7,7 +7,6 @@ export interface TimelineEvent {
 export const certifications = [
   { title: "情報処理安全確保支援士 (未登録)", date: "2025年度秋" },
   { title: "応用情報技術者", date: "2024年度秋" },
-  { title: "ITパスポート", date: "2020年度春" },
 ];
 
 export const awards = [
@@ -24,34 +23,19 @@ export const awards = [
   },
 ];
 
-export const hobbies = [
-  {
-    name: "開発",
-    items: ["Web", "dotfiles", "UUID"],
-  },
-  {
-    name: "音楽",
-    items: ["ヰ世界情緒", "花譜", "V.W.P", "VALIS", "少女革命計画", "KMNZ"],
-  },
-  {
-    name: "ライトノベル",
-    items: ["スパイ教室", "こちら週末停滞委員会", "わたなれ"],
-  },
-  {
-    name: "Twitter",
-  },
-  {
-    name: "ラーメン二郎",
-  },
-];
-
 export const timelineData: TimelineEvent[] = [
   {
-    date: "2023年4月",
-    title: "電気通信大学 I類 入学",
+    date: "2023年4月〜",
+    title: "電気通信大学 I類 CS プログラム",
+    description: "主にプログラミング言語・言語処理系について学んでいます",
   },
   {
-    date: "2024年11月",
+    date: "2023年4月〜",
+    title: "技術系学生団体 team411",
+    description: "Web アプリケーションをチームで開発しています",
+  },
+  {
+    date: "2024年11月〜2025年3月",
     title: "第74回調布祭実行委員会 技術局",
     description: "調布祭公式サイトのデザイン・制作を担当しました",
   },
@@ -66,16 +50,13 @@ export const timelineData: TimelineEvent[] = [
     description: "教育事業本部でフロントエンド開発を行いました",
   },
   {
-    date: "2025年12月",
-    title: "情報処理安全確保支援士試験 合格",
+    date: "2026年1月〜",
+    title: "株式会社はてな アルバイト",
+    description: "学生アルバイトとして，Web 開発をメインに行っています",
   },
   {
-    date: "2026年1月",
-    title: "はてな アルバイト",
-  },
-  {
-    date: "2026年4月",
-    title: "PLSP Lab",
-    description: "電気通信大学の佐藤研究室に所属し，卒業研究を行っています",
+    date: "2026年4月〜",
+    title: "電気通信大学 佐藤研究室",
+    description: "アセンブリ言語の形式意味論の構築に関する研究を行っています",
   },
 ];

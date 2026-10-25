@@ -1,12 +1,15 @@
 <template>
-  <div class="site-shell">
-    <SiteHeader />
-    <main><RouterView /></main>
-    <SiteFooter />
-  </div>
+  <SiteLayout>
+    <RouterView v-slot="{ Component, route }">
+      <Transition name="page" mode="out-in">
+        <div :key="route.path" class="page-transition">
+          <component :is="Component" />
+        </div>
+      </Transition>
+    </RouterView>
+  </SiteLayout>
 </template>
 
 <script setup lang="ts">
-import SiteFooter from "./components/SiteFooter.vue";
-import SiteHeader from "./components/SiteHeader.vue";
+import SiteLayout from "./components/SiteLayout.vue";
 </script>

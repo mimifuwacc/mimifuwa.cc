@@ -2,7 +2,7 @@ import { defineConfig } from "void/config";
 
 export default defineConfig({
   inference: {
-    appType: "static",
+    appType: "void",
     outputDir: "dist",
   },
 });

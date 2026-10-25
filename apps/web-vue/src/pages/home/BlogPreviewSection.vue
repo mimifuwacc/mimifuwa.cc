@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { ArrowRight } from "@lucide/vue";
 import BlogCard from "../../components/BlogCard.vue";
 import Button from "../../components/Button.vue";
 import SiteSection from "../../components/SiteSection.vue";
+import { getBlogList } from "../../lib/blog-api";
 import type { BlogSummary } from "../../types/blog";
 
 const posts = ref<BlogSummary[]>([]);
-
 onMounted(async () => {
   try {
-    const response = await fetch("/blog-list.json");
-    if (!response.ok) return;
-    posts.value = ((await response.json()) as BlogSummary[]).slice(0, 6);
+    posts.value = (await getBlogList()).slice(0, 6);
   } catch {
     posts.value = [];
   }
@@ -19,17 +18,22 @@ onMounted(async () => {
 </script>
 
 <template>
-  <SiteSection v-if="posts.length" id="blog-section" eyebrow="02 / Writing" title="Blog">
+  <SiteSection
+    v-if="posts.length"
+    id="blog-section"
+    eyebrow="Notes & Thoughts"
+    title="Blogs"
+  >
     <template #action>
       <Button class="blog-action-desktop" href="/blogs/">
-        All articles <span aria-hidden="true">→</span>
+        See more <ArrowRight class="icon" aria-hidden="true" />
       </Button>
     </template>
     <div class="blog-grid">
       <BlogCard v-for="post in posts" :key="post.url" :post="post" />
     </div>
     <div class="blog-actions-mobile">
-      <Button href="/blogs/">All articles <span aria-hidden="true">→</span></Button>
+      <Button href="/blogs/">See more <ArrowRight class="icon" aria-hidden="true" /></Button>
     </div>
   </SiteSection>
 </template>

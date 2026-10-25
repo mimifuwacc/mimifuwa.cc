@@ -23,6 +23,6 @@
     "tsx": "^4.19.2",
     "typescript-eslint": "^8.67.0",
     "vite-plus": "catalog:",
-    "wrangler": "^4.121.0"
+    "wrangler": "^4.151.3"
   }
 }

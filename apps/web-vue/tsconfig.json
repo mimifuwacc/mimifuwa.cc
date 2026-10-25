@@ -15,5 +15,5 @@
     "noEmit": true,
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src"]
+  "include": ["env.ts", "routes", "src"]
 }

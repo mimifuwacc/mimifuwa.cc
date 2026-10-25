@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowUpRight } from "@lucide/vue";
+import { ArrowRight } from "@lucide/vue";
 import InlineTagList from "./InlineTagList.vue";
 import type { BlogSummary } from "../types/blog";
 
@@ -21,7 +21,7 @@ const formatDate = (date?: string) => {
     <div class="blog-card-body">
       <div class="blog-card-meta">
         <time v-if="post.date" :datetime="post.date">{{ formatDate(post.date) }}</time>
-        <ArrowUpRight class="icon" aria-hidden="true" />
+        <ArrowRight class="icon" aria-hidden="true" />
       </div>
       <p class="blog-card-title">{{ post.title }}</p>
       <p v-if="post.description" class="blog-card-description">
@@ -61,9 +61,7 @@ const formatDate = (date?: string) => {
 
 .blog-card-meta .icon {
   flex: 0 0 auto;
-  transition:
-    color 150ms ease,
-    transform 150ms ease;
+  transition: color var(--ui-transition-duration) ease;
 }
 
 .blog-card-meta time {
@@ -96,7 +94,6 @@ const formatDate = (date?: string) => {
 .blog-card:hover .blog-card-meta .icon,
 .blog-card:focus-visible .blog-card-meta .icon {
   color: var(--foreground);
-  transform: translateX(2px);
 }
 
 @media (prefers-reduced-motion: reduce) {

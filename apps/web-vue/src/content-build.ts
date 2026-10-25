@@ -1,13 +1,12 @@
-import { readdir, readFile, mkdir, writeFile } from "node:fs/promises";
+import { copyFile, readdir, readFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname, extname, relative, resolve, sep } from "node:path";
 import { createMarkdownProcessor } from "@ox-content/vite-plugin";
 import type { ArticlePage } from "./content-theme";
-import { markdownToText, renderBlogIndex, renderMimifuwaPage } from "./content-theme";
+import { markdownToText } from "./content-theme";
 
 interface ContentBuildOptions {
   contentDir: string;
   outDir: string;
-  styles: string;
 }
 
 interface DevServer {
@@ -18,8 +17,9 @@ interface DevServer {
   middlewares: {
     use(
       handler: (
-        request: { url?: string },
+        request: { url?: string; method?: string },
         response: {
+          statusCode?: number;
           setHeader(name: string, value: string): void;
           end(value?: string | Uint8Array): void;
         },
@@ -58,18 +58,43 @@ const articleUrl = (contentDir: string, filePath: string) => {
     .join("/")
     .replace(/\.(md|markdown|mdx)$/i, "")
     .replace(/\/index$/i, "");
-  const route =
-    path === "blogs" ? "/blogs/" : path.startsWith("blogs/") ? `/${path}` : `/blogs/${path}`;
+  const section = path.startsWith("works") ? "works" : "blogs";
+  const contentPath = path.replace(/^(blogs|works)\/?/, "");
+  const route = contentPath ? `/${section}/${contentPath}` : `/${section}`;
   return `${route.replace(/\/$/, "")}/`;
 };
 
-const writePage = async (outDir: string, url: string, html: string) => {
-  const outputPath = resolve(outDir, `.${url}`, "index.html");
-  await mkdir(dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, html);
-};
+const blogListFromPages = (pages: ArticlePage[]) =>
+  pages
+    .filter((page) => page.section === "blogs" && page.url !== "/blogs/")
+    .map(({ title, description, date, tags, url }) => ({ title, description, date, tags, url }));
 
-export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildOptions) => {
+const workListFromPages = (pages: ArticlePage[]) =>
+  pages
+    .filter((page) => page.section === "works")
+    .map(({ title, description, technologies, tags, externalUrl, url }) => ({
+      title,
+      description,
+      technologies: technologies ?? tags ?? [],
+      externalUrl,
+      url,
+    }))
+    .filter((work) => typeof work.url === "string" && typeof work.externalUrl === "string");
+
+const workContentFromPages = (pages: ArticlePage[]) =>
+  pages
+    .filter((page) => page.section === "works")
+    .map(({ title, description, technologies, tags, externalUrl, url, html }) => ({
+      title,
+      description,
+      technologies: technologies ?? tags ?? [],
+      externalUrl,
+      url,
+      html,
+    }))
+    .filter((work) => typeof work.externalUrl === "string");
+
+export const createContentBuild = ({ contentDir, outDir }: ContentBuildOptions) => {
   const processor = createMarkdownProcessor({
     srcDir: contentDir,
     highlight: true,
@@ -80,70 +105,63 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
   });
   let articlesPromise: Promise<ArticlePage[]> | undefined;
 
-  const loadArticles = () => {
-    articlesPromise ??= (async () => {
-      const files = await listMarkdownFiles(contentDir);
-      const rendered = await Promise.all(
-        files.map(async (filePath) => {
-          const source = await readFile(filePath, "utf8");
-          const result = await processor.render(source, filePath);
-          const frontmatter = result.frontmatter;
-          const relativePath = relative(contentDir, filePath).split(sep).join("/");
-          const fileName =
-            relativePath
-              .replace(/\.(md|markdown|mdx)$/i, "")
-              .replace(/\/index$/i, "")
-              .split("/")
-              .at(-1) ?? "Article";
-          return {
-            title: asString(frontmatter.title) ?? titleize(fileName),
-            navTitle: asString(frontmatter.navTitle) ?? titleize(fileName),
-            description: asString(frontmatter.description) ?? asString(frontmatter.excerpt),
-            date:
-              frontmatter.date instanceof Date
-                ? frontmatter.date.toISOString().slice(0, 10)
-                : asString(frontmatter.date),
-            tags: Array.isArray(frontmatter.tags)
-              ? frontmatter.tags.filter((tag): tag is string => typeof tag === "string")
-              : [],
-            html: result.html,
-            url: articleUrl(contentDir, filePath),
-            sortDate:
-              frontmatter.date instanceof Date
-                ? frontmatter.date.getTime()
-                : Date.parse(String(frontmatter.date ?? "")),
-          };
-        }),
-      );
-      return rendered
-        .sort(
-          (left, right) =>
-            right.sortDate - left.sortDate || left.title.localeCompare(right.title, "ja"),
-        )
-        .map(({ sortDate: _sortDate, ...article }) => article);
-    })();
+  const loadArticles = (): Promise<ArticlePage[]> => {
+    if (!articlesPromise)
+      articlesPromise = (async () => {
+        const files = await listMarkdownFiles(contentDir);
+        const rendered = await Promise.all(
+          files.map(async (filePath) => {
+            const source = await readFile(filePath, "utf8");
+            const result = await processor.render(source, filePath);
+            const frontmatter = result.frontmatter;
+            const relativePath = relative(contentDir, filePath).split(sep).join("/");
+            const section: ArticlePage["section"] = relativePath.startsWith("works/")
+              ? "works"
+              : "blogs";
+            const fileName =
+              relativePath
+                .replace(/\.(md|markdown|mdx)$/i, "")
+                .replace(/\/index$/i, "")
+                .split("/")
+                .at(-1) ?? "Article";
+            return {
+              title: asString(frontmatter.title) ?? titleize(fileName),
+              navTitle: asString(frontmatter.navTitle) ?? titleize(fileName),
+              description: asString(frontmatter.description) ?? asString(frontmatter.excerpt),
+              date:
+                frontmatter.date instanceof Date
+                  ? frontmatter.date.toISOString().slice(0, 10)
+                  : asString(frontmatter.date),
+              tags: Array.isArray(frontmatter.tags)
+                ? frontmatter.tags.filter((tag): tag is string => typeof tag === "string")
+                : [],
+              html: result.html,
+              url: articleUrl(contentDir, filePath),
+              section,
+              externalUrl: asString(frontmatter.url),
+              technologies: Array.isArray(frontmatter.technologies)
+                ? frontmatter.technologies.filter((tag): tag is string => typeof tag === "string")
+                : [],
+              sortDate:
+                frontmatter.date instanceof Date
+                  ? frontmatter.date.getTime()
+                  : Date.parse(String(frontmatter.date ?? "")),
+            };
+          }),
+        );
+        return rendered
+          .sort(
+            (left, right) =>
+              right.sortDate - left.sortDate || left.title.localeCompare(right.title, "ja"),
+          )
+          .map(({ sortDate: _sortDate, ...article }) => article);
+      })();
     return articlesPromise;
   };
 
   const generate = async (directory: string) => {
-    const sourcePages = await loadArticles();
-    const blogPage = sourcePages.find((page) => page.url === "/blogs/") ?? {
-      title: "Blog",
-      navTitle: "Blogs",
-      description: "Articles about technology and personal projects.",
-      html: renderBlogIndex(sourcePages.filter((page) => page.url !== "/blogs/")),
-      url: "/blogs/",
-    };
-    const articles = sourcePages.filter((page) => page.url !== "/blogs/");
-    const navigation = [...articles].sort((left, right) =>
-      left.navTitle.localeCompare(right.navTitle, "en", { numeric: true }),
-    );
-    const pages = [blogPage, ...articles];
-    await Promise.all(
-      pages.map((page) =>
-        writePage(directory, page.url, renderMimifuwaPage(page, navigation, styles)),
-      ),
-    );
+    const pages = await loadArticles();
+    const articles = pages.filter((page) => page.section === "blogs" && page.url !== "/blogs/");
     const searchIndex = {
       documents: articles.map((article) => ({
         title: article.title,
@@ -153,14 +171,27 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
     };
     await mkdir(directory, { recursive: true });
     await writeFile(resolve(directory, "search-index.json"), JSON.stringify(searchIndex));
-    const blogList = articles.map(({ title, description, date, tags, url }) => ({
+    const blogList = blogListFromPages(pages);
+    await mkdir(resolve(directory, "blogs"), { recursive: true });
+    await writeFile(resolve(directory, "blogs", "index.json"), JSON.stringify(blogList));
+    const blogContent = articles.map(({ title, description, date, tags, url, html }) => ({
       title,
       description,
       date,
       tags,
       url,
+      html,
     }));
-    await writeFile(resolve(directory, "blog-list.json"), JSON.stringify(blogList));
+    await writeFile(resolve(directory, "blogs", "content.json"), JSON.stringify(blogContent));
+    await mkdir(resolve(directory, "works"), { recursive: true });
+    await writeFile(
+      resolve(directory, "works", "index.json"),
+      JSON.stringify(workListFromPages(pages)),
+    );
+    await writeFile(
+      resolve(directory, "works", "content.json"),
+      JSON.stringify(workContentFromPages(pages)),
+    );
     return pages;
   };
 
@@ -186,9 +217,11 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
         const pathname = new URL(request.url ?? "/", "http://localhost").pathname;
         try {
           await refreshPromise;
-          if (pathname === "/search-index.json") {
+          if (request.method === "GET" && pathname === "/api/search-index") {
             const pages = await loadArticles();
-            const articles = pages.filter((article) => article.url !== "/blogs/");
+            const articles = pages.filter(
+              (article) => article.section === "blogs" && article.url !== "/blogs/",
+            );
             response.setHeader("content-type", "application/json; charset=utf-8");
             response.end(
               JSON.stringify({
@@ -201,44 +234,50 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
             );
             return;
           }
-          if (pathname === "/blog-list.json") {
+          if (request.method === "GET" && pathname === "/api/blogs") {
             const pages = await loadArticles();
-            const articles = pages.filter((article) => article.url !== "/blogs/");
             response.setHeader("content-type", "application/json; charset=utf-8");
-            response.end(
-              JSON.stringify(
-                articles.map(({ title, description, date, tags, url }) => ({
-                  title,
-                  description,
-                  date,
-                  tags,
-                  url,
-                })),
-              ),
-            );
+            response.end(JSON.stringify(blogListFromPages(pages)));
             return;
           }
-          const pages = await loadArticles();
-          const articles = pages.filter((article) => article.url !== "/blogs/");
-          const navigation = [...articles].sort((left, right) =>
-            left.navTitle.localeCompare(right.navTitle, "en", { numeric: true }),
-          );
-          const page =
-            pathname === "/blogs/"
-              ? (pages.find((article) => article.url === "/blogs/") ?? {
-                  title: "Blog",
-                  navTitle: "Blogs",
-                  description: "Articles about technology and personal projects.",
-                  html: renderBlogIndex(articles),
-                  url: "/blogs/",
-                })
-              : articles.find(
-                  (article) =>
-                    article.url === pathname || article.url === `${pathname.replace(/\/$/, "")}/`,
-                );
-          if (!page) return next();
-          response.setHeader("content-type", "text/html; charset=utf-8");
-          response.end(renderMimifuwaPage(page, navigation, styles));
+          if (request.method === "GET" && pathname === "/api/works") {
+            const pages = await loadArticles();
+            response.setHeader("content-type", "application/json; charset=utf-8");
+            response.end(JSON.stringify(workListFromPages(pages)));
+            return;
+          }
+          if (request.method === "GET" && pathname.startsWith("/api/works/")) {
+            const pages = await loadArticles();
+            const requestedUrl = `${decodeURIComponent(pathname.slice("/api".length)).replace(/\/+$/, "")}/`;
+            const work = workContentFromPages(pages).find((item) => item.url === requestedUrl);
+            if (!work) {
+              response.statusCode = 404;
+              response.setHeader("content-type", "application/json; charset=utf-8");
+              response.end(JSON.stringify({ error: "not_found" }));
+              return;
+            }
+            response.setHeader("content-type", "application/json; charset=utf-8");
+            response.end(JSON.stringify(work));
+            return;
+          }
+          if (request.method === "GET" && pathname.startsWith("/api/blogs/")) {
+            const pages = await loadArticles();
+            const articles = pages.filter(
+              (article) => article.section === "blogs" && article.url !== "/blogs/",
+            );
+            const requestedUrl = `${decodeURIComponent(pathname.slice("/api".length)).replace(/\/+$/, "")}/`;
+            const article = articles.find((item) => item.url === requestedUrl);
+            if (!article) {
+              response.statusCode = 404;
+              response.setHeader("content-type", "application/json; charset=utf-8");
+              response.end(JSON.stringify({ error: "not_found" }));
+              return;
+            }
+            response.setHeader("content-type", "application/json; charset=utf-8");
+            response.end(JSON.stringify(article));
+            return;
+          }
+          return next();
         } catch (error) {
           next(error instanceof Error ? error : new Error(String(error)));
         }
@@ -247,6 +286,23 @@ export const createContentBuild = ({ contentDir, outDir, styles }: ContentBuildO
     async closeBundle() {
       articlesPromise = undefined;
       await generate(outDir);
+      const pages = await loadArticles();
+      const routes = [
+        "/blogs/",
+        "/works/",
+        ...pages
+          .filter((page) => page.section === "blogs" || page.section === "works")
+          .map((page) => page.url)
+          .filter((url) => url !== "/blogs/" && url !== "/works/"),
+      ];
+      const appShell = resolve(outDir, "index.html");
+      await Promise.all(
+        routes.map(async (url) => {
+          const routeShell = resolve(outDir, `.${url}`, "index.html");
+          await mkdir(dirname(routeShell), { recursive: true });
+          await copyFile(appShell, routeShell);
+        }),
+      );
     },
   };
 };

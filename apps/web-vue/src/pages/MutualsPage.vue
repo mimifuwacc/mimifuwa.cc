@@ -6,9 +6,8 @@ import SiteSection from "../components/SiteSection.vue";
 
 <template>
   <SiteSection
-    id="links-page"
-    eyebrow="04 / Elsewhere"
-    title="Links"
+    id="mutuals-page"
+    title="Mutuals"
     subtitle="Sites by friends and fellow makers."
     heading-level="h1"
   >

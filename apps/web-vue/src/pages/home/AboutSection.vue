@@ -19,7 +19,7 @@ function timelineDateParts(date: string) {
 </script>
 
 <template>
-  <SiteSection id="about-section" eyebrow="01 / About" title="About Me">
+  <SiteSection id="about-section" eyebrow="Profile" title="About Me">
     <div class="about-content">
       <article class="profile-feature about-intro">
         <img class="profile-avatar" :src="avatar" alt="mimifuwacc" />
@@ -42,13 +42,13 @@ function timelineDateParts(date: string) {
 
       <div class="about-columns">
         <div class="about-primary">
-          <ContentCard title="Interests" icon="code">
+          <ContentCard title="Interests">
             <ul class="interests-list" aria-label="Technical interests">
               <li v-for="interest in technicalInterests" :key="interest">{{ interest }}</li>
             </ul>
           </ContentCard>
 
-          <ContentCard title="Certifications" icon="award">
+          <ContentCard title="Certifications">
             <ul class="certification-list">
               <li v-for="item in certifications" :key="item.title">
                 <time class="certification-date">{{ item.date }}</time>
@@ -57,7 +57,7 @@ function timelineDateParts(date: string) {
             </ul>
           </ContentCard>
 
-          <ContentCard title="Awards" icon="trophy">
+          <ContentCard title="Awards">
             <ul class="award-list">
               <li v-for="item in awards" :key="item.date + item.title">
                 <time>{{ item.date }}</time>
@@ -69,7 +69,7 @@ function timelineDateParts(date: string) {
         </div>
 
         <div class="about-secondary">
-          <ContentCard title="Timeline" icon="clock">
+          <ContentCard title="Timeline">
             <div class="timeline">
               <article
                 v-for="event in timelineData"

@@ -2,7 +2,7 @@
 import AboutSection from "./home/AboutSection.vue";
 import BlogPreviewSection from "./home/BlogPreviewSection.vue";
 import HomeHero from "./home/HomeHero.vue";
-import OutsideWorkSection from "./home/OutsideWorkSection.vue";
+import OnRepeatSection from "./home/OnRepeatSection.vue";
 import WorksSection from "./home/WorksSection.vue";
 
 const avatar =
@@ -14,5 +14,5 @@ const avatar =
   <AboutSection :avatar="avatar" />
   <BlogPreviewSection />
   <WorksSection />
-  <OutsideWorkSection />
+  <OnRepeatSection />
 </template>

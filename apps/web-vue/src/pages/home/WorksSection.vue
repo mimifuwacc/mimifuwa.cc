@@ -1,25 +1,34 @@
 <script setup lang="ts">
-import { ArrowUpRight } from "@lucide/vue";
-import { works } from "../../../../../contents/works";
+import { onMounted, ref } from "vue";
+import { ArrowRight } from "@lucide/vue";
 import Button from "../../components/Button.vue";
 import SiteSection from "../../components/SiteSection.vue";
 import WorkCard from "../../components/WorkCard.vue";
+import { getWorks } from "../../lib/work-api";
+import type { WorkItem } from "../../types/work";
+
+const works = ref<WorkItem[]>([]);
+onMounted(async () => {
+  try {
+    works.value = (await getWorks()).slice(0, 6);
+  } catch {
+    works.value = [];
+  }
+});
 </script>
 
 <template>
-  <SiteSection id="works-section" eyebrow="03 / Selected work" title="Works">
+  <SiteSection v-if="works.length" id="works-section" eyebrow="Things I’ve made" title="Works">
     <template #action>
-      <Button class="works-action-desktop" href="https://github.com/mimifuwacc" external>
-        More projects <ArrowUpRight class="icon" aria-hidden="true" />
+      <Button class="works-action-desktop" href="/works/">
+        See more <ArrowRight class="icon" aria-hidden="true" />
       </Button>
     </template>
     <div class="works-grid">
       <WorkCard v-for="work in works" :key="work.title" :work="work" />
     </div>
     <div class="works-actions-mobile">
-      <Button href="https://github.com/mimifuwacc" external>
-        More projects <ArrowUpRight class="icon" aria-hidden="true" />
-      </Button>
+      <Button href="/works/"> See more <ArrowRight class="icon" aria-hidden="true" /> </Button>
     </div>
   </SiteSection>
 </template>
