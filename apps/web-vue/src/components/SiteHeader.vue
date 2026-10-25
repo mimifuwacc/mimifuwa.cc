@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Menu, Moon, Search, Sun, X } from "@lucide/vue";
 
@@ -11,6 +11,7 @@ interface SearchDocument {
 
 const route = useRoute();
 const menuOpen = ref(false);
+const menuDialog = ref<HTMLDialogElement>();
 const searchOpen = ref(false);
 const query = ref("");
 const documents = ref<SearchDocument[]>([]);
@@ -32,9 +33,11 @@ const matches = computed(() => {
 const isActive = (href: string) =>
   route.path === href || (href !== "/" && route.path.startsWith(href));
 
-const syncTheme = () => {
-  isDark.value = document.documentElement.dataset.theme === "dark";
-};
+watch(menuOpen, async (open) => {
+  if (!open) return;
+  await nextTick();
+  menuDialog.value?.showModal();
+});
 
 const toggleTheme = () => {
   isDark.value = !isDark.value;
@@ -77,7 +80,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 
 <template>
   <header class="site-header">
-    <div class="header-inner container-wide">
+    <div class="header-inner">
       <a class="brand" href="/">mimifuwa.cc</a>
       <nav class="desktop-nav" aria-label="Main navigation">
         <a
@@ -88,6 +91,8 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
         >
           {{ item.label }}
         </a>
+      </nav>
+      <div class="header-utilities">
         <button
           class="icon-button search-trigger"
           type="button"
@@ -108,7 +113,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
           <Moon v-else class="icon" aria-hidden="true" />
           <span class="visually-hidden">{{ isDark ? "Light theme" : "Dark theme" }}</span>
         </button>
-      </nav>
+      </div>
       <div class="mobile-actions">
         <button
           class="icon-button search-trigger"
@@ -140,18 +145,43 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
         </button>
       </div>
     </div>
-    <nav v-if="menuOpen" class="mobile-nav container-wide" aria-label="Mobile navigation">
-      <a
-        v-for="item in navItems"
-        :key="item.href"
-        :href="item.href"
-        :aria-current="isActive(item.href) ? 'page' : undefined"
-        @click="menuOpen = false"
-      >
-        {{ item.label }}
-      </a>
-    </nav>
   </header>
+
+  <dialog
+    v-if="menuOpen"
+    ref="menuDialog"
+    class="mobile-menu"
+    aria-label="Main menu"
+    @click.self="menuOpen = false"
+    @cancel.prevent="menuOpen = false"
+  >
+    <div class="mobile-menu-inner">
+      <div class="mobile-menu-header">
+        <span>CONTENTS</span>
+        <button
+          class="icon-button mobile-menu-close"
+          type="button"
+          aria-label="Close menu"
+          autofocus
+          @click="menuOpen = false"
+        >
+          <X class="icon" aria-hidden="true" />
+        </button>
+      </div>
+      <nav class="mobile-menu-links" aria-label="Main navigation">
+        <a
+          v-for="item in navItems"
+          :key="item.href"
+          :href="item.href"
+          :aria-current="isActive(item.href) ? 'page' : undefined"
+          @click="menuOpen = false"
+        >
+          {{ item.label }}
+        </a>
+      </nav>
+      <span class="mobile-menu-brand" aria-hidden="true">mimifuwa.cc</span>
+    </div>
+  </dialog>
 
   <dialog
     v-if="searchOpen"
