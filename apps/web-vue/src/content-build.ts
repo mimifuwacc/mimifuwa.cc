@@ -94,6 +94,9 @@ const workContentFromPages = (pages: ArticlePage[]) =>
     }))
     .filter((work) => typeof work.externalUrl === "string");
 
+const fixturesModuleId = "virtual:mimifuwa-content-fixtures";
+const resolvedFixturesModuleId = `\0${fixturesModuleId}`;
+
 export const createContentBuild = ({ contentDir, outDir }: ContentBuildOptions) => {
   const processor = createMarkdownProcessor({
     srcDir: contentDir,
@@ -197,6 +200,36 @@ export const createContentBuild = ({ contentDir, outDir }: ContentBuildOptions) 
 
   return {
     name: "mimifuwa-content-pages",
+    resolveId(id: string) {
+      return id === fixturesModuleId ? resolvedFixturesModuleId : undefined;
+    },
+    async load(id: string) {
+      if (id !== resolvedFixturesModuleId) return undefined;
+      const pages = await loadArticles();
+      const articles = pages.filter((page) => page.section === "blogs" && page.url !== "/blogs/");
+      const searchIndex = {
+        documents: articles.map((article) => ({
+          title: article.title,
+          url: article.url,
+          body: markdownToText(article.html),
+        })),
+      };
+      const fixtures = {
+        blogs: blogListFromPages(pages),
+        blogContent: articles.map(({ title, description, date, tags, url, html }) => ({
+          title,
+          description,
+          date,
+          tags,
+          url,
+          html,
+        })),
+        works: workListFromPages(pages),
+        workContent: workContentFromPages(pages),
+        searchIndex,
+      };
+      return `export default ${JSON.stringify(fixtures)};`;
+    },
     configureServer(server: DevServer) {
       const refresh = () => {
         articlesPromise = undefined;

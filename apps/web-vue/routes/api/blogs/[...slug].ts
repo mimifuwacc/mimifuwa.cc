@@ -1,5 +1,6 @@
 import { defineHandler } from "void";
 import { storage } from "void/storage";
+import { fixtures, isDevContent } from "../../../src/server-content";
 
 interface BlogArticle {
   url: string;
@@ -7,6 +8,13 @@ interface BlogArticle {
 }
 
 export const GET = defineHandler(async (c) => {
+  if (isDevContent) {
+    const slug = c.req.param("slug") ?? "";
+    const url = `/blogs/${slug.replace(/^\/+|\/+$/g, "")}/`;
+    const article = fixtures.blogContent.find((item) => item.url === url);
+    return article ? c.json(article) : c.json({ error: "not_found" }, 404);
+  }
+
   const revisionObject = await storage.get("content/active-revision.json");
   if (!revisionObject) return c.json({ error: "not_found" }, 404);
   const value: unknown = await revisionObject.json();

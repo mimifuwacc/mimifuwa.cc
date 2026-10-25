@@ -24,6 +24,6 @@ The content publisher uploads a complete revision before switching the active re
 
 ## Deployment
 
-- A push to `dev` deploys the development Worker and uses `mimifuwa-cc-content-dev`.
-- A push to `release` deploys the production Worker and uses `mimifuwa-cc-content`.
-- `CONTENT_PUBLISH_TOKEN` is stored as a Void Worker secret. GitHub Actions reads the matching `VOID_CONTENT_PUBLISH_TOKEN` environment secret and sets it during deployment.
+- A push to `dev` deploys the `mimifuwa-cc-dev` Worker. Its blog and work API responses are bundled from `packages/content-dev`; it does not read or publish content in R2.
+- A push to `release` deploys the production Worker. Its blog and work API responses use the active revision published by `mimifuwa.cc-content` in R2.
+- `CONTENT_PUBLISH_TOKEN` is configured only on the production Worker. The dev Worker returns `404` from content publishing endpoints.

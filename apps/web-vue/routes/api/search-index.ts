@@ -1,7 +1,10 @@
 import { defineHandler } from "void";
 import { storage } from "void/storage";
+import { fixtures, isDevContent } from "../../src/server-content";
 
 export const GET = defineHandler(async () => {
+  if (isDevContent) return Response.json(fixtures.searchIndex);
+
   const revisionObject = await storage.get("content/active-revision.json");
   if (!revisionObject) return Response.json({ documents: [] });
   const value: unknown = await revisionObject.json();

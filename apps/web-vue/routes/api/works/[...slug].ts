@@ -1,5 +1,6 @@
 import { defineHandler } from "void";
 import { storage } from "void/storage";
+import { fixtures, isDevContent } from "../../../src/server-content";
 
 interface WorkRecord {
   url: string;
@@ -7,6 +8,12 @@ interface WorkRecord {
 }
 
 export const GET = defineHandler(async (c) => {
+  if (isDevContent) {
+    const slug = (c.req.param("slug") ?? "").replace(/^\/+|\/+$/g, "");
+    const work = fixtures.workContent.find((item) => item.url === `/works/${slug}/`);
+    return work ? c.json(work) : c.json({ error: "not_found" }, 404);
+  }
+
   const revisionObject = await storage.get("content/active-revision.json");
   if (!revisionObject) return c.json({ error: "not_found" }, 404);
   const value: unknown = await revisionObject.json();

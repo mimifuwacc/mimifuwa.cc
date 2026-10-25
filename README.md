@@ -28,6 +28,6 @@ vp run -r build
 
 ## デプロイ
 
-- `dev` への push は開発環境へ自動デプロイします。
+- `dev` への push は <https://mimifuwa-cc-dev.m8c.workers.dev> へ自動デプロイします。Blogs と Works は `packages/content-dev` のサンプルを表示します。
 - `release` への push は本番環境へ自動デプロイし、GitHub Release を作成します。
 - Cloudflare の認証情報と `VOID_CONTENT_PUBLISH_TOKEN` は GitHub Actions の `dev` / `production` 環境シークレットで管理します。

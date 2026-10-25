@@ -9,6 +9,9 @@ const appDir = dirname(fileURLToPath(import.meta.url));
 const contentDir =
   process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-dev/articles");
 export default defineConfig(({ command }) => ({
+  define: {
+    __MIMIFUWA_CC_DEPLOY_ENV__: JSON.stringify(process.env.MIMIFUWA_CC_DEPLOY_ENV ?? "production"),
+  },
   plugins: [
     createContentBuild({ contentDir, outDir: resolve(appDir, "dist") }),
     ...(command === "serve" ? [] : [voidPlugin()]),

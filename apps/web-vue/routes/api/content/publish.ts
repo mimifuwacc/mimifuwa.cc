@@ -1,8 +1,11 @@
 import { defineHandler } from "void";
 import { env } from "void/env";
 import { storage } from "void/storage";
+import { isDevContent } from "../../../src/server-content";
 
 export const POST = defineHandler(async (c) => {
+  if (isDevContent) return c.notFound();
+
   const expected = env.CONTENT_PUBLISH_TOKEN;
   if (!expected || c.req.header("Authorization") !== `Bearer ${expected}`) {
     return c.json({ error: "unauthorized" }, 401);

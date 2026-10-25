@@ -1,7 +1,10 @@
 import { defineHandler } from "void";
 import { storage } from "void/storage";
+import { fixtures, isDevContent } from "../../../src/server-content";
 
 export const GET = defineHandler(async (c) => {
+  if (isDevContent) return c.json(fixtures.blogs);
+
   const revision = await getActiveRevision();
   if (!revision) return c.json([], 200, { "cache-control": "no-store" });
 
