@@ -10,7 +10,7 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "13.1.0",
+    "@astrojs/cloudflare": "13.7.0",
     "@lucide/astro": "^1.29.0",
     "@mimifuwacc/blog-ui": "workspace:*",
     "@mimifuwacc/parser": "workspace:*",
