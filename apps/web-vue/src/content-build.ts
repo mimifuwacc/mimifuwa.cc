@@ -1,12 +1,11 @@
-import { copyFile, readdir, readFile, mkdir, writeFile } from "node:fs/promises";
-import { dirname, extname, relative, resolve, sep } from "node:path";
+import { readdir, readFile } from "node:fs/promises";
+import { extname, relative, resolve, sep } from "node:path";
 import { createMarkdownProcessor } from "@ox-content/vite-plugin";
 import type { ArticlePage } from "./content-theme";
 import { markdownToText } from "./content-theme";
 
 interface ContentBuildOptions {
   contentDir: string;
-  outDir: string;
 }
 
 interface DevServer {
@@ -97,7 +96,7 @@ const workContentFromPages = (pages: ArticlePage[]) =>
 const fixturesModuleId = "virtual:mimifuwa-content-fixtures";
 const resolvedFixturesModuleId = `\0${fixturesModuleId}`;
 
-export const createContentBuild = ({ contentDir, outDir }: ContentBuildOptions) => {
+export const createContentBuild = ({ contentDir }: ContentBuildOptions) => {
   const processor = createMarkdownProcessor({
     srcDir: contentDir,
     highlight: true,
@@ -162,42 +161,6 @@ export const createContentBuild = ({ contentDir, outDir }: ContentBuildOptions) 
     return articlesPromise;
   };
 
-  const generate = async (directory: string) => {
-    const pages = await loadArticles();
-    const articles = pages.filter((page) => page.section === "blogs" && page.url !== "/blogs/");
-    const searchIndex = {
-      documents: articles.map((article) => ({
-        title: article.title,
-        url: article.url,
-        body: markdownToText(article.html),
-      })),
-    };
-    await mkdir(directory, { recursive: true });
-    await writeFile(resolve(directory, "search-index.json"), JSON.stringify(searchIndex));
-    const blogList = blogListFromPages(pages);
-    await mkdir(resolve(directory, "blogs"), { recursive: true });
-    await writeFile(resolve(directory, "blogs", "index.json"), JSON.stringify(blogList));
-    const blogContent = articles.map(({ title, description, date, tags, url, html }) => ({
-      title,
-      description,
-      date,
-      tags,
-      url,
-      html,
-    }));
-    await writeFile(resolve(directory, "blogs", "content.json"), JSON.stringify(blogContent));
-    await mkdir(resolve(directory, "works"), { recursive: true });
-    await writeFile(
-      resolve(directory, "works", "index.json"),
-      JSON.stringify(workListFromPages(pages)),
-    );
-    await writeFile(
-      resolve(directory, "works", "content.json"),
-      JSON.stringify(workContentFromPages(pages)),
-    );
-    return pages;
-  };
-
   return {
     name: "mimifuwa-content-pages",
     resolveId(id: string) {
@@ -233,7 +196,7 @@ export const createContentBuild = ({ contentDir, outDir }: ContentBuildOptions) 
     configureServer(server: DevServer) {
       const refresh = () => {
         articlesPromise = undefined;
-        return generate(resolve(outDir, ".preview-content"));
+        return loadArticles();
       };
       let refreshPromise = refresh();
       server.watcher.add(contentDir);
@@ -315,27 +278,6 @@ export const createContentBuild = ({ contentDir, outDir }: ContentBuildOptions) 
           next(error instanceof Error ? error : new Error(String(error)));
         }
       });
-    },
-    async closeBundle() {
-      articlesPromise = undefined;
-      await generate(outDir);
-      const pages = await loadArticles();
-      const routes = [
-        "/blogs/",
-        "/works/",
-        ...pages
-          .filter((page) => page.section === "blogs" || page.section === "works")
-          .map((page) => page.url)
-          .filter((url) => url !== "/blogs/" && url !== "/works/"),
-      ];
-      const appShell = resolve(outDir, "index.html");
-      await Promise.all(
-        routes.map(async (url) => {
-          const routeShell = resolve(outDir, `.${url}`, "index.html");
-          await mkdir(dirname(routeShell), { recursive: true });
-          await copyFile(appShell, routeShell);
-        }),
-      );
     },
   };
 };
