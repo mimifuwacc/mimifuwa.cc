@@ -1,8 +1,17 @@
+<script setup lang="ts">
+import AboutSection from "./home/AboutSection.vue";
+import BlogPreviewSection from "./home/BlogPreviewSection.vue";
+import HomeHero from "./home/HomeHero.vue";
+import OnRepeatSection from "./home/OnRepeatSection.vue";
+import WorksSection from "./home/WorksSection.vue";
+
+const avatar = "/mimifuwacc.png";
+</script>
+
 <template>
-  <section class="hero">
-    <p class="eyebrow">mimifuwa.cc</p>
-    <h1>Making things.<br />Writing things down.</h1>
-    <p class="intro">Notes on software and personal projects.</p>
-    <a class="button" href="/blogs/">Read the blog <span aria-hidden="true">→</span></a>
-  </section>
+  <HomeHero :avatar="avatar" />
+  <AboutSection :avatar="avatar" />
+  <BlogPreviewSection />
+  <WorksSection />
+  <OnRepeatSection />
 </template>

@@ -8,7 +8,7 @@
     "dist"
   ],
   "bin": {
-    "mimifuwa": "./dist/cli.js"
+    "mimifuwacc": "./dist/cli.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
