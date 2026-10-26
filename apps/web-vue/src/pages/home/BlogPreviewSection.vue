@@ -18,12 +18,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <SiteSection
-    v-if="posts.length"
-    id="blog-section"
-    eyebrow="Notes & Thoughts"
-    title="Blogs"
-  >
+  <SiteSection v-if="posts.length" id="blog-section" eyebrow="Notes & Thoughts" title="Blogs">
     <template #action>
       <Button class="blog-action-desktop" href="/blogs/">
         See more <ArrowRight class="icon" aria-hidden="true" />
