@@ -8,6 +8,7 @@ export default defineConfig({
     : {}),
   inference: {
     appType: "void",
+    build: "vp build",
     outputDir: "dist",
   },
 });

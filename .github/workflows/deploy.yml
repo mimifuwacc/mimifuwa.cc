@@ -24,27 +24,20 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.21.2
         with:
           node-version-file: .node-version
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          cache: true
+          run-install: true
 
       - name: Deploy Vue site to Void
-        working-directory: apps/web-vue
-        run: pnpm exec void deploy --platform cloudflare
+        run: vp exec --filter @mimifuwacc/web-vue -- void deploy --platform cloudflare
 
       - name: Set content publish token
-        working-directory: apps/web-vue
         run: |
           test -n "$VOID_CONTENT_PUBLISH_TOKEN"
-          printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | pnpm exec void secret put CONTENT_PUBLISH_TOKEN
+          printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | vp exec --filter @mimifuwacc/web-vue -- void secret put CONTENT_PUBLISH_TOKEN
 
   release:
     needs: deploy

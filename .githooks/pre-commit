@@ -1,3 +1,2 @@
 #!/usr/bin/env sh
-# ステージ済み Vue アプリのファイルに lint/format を適用
-vp staged --cwd apps/web-vue --relative -p false
+vp staged
