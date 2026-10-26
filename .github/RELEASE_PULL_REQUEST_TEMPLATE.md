@@ -1,12 +1,8 @@
 <%= ENV['PR_TITLE'] %>
 
-## dev環境
+## dev 環境
 
-| Service | URL                           |
-| ------- | ----------------------------- |
-| Web     | https://web-dev.mimifuwa.cc   |
-| Admin   | https://admin-dev.mimifuwa.cc |
-| API     | https://api-dev.mimifuwa.cc   |
+https://web-vue-dev.mimifuwa.cc
 
 ## 更新内容
 

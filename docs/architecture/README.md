@@ -1,35 +1,7 @@
-# Architecture
+# Site architecture
 
-このディレクトリは，mimifuwa.cc の Web Architecture を定義する．
+`apps/web-vue` is the site's only application. Void serves the Vue app and its API routes as a Cloudflare Worker. The API routes read the active content revision from R2; `mimifuwa.cc-content` publishes revisions and controls which one is active.
 
-理論的な前提は，[「ReactはUI = f(State)であるか？」](https://wtrclred.io/ja/posts/09) を参照する．
+The source for articles and work entries lives in `mimifuwa.cc-content`. `packages/content-dev/articles` contains a small fixture set for local development. Profile details and mutual links that are specific to this site live in `contents/`.
 
-## 文書構成
-
-1. [理論的前提](./01-theoretical-foundation.md)
-2. [設計原則](./02-design-principles.md)
-3. [実装 Architecture](./03-implementation-architecture.md)
-4. [Content Pipeline](./04-content-pipeline.md)
-
-設計判断は [設計原則](./02-design-principles.md) と [実装 Architecture](./03-implementation-architecture.md) に記録する．
-
-## 処理モデル
-
-```mermaid
-flowchart LR
-  Program -->|Interpret| Computation
-  Computation -->|Schedule| Candidate
-  Candidate -->|Commit| UI
-```
-
-各層の担当を次のように分ける．
-
-| 層         | 担当する責務                                                          |
-| ---------- | --------------------------------------------------------------------- |
-| Content    | Markdown を正本として管理する                                         |
-| Effect     | Computation，依存性，失敗，Concurrency                                |
-| Zustand    | Shared Mutable State                                                  |
-| React      | Temporal Rendering，Suspense，Transition，Commit                      |
-| React Aria | Interaction，Accessibility，Focus，Keyboard                           |
-| CSS        | Visual Presentation                                                   |
-| Astro      | Delivery と Composition Boundary。Routing，SSR，HTML Document，Island |
+The `mimifuwacc` CLI in `packages/cli` starts the Vue development server or builds the site with a selected content directory. See [the CLI guide](../../packages/cli/README.md).

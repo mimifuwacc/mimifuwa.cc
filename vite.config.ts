@@ -1,6 +1,7 @@
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
+  // Vite+ supports `test` here; the current TS declaration merge rejects this field.
   test: {
     // vitest のデフォルト除外 + .direnv（nix の devShell ディレクトリを走査させない）
     exclude: [
@@ -12,11 +13,11 @@ export default defineConfig({
       "**/.next/**",
       "**/cypress/**",
       "**/.{idea,git,cache,output,temp}/**",
-      "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*",
+      "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*",
     ],
   },
   lint: {
-    plugins: ["oxc", "typescript", "unicorn", "react"],
+    plugins: ["oxc", "typescript", "unicorn"],
     categories: {
       correctness: "warn",
     },
@@ -25,6 +26,7 @@ export default defineConfig({
     },
     ignorePatterns: [
       "**/node_modules/**",
+      "apps/web-vue/**",
       "**/dist/**",
       "**/build/**",
       "**/out/**",
@@ -99,25 +101,6 @@ export default defineConfig({
       "valid-typeof": "error",
       "no-array-constructor": "error",
       "no-unused-expressions": "error",
-      "react/display-name": "error",
-      "react/jsx-key": "error",
-      "react/jsx-no-comment-textnodes": "error",
-      "react/jsx-no-duplicate-props": "error",
-      "react/jsx-no-target-blank": "error",
-      "react/jsx-no-undef": "error",
-      "react/no-children-prop": "error",
-      "react/no-danger-with-children": "error",
-      "react/no-direct-mutation-state": "error",
-      "react/no-find-dom-node": "error",
-      "react/no-is-mounted": "error",
-      "react/no-render-return-value": "error",
-      "react/no-string-refs": "error",
-      "react/no-unescaped-entities": "error",
-      "react/no-unknown-property": "error",
-      "react/no-unsafe": "off",
-      // 自動 JSX ランタイム（"jsx": "react-jsx"）のため React のスコープ取り込みは不要
-      "react/react-in-jsx-scope": "off",
-      "react/require-render-return": "error",
       "no-console": [
         "warn",
         {
@@ -145,13 +128,6 @@ export default defineConfig({
     },
     overrides: [
       {
-        // Astro injects this global into component frontmatter.
-        files: ["apps/web/**/*.astro"],
-        rules: {
-          "no-undef": "off",
-        },
-      },
-      {
         files: ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
         rules: {
           "constructor-super": "off",
@@ -175,26 +151,6 @@ export default defineConfig({
           "prefer-const": "error",
           "prefer-rest-params": "error",
           "prefer-spread": "error",
-        },
-      },
-      {
-        files: ["apps/admin/**/*.{ts,tsx}"],
-        rules: {
-          "react/rules-of-hooks": "error",
-          "react/exhaustive-deps": "warn",
-          "react/only-export-components": [
-            "warn",
-            {
-              allowConstantExport: true,
-            },
-          ],
-        },
-      },
-      {
-        // unified/hast/rehype-react を扱う層は AST と動的コンポーネントの性質上 any が避けられない
-        files: ["packages/parser/**/*.{ts,tsx}", "apps/admin/src/components/content/**/*.{ts,tsx}"],
-        rules: {
-          "typescript/no-explicit-any": "off",
         },
       },
     ],
@@ -222,13 +178,10 @@ export default defineConfig({
       "**/build/**",
       "**/out/**",
       "**/.next/**",
-      "**/.astro/**",
       "**/.open-next/**",
       "**/.wrangler/**",
       "**/.direnv/**",
       "**/coverage/**",
-      // TanStack Router が自動生成するため、手動フォーマットの対象外にする。
-      "apps/admin/src/routeTree.gen.ts",
       "pnpm-lock.yaml",
       "**/*.tsbuildinfo",
     ],
@@ -237,7 +190,5 @@ export default defineConfig({
   staged: {
     "*.{ts,tsx,js,jsx}": "vp lint --fix",
     "*.{ts,tsx,js,jsx,json,css,md}": "vp fmt --write",
-    "*.astro": "prettier --write",
-    "**/*.astro": "eslint",
   },
 });
