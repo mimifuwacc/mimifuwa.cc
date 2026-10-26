@@ -26,7 +26,7 @@ export default defineConfig({
     },
     ignorePatterns: [
       "**/node_modules/**",
-      "apps/web-vue/**",
+      "apps/web-vue/**/*.vue",
       "**/dist/**",
       "**/build/**",
       "**/out/**",
@@ -189,6 +189,6 @@ export default defineConfig({
   // pre-commit (`vp staged`) でステージ済みファイルに対して実行する
   staged: {
     "*.{ts,tsx,js,jsx}": "vp lint --fix",
-    "*.{ts,tsx,js,jsx,json,css,md}": "vp fmt --write",
+    "*.{ts,tsx,js,jsx,json,css,md,vue,yml,yaml}": "vp fmt --write",
   },
 });
