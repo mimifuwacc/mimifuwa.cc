@@ -4,7 +4,7 @@ The source of truth for blog posts and work entries is the `mimifuwa.cc-content`
 
 ## Local preview
 
-The content repository runs the `mimifuwacc` CLI from this repository. The CLI passes its selected article directory to the Vue app through `CONTENT_DIR`.
+The content repository runs the `mimifuwacc` CLI from this repository. The CLI passes its selected article directory to the Vue app through `CONTENT_DIR`; the Ox Content Vite plugin loads the blogs and works collections from that directory.
 
 ```sh
 mimifuwacc preview --content articles
@@ -18,7 +18,7 @@ vp run dev
 
 ## Build and publish
 
-The Vue app uses the Ox Content Markdown processor to create article pages and JSON indexes during the build. Its Void API routes read the active revision from the `STORAGE` R2 bucket. They expose blog and work indexes, article details, search data, and the content publish endpoints.
+The local CLI can build the Vue Worker with the selected collections bundled in dev content mode. This is for checking content and does not publish it. In production, Void API routes read the active revision from the `STORAGE` R2 bucket. They expose blog and work indexes, article details, search data, and the content publish endpoints. The content repository produces and uploads the revision files.
 
 The content publisher uploads a complete revision before switching the active revision pointer. The site reads only the active revision, so an incomplete upload is not shown to visitors.
 

@@ -2,7 +2,7 @@
 
 Vue Router provides the shared site layout, blog index and article pages, works list and detail pages, and links page. Void API routes read the active Ox Content revision from R2 and provide the blog list, work list and details, and search index to the client. The content publisher uploads each revision to R2 and switches the active revision only after all files are present.
 
-Local development uses the small fixture set in `packages/content-dev/articles`. The `mimifuwa.cc-content` CLI passes its own article directory through `CONTENT_DIR`, so content preview and publishing run the same Ox Content pipeline against the real articles.
+Local development uses the small fixture set in `packages/content-dev/articles`. The `mimifuwa.cc-content` CLI passes its article directory through `CONTENT_DIR`, so the site preview processes those Markdown files with the same Ox Content collections. The CLI build is a local content build only; production content is still published as a revision to R2 by the content repository.
 
 GitHub Actions deploys the `mimifuwa-cc-dev` Worker when `dev` is updated and production when `release` is updated. The dev Worker serves the fixtures bundled from `packages/content-dev`, so it does not need an R2 publish token and cannot modify production content. Its public URL is `https://mimifuwa-cc-dev.m8c.workers.dev`.
 
