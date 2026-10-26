@@ -1,6 +1,6 @@
 import { defineHandler } from "void";
-import { storage } from "void/storage";
-import { fixtures, isDevContent } from "../../../src/server-content";
+import { contentUrl, readActiveContentJson, rewriteContentAssetUrls } from "@/content-store";
+import { fixtures, isDevContent } from "@/server-content";
 
 interface BlogArticle {
   url: string;
@@ -15,28 +15,16 @@ export const GET = defineHandler(async (c) => {
     return article ? c.json(article) : c.json({ error: "not_found" }, 404);
   }
 
-  const revisionObject = await storage.get("content/active-revision.json");
-  if (!revisionObject) return c.json({ error: "not_found" }, 404);
-  const value: unknown = await revisionObject.json();
-  const revision =
-    value && typeof value === "object" && "revision" in value && typeof value.revision === "string"
-      ? value.revision
-      : "";
-  if (!/^[a-f0-9]{7,64}$/.test(revision)) return c.json({ error: "not_found" }, 404);
-
-  const object = await storage.get(`content/revisions/${revision}/blogs/content.json`);
-  if (!object) return c.json({ error: "content_unavailable" }, 503);
-  const articles = (await object.json()) as BlogArticle[];
   const slug = c.req.param("slug") ?? "";
-  const url = `/blogs/${slug.replace(/^\/+|\/+$/g, "")}/`;
-  const article = articles.find((item) => item.url === url);
+  const result = await readActiveContentJson<BlogArticle[]>("blogs/content.json");
+  if (result.status === "unpublished") return c.json({ error: "not_found" }, 404);
+  if (result.status === "missing") return c.json({ error: "content_unavailable" }, 503);
+
+  const article = result.value.find((item) => item.url === contentUrl("blogs", slug));
   if (!article) return c.json({ error: "not_found" }, 404);
 
   if (typeof article.html === "string") {
-    article.html = article.html.replace(
-      /(["'(])\/assets\/(ox-content-[^"')\s]+)/g,
-      "$1/api/content/assets/assets/$2",
-    );
+    article.html = rewriteContentAssetUrls(article.html);
   }
 
   return c.json(article, 200, {

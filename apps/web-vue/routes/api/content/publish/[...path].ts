@@ -1,34 +1,29 @@
 import { defineHandler } from "void";
-import { env } from "void/env";
-import { storage } from "void/storage";
-import { isDevContent } from "../../../../src/server-content";
+import {
+  isAuthorizedPublisher,
+  isContentRevision,
+  isPublishableContentPath,
+  uploadContentFile,
+} from "@/content-store";
+import { isDevContent } from "@/server-content";
 
 export const POST = defineHandler(async (c) => {
   if (isDevContent) return c.notFound();
 
-  const expected = env.CONTENT_PUBLISH_TOKEN;
-  if (!expected || c.req.header("Authorization") !== `Bearer ${expected}`) {
+  if (!isAuthorizedPublisher(c.req.header("Authorization"))) {
     return c.json({ error: "unauthorized" }, 401);
   }
   const revision = c.req.header("X-Content-Revision") ?? "";
   const path = (c.req.param("path") ?? "").replace(/^\/+/, "");
-  if (!/^[a-f0-9]{7,64}$/.test(revision) || !isPublishablePath(path)) {
+  if (!isContentRevision(revision) || !isPublishableContentPath(path)) {
     return c.json({ error: "invalid_request" }, 400);
   }
 
-  await storage.put(`content/revisions/${revision}/${path}`, await c.req.raw.arrayBuffer(), {
-    httpMetadata: { contentType: c.req.header("Content-Type") ?? "application/octet-stream" },
-  });
+  await uploadContentFile(
+    revision,
+    path,
+    await c.req.raw.arrayBuffer(),
+    c.req.header("Content-Type") ?? "application/octet-stream",
+  );
   return c.json({ uploaded: path });
 });
-
-function isPublishablePath(path: string) {
-  return (
-    path.length > 0 &&
-    !path.split("/").some((part) => part === ".." || part === ".") &&
-    (path === "search-index.json" ||
-      path.startsWith("blogs/") ||
-      path.startsWith("works/") ||
-      /^assets\/ox-content-/.test(path))
-  );
-}
