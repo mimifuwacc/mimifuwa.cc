@@ -1,0 +1,27 @@
+{
+  "name": "@mimifuwacc/cli",
+  "version": "0.1.0",
+  "description": "Preview and build mimifuwa.cc content with Ox Content",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "mimifuwacc": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "pnpm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.2",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=24.21.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

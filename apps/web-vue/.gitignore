@@ -1,0 +1,5 @@
+.void-wrangler.jsonc
+.void/
+.cache/
+.vite/
+dist/

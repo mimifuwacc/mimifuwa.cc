@@ -1,0 +1,28 @@
+{
+  "name": "@mimifuwacc/web-vue",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.21.0"
+  },
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview",
+    "typecheck": "tsc -p tsconfig.json",
+    "deploy": "void deploy"
+  },
+  "dependencies": {
+    "@iconify-prerendered/vue-fa-brands": "^0.28.1722793346",
+    "@lucide/vue": "^1.61.0",
+    "@ox-content/vite-plugin": "alpha",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "void": "1.1.11"
+  }
+}
