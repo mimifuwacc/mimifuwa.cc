@@ -1,6 +1,45 @@
 import type { ArticlePage } from "./content-theme";
 import { markdownToText } from "./content-theme";
 
+interface OxContentEntry {
+  path: string;
+  title: string;
+  description?: string;
+  frontmatter: Record<string, unknown>;
+  html?: string;
+}
+
+interface OxContentCollections {
+  blogs: OxContentEntry[];
+  works: OxContentEntry[];
+}
+
+const asString = (value: unknown) => (typeof value === "string" ? value : undefined);
+const asStringList = (value: unknown) =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+
+const toArticlePage = (section: ArticlePage["section"], entry: OxContentEntry): ArticlePage => {
+  const frontmatter = entry.frontmatter ?? {};
+  const date = frontmatter.date;
+  return {
+    title: entry.title,
+    navTitle: asString(frontmatter.navTitle) ?? entry.title,
+    description: entry.description ?? asString(frontmatter.excerpt),
+    date: date instanceof Date ? date.toISOString().slice(0, 10) : asString(date),
+    tags: asStringList(frontmatter.tags),
+    html: entry.html ?? "",
+    url: `${entry.path.replace(/\/+$/, "") || `/${section}`}/`,
+    section,
+    externalUrl: asString(frontmatter.url),
+    technologies: asStringList(frontmatter.technologies),
+  };
+};
+
+export const articlePagesFromCollections = (collections: OxContentCollections): ArticlePage[] => [
+  ...collections.blogs.map((entry) => toArticlePage("blogs", entry)),
+  ...collections.works.map((entry) => toArticlePage("works", entry)),
+];
+
 export function createContentData(pages: ArticlePage[]) {
   const blogs = pages.filter((page) => page.section === "blogs" && page.url !== "/blogs/");
   const works = pages.filter((page) => page.section === "works");
@@ -50,8 +89,10 @@ export function createContentData(pages: ArticlePage[]) {
   };
 }
 
-export function getLocalContentResponse(pathname: string, pages: ArticlePage[]) {
-  const data = createContentData(pages);
+export function getLocalContentResponse(
+  pathname: string,
+  data: ReturnType<typeof createContentData>,
+) {
   if (pathname === "/api/search-index") return { body: data.searchIndex };
   if (pathname === "/api/blogs") return { body: data.blogs };
   if (pathname === "/api/works") return { body: data.works };

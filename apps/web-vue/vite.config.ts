@@ -1,9 +1,10 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import vue from "@vitejs/plugin-vue";
+import { oxContent } from "@ox-content/vite-plugin";
 import { voidPlugin } from "void";
 import { defineConfig } from "vite-plus";
-import { createContentBuild } from "./src/content-build";
+import { contentDevApi } from "./src/content-dev-api";
 
 const appDir = dirname(fileURLToPath(import.meta.url));
 const contentDir =
@@ -22,7 +23,20 @@ export default defineConfig({
     },
   },
   plugins: [
-    createContentBuild({ contentDir }),
+    oxContent({
+      srcDir: contentDir,
+      ssg: false,
+      search: false,
+      docs: false,
+      ogViewer: false,
+      highlight: true,
+      gfm: true,
+      collections: {
+        blogs: { source: "blogs/**/*", include: ["html"] },
+        works: { source: "works/**/*", include: ["html"] },
+      },
+    }),
+    contentDevApi(),
     ...(process.env.NODE_ENV === "production" ? [voidPlugin()] : []),
     vue(),
   ],
