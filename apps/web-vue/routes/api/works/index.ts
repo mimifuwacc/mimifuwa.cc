@@ -1,14 +1,4 @@
 import { defineHandler } from "void";
-import { readActiveContentJson } from "@/content-store";
-import { fixtures, isDevContent } from "@/server-content";
+import { listContent } from "@/content-api";
 
-export const GET = defineHandler(async (c) => {
-  if (isDevContent) return c.json(fixtures.works);
-
-  const result = await readActiveContentJson("works/index.json");
-  if (result.status === "unpublished") return c.json([], 200, { "cache-control": "no-store" });
-  if (result.status === "missing") return c.json({ error: "content_unavailable" }, 503);
-  return c.json(result.value, 200, {
-    "cache-control": "public, max-age=60, stale-while-revalidate=300",
-  });
-});
+export const GET = defineHandler(() => listContent("works"));
