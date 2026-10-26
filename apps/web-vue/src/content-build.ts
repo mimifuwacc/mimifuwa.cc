@@ -1,8 +1,8 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, relative, resolve, sep } from "node:path";
 import { createMarkdownProcessor } from "@ox-content/vite-plugin";
+import { createContentData, getLocalContentResponse } from "./content-data";
 import type { ArticlePage } from "./content-theme";
-import { markdownToText } from "./content-theme";
 
 interface ContentBuildOptions {
   contentDir: string;
@@ -62,36 +62,6 @@ const articleUrl = (contentDir: string, filePath: string) => {
   const route = contentPath ? `/${section}/${contentPath}` : `/${section}`;
   return `${route.replace(/\/$/, "")}/`;
 };
-
-const blogListFromPages = (pages: ArticlePage[]) =>
-  pages
-    .filter((page) => page.section === "blogs" && page.url !== "/blogs/")
-    .map(({ title, description, date, tags, url }) => ({ title, description, date, tags, url }));
-
-const workListFromPages = (pages: ArticlePage[]) =>
-  pages
-    .filter((page) => page.section === "works")
-    .map(({ title, description, technologies, tags, externalUrl, url }) => ({
-      title,
-      description,
-      technologies: technologies ?? tags ?? [],
-      externalUrl,
-      url,
-    }))
-    .filter((work) => typeof work.url === "string" && typeof work.externalUrl === "string");
-
-const workContentFromPages = (pages: ArticlePage[]) =>
-  pages
-    .filter((page) => page.section === "works")
-    .map(({ title, description, technologies, tags, externalUrl, url, html }) => ({
-      title,
-      description,
-      technologies: technologies ?? tags ?? [],
-      externalUrl,
-      url,
-      html,
-    }))
-    .filter((work) => typeof work.externalUrl === "string");
 
 const fixturesModuleId = "virtual:mimifuwa-content-fixtures";
 const resolvedFixturesModuleId = `\0${fixturesModuleId}`;
@@ -169,29 +139,7 @@ export const createContentBuild = ({ contentDir }: ContentBuildOptions) => {
     async load(id: string) {
       if (id !== resolvedFixturesModuleId) return undefined;
       const pages = await loadArticles();
-      const articles = pages.filter((page) => page.section === "blogs" && page.url !== "/blogs/");
-      const searchIndex = {
-        documents: articles.map((article) => ({
-          title: article.title,
-          url: article.url,
-          body: markdownToText(article.html),
-        })),
-      };
-      const fixtures = {
-        blogs: blogListFromPages(pages),
-        blogContent: articles.map(({ title, description, date, tags, url, html }) => ({
-          title,
-          description,
-          date,
-          tags,
-          url,
-          html,
-        })),
-        works: workListFromPages(pages),
-        workContent: workContentFromPages(pages),
-        searchIndex,
-      };
-      return `export default ${JSON.stringify(fixtures)};`;
+      return `export default ${JSON.stringify(createContentData(pages))};`;
     },
     configureServer(server: DevServer) {
       const refresh = () => {
@@ -213,67 +161,12 @@ export const createContentBuild = ({ contentDir }: ContentBuildOptions) => {
         const pathname = new URL(request.url ?? "/", "http://localhost").pathname;
         try {
           await refreshPromise;
-          if (request.method === "GET" && pathname === "/api/search-index") {
-            const pages = await loadArticles();
-            const articles = pages.filter(
-              (article) => article.section === "blogs" && article.url !== "/blogs/",
-            );
-            response.setHeader("content-type", "application/json; charset=utf-8");
-            response.end(
-              JSON.stringify({
-                documents: articles.map((article) => ({
-                  title: article.title,
-                  url: article.url,
-                  body: markdownToText(article.html),
-                })),
-              }),
-            );
-            return;
-          }
-          if (request.method === "GET" && pathname === "/api/blogs") {
-            const pages = await loadArticles();
-            response.setHeader("content-type", "application/json; charset=utf-8");
-            response.end(JSON.stringify(blogListFromPages(pages)));
-            return;
-          }
-          if (request.method === "GET" && pathname === "/api/works") {
-            const pages = await loadArticles();
-            response.setHeader("content-type", "application/json; charset=utf-8");
-            response.end(JSON.stringify(workListFromPages(pages)));
-            return;
-          }
-          if (request.method === "GET" && pathname.startsWith("/api/works/")) {
-            const pages = await loadArticles();
-            const requestedUrl = `${decodeURIComponent(pathname.slice("/api".length)).replace(/\/+$/, "")}/`;
-            const work = workContentFromPages(pages).find((item) => item.url === requestedUrl);
-            if (!work) {
-              response.statusCode = 404;
-              response.setHeader("content-type", "application/json; charset=utf-8");
-              response.end(JSON.stringify({ error: "not_found" }));
-              return;
-            }
-            response.setHeader("content-type", "application/json; charset=utf-8");
-            response.end(JSON.stringify(work));
-            return;
-          }
-          if (request.method === "GET" && pathname.startsWith("/api/blogs/")) {
-            const pages = await loadArticles();
-            const articles = pages.filter(
-              (article) => article.section === "blogs" && article.url !== "/blogs/",
-            );
-            const requestedUrl = `${decodeURIComponent(pathname.slice("/api".length)).replace(/\/+$/, "")}/`;
-            const article = articles.find((item) => item.url === requestedUrl);
-            if (!article) {
-              response.statusCode = 404;
-              response.setHeader("content-type", "application/json; charset=utf-8");
-              response.end(JSON.stringify({ error: "not_found" }));
-              return;
-            }
-            response.setHeader("content-type", "application/json; charset=utf-8");
-            response.end(JSON.stringify(article));
-            return;
-          }
-          return next();
+          if (request.method !== "GET") return next();
+          const result = getLocalContentResponse(pathname, await loadArticles());
+          if (!result) return next();
+          response.statusCode = result.status ?? 200;
+          response.setHeader("content-type", "application/json; charset=utf-8");
+          response.end(JSON.stringify(result.body));
         } catch (error) {
           next(error instanceof Error ? error : new Error(String(error)));
         }
