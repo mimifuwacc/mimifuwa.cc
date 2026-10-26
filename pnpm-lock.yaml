@@ -49,6 +49,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
+      vite-plus:
+        specifier: 'catalog:'
+        version: 0.1.24(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(yaml@2.9.1))(yaml@2.9.1)
       void:
         specifier: 1.1.11
         version: 1.1.11(@tanstack/react-start@1.168.0(esbuild@0.28.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rolldown@1.2.14)(vite@8.0.16(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(yaml@2.9.1)))(@types/node@24.19.2)(arktype@2.2.9)(kysely@0.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(valibot@1.5.0(typescript@6.0.3))(vite@8.0.16(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))(wrangler@4.151.3(@cloudflare/workers-types@5.20261021.1)(@types/node@24.19.2))(zod@4.6.7)

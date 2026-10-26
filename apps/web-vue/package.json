@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "void": "1.1.11"
   }
 }
