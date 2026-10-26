@@ -33,5 +33,6 @@ peerDependencyRules:
 allowBuilds:
   better-sqlite3: true
   esbuild: true
+  puppeteer: true
   sharp: true
   workerd: true
