@@ -6,19 +6,39 @@ import { delimiter, dirname, resolve } from "node:path";
 type Action = "preview" | "build";
 
 const [requestedAction = "preview", ...args] = process.argv.slice(2);
+const usage = "Usage: mimifuwacc <preview|build> [--content <directory>] [--site <directory>]";
+
+if (requestedAction === "--help" || requestedAction === "-h") {
+  console.info(usage);
+  process.exit(0);
+}
 if (requestedAction !== "preview" && requestedAction !== "build") {
-  console.error("Usage: mimifuwacc <preview|build> [--content <directory>] [--site <directory>]");
+  console.error(usage);
   process.exit(2);
 }
 const action: Action = requestedAction;
 
 const readOption = (name: string): string | undefined => {
-  const index = args.indexOf(name);
-  if (index === -1) return undefined;
-  const value = args[index + 1];
-  if (!value || value.startsWith("--")) throw new Error(`${name} requires a directory path`);
+  const values = args.flatMap((arg, index) => (arg === name ? [args[index + 1]] : []));
+  if (values.length > 1) {
+    console.error(`${name} can only be specified once`);
+    process.exit(2);
+  }
+  const value = values[0];
+  if (values.length === 0) return undefined;
+  if (!value || value.startsWith("--")) {
+    console.error(`${name} requires a directory path`);
+    process.exit(2);
+  }
   return value;
 };
+
+for (const arg of args) {
+  if (arg.startsWith("--") && arg !== "--content" && arg !== "--site") {
+    console.error(`Unknown option: ${arg}\n${usage}`);
+    process.exit(2);
+  }
+}
 
 const contentDir = resolve(readOption("--content") ?? "articles");
 const siteDir = resolve(
@@ -50,6 +70,9 @@ const result = spawnSync(
     env: {
       ...process.env,
       CONTENT_DIR: contentDir,
+      // Preview and build the selected Markdown through Ox Content without
+      // reading from or publishing to the production R2 bucket.
+      MIMIFUWA_CC_DEPLOY_ENV: "dev",
       PATH: pathEntries.join(delimiter),
     },
   },

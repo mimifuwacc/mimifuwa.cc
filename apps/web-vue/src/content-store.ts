@@ -40,12 +40,6 @@ export const isPublishableContentPath = (path: string) =>
 export const isOxContentAssetPath = (path: string) =>
   /^assets\/ox-content-[a-zA-Z0-9._/-]+$/.test(path) && !path.includes("..");
 
-export const contentUrl = (section: "blogs" | "works", slug: string) =>
-  `/${section}/${slug.replace(/^\/+|\/+$/g, "")}/`;
-
-export const rewriteContentAssetUrls = (html: string) =>
-  html.replace(/(["'(])\/assets\/(ox-content-[^"')\s]+)/g, "$1/api/content/assets/assets/$2");
-
 const contentKey = (revision: string, path: string) => `content/revisions/${revision}/${path}`;
 
 export async function readActiveContentFile(path: string): Promise<ContentFileResult> {
