@@ -9,7 +9,7 @@ const [requestedAction = "preview", ...args] = process.argv.slice(2);
 const usage = "Usage: mimifuwacc <preview|build> [--content <directory>] [--site <directory>]";
 
 if (requestedAction === "--help" || requestedAction === "-h") {
-  console.log(usage);
+  console.info(usage);
   process.exit(0);
 }
 if (requestedAction !== "preview" && requestedAction !== "build") {
