@@ -37,6 +37,9 @@ jobs:
       - name: Deploy Vue site to Void
         run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
+      - name: Select Cloudflare for secret management
+        run: vp exec --filter @mimifuwacc/web -- void connect --platform cloudflare
+
       - name: Set content publish token
         run: |
           test -n "$VOID_CONTENT_PUBLISH_TOKEN"
