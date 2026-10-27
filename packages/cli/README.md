@@ -4,7 +4,7 @@ Vite plugin and CLI for processing and publishing Mimifuwacc's Ox Content articl
 
 ## Vite configuration
 
-Install `@mimifuwacc/cli` and `@ox-content/vite-plugin` as development dependencies, then configure the content source and its single publish target in `vite.config.ts`:
+Install `@mimifuwacc/cli` and `@ox-content/vite-plugin` as development dependencies, then configure the content source in `vite.config.ts`:
 
 ```ts
 import { mimifuwaccContent } from "@mimifuwacc/cli/vite";
@@ -17,16 +17,12 @@ export default defineConfig({
         blogs: { source: "blogs/**/*", include: ["html"] },
         works: { source: "works/**/*", include: ["html"] },
       },
-      target: {
-        url: process.env.CONTENT_PUBLISH_URL!,
-        token: process.env.CONTENT_PUBLISH_TOKEN,
-      },
     }),
   ],
 });
 ```
 
-`target.token` is only read by the deploy command. Keep it in the CI environment or a local untracked environment file; never commit the token.
+The plugin defines the Markdown source and collections. The CLI publishes generated content to the `STORAGE` R2 bucket configured by the site deployment.
 
 ## Local preview
 
@@ -34,16 +30,16 @@ In the site repository, `vp run dev` serves the sample articles in `packages/con
 
 ## Publish content
 
-Run from the repository whose `vite.config.ts` defines the desired articles and target:
+Deploy the site first so its resolved `STORAGE` bucket configuration is available. Then run from the site workspace, setting `CONTENT_DIR` to the desired articles directory:
 
 ```sh
-vp exec @mimifuwacc/cli deploy
+CONTENT_DIR=packages/content-dev/articles vp exec --filter @mimifuwacc/cli -- mimifuwacc deploy
 ```
 
-The CLI builds with Vite, reads the configured Ox Content collections, writes the publish JSON payload, uploads a new revision, and activates it only after all required files are present. The target URL and token come from the Vite configuration and its environment; there is no separate `--target` option.
+The CLI loads only the Ox Content plugin, builds the collection payload, uploads it under a revision key with Cloudflare's `cf` CLI, and updates the active revision in R2. It does not build or deploy the website. In this workspace, `cf` is installed with the other dependencies through Vite+. `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` must be available in the environment; the token needs permission to write R2 objects.
 
-For the website repository, configure `packages/content-dev/articles` and the dev Worker target. For `mimifuwa.cc-content`, configure `articles` and the production target. The two repositories use the same command while retaining separate content and credentials.
+The `dev` branch workflow publishes `packages/content-dev/articles`. A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the site and the same dev articles. A stable version tag such as `v5.0.0` publishes the site and `mimifuwa.cc-content/articles` from that repository's `main` branch.
 
 ## npm releases
 
-The `Publish CLI` workflow publishes tags named `v<version>` (for example, `v5.0.0-dev.0`). Keep the tag version aligned with this package's `version`. Prereleases are published to npm's `next` dist-tag. Configure npm Trusted Publishing for this repository and `.github/workflows/publish-cli.yml`; the workflow publishes with OIDC and does not require a long-lived npm token.
+The release workflow publishes tags named `v<version>` (for example, `v5.0.0`, `v5.0.0-dev.0`, or `v5.0.0-alpha.0`). Keep the tag version aligned with this package's `version`. Stable releases use npm's `latest` dist-tag; prereleases use the first prerelease identifier as the dist-tag (`dev`, `alpha`, and so on). The same workflow then deploys the site and publishes content with that exact CLI version. Configure npm Trusted Publishing for this repository and `.github/workflows/deploy.yml`; publishing uses OIDC and does not require a long-lived npm token.

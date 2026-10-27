@@ -1,9 +1,14 @@
 #!/usr/bin/env node
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { delimiter, dirname, join, relative, resolve, sep } from "node:path";
-import { build, createServer, loadConfigFromFile } from "vite";
-import { mimifuwaccContentOptions, type MimifuwaccContentOptions } from "./vite.js";
+import { tmpdir } from "node:os";
+import { createServer, loadConfigFromFile } from "vite";
+import {
+  mimifuwaccContent,
+  mimifuwaccContentOptions,
+  type MimifuwaccContentOptions,
+} from "./vite.js";
 
 type Action = "preview" | "build" | "deploy";
 const [requestedAction = "preview", ...args] = process.argv.slice(2);
@@ -56,25 +61,23 @@ async function deploy() {
   );
   if (!plugin || typeof plugin !== "object") {
     throw new Error(
-      "Add mimifuwaccContent({ target: { url, token } }) to vite.config.ts before deploying",
+      "Add mimifuwaccContent({ srcDir, collections }) to vite.config.ts before deploying",
     );
   }
 
   const options = (plugin as { [mimifuwaccContentOptions]: MimifuwaccContentOptions })[
     mimifuwaccContentOptions
   ];
-  const token = options.target.token;
-  if (!token) throw new Error("Content publish token is missing from mimifuwaccContent target");
-
-  console.info(`Building content for ${new URL(options.target.url).host}`);
+  console.info("Building content");
   const config = loaded.config;
-  await build(config);
-
-  const outDir = resolve(
-    config.root ?? dirname(configFile),
-    options.outDir ?? config.build?.outDir ?? "dist",
-  );
-  const server = await createServer(config);
+  const appRoot = resolve(config.root ?? dirname(configFile));
+  const outDir = await mkdtemp(join(tmpdir(), "mimifuwacc-content-"));
+  const server = await createServer({
+    configFile: false,
+    root: appRoot,
+    logLevel: "error",
+    plugins: mimifuwaccContent(options),
+  });
   try {
     const collectionModule = await server.ssrLoadModule("virtual:ox-content/collections");
     if (typeof collectionModule.getCollection !== "function") {
@@ -88,51 +91,96 @@ async function deploy() {
     await server.close();
   }
 
-  const payload = await collectPayload(outDir);
-  const revision = getRevision();
-  const baseUrl = new URL(options.target.url);
+  try {
+    const payload = await collectPayload(outDir);
+    const revision = getRevision();
+    const { bucket, accountId } = await getStorageTarget(appRoot);
+    const env = {
+      ...process.env,
+      ...(accountId ? { CLOUDFLARE_ACCOUNT_ID: accountId } : {}),
+    };
 
-  for (const file of payload) {
-    const endpoint = new URL(`/api/content/publish/${file.path}`, baseUrl);
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": file.contentType,
-        "X-Content-Revision": revision,
-      },
-      body: file.body as BodyInit,
-    });
-    if (!response.ok) {
-      throw new Error(`Upload failed for ${file.path} (${response.status})`);
+    for (const file of payload) {
+      uploadObject(appRoot, env, bucket, `content/revisions/${revision}/${file.path}`, file);
+      console.info(`Uploaded ${file.path}`);
     }
-    console.info(`Uploaded ${file.path}`);
-  }
 
-  const response = await fetch(new URL("/api/content/publish", baseUrl), {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ revision }),
-  });
-  if (!response.ok) throw new Error(`Content activation failed (${response.status})`);
-  console.info(`Published content revision ${revision}`);
+    const manifest = join(outDir, "active-revision.json");
+    await writeFile(manifest, `${JSON.stringify({ revision })}\n`);
+    uploadObject(appRoot, env, bucket, "content/active-revision.json", {
+      path: "content/active-revision.json",
+      file: manifest,
+      contentType: "application/json; charset=utf-8",
+    });
+    console.info(`Published content revision ${revision}`);
+  } finally {
+    await rm(outDir, { recursive: true, force: true });
+  }
+}
+
+async function getStorageTarget(appRoot: string) {
+  const configPath = join(appRoot, ".void-wrangler.jsonc");
+  let config: { account_id?: string; r2_buckets?: { binding?: string; bucket_name?: string }[] };
+  try {
+    config = JSON.parse(await readFile(configPath, "utf8")) as typeof config;
+  } catch {
+    throw new Error(`Could not read ${configPath}; deploy the site before publishing content`);
+  }
+  const bucket =
+    process.env.CONTENT_BUCKET ??
+    config.r2_buckets?.find((binding) => binding.binding === "STORAGE")?.bucket_name;
+  if (!bucket) throw new Error(`No STORAGE R2 bucket found in ${configPath}`);
+  if (!process.env.CLOUDFLARE_API_TOKEN) {
+    throw new Error("Set CLOUDFLARE_API_TOKEN to publish content to R2");
+  }
+  return { bucket, accountId: config.account_id };
+}
+
+function uploadObject(
+  cwd: string,
+  env: NodeJS.ProcessEnv,
+  bucket: string,
+  key: string,
+  file: PayloadFile,
+) {
+  execFileSync(
+    process.env.CF_BIN ?? "cf",
+    [
+      "r2",
+      "objects",
+      "put",
+      key,
+      "--bucket-name",
+      bucket,
+      "--file",
+      file.file,
+      "--content-type",
+      file.contentType,
+    ],
+    { cwd, env, stdio: "inherit" },
+  );
 }
 
 async function findConfigFile(root: string) {
   const { access } = await import("node:fs/promises");
-  const candidates = [join(root, "vite.config.ts"), join(root, "apps/web/vite.config.ts")];
-  for (const candidate of candidates) {
-    try {
-      await access(candidate);
-      return candidate;
-    } catch {
-      // Try the next conventional location.
+  let directory = resolve(root);
+  while (true) {
+    for (const candidate of [
+      join(directory, "apps/web/vite.config.ts"),
+      join(directory, "vite.config.ts"),
+    ]) {
+      try {
+        await access(candidate);
+        return candidate;
+      } catch {
+        // Try the next conventional location.
+      }
     }
+    const parent = dirname(directory);
+    if (parent === directory) break;
+    directory = parent;
   }
-  throw new Error(`Could not find vite.config.ts in ${root} or ${join(root, "apps/web")}`);
+  throw new Error(`Could not find vite.config.ts from ${root}`);
 }
 
 function flattenPlugins(plugins: unknown): unknown[] {
@@ -142,7 +190,7 @@ function flattenPlugins(plugins: unknown): unknown[] {
 
 interface PayloadFile {
   path: string;
-  body: Buffer;
+  file: string;
   contentType: string;
 }
 
@@ -183,15 +231,13 @@ async function collectPayload(outDir: string): Promise<PayloadFile[]> {
     throw new Error(`Build output is missing publish files: ${missing.join(", ")}`);
   }
 
-  return Promise.all(
-    publishable.map(async ({ file, path }) => ({
-      path,
-      body: await readFile(file),
-      contentType: path.endsWith(".json")
-        ? "application/json; charset=utf-8"
-        : "application/octet-stream",
-    })),
-  );
+  return publishable.map(({ file, path }) => ({
+    path,
+    file,
+    contentType: path.endsWith(".json")
+      ? "application/json; charset=utf-8"
+      : "application/octet-stream",
+  }));
 }
 
 interface ContentEntry {

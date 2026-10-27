@@ -1,5 +1,3 @@
-import { defineEnv, string } from "void/env";
+import { defineEnv } from "void/env";
 
-export default defineEnv({
-  CONTENT_PUBLISH_TOKEN: string().optional(),
-});
+export default defineEnv({});

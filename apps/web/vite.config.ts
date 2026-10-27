@@ -24,10 +24,6 @@ const config = {
         blogs: { source: "blogs/**/*", include: ["html"] },
         works: { source: "works/**/*", include: ["html"] },
       },
-      target: {
-        url: process.env.CONTENT_PUBLISH_URL ?? "https://mimifuwa-cc-dev.m8c.workers.dev",
-        token: process.env.CONTENT_PUBLISH_TOKEN,
-      },
     }),
     contentDevApi(),
     ...(process.env.NODE_ENV === "production" ? [voidPlugin()] : []),

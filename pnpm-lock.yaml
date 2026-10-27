@@ -20,6 +20,9 @@ importers:
 
   .:
     devDependencies:
+      cf:
+        specifier: 1.0.0-beta.19
+        version: 1.0.0-beta.19(@types/node@24.13.2)
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@1.4.0
         version: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1)'
@@ -291,6 +294,9 @@ packages:
 
   '@cloudflare/runtime-types@0.1.12':
     resolution: {integrity: sha512-eYF5teHQ+Jss4sbSVINM5tNPHxo/kJ2gKcMs7omyy7gO9PEkgUbGPZCYl06SxbBWTcJFF2vrX4epB775QTE4BQ==}
+
+  '@cloudflare/runtime-types@0.1.13':
+    resolution: {integrity: sha512-k9UQ/ZPxvL0JQRFfXpnI2O5A+3O/m17+LckI3hRhMZRUrf7n4I7+a2JqN2WX4gGjVk+JeXS0msmtmoGhUDV1rg==}
 
   '@cloudflare/sandbox@1.0.2':
     resolution: {integrity: sha512-JPPASKBQ5PE1XLy18zzljh3oIyDleu8lK3jW/HaSGq+eh9aJMl5zwAgobuP7I2FLuRMlqA18te5MIPEBF56jlg==}
@@ -3306,6 +3312,11 @@ packages:
     engines: {node: '>=22'}
     hasBin: true
 
+  cf@1.0.0-beta.19:
+    resolution: {integrity: sha512-hFnYP15f7dRhmAXjy9+3DekbcR3Dr7vjRWA2W18nYpokEGmIUZdEHRjertzeFHphZgQkCi+ZImlFgP4JpNifYA==}
+    engines: {node: '>=22'}
+    hasBin: true
+
   chai@6.3.0:
     resolution: {integrity: sha512-XWAtwJ6OHO+tj0EKCs0Y2UamnyOxseZWltU4x2U2wh8g4AigdjwvtUjvLP2tqkA/avxHEtzxNaqGq/YGNwckKg==}
     engines: {node: '>=18'}
@@ -4244,6 +4255,10 @@ packages:
 
   miniflare@5.20261012.1-beta:
     resolution: {integrity: sha512-8Canhy6g9+vAhqMc0o80YphqYIwpiA3aAp8aX+uDXU7J/qbUeoZzcII9c2V1P4uT/eHD4SB93qet1o1bRY3BuQ==}
+    engines: {node: '>=22.0.0'}
+
+  miniflare@5.20261019.0-beta:
+    resolution: {integrity: sha512-NmE6Yz7MSdjrfr3lMaMAVO55rIm3+6YXllOkJOMy6pPQITDuDeo0PYRedp7pju2olNWmrAlf1i1LIWYfGQvvuw==}
     engines: {node: '>=22.0.0'}
 
   miniflare@5.20261019.1-beta:
@@ -5357,6 +5372,15 @@ snapshots:
     dependencies:
       miniflare: 5.20261012.1-beta(@types/node@24.13.2)
       workerd: 1.20261012.1
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - utf-8-validate
+
+  '@cloudflare/runtime-types@0.1.13(@types/node@24.13.2)':
+    dependencies:
+      miniflare: 5.20261019.0-beta(@types/node@24.13.2)
+      workerd: 1.20261019.1
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -7608,6 +7632,18 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  cf@1.0.0-beta.19(@types/node@24.13.2):
+    dependencies:
+      '@cloudflare/build-output-utils': 0.9.3
+      '@cloudflare/config': 0.27.0
+      '@cloudflare/runtime-types': 0.1.13(@types/node@24.13.2)
+      blake3-wasm: 2.1.5
+      miniflare: 5.20261019.0-beta(@types/node@24.13.2)
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - utf-8-validate
+
   chai@6.3.0: {}
 
   chalk@5.3.0: {}
@@ -8502,6 +8538,19 @@ snapshots:
       sharp: 0.35.5(@types/node@24.13.2)
       undici: 7.29.1
       workerd: 1.20261012.1
+      ws: 8.21.0
+      youch: 4.1.0-beta.10
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - utf-8-validate
+
+  miniflare@5.20261019.0-beta(@types/node@24.13.2):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      sharp: 0.35.5(@types/node@24.13.2)
+      undici: 7.29.1
+      workerd: 1.20261019.1
       ws: 8.21.0
       youch: 4.1.0-beta.10
     transitivePeerDependencies:
