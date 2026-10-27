@@ -1,5 +1,5 @@
 {
-  "name": "@mimifuwa.cc/cli",
+  "name": "@mimifuwacc/cli",
   "version": "5.0.0-dev.0",
   "description": "Vite plugin and CLI for publishing mimifuwa.cc content",
   "license": "MIT",
