@@ -46,4 +46,4 @@ For the website repository, configure `packages/content-dev/articles` and the de
 
 ## npm releases
 
-The `Publish CLI` workflow publishes tags named `cli-v<version>` (for example, `cli-v0.1.0`). Keep the tag version aligned with this package's `version`. Configure npm Trusted Publishing for this repository and `.github/workflows/publish-cli.yml`; the workflow publishes with OIDC and does not require a long-lived npm token.
+The `Publish CLI` workflow publishes tags named `v<version>` (for example, `v5.0.0-dev.0`). Keep the tag version aligned with this package's `version`. Prereleases are published to npm's `next` dist-tag. Configure npm Trusted Publishing for this repository and `.github/workflows/publish-cli.yml`; the workflow publishes with OIDC and does not require a long-lived npm token.
