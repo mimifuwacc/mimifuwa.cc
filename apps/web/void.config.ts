@@ -1,6 +1,6 @@
 import { defineConfig } from "void/config";
 
-const deploymentEnv = process.env.MIMIFUWA_CC_DEPLOY_ENV;
+const deploymentEnv = process.env.DEPLOY_ENV;
 
 export default defineConfig({
   ...(deploymentEnv === "dev"

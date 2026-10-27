@@ -20,7 +20,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       VOID_CONTENT_PUBLISH_TOKEN: ${{ secrets.VOID_CONTENT_PUBLISH_TOKEN }}
-      MIMIFUWA_CC_DEPLOY_ENV: release
+      DEPLOY_ENV: release
     steps:
       - uses: actions/checkout@v7
 

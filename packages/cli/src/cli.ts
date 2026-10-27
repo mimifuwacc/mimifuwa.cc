@@ -333,7 +333,7 @@ if (action === "deploy") {
       env: {
         ...process.env,
         CONTENT_DIR: contentDir,
-        MIMIFUWA_CC_DEPLOY_ENV: "local",
+        DEPLOY_ENV: "local",
         PATH: pathEntries.join(delimiter),
       },
     },

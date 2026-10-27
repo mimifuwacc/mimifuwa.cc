@@ -10,7 +10,7 @@ const contentDir =
   process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-dev/articles");
 const config = {
   define: {
-    __MIMIFUWA_CC_DEPLOY_ENV__: JSON.stringify(process.env.MIMIFUWA_CC_DEPLOY_ENV ?? "local"),
+    __DEPLOY_ENV__: JSON.stringify(process.env.DEPLOY_ENV ?? "local"),
   },
   resolve: {
     alias: {
