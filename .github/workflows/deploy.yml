@@ -104,7 +104,7 @@ jobs:
         id: content-token
         uses: actions/create-github-app-token@v3
         with:
-          client-id: ${{ vars.CONTENT_REPO_APP_CLIENT_ID }}
+          client-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
           private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
           owner: mimifuwacc
           repositories: mimifuwa.cc-content
