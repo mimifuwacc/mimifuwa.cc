@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { ArrowRight } from "@lucide/vue";
-import Button from "../../components/Button.vue";
+import SiteButton from "../../components/SiteButton.vue";
 import SiteSection from "../../components/SiteSection.vue";
 import WorkCard from "../../components/WorkCard.vue";
 import { getWorks } from "../../lib/work-api";
@@ -20,15 +20,15 @@ onMounted(async () => {
 <template>
   <SiteSection v-if="works.length" id="works-section" eyebrow="Things I’ve made" title="Works">
     <template #action>
-      <Button class="works-action-desktop" href="/works/">
-        See more <ArrowRight class="icon" aria-hidden="true" />
-      </Button>
+      <SiteButton class="works-action-desktop" href="/works/">
+        See more <ArrowRight aria-hidden="true" class="icon" />
+      </SiteButton>
     </template>
     <div class="works-grid">
       <WorkCard v-for="work in works" :key="work.title" :work="work" />
     </div>
     <div class="works-actions-mobile">
-      <Button href="/works/"> See more <ArrowRight class="icon" aria-hidden="true" /> </Button>
+      <SiteButton href="/works/"> See more <ArrowRight aria-hidden="true" class="icon" /> </SiteButton>
     </div>
   </SiteSection>
 </template>

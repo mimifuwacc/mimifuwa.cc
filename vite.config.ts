@@ -26,7 +26,6 @@ export default defineConfig({
     },
     ignorePatterns: [
       "**/node_modules/**",
-      "apps/web-vue/**/*.vue",
       "**/dist/**",
       "**/build/**",
       "**/out/**",
@@ -35,6 +34,7 @@ export default defineConfig({
       "**/.wrangler/**",
       "**/.direnv/**",
       "**/coverage/**",
+      "apps/web/**/*.vue",
     ],
     rules: {
       "constructor-super": "error",
@@ -182,6 +182,7 @@ export default defineConfig({
       "**/.wrangler/**",
       "**/.direnv/**",
       "**/coverage/**",
+      "apps/web/**/*.vue",
       "pnpm-lock.yaml",
       "**/*.tsbuildinfo",
     ],
@@ -189,6 +190,7 @@ export default defineConfig({
   // pre-commit (`vp staged`) でステージ済みファイルに対して実行する
   staged: {
     "*.{ts,tsx,js,jsx}": "vp lint --fix",
-    "*.{ts,tsx,js,jsx,json,css,md,vue,yml,yaml}": "vp fmt --write",
+    "*.vue": "vp exec --filter @mimifuwacc/web -- vize fmt --write",
+    "*.{ts,tsx,js,jsx,json,css,md,yml,yaml}": "vp fmt --write",
   },
 });

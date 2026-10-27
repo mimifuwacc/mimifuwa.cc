@@ -8,32 +8,30 @@ const year = new Date().getFullYear();
   <footer class="site-footer">
     <div class="container-wide footer-inner">
       <div class="footer-identity">
-        <a href="/" class="footer-brand">mimifuwa.cc</a>
+        <a class="footer-brand" href="/">mimifuwa.cc</a>
         <p class="copyright">© {{ year }} mimifuwacc</p>
       </div>
       <div class="footer-links">
-        <nav class="footer-nav" aria-label="Footer navigation">
+        <nav aria-label="Footer navigation" class="footer-nav">
           <a href="/">Home</a>
           <a href="/blogs/">Blogs</a>
           <a href="/works/">Works</a>
           <a href="/onrepeat/">OnRepeat</a>
           <a href="/mutuals/">Mutuals</a>
         </nav>
-        <nav class="social-links" aria-label="Social links">
+        <nav aria-label="Social links" class="social-links">
           <a
+            aria-label="GitHub"
             href="https://github.com/mimifuwacc"
             rel="me noopener"
             target="_blank"
-            aria-label="GitHub"
-            ><IconGithub aria-hidden="true"
-          /></a>
+          ><IconGithub aria-hidden="true" /></a>
           <a
+            aria-label="Twitter"
             href="https://twitter.com/mimifuwacc"
             rel="me noopener"
             target="_blank"
-            aria-label="Twitter"
-            ><IconTwitter aria-hidden="true"
-          /></a>
+          ><IconTwitter aria-hidden="true" /></a>
         </nav>
       </div>
     </div>

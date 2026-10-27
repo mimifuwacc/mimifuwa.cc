@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
 import { awards, certifications, timelineData } from "../../../../../contents/about";
-import Button from "../../components/Button.vue";
+import SiteButton from "../../components/SiteButton.vue";
 import ContentCard from "../../components/ContentCard.vue";
 import SiteSection from "../../components/SiteSection.vue";
 import ProfileUuid from "./ProfileUuid.vue";
@@ -31,19 +31,19 @@ function timelineDateParts(date: string) {
           <ProfileUuid />
         </div>
         <div class="profile-socials">
-          <Button href="https://github.com/mimifuwacc" external>
+          <SiteButton external href="https://github.com/mimifuwacc">
             <IconGithub class="icon" /> GitHub
-          </Button>
-          <Button href="https://twitter.com/mimifuwacc" external>
+          </SiteButton>
+          <SiteButton external href="https://twitter.com/mimifuwacc">
             <IconTwitter class="icon" /> Twitter
-          </Button>
+          </SiteButton>
         </div>
       </article>
 
       <div class="about-columns">
         <div class="about-primary">
           <ContentCard title="Interests">
-            <ul class="interests-list" aria-label="Technical interests">
+            <ul aria-label="Technical interests" class="interests-list">
               <li v-for="interest in technicalInterests" :key="interest">{{ interest }}</li>
             </ul>
           </ContentCard>

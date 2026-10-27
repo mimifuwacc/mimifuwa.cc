@@ -21,8 +21,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <SiteSection id="works-page" title="Works" heading-level="h1">
-    <p v-if="loading" class="works-message" aria-live="polite">読み込み中...</p>
+  <SiteSection id="works-page" heading-level="h1" title="Works">
+    <p v-if="loading" aria-live="polite" class="works-message">読み込み中...</p>
     <p v-else-if="hasError" class="works-message" role="alert">制作物を読み込めませんでした。</p>
     <p v-else-if="works.length === 0" class="works-message">制作物はまだありません。</p>
     <div v-else class="works-grid">

@@ -10,7 +10,7 @@ defineProps<{ work: WorkItem }>();
   <RouterLink class="work-card" :to="work.url">
     <div class="work-card-heading">
       <h3>{{ work.title }}</h3>
-      <ArrowRight class="icon" aria-hidden="true" />
+      <ArrowRight aria-hidden="true" class="icon" />
     </div>
     <p>{{ work.description }}</p>
     <InlineTagList

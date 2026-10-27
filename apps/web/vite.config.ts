@@ -1,15 +1,14 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import vue from "@vitejs/plugin-vue";
 import { oxContent } from "@ox-content/vite-plugin";
+import { defineConfig } from "@vizejs/vite-plugin/vite-plus";
 import { voidPlugin } from "void";
-import { defineConfig } from "vite-plus";
 import { contentDevApi } from "./src/content-dev-api";
 
 const appDir = dirname(fileURLToPath(import.meta.url));
 const contentDir =
   process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-dev/articles");
-export default defineConfig({
+const config = {
   define: {
     __MIMIFUWA_CC_DEPLOY_ENV__: JSON.stringify(process.env.MIMIFUWA_CC_DEPLOY_ENV ?? "production"),
   },
@@ -34,6 +33,12 @@ export default defineConfig({
     }),
     contentDevApi(),
     ...(process.env.NODE_ENV === "production" ? [voidPlugin()] : []),
-    vue(),
   ],
+};
+
+export default defineConfig(config).withVue({
+  compiler: {},
+  typeChecker: { strict: true },
+  linter: { preset: "essential" },
+  formatter: { printWidth: 100, tabWidth: 2 },
 });

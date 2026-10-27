@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { ArrowLeft, ArrowUpRight } from "@lucide/vue";
-import Button from "../components/Button.vue";
+import SiteButton from "../components/SiteButton.vue";
 import InlineTagList from "../components/InlineTagList.vue";
 import { getWork } from "../lib/work-api";
 import type { WorkItem } from "../types/work";
@@ -40,10 +40,10 @@ watch(
 
 <template>
   <main class="work-detail-page container">
-    <p v-if="loading" class="work-detail-message" aria-live="polite">読み込み中...</p>
+    <p v-if="loading" aria-live="polite" class="work-detail-message">読み込み中...</p>
     <section v-else-if="hasError || !work" class="work-detail-message">
       <h1>{{ hasError ? "制作物を読み込めませんでした" : "制作物が見つかりません" }}</h1>
-      <Button href="/works/"><ArrowLeft class="icon" aria-hidden="true" /> Works に戻る</Button>
+      <SiteButton href="/works/"><ArrowLeft aria-hidden="true" class="icon" /> Works に戻る</SiteButton>
     </section>
     <template v-else>
       <header class="work-detail-header">
@@ -55,13 +55,14 @@ watch(
           :items="work.technologies"
           variant="outlined"
         />
-        <Button v-if="work.externalUrl" :href="work.externalUrl" external>
-          Visit project <ArrowUpRight class="icon" aria-hidden="true" />
-        </Button>
+        <SiteButton v-if="work.externalUrl" :href="work.externalUrl" external>
+          Visit project <ArrowUpRight aria-hidden="true" class="icon" />
+        </SiteButton>
       </header>
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <article v-if="work.html" class="work-detail-content" v-html="work.html" />
-      <nav class="work-detail-nav" aria-label="Works navigation">
-        <Button href="/works/"><ArrowLeft class="icon" aria-hidden="true" /> All works</Button>
+      <nav aria-label="Works navigation" class="work-detail-nav">
+        <SiteButton href="/works/"><ArrowLeft aria-hidden="true" class="icon" /> All works</SiteButton>
       </nav>
     </template>
   </main>

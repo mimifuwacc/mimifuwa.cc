@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Check, Copy } from "@lucide/vue";
-import Button from "../../components/Button.vue";
+import SiteButton from "../../components/SiteButton.vue";
 
 const uuid = "fa6c2a8f-27b1-4611-a0f5-19b0d6c20612";
 const copied = ref(false);
@@ -17,7 +17,7 @@ const copyUuid = async () => {
   <div class="profile-uuid">
     <span class="uuid-label">UUID</span>
     <code>{{ uuid }}</code>
-    <Button
+    <SiteButton
       class="uuid-copy"
       variant="outline"
       :aria-label="copied ? 'UUID copied' : 'Copy UUID'"
@@ -25,8 +25,8 @@ const copyUuid = async () => {
     >
       <Check v-if="copied" class="icon" />
       <Copy v-else class="icon" />
-    </Button>
-    <span class="visually-hidden" aria-live="polite">{{ copied ? "UUID copied" : "" }}</span>
+    </SiteButton>
+    <span aria-live="polite" class="visually-hidden">{{ copied ? "UUID copied" : "" }}</span>
   </div>
 </template>
 

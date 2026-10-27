@@ -4,13 +4,14 @@
   "type": "module",
   "packageManager": "pnpm@11.28.8",
   "scripts": {
-    "dev": "vp run --filter @mimifuwacc/web-vue dev",
+    "dev": "vp run --filter @mimifuwacc/web dev",
     "format": "vp fmt --write",
     "format:check": "vp fmt --check",
     "lint": "vp lint",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
-    "vite-plus": "catalog:"
+    "vite": "catalog:",
+    "vite-plus": "1.4.0"
   }
 }

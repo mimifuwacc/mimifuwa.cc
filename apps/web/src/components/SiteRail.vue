@@ -21,30 +21,30 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
     :class="{ 'has-back-to-top': showBackToTop }"
     aria-label="Site shortcuts"
   >
-    <a class="site-signature" href="/" aria-label="mimifuwa.cc home">
-      <span class="site-version" aria-hidden="true">v.4.0.0</span>
-      <span class="site-url" aria-hidden="true">https://mimifuwa.cc/</span>
+    <a aria-label="mimifuwa.cc home" class="site-signature" href="/">
+      <span aria-hidden="true" class="site-version">v.4.0.0</span>
+      <span aria-hidden="true" class="site-url">https://mimifuwa.cc/</span>
     </a>
     <div class="site-rail-middle">
       <p class="site-rail-note">fa6c2a8f-27b1-4611-a0f5-19b0d6c20612</p>
-      <nav class="site-rail-socials" aria-label="Social links">
-        <a href="https://github.com/mimifuwacc" target="_blank" rel="noopener" aria-label="GitHub">
+      <nav aria-label="Social links" class="site-rail-socials">
+        <a aria-label="GitHub" href="https://github.com/mimifuwacc" rel="noopener" target="_blank">
           <IconGithub aria-hidden="true" />
         </a>
         <a
-          href="https://twitter.com/mimifuwacc"
-          target="_blank"
-          rel="noopener"
           aria-label="Twitter"
+          href="https://twitter.com/mimifuwacc"
+          rel="noopener"
+          target="_blank"
         >
           <IconTwitter aria-hidden="true" />
         </a>
       </nav>
     </div>
     <Transition name="rail-button">
-      <a v-if="showBackToTop" class="back-to-top" href="#top" aria-label="Back to top">
+      <a v-if="showBackToTop" aria-label="Back to top" class="back-to-top" href="#top">
         <span class="back-to-top-icon"><ArrowUp aria-hidden="true" /></span>
-        <span class="back-to-top-label" aria-hidden="true">BACK TO TOP</span>
+        <span aria-hidden="true" class="back-to-top-label">BACK TO TOP</span>
       </a>
     </Transition>
   </aside>

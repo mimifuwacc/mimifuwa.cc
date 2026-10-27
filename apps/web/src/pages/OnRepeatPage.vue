@@ -1,40 +1,30 @@
 <script setup lang="ts">
-import SiteSection from "../../components/SiteSection.vue";
-import { ArrowRight } from "@lucide/vue";
-import Button from "../../components/Button.vue";
-import { tracks } from "../../lib/on-repeat";
+import { sanitizeUrl } from "@braintree/sanitize-url";
+import SiteSection from "../components/SiteSection.vue";
+import { tracks } from "../lib/on-repeat";
 </script>
 
 <template>
-  <SiteSection id="on-repeat-section" eyebrow="My Favorite Songs" title="On Repeat">
-    <template #action>
-      <Button class="on-repeat-action-desktop" href="/onrepeat/">
-        See more <ArrowRight class="icon" aria-hidden="true" />
-      </Button>
-    </template>
+  <SiteSection id="on-repeat-page" heading-level="h1" title="On Repeat">
     <div class="track-grid">
       <a
         v-for="track in tracks"
         :key="track.url"
         class="track-card"
-        :href="track.url"
-        target="_blank"
+        :href="sanitizeUrl(track.url)"
         rel="noopener noreferrer"
+        target="_blank"
       >
         <img
           class="track-artwork"
           :src="track.artworkUrl"
           :alt="`${track.title} — ${track.artist} のジャケット`"
-          loading="lazy"
         />
         <span class="track-copy">
           <strong>{{ track.title }}</strong>
           <span>{{ track.artist }}</span>
         </span>
       </a>
-    </div>
-    <div class="on-repeat-actions-mobile">
-      <Button href="/onrepeat/"> See more <ArrowRight class="icon" aria-hidden="true" /> </Button>
     </div>
   </SiteSection>
 </template>
@@ -82,8 +72,10 @@ import { tracks } from "../../lib/on-repeat";
   text-underline-offset: 0.2em;
 }
 
-.on-repeat-actions-mobile {
-  display: none;
+@media (min-width: 48.001rem) and (max-width: 70rem) {
+  .track-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 48.001rem) and (max-width: 70rem) {
@@ -96,22 +88,6 @@ import { tracks } from "../../lib/on-repeat";
   .track-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem 1rem;
-  }
-
-  .on-repeat-action-desktop {
-    display: none;
-  }
-
-  .on-repeat-actions-mobile {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1.25rem;
-  }
-
-  .on-repeat-actions-mobile :deep(.button) {
-    min-height: 2.25rem;
-    padding: 0.45rem 0.7rem;
-    font-size: 0.85rem;
   }
 }
 </style>

@@ -42,7 +42,7 @@ for (const arg of args) {
 
 const contentDir = resolve(readOption("--content") ?? "articles");
 const siteDir = resolve(
-  readOption("--site") ?? process.env.MIMIFUWA_SITE_DIR ?? "../mimifuwa.cc/apps/web-vue",
+  readOption("--site") ?? process.env.MIMIFUWA_SITE_DIR ?? "../mimifuwa.cc/apps/web",
 );
 const workspaceDir = resolve(siteDir, "../..");
 const vpBin = resolve(workspaceDir, "node_modules/.bin/vp");
@@ -63,7 +63,7 @@ const pathEntries = [dirname(process.execPath), process.env.PATH].filter((entry)
 );
 const result = spawnSync(
   vpBin,
-  ["run", "--filter", "@mimifuwacc/web-vue", action === "build" ? "build" : "dev"],
+  ["run", "--filter", "@mimifuwacc/web", action === "build" ? "build" : "dev"],
   {
     cwd: workspaceDir,
     stdio: "inherit",
