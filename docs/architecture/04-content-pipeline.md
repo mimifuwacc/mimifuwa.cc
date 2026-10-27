@@ -18,12 +18,10 @@ vp run dev
 
 ## Build and publish
 
-The local CLI can build the Vue Worker with the selected collections bundled in dev content mode. This is for checking content and does not publish it. In production, Void API routes read the active revision from the `STORAGE` R2 bucket. They expose blog and work indexes, article details, search data, and the content publish endpoints. The content repository produces and uploads the revision files.
-
-The content publisher uploads a complete revision before switching the active revision pointer. The site reads only the active revision, so an incomplete upload is not shown to visitors.
+The site reads the active content revision from the `STORAGE` R2 bucket. The content CLI publishes a complete revision with the released `@mimifuwa.cc/cli`, then switches the active revision pointer after all files are uploaded. The site reads only the active revision, so an incomplete upload is not shown to visitors.
 
 ## Deployment
 
-- A push to `dev` deploys the `mimifuwa-cc-dev` Worker. Its blog and work API responses are bundled from `packages/content-dev`; it does not read or publish content in R2.
-- A push to `release` deploys the production Worker. Its blog and work API responses use the active revision published by `mimifuwa.cc-content` in R2.
-- `CONTENT_PUBLISH_TOKEN` is configured only on the production Worker. The dev Worker returns `404` from content publishing endpoints.
+- A push to `dev` deploys the `mimifuwa-cc-dev` Worker and publishes `packages/content-dev/articles` to its R2 bucket.
+- A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the CLI under its prerelease npm tag, deploys the dev Worker, and publishes `packages/content-dev/articles`.
+- A stable version tag such as `v5.0.0` publishes the CLI under npm's `latest` tag and deploys production. After deployment, it dispatches and waits for the content repository's publish workflow to build and publish that repository's `main` branch.

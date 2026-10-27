@@ -29,5 +29,6 @@ vp run -r build
 ## デプロイ
 
 - `dev` への push は <https://mimifuwa-cc-dev.m8c.workers.dev> へ自動デプロイします。Blogs と Works は `packages/content-dev` のサンプルを表示します。
-- `release` への push は本番環境へ自動デプロイし、GitHub Release を作成します。
-- Cloudflare の認証情報と `VOID_CONTENT_PUBLISH_TOKEN` は GitHub Actions の `dev` / `production` 環境シークレットで管理します。
+- `vX.Y.Z` tag は CLI を npm の `latest` として公開し、本番サイトと `mimifuwa.cc-content` の `main` の記事をデプロイした後、GitHub Release を作成します。
+- `vX.Y.Z-dev.N` や `vX.Y.Z-alpha.N` tag は CLI を対応する npm prerelease tag で公開し、dev Worker と `packages/content-dev` の記事をデプロイします。
+- Cloudflare の認証情報は GitHub Actions の `dev` / `production` 環境シークレットで管理します。

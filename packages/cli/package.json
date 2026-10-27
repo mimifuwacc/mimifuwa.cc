@@ -1,5 +1,5 @@
 {
-  "name": "@mimifuwacc/cli",
+  "name": "@mimifuwa.cc/cli",
   "version": "5.0.0-dev.0",
   "description": "Vite plugin and CLI for publishing mimifuwa.cc content",
   "license": "MIT",
@@ -19,6 +19,10 @@
     "./vite": {
       "types": "./dist/vite.d.ts",
       "import": "./dist/vite.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js"
     }
   },
   "scripts": {

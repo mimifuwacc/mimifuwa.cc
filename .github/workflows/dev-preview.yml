@@ -20,7 +20,6 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       DEPLOY_ENV: dev
-      CONTENT_PUBLISH_TOKEN: ${{ secrets.CONTENT_PUBLISH_TOKEN }}
     steps:
       - uses: actions/checkout@v7
 
@@ -32,18 +31,12 @@ jobs:
           run-install: true
 
       - name: Build content CLI
-        run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
+        run: vp exec --filter @mimifuwa.cc/cli -- tsc -p tsconfig.json
 
       - name: Deploy Vue site to Void
         run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
-      - name: Select Cloudflare for secret management
-        run: vp exec --filter @mimifuwacc/web -- void connect --platform cloudflare
-
-      - name: Set content publish token
-        run: |
-          test -n "$CONTENT_PUBLISH_TOKEN"
-          printf '%s' "$CONTENT_PUBLISH_TOKEN" | vp exec --filter @mimifuwacc/web -- void secret put CONTENT_PUBLISH_TOKEN
-
       - name: Publish dev content
-        run: vp exec --filter @mimifuwacc/cli -- mimifuwacc deploy
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/packages/content-dev/articles
+        run: vp exec --filter @mimifuwa.cc/cli -- mimifuwacc deploy

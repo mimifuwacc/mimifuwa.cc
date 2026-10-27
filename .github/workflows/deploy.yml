@@ -1,26 +1,19 @@
-name: Deploy and Release
+name: Release
 
 on:
   push:
-    branches:
-      - release
-  workflow_dispatch:
+    tags:
+      - "v*"
 
 permissions:
   contents: write
   id-token: write
 
 jobs:
-  deploy:
+  publish-cli:
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://mimifuwa.cc
-    env:
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      VOID_CONTENT_PUBLISH_TOKEN: ${{ secrets.VOID_CONTENT_PUBLISH_TOKEN }}
-      DEPLOY_ENV: release
+    outputs:
+      version: ${{ steps.release.outputs.version }}
     steps:
       - uses: actions/checkout@v7
 
@@ -31,38 +24,167 @@ jobs:
           cache: true
           run-install: true
 
-      - name: Build content CLI
-        run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
+      - name: Verify release tag and select npm dist-tag
+        id: release
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          PACKAGE_VERSION="${RELEASE_TAG#v}"
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag must use v<semver>: $RELEASE_TAG" >&2
+            exit 1
+          fi
 
-      - name: Deploy Vue site to Void
+          node --input-type=module - "$PACKAGE_VERSION" <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const path = 'packages/cli/package.json';
+          const manifest = JSON.parse(readFileSync(path, 'utf8'));
+          manifest.version = process.argv[2];
+          writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
+          NODE
+
+          if [[ "$PACKAGE_VERSION" == *-* ]]; then
+            PRERELEASE="${PACKAGE_VERSION#*-}"
+            NPM_TAG="${PRERELEASE%%.*}"
+            if [[ "$NPM_TAG" =~ ^[0-9]+$ ]]; then
+              NPM_TAG=next
+            fi
+          else
+            NPM_TAG=latest
+          fi
+
+          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Build CLI package
+        run: vp run --filter @mimifuwa.cc/cli build
+
+      - name: Publish CLI package
+        env:
+          NPM_TAG: ${{ steps.release.outputs.npm_tag }}
+        run: vp pm publish ./packages/cli --access public --provenance --tag "$NPM_TAG" -- --ignore-scripts
+
+  deploy:
+    needs: publish-cli
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ contains(github.ref_name, '-') && 'dev' || 'production' }}
+      url: ${{ contains(github.ref_name, '-') && 'https://mimifuwa-cc-dev.m8c.workers.dev' || 'https://mimifuwa.cc' }}
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      DEPLOY_ENV: ${{ contains(github.ref_name, '-') && 'dev' || 'release' }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.22.0
+        with:
+          node-version-file: .node-version
+          cache: true
+          run-install: true
+
+      - name: Deploy site to Cloudflare
         run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
-      - name: Select Cloudflare for secret management
-        run: vp exec --filter @mimifuwacc/web -- void connect --platform cloudflare
-
-      - name: Set content publish token
+      - name: Read the production content target
+        if: ${{ !contains(github.ref_name, '-') }}
+        id: storage
         run: |
-          test -n "$VOID_CONTENT_PUBLISH_TOKEN"
-          printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | vp exec --filter @mimifuwacc/web -- void secret put CONTENT_PUBLISH_TOKEN
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from 'node:fs';
+
+          const config = JSON.parse(readFileSync('apps/web/.void-wrangler.jsonc', 'utf8'));
+          const bucket = config.r2_buckets?.find((binding) => binding.binding === 'STORAGE')?.bucket_name;
+          if (!bucket) throw new Error('The deployed site config has no STORAGE R2 bucket');
+          if (!config.account_id) throw new Error('The deployed site config has no Cloudflare account_id');
+          appendFileSync(process.env.GITHUB_OUTPUT, `bucket=${bucket}\naccount_id=${config.account_id}\n`);
+          NODE
+
+      - name: Publish dev content with the released CLI
+        if: ${{ contains(github.ref_name, '-') }}
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/packages/content-dev/articles
+          CONTENT_REVISION: ${{ github.sha }}
+          CF_BIN: ${{ github.workspace }}/node_modules/.bin/cf
+          CLI_VERSION: ${{ needs.publish-cli.outputs.version }}
+        run: vp dlx "@mimifuwa.cc/cli@$CLI_VERSION" deploy
+
+      - name: Create content repository token
+        if: ${{ !contains(github.ref_name, '-') }}
+        id: content-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
+          owner: mimifuwacc
+          repositories: mimifuwa.cc-content
+          permission-actions: write
+
+      - name: Publish production content from the content repository
+        if: ${{ !contains(github.ref_name, '-') }}
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ steps.content-token.outputs.token }}
+          script: |
+            const owner = "mimifuwacc";
+            const repo = "mimifuwa.cc-content";
+            const workflow_id = "publish-content.yml";
+            const baseline = new Set((await github.rest.actions.listWorkflowRuns({
+              owner, repo, workflow_id, event: "workflow_dispatch", branch: "main", per_page: 100,
+            })).data.workflow_runs.map((run) => run.id));
+            const dispatchedAt = Date.now() - 5000;
+
+            await github.rest.actions.createWorkflowDispatch({
+              owner,
+              repo,
+              workflow_id,
+              ref: "main",
+              inputs: {
+                cli_version: process.env.CLI_VERSION,
+                site_ref: process.env.SITE_REF,
+                content_ref: "main",
+                content_bucket: process.env.CONTENT_BUCKET,
+                cloudflare_account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
+              },
+            });
+
+            const deadline = Date.now() + 30 * 60 * 1000;
+            let contentRun;
+            while (Date.now() < deadline) {
+              const runs = (await github.rest.actions.listWorkflowRuns({
+                owner, repo, workflow_id, event: "workflow_dispatch", branch: "main", per_page: 100,
+              })).data.workflow_runs;
+              contentRun = runs.find((run) => !baseline.has(run.id) && Date.parse(run.created_at) >= dispatchedAt);
+              if (contentRun?.status === "completed") {
+                if (contentRun.conclusion !== "success") {
+                  core.setFailed(`Content publish workflow concluded with ${contentRun.conclusion}: ${contentRun.html_url}`);
+                } else {
+                  core.info(`Content publish completed: ${contentRun.html_url}`);
+                }
+                return;
+              }
+              await new Promise((resolve) => setTimeout(resolve, 10000));
+            }
+            core.setFailed(contentRun
+              ? `Timed out waiting for content publish: ${contentRun.html_url}`
+              : "Timed out waiting for the content publish workflow to start");
+        env:
+          CLI_VERSION: ${{ needs.publish-cli.outputs.version }}
+          SITE_REF: ${{ github.ref_name }}
+          CONTENT_BUCKET: ${{ steps.storage.outputs.bucket }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ steps.storage.outputs.account_id }}
 
   release:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-
-      - name: Set release tag
-        env:
-          TZ: "Asia/Tokyo"
-        run: |
-          echo "RELEASE_TAG=$(date '+%Y-%m-%d-%H%M%S')" >> $GITHUB_ENV
-          echo "RELEASE_NAME=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          name: ${{ env.RELEASE_NAME }}
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
