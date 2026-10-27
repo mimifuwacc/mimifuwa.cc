@@ -21,7 +21,7 @@
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vize": "0.510.0",
-    "void": "1.1.11"
+    "void": "1.2.1"
   },
   "engines": {
     "node": ">=24.21.0"
