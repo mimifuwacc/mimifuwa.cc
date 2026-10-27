@@ -51,6 +51,9 @@ importers:
         specifier: ^5.4.0
         version: 5.4.0(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(@vue/compiler-sfc@3.6.0-rc.13)(esbuild@0.28.2)(rolldown@1.2.14)(vue@3.6.0-rc.13(typescript@6.0.3))
     devDependencies:
+      '@mimifuwacc/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
       '@vue/compiler-sfc':
         specifier: 3.6.0-rc.13
         version: 3.6.0-rc.13
@@ -78,6 +81,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1)'
 
   packages/content-dev: {}
 

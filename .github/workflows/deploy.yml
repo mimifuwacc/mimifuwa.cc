@@ -31,6 +31,9 @@ jobs:
           cache: true
           run-install: true
 
+      - name: Build content CLI
+        run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
+
       - name: Deploy Vue site to Void
         run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 

@@ -2,17 +2,18 @@
 
 Vue Router provides the shared site layout, blog index and article pages, works list and detail pages, and links page. Void API routes read the active Ox Content revision from R2 and provide the blog list, work list and details, and search index to the client. The content publisher uploads each revision to R2 and switches the active revision only after all files are present.
 
-Local development uses the small fixture set in `packages/content-dev/articles`. The `mimifuwa.cc-content` CLI passes its article directory through `CONTENT_DIR`, so the site preview processes those Markdown files with the same Ox Content collections. The CLI build is a local content build only; production content is still published as a revision to R2 by the content repository.
+Local development uses `packages/content-dev/articles` and serves the articles directly from the Vite dev server. The same articles are published to the dev Worker after a push to `dev`. Production articles are published separately from the `mimifuwa.cc-content` repository.
 
-GitHub Actions deploys the `mimifuwa-cc-dev` Worker when `dev` is updated and production when `release` is updated. The dev Worker serves the fixtures bundled from `packages/content-dev`, so it does not need an R2 publish token and cannot modify production content. Its public URL is `https://mimifuwa-cc-dev.m8c.workers.dev`.
+GitHub Actions deploys the `mimifuwa-cc-dev` Worker and publishes `packages/content-dev/articles` when `dev` is updated. Dev and production use separate Worker storage and publish tokens. The dev Worker URL is `https://mimifuwa-cc-dev.m8c.workers.dev`.
 
 Configure the `dev` and `production` GitHub Actions environments with these secrets:
 
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_API_TOKEN`
-- `VOID_CONTENT_PUBLISH_TOKEN` (production only)
+- `CONTENT_PUBLISH_TOKEN` in `dev`
+- `VOID_CONTENT_PUBLISH_TOKEN` in `production`
 
-The deployment workflow writes `VOID_CONTENT_PUBLISH_TOKEN` to the Void Worker as `CONTENT_PUBLISH_TOKEN`. The matching token must also be configured in the `mimifuwa.cc-content` repository for publishing.
+Each deployment workflow writes its environment's token to that Void Worker as `CONTENT_PUBLISH_TOKEN`. The production token must also be configured in the `mimifuwa.cc-content` repository for publishing.
 
 ```sh
 vp run dev
