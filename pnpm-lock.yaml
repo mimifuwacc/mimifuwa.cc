@@ -74,6 +74,13 @@ importers:
         version: 1.2.1(@types/node@24.13.2)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(arktype@2.2.9)(kysely@0.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(valibot@1.5.0(typescript@6.0.3))(vitest@5.0.5(@types/node@24.13.2)(@vitest/browser-preview@5.0.5)(@vitest/ui@5.0.5(vitest@5.0.5))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1)))(vue@3.6.0-rc.13(typescript@6.0.3))(wrangler@4.151.3(@cloudflare/workers-types@5.20261021.1)(@types/node@24.13.2))(zod@4.6.7)
 
   packages/cli:
+    dependencies:
+      '@ox-content/vite-plugin':
+        specifier: 3.0.0-alpha.18
+        version: 3.0.0-alpha.18(@babel/core@7.29.7(supports-color@10.2.2))(@babel/template@7.29.7)(@types/react@19.2.17)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(@vue/compiler-sfc@3.5.44)(katex@0.16.47)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(tailwindcss@4.3.1)
+      vite:
+        specifier: npm:@voidzero-dev/vite-plus-core@1.4.0
+        version: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1)'
     devDependencies:
       '@types/node':
         specifier: ^24.13.2
@@ -81,9 +88,6 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
-      vite:
-        specifier: 'catalog:'
-        version: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1)'
 
   packages/content-dev: {}
 
@@ -6184,6 +6188,43 @@ snapshots:
       '@ox-content/binding-linux-x64-gnu': 3.0.0-alpha.18
       '@ox-content/binding-linux-x64-musl': 3.0.0-alpha.18
       '@ox-content/binding-win32-x64-msvc': 3.0.0-alpha.18
+
+  '@ox-content/vite-plugin@3.0.0-alpha.18(@babel/core@7.29.7(supports-color@10.2.2))(@babel/template@7.29.7)(@types/react@19.2.17)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(@vue/compiler-sfc@3.5.44)(katex@0.16.47)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(tailwindcss@4.3.1)':
+    dependencies:
+      '@cspell/dict-de-de': 4.1.3
+      '@cspell/dict-en_us': 4.4.41
+      '@cspell/dict-fr-fr': 2.3.2
+      '@cspell/dict-pl_pl': 3.0.8
+      '@mermaid-js/mermaid-cli': 11.17.0(@babel/core@7.29.7(supports-color@10.2.2))(@babel/template@7.29.7)(@types/react@19.2.17)(puppeteer@25.15.0)(tailwindcss@4.3.1)
+      '@ox-content/napi': 3.0.0-alpha.18
+      '@resvg/resvg-js': 2.6.2
+      cspell-lib: 10.4.0
+      glob: 13.0.6
+      playwright: 1.64.1
+      puppeteer: 25.15.0
+      rehype-parse: 9.0.1
+      rehype-stringify: 10.0.1
+      rolldown: 1.2.14
+      satori: 0.33.5
+      satori-html: 0.3.2
+      typescript: 7.0.2
+      unified: 11.0.5
+      vite: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1)'
+    optionalDependencies:
+      '@vue/compiler-sfc': 3.5.44
+      katex: 0.16.47
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@babel/template'
+      - '@types/react'
+      - bufferutil
+      - playwright-core
+      - proxy-agent
+      - tailwindcss
+      - utf-8-validate
+      - yauzl
 
   '@ox-content/vite-plugin@3.0.0-alpha.18(@babel/core@7.29.7(supports-color@10.2.2))(@babel/template@7.29.7)(@types/react@19.2.17)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(@vue/compiler-sfc@3.6.0-rc.13)(katex@0.16.47)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(tailwindcss@4.3.1)(vue@3.6.0-rc.13(typescript@6.0.3))':
     dependencies:
