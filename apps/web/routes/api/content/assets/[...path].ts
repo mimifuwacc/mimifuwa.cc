@@ -1,10 +1,7 @@
 import { defineHandler } from "void";
 import { isOxContentAssetPath, readActiveContentFile } from "@/content-store";
-import { isDevContent } from "@/server-content";
 
 export const GET = defineHandler(async (c) => {
-  if (isDevContent) return c.notFound();
-
   const path = (c.req.param("path") ?? "").replace(/^\/+/, "");
   if (!isOxContentAssetPath(path)) return c.notFound();
   const result = await readActiveContentFile(path);

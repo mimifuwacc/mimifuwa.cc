@@ -19,7 +19,8 @@ jobs:
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      MIMIFUWA_CC_DEPLOY_ENV: dev
+      DEPLOY_ENV: dev
+      CONTENT_PUBLISH_TOKEN: ${{ secrets.CONTENT_PUBLISH_TOKEN }}
     steps:
       - uses: actions/checkout@v7
 
@@ -30,5 +31,16 @@ jobs:
           cache: true
           run-install: true
 
+      - name: Build content CLI
+        run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
+
       - name: Deploy Vue site to Void
         run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
+
+      - name: Set content publish token
+        run: |
+          test -n "$CONTENT_PUBLISH_TOKEN"
+          printf '%s' "$CONTENT_PUBLISH_TOKEN" | vp exec --filter @mimifuwacc/web -- void secret put CONTENT_PUBLISH_TOKEN
+
+      - name: Publish dev content
+        run: vp exec --filter @mimifuwacc/cli -- mimifuwacc deploy

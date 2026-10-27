@@ -1,10 +1,7 @@
 import { defineHandler } from "void";
 import { activateContentRevision, isAuthorizedPublisher, isContentRevision } from "@/content-store";
-import { isDevContent } from "@/server-content";
 
 export const POST = defineHandler(async (c) => {
-  if (isDevContent) return c.notFound();
-
   if (!isAuthorizedPublisher(c.req.header("Authorization"))) {
     return c.json({ error: "unauthorized" }, 401);
   }

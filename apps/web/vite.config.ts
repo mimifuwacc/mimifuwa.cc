@@ -1,6 +1,6 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { oxContent } from "@ox-content/vite-plugin";
+import { mimifuwaccContent } from "../../packages/cli/src/vite";
 import { defineConfig } from "@vizejs/vite-plugin/vite-plus";
 import { voidPlugin } from "void";
 import { contentDevApi } from "./src/content-dev-api";
@@ -10,7 +10,7 @@ const contentDir =
   process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-dev/articles");
 const config = {
   define: {
-    __MIMIFUWA_CC_DEPLOY_ENV__: JSON.stringify(process.env.MIMIFUWA_CC_DEPLOY_ENV ?? "production"),
+    __DEPLOY_ENV__: JSON.stringify(process.env.DEPLOY_ENV ?? "local"),
   },
   resolve: {
     alias: {
@@ -18,17 +18,15 @@ const config = {
     },
   },
   plugins: [
-    oxContent({
+    mimifuwaccContent({
       srcDir: contentDir,
-      ssg: false,
-      search: false,
-      docs: false,
-      ogViewer: false,
-      highlight: true,
-      gfm: true,
       collections: {
         blogs: { source: "blogs/**/*", include: ["html"] },
         works: { source: "works/**/*", include: ["html"] },
+      },
+      target: {
+        url: process.env.CONTENT_PUBLISH_URL ?? "https://mimifuwa-cc-dev.m8c.workers.dev",
+        token: process.env.CONTENT_PUBLISH_TOKEN,
       },
     }),
     contentDevApi(),

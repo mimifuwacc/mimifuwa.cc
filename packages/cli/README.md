@@ -1,29 +1,49 @@
-# mimifuwacc content CLI
+# @mimifuwacc/cli
 
-The `mimifuwacc` command previews or builds the Vue site using the content repository's Markdown. The Vue app processes `articles/blogs` and `articles/works` with the Ox Content Vite plugin, then serves the site's own styled pages and API responses.
+Vite plugin and CLI for processing and publishing Mimifuwacc's Ox Content articles.
 
-## Preview
+## Vite configuration
 
-From the content repository, run:
+Install `@mimifuwacc/cli` and `@ox-content/vite-plugin` as development dependencies, then configure the content source and its single publish target in `vite.config.ts`:
 
-```sh
-mimifuwacc preview --content articles
+```ts
+import { mimifuwaccContent } from "@mimifuwacc/cli/vite";
+
+export default defineConfig({
+  plugins: [
+    mimifuwaccContent({
+      srcDir: "./articles",
+      collections: {
+        blogs: { source: "blogs/**/*", include: ["html"] },
+        works: { source: "works/**/*", include: ["html"] },
+      },
+      target: {
+        url: process.env.CONTENT_PUBLISH_URL!,
+        token: process.env.CONTENT_PUBLISH_TOKEN,
+      },
+    }),
+  ],
+});
 ```
 
-This starts the Vue development server and points Ox Content at `articles`. The default site location is `../mimifuwa.cc/apps/web`; if the repositories are elsewhere, provide `--site` or set `MIMIFUWA_SITE_DIR` to the `apps/web` directory.
+`target.token` is only read by the deploy command. Keep it in the CI environment or a local untracked environment file; never commit the token.
 
-For local development inside this repository, use the included fixtures:
+## Local preview
+
+In the site repository, `vp run dev` serves the sample articles in `packages/content-dev/articles`. It does not contact the publish target.
+
+## Publish content
+
+Run from the repository whose `vite.config.ts` defines the desired articles and target:
 
 ```sh
-vp run dev
+vp exec @mimifuwacc/cli deploy
 ```
 
-## Build
+The CLI builds with Vite, reads the configured Ox Content collections, writes the publish JSON payload, uploads a new revision, and activates it only after all required files are present. The target URL and token come from the Vite configuration and its environment; there is no separate `--target` option.
 
-```sh
-mimifuwacc build --content articles
-```
+For the website repository, configure `packages/content-dev/articles` and the dev Worker target. For `mimifuwa.cc-content`, configure `articles` and the production target. The two repositories use the same command while retaining separate content and credentials.
 
-The build command writes the Worker build under the Vue app's `dist` directory, bundling the selected content collection for local inspection. Both commands use the `dev` content mode: they never read from or publish to production R2. Production articles continue to be read from the active R2 revision after the content repository publishes them.
+## npm releases
 
-Run `mimifuwacc --help` to print the available command syntax.
+The `Publish CLI` workflow publishes tags named `cli-v<version>` (for example, `cli-v0.1.0`). Keep the tag version aligned with this package's `version`. Configure npm Trusted Publishing for this repository and `.github/workflows/publish-cli.yml`; the workflow publishes with OIDC and does not require a long-lived npm token.
