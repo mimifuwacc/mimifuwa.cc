@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { sanitizeUrl } from "@braintree/sanitize-url";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Menu, Moon, Sun, X } from "@lucide/vue";
@@ -90,7 +91,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
         <a
           v-for="item in navItems"
           :key="item.href"
-          :href="item.href"
+          :href="sanitizeUrl(item.href)"
           :aria-current="isActive(item.href) ? 'page' : undefined"
         >
           <span>{{ item.label }}</span>
@@ -157,7 +158,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
         <a
           v-for="item in navItems"
           :key="item.href"
-          :href="item.href"
+          :href="sanitizeUrl(item.href)"
           :aria-current="isActive(item.href) ? 'page' : undefined"
           @click="menuOpen = false"
         >
@@ -193,7 +194,12 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
       </button>
     </div>
     <div class="search-results">
-      <a v-for="result in matches" :key="result.url" class="search-result" :href="result.url">
+      <a
+        v-for="result in matches"
+        :key="result.url"
+        class="search-result"
+        :href="sanitizeUrl(result.url)"
+      >
         <strong>{{ result.title }}</strong>
         <span>{{ result.body.slice(0, 160) }}</span>
       </a>

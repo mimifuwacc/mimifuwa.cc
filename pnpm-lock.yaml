@@ -29,6 +29,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@braintree/sanitize-url':
+        specifier: 7.1.2
+        version: 7.1.2
       '@iconify-prerendered/vue-fa-brands':
         specifier: ^0.28.1722793346
         version: 0.28.1722793346(vue@3.6.0-rc.13(typescript@6.0.3))

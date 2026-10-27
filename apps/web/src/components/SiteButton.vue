@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { sanitizeUrl } from "@braintree/sanitize-url";
+
 withDefaults(
   defineProps<{
     href?: string;
@@ -18,7 +20,7 @@ withDefaults(
     v-if="href"
     class="button"
     :class="`button--${variant}`"
-    :href="href"
+    :href="sanitizeUrl(href)"
     :target="external ? '_blank' : undefined"
     :rel="external ? 'noopener noreferrer' : undefined"
   >

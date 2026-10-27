@@ -59,6 +59,7 @@ watch(
           Visit project <ArrowUpRight aria-hidden="true" class="icon" />
         </SiteButton>
       </header>
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <article v-if="work.html" class="work-detail-content" v-html="work.html" />
       <nav aria-label="Works navigation" class="work-detail-nav">
         <SiteButton href="/works/"><ArrowLeft aria-hidden="true" class="icon" /> All works</SiteButton>

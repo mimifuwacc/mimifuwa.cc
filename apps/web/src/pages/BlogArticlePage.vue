@@ -59,6 +59,7 @@ watch(
         <time v-if="article.date" :datetime="article.date">{{ formatDate(article.date) }}</time>
         <InlineTagList v-if="article.tags?.length" :items="article.tags" variant="outlined" />
       </header>
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <article class="article-content" v-html="article.html" />
     </template>
   </div>

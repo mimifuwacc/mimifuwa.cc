@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { sanitizeUrl } from "@braintree/sanitize-url";
 import SiteSection from "../components/SiteSection.vue";
 import { tracks } from "../lib/on-repeat";
 </script>
@@ -10,7 +11,7 @@ import { tracks } from "../lib/on-repeat";
         v-for="track in tracks"
         :key="track.url"
         class="track-card"
-        :href="track.url"
+        :href="sanitizeUrl(track.url)"
         rel="noopener noreferrer"
         target="_blank"
       >
