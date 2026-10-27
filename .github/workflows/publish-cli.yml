@@ -3,7 +3,7 @@ name: Publish CLI
 on:
   push:
     tags:
-      - "cli-v*"
+      - "v*"
 
 permissions:
   contents: read
@@ -28,10 +28,10 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           PACKAGE_VERSION=$(node -p "require('./packages/cli/package.json').version")
-          test "$RELEASE_TAG" = "cli-v$PACKAGE_VERSION"
+          test "$RELEASE_TAG" = "v$PACKAGE_VERSION"
 
       - name: Build CLI package
         run: vp run --filter @mimifuwacc/cli build
 
       - name: Publish to npm
-        run: npm publish ./packages/cli --access public --provenance --ignore-scripts
+        run: npm publish ./packages/cli --access public --provenance --tag next --ignore-scripts
