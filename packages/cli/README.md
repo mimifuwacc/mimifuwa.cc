@@ -10,7 +10,7 @@ From the content repository, run:
 mimifuwacc preview --content articles
 ```
 
-This starts the Vue development server and points Ox Content at `articles`. The default site location is `../mimifuwa.cc/apps/web-vue`; if the repositories are elsewhere, provide `--site` or set `MIMIFUWA_SITE_DIR` to the `apps/web-vue` directory.
+This starts the Vue development server and points Ox Content at `articles`. The default site location is `../mimifuwa.cc/apps/web`; if the repositories are elsewhere, provide `--site` or set `MIMIFUWA_SITE_DIR` to the `apps/web` directory.
 
 For local development inside this repository, use the included fixtures:
 

@@ -10,6 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "types": ["vite-plus/client", "@vizejs/vite-plugin"],
     "paths": {
       "@/*": ["./src/*"]
     },

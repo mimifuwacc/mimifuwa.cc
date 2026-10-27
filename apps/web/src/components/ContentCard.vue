@@ -10,9 +10,9 @@ defineProps<{
     <header v-if="title || label" class="content-card-heading">
       <p v-if="label" class="card-label">{{ label }}</p>
       <div class="content-card-title">
-        <span class="content-card-mark" aria-hidden="true">〈</span>
+        <span aria-hidden="true" class="content-card-mark">〈</span>
         <h3 v-if="title">{{ title }}</h3>
-        <span class="content-card-mark" aria-hidden="true">〉</span>
+        <span aria-hidden="true" class="content-card-mark">〉</span>
       </div>
     </header>
     <slot />

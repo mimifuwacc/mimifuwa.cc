@@ -47,7 +47,7 @@ watch(
 
 <template>
   <div class="article-page container">
-    <p v-if="loading" class="article-message" aria-live="polite">読み込み中...</p>
+    <p v-if="loading" aria-live="polite" class="article-message">読み込み中...</p>
     <section v-else-if="hasError || !article" class="article-message">
       <h1>{{ hasError ? "記事を読み込めませんでした" : "記事が見つかりません" }}</h1>
       <a class="square-button" href="/blogs/">Blogs に戻る</a>

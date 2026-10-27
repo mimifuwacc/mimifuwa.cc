@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import SiteSection from "../../components/SiteSection.vue";
 import { ArrowRight } from "@lucide/vue";
-import Button from "../../components/Button.vue";
+import SiteButton from "../../components/SiteButton.vue";
 import { tracks } from "../../lib/on-repeat";
 </script>
 
 <template>
   <SiteSection id="on-repeat-section" eyebrow="My Favorite Songs" title="On Repeat">
     <template #action>
-      <Button class="on-repeat-action-desktop" href="/onrepeat/">
-        See more <ArrowRight class="icon" aria-hidden="true" />
-      </Button>
+      <SiteButton class="on-repeat-action-desktop" href="/onrepeat/">
+        See more <ArrowRight aria-hidden="true" class="icon" />
+      </SiteButton>
     </template>
     <div class="track-grid">
       <a
@@ -18,8 +18,8 @@ import { tracks } from "../../lib/on-repeat";
         :key="track.url"
         class="track-card"
         :href="track.url"
-        target="_blank"
         rel="noopener noreferrer"
+        target="_blank"
       >
         <img
           class="track-artwork"
@@ -34,7 +34,7 @@ import { tracks } from "../../lib/on-repeat";
       </a>
     </div>
     <div class="on-repeat-actions-mobile">
-      <Button href="/onrepeat/"> See more <ArrowRight class="icon" aria-hidden="true" /> </Button>
+      <SiteButton href="/onrepeat/"> See more <ArrowRight aria-hidden="true" class="icon" /> </SiteButton>
     </div>
   </SiteSection>
 </template>

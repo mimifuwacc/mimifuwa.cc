@@ -86,7 +86,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
       <div class="header-brand-row">
         <a class="brand" href="/">mimifuwa.cc</a>
       </div>
-      <nav class="desktop-nav" aria-label="Main navigation">
+      <nav aria-label="Main navigation" class="desktop-nav">
         <a
           v-for="item in navItems"
           :key="item.href"
@@ -98,25 +98,25 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
       </nav>
       <div class="header-theme">
         <button
+          aria-label="Toggle color theme"
           class="icon-button theme-toggle"
           type="button"
-          aria-label="Toggle color theme"
           @click="toggleTheme"
         >
-          <Sun v-if="isDark" class="icon" aria-hidden="true" />
-          <Moon v-else class="icon" aria-hidden="true" />
+          <Sun v-if="isDark" aria-hidden="true" class="icon" />
+          <Moon v-else aria-hidden="true" class="icon" />
           <span class="visually-hidden">{{ isDark ? "Light theme" : "Dark theme" }}</span>
         </button>
       </div>
       <div class="mobile-actions">
         <button
+          aria-label="Toggle color theme"
           class="icon-button theme-toggle"
           type="button"
-          aria-label="Toggle color theme"
           @click="toggleTheme"
         >
-          <Sun v-if="isDark" class="icon" aria-hidden="true" />
-          <Moon v-else class="icon" aria-hidden="true" />
+          <Sun v-if="isDark" aria-hidden="true" class="icon" />
+          <Moon v-else aria-hidden="true" class="icon" />
         </button>
         <button
           class="icon-button menu-toggle"
@@ -125,8 +125,8 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
           :aria-label="menuOpen ? 'Close menu' : 'Open menu'"
           @click="menuOpen = !menuOpen"
         >
-          <X v-if="menuOpen" class="icon" aria-hidden="true" />
-          <Menu v-else class="icon" aria-hidden="true" />
+          <X v-if="menuOpen" aria-hidden="true" class="icon" />
+          <Menu v-else aria-hidden="true" class="icon" />
         </button>
       </div>
     </div>
@@ -135,8 +135,8 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   <dialog
     v-if="menuOpen"
     ref="menuDialog"
-    class="mobile-menu"
     aria-label="Main menu"
+    class="mobile-menu"
     @click.self="menuOpen = false"
     @cancel.prevent="menuOpen = false"
   >
@@ -144,16 +144,16 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
       <div class="mobile-menu-header">
         <span>CONTENTS</span>
         <button
-          class="icon-button mobile-menu-close"
-          type="button"
           aria-label="Close menu"
           autofocus
+          class="icon-button mobile-menu-close"
+          type="button"
           @click="menuOpen = false"
         >
-          <X class="icon" aria-hidden="true" />
+          <X aria-hidden="true" class="icon" />
         </button>
       </div>
-      <nav class="mobile-menu-links" aria-label="Main navigation">
+      <nav aria-label="Main navigation" class="mobile-menu-links">
         <a
           v-for="item in navItems"
           :key="item.href"
@@ -164,32 +164,32 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
           {{ item.label }}
         </a>
       </nav>
-      <span class="mobile-menu-brand" aria-hidden="true">mimifuwa.cc</span>
+      <span aria-hidden="true" class="mobile-menu-brand">mimifuwa.cc</span>
     </div>
   </dialog>
 
   <dialog
     v-if="searchOpen"
+    aria-label="Search articles"
     class="search-dialog"
     open
-    aria-label="Search articles"
     @click.self="searchOpen = false"
   >
     <div class="search-dialog-header">
       <input
         v-model="query"
-        type="search"
-        placeholder="Search articles"
         aria-label="Search articles"
         autofocus
+        placeholder="Search articles"
+        type="search"
       />
       <button
+        aria-label="Close search"
         class="icon-button"
         type="button"
-        aria-label="Close search"
         @click="searchOpen = false"
       >
-        <X class="icon" aria-hidden="true" />
+        <X aria-hidden="true" class="icon" />
       </button>
     </div>
     <div class="search-results">

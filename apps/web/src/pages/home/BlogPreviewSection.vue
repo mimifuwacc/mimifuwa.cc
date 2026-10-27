@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 import { ArrowRight } from "@lucide/vue";
 import BlogCard from "../../components/BlogCard.vue";
-import Button from "../../components/Button.vue";
+import SiteButton from "../../components/SiteButton.vue";
 import SiteSection from "../../components/SiteSection.vue";
 import { getBlogList } from "../../lib/blog-api";
 import type { BlogSummary } from "../../types/blog";
@@ -20,15 +20,16 @@ onMounted(async () => {
 <template>
   <SiteSection v-if="posts.length" id="blog-section" eyebrow="Notes & Thoughts" title="Blogs">
     <template #action>
-      <Button class="blog-action-desktop" href="/blogs/">
-        See more <ArrowRight class="icon" aria-hidden="true" />
-      </Button>
+      <SiteButton class="blog-action-desktop" href="/blogs/">
+        See more <ArrowRight aria-hidden="true" class="icon" />
+      </SiteButton>
     </template>
     <div class="blog-grid">
       <BlogCard v-for="post in posts" :key="post.url" :post="post" />
     </div>
     <div class="blog-actions-mobile">
-      <Button href="/blogs/">See more <ArrowRight class="icon" aria-hidden="true" /></Button>
+      <SiteButton href="/blogs/">See more <ArrowRight aria-hidden="true" class="icon" /></SiteButton
+      >
     </div>
   </SiteSection>
 </template>

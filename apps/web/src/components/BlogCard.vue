@@ -21,7 +21,7 @@ const formatDate = (date?: string) => {
     <div class="blog-card-body">
       <div class="blog-card-meta">
         <time v-if="post.date" :datetime="post.date">{{ formatDate(post.date) }}</time>
-        <ArrowRight class="icon" aria-hidden="true" />
+        <ArrowRight aria-hidden="true" class="icon" />
       </div>
       <p class="blog-card-title">{{ post.title }}</p>
       <p v-if="post.description" class="blog-card-description">

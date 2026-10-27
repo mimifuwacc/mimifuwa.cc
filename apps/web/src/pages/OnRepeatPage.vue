@@ -4,15 +4,15 @@ import { tracks } from "../lib/on-repeat";
 </script>
 
 <template>
-  <SiteSection id="on-repeat-page" title="On Repeat" heading-level="h1">
+  <SiteSection id="on-repeat-page" heading-level="h1" title="On Repeat">
     <div class="track-grid">
       <a
         v-for="track in tracks"
         :key="track.url"
         class="track-card"
         :href="track.url"
-        target="_blank"
         rel="noopener noreferrer"
+        target="_blank"
       >
         <img
           class="track-artwork"

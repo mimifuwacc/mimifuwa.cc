@@ -32,12 +32,12 @@ jobs:
           run-install: true
 
       - name: Deploy Vue site to Void
-        run: vp exec --filter @mimifuwacc/web-vue -- void deploy --platform cloudflare
+        run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
       - name: Set content publish token
         run: |
           test -n "$VOID_CONTENT_PUBLISH_TOKEN"
-          printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | vp exec --filter @mimifuwacc/web-vue -- void secret put CONTENT_PUBLISH_TOKEN
+          printf '%s' "$VOID_CONTENT_PUBLISH_TOKEN" | vp exec --filter @mimifuwacc/web -- void secret put CONTENT_PUBLISH_TOKEN
 
   release:
     needs: deploy

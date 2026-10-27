@@ -31,4 +31,4 @@ jobs:
           run-install: true
 
       - name: Deploy Vue site to Void
-        run: vp exec --filter @mimifuwacc/web-vue -- void deploy --platform cloudflare
+        run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare

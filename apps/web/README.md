@@ -1,4 +1,4 @@
-# web-vue
+# web
 
 Vue Router provides the shared site layout, blog index and article pages, works list and detail pages, and links page. Void API routes read the active Ox Content revision from R2 and provide the blog list, work list and details, and search index to the client. The content publisher uploads each revision to R2 and switches the active revision only after all files are present.
 
@@ -16,8 +16,8 @@ The deployment workflow writes `VOID_CONTENT_PUBLISH_TOKEN` to the Void Worker a
 
 ```sh
 vp run dev
-vp run --filter @mimifuwacc/web-vue build
-vp run --filter @mimifuwacc/web-vue deploy
+vp run --filter @mimifuwacc/web build
+vp run --filter @mimifuwacc/web deploy
 ```
 
 Void deployment requires Node.js 24.21 or newer. Configure a target with `void connect` before deploying; the saved target can be a Void platform or your Cloudflare account.

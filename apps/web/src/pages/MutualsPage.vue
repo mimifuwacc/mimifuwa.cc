@@ -7,9 +7,9 @@ import SiteSection from "../components/SiteSection.vue";
 <template>
   <SiteSection
     id="mutuals-page"
-    title="Mutuals"
-    subtitle="Sites by friends and fellow makers."
     heading-level="h1"
+    subtitle="Sites by friends and fellow makers."
+    title="Mutuals"
   >
     <div class="links-list">
       <LinkCard v-for="link in links" :key="link.url" :link="link" />
