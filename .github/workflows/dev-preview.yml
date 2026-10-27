@@ -39,4 +39,5 @@ jobs:
       - name: Publish dev content
         env:
           CONTENT_DIR: ${{ github.workspace }}/packages/content-dev/articles
-        run: vp exec --filter @mimifuwa.cc/cli -- mimifuwacc deploy
+          CF_BIN: ${{ github.workspace }}/node_modules/.bin/cf
+        run: node packages/cli/dist/cli.js deploy
