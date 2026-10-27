@@ -29,8 +29,19 @@ jobs:
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          PACKAGE_VERSION=$(node -p "require('./packages/cli/package.json').version")
-          test "$RELEASE_TAG" = "v$PACKAGE_VERSION"
+          PACKAGE_VERSION="${RELEASE_TAG#v}"
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag must use v<semver>: $RELEASE_TAG" >&2
+            exit 1
+          fi
+
+          node --input-type=module - "$PACKAGE_VERSION" <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const path = 'packages/cli/package.json';
+          const manifest = JSON.parse(readFileSync(path, 'utf8'));
+          manifest.version = process.argv[2];
+          writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
+          NODE
 
           if [[ "$PACKAGE_VERSION" == *-* ]]; then
             PRERELEASE="${PACKAGE_VERSION#*-}"
