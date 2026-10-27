@@ -99,11 +99,22 @@ jobs:
           CLI_VERSION: ${{ needs.publish-cli.outputs.version }}
         run: vp dlx "@mimifuwa.cc/cli@$CLI_VERSION" deploy
 
+      - name: Create content repository token
+        if: ${{ !contains(github.ref_name, '-') }}
+        id: content-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.CONTENT_REPO_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
+          owner: mimifuwacc
+          repositories: mimifuwa.cc-content
+          permission-actions: write
+
       - name: Publish production content from the content repository
         if: ${{ !contains(github.ref_name, '-') }}
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.CONTENT_REPO_WORKFLOW_TOKEN }}
+          github-token: ${{ steps.content-token.outputs.token }}
           script: |
             const owner = "mimifuwacc";
             const repo = "mimifuwa.cc-content";
