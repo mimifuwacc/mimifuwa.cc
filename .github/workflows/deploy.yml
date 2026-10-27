@@ -57,7 +57,7 @@ jobs:
           echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Build CLI package
-        run: vp run --filter @mimifuwa.cc/cli build
+        run: vp run --filter @mimifuwacc/cli build
 
       - name: Publish CLI package
         env:
@@ -108,7 +108,7 @@ jobs:
           CONTENT_REVISION: ${{ github.sha }}
           CF_BIN: ${{ github.workspace }}/node_modules/.bin/cf
           CLI_VERSION: ${{ needs.publish-cli.outputs.version }}
-        run: vp dlx "@mimifuwa.cc/cli@$CLI_VERSION" deploy
+        run: vp dlx "@mimifuwacc/cli@$CLI_VERSION" deploy
 
       - name: Create content repository token
         if: ${{ !contains(github.ref_name, '-') }}

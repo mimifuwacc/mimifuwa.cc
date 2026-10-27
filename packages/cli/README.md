@@ -1,13 +1,13 @@
-# @mimifuwa.cc/cli
+# @mimifuwacc/cli
 
 Vite plugin and CLI for processing and publishing Mimifuwacc's Ox Content articles.
 
 ## Vite configuration
 
-Install `@mimifuwa.cc/cli` and `@ox-content/vite-plugin` as development dependencies, then configure the content source in `vite.config.ts`:
+Install `@mimifuwacc/cli` and `@ox-content/vite-plugin` as development dependencies, then configure the content source in `vite.config.ts`:
 
 ```ts
-import { mimifuwaccContent } from "@mimifuwa.cc/cli/vite";
+import { mimifuwaccContent } from "@mimifuwacc/cli/vite";
 
 export default defineConfig({
   plugins: [
@@ -33,7 +33,7 @@ In the site repository, `vp run dev` serves the sample articles in `packages/con
 Deploy the site first so its resolved `STORAGE` bucket configuration is available. Then run from the site workspace, setting `CONTENT_DIR` to the desired articles directory:
 
 ```sh
-CONTENT_DIR=packages/content-dev/articles vp exec --filter @mimifuwa.cc/cli -- mimifuwacc deploy
+CONTENT_DIR=packages/content-dev/articles vp exec --filter @mimifuwacc/cli -- mimifuwacc deploy
 ```
 
 The CLI loads only the Ox Content plugin, builds the collection payload, uploads it under a revision key with Cloudflare's `cf` CLI, and updates the active revision in R2. It does not build or deploy the website. In this workspace, `cf` is installed with the other dependencies through Vite+. `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` must be available in the environment; the token needs permission to write R2 objects.

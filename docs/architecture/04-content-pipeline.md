@@ -18,7 +18,7 @@ vp run dev
 
 ## Build and publish
 
-The site reads the active content revision from the `STORAGE` R2 bucket. The content CLI publishes a complete revision with the released `@mimifuwa.cc/cli`, then switches the active revision pointer after all files are uploaded. The site reads only the active revision, so an incomplete upload is not shown to visitors.
+The site reads the active content revision from the `STORAGE` R2 bucket. The content CLI publishes a complete revision with the released `@mimifuwacc/cli`, then switches the active revision pointer after all files are uploaded. The site reads only the active revision, so an incomplete upload is not shown to visitors.
 
 ## Deployment
 
