@@ -31,7 +31,7 @@ jobs:
           run-install: true
 
       - name: Build content CLI
-        run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
+        run: vp exec --filter @mimifuwa.cc/cli -- tsc -p tsconfig.json
 
       - name: Deploy Vue site to Void
         run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
@@ -39,4 +39,4 @@ jobs:
       - name: Publish dev content
         env:
           CONTENT_DIR: ${{ github.workspace }}/packages/content-dev/articles
-        run: vp exec --filter @mimifuwacc/cli -- mimifuwacc deploy
+        run: vp exec --filter @mimifuwa.cc/cli -- mimifuwacc deploy

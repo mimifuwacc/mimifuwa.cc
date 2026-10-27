@@ -54,7 +54,7 @@ importers:
         specifier: ^5.4.0
         version: 5.4.0(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(@vue/compiler-sfc@3.6.0-rc.13)(esbuild@0.28.2)(rolldown@1.2.14)(vue@3.6.0-rc.13(typescript@6.0.3))
     devDependencies:
-      '@mimifuwacc/cli':
+      '@mimifuwa.cc/cli':
         specifier: workspace:*
         version: link:../../packages/cli
       '@vue/compiler-sfc':

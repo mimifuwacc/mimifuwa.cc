@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { delimiter, dirname, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
-import { createServer, loadConfigFromFile } from "vite";
-import {
-  mimifuwaccContent,
-  mimifuwaccContentOptions,
-  type MimifuwaccContentOptions,
-} from "./vite.js";
+import { pathToFileURL } from "node:url";
+import { createServer, loadConfigFromFile, type PluginOption } from "vite";
+import { mimifuwaccContentOptions, type MimifuwaccContentOptions } from "./config.js";
 
 type Action = "preview" | "build" | "deploy";
 const [requestedAction = "preview", ...args] = process.argv.slice(2);
@@ -72,11 +70,27 @@ async function deploy() {
   const config = loaded.config;
   const appRoot = resolve(config.root ?? dirname(configFile));
   const outDir = await mkdtemp(join(tmpdir(), "mimifuwacc-content-"));
+  const requireFromApp = createRequire(join(appRoot, "package.json"));
+  const oxContentPath = requireFromApp.resolve("@ox-content/vite-plugin");
+  const { oxContent } = (await import(pathToFileURL(oxContentPath).href)) as {
+    oxContent: (options: Record<string, unknown>) => PluginOption;
+  };
   const server = await createServer({
     configFile: false,
     root: appRoot,
     logLevel: "error",
-    plugins: mimifuwaccContent(options),
+    plugins: [
+      oxContent({
+        srcDir: options.srcDir,
+        ssg: false,
+        search: false,
+        docs: false,
+        ogViewer: false,
+        highlight: true,
+        gfm: true,
+        collections: options.collections,
+      }),
+    ],
   });
   try {
     const collectionModule = await server.ssrLoadModule("virtual:ox-content/collections");
@@ -120,11 +134,14 @@ async function deploy() {
 
 async function getStorageTarget(appRoot: string) {
   const configPath = join(appRoot, ".void-wrangler.jsonc");
-  let config: { account_id?: string; r2_buckets?: { binding?: string; bucket_name?: string }[] };
+  let config: { account_id?: string; r2_buckets?: { binding?: string; bucket_name?: string }[] } =
+    {};
   try {
     config = JSON.parse(await readFile(configPath, "utf8")) as typeof config;
   } catch {
-    throw new Error(`Could not read ${configPath}; deploy the site before publishing content`);
+    if (!process.env.CONTENT_BUCKET) {
+      throw new Error(`Could not read ${configPath}; deploy the site before publishing content`);
+    }
   }
   const bucket =
     process.env.CONTENT_BUCKET ??
@@ -133,7 +150,9 @@ async function getStorageTarget(appRoot: string) {
   if (!process.env.CLOUDFLARE_API_TOKEN) {
     throw new Error("Set CLOUDFLARE_API_TOKEN to publish content to R2");
   }
-  return { bucket, accountId: config.account_id };
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID ?? config.account_id;
+  if (!accountId) throw new Error("Set CLOUDFLARE_ACCOUNT_ID to publish content to R2");
+  return { bucket, accountId };
 }
 
 function uploadObject(

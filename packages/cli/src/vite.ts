@@ -1,5 +1,6 @@
 import { oxContent } from "@ox-content/vite-plugin";
 import type { Plugin, PluginOption } from "vite";
+import { defineMimifuwaccContentConfig, mimifuwaccContentOptions } from "./config.js";
 
 type OxContentOptions = NonNullable<Parameters<typeof oxContent>[0]>;
 
@@ -10,8 +11,6 @@ export interface MimifuwaccContentOptions {
   collections: NonNullable<OxContentOptions["collections"]>;
 }
 
-export const mimifuwaccContentOptions = Symbol.for("@mimifuwacc/cli:content-options");
-
 export type MimifuwaccContentPlugin = Plugin & {
   [mimifuwaccContentOptions]: MimifuwaccContentOptions;
 };
@@ -19,8 +18,7 @@ export type MimifuwaccContentPlugin = Plugin & {
 /** Configure Ox Content for `mimifuwacc deploy`. */
 export function mimifuwaccContent(options: MimifuwaccContentOptions): PluginOption[] {
   const plugin: MimifuwaccContentPlugin = {
-    name: "@mimifuwacc/cli:content",
-    [mimifuwaccContentOptions]: options,
+    ...defineMimifuwaccContentConfig(options),
     configResolved(config) {
       if (!config.root) throw new Error("Vite root could not be resolved");
     },
