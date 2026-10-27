@@ -62,7 +62,7 @@ jobs:
       - name: Publish CLI package
         env:
           NPM_TAG: ${{ steps.release.outputs.npm_tag }}
-        run: vp pm publish ./packages/cli --access public --provenance --tag "$NPM_TAG" -- --ignore-scripts
+        run: vp pm publish ./packages/cli --access public --provenance --tag "$NPM_TAG" --no-git-checks -- --ignore-scripts
 
   deploy:
     needs: publish-cli
