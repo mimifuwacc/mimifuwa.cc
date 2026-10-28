@@ -1,5 +1,6 @@
 import { readActiveContentJson } from "@/content-store";
-import { fixtures, isLocalContent } from "@/server-content";
+import { fixtures, isLocalContent, siteContent as localSiteContent } from "@/server-content";
+import { emptySiteContent, type SiteContent } from "@/types/site-content";
 
 type Section = "blogs" | "works";
 type ContentRecord = { url: string; html?: unknown };
@@ -50,4 +51,13 @@ export async function getSearchIndex() {
   return result.status === "ready"
     ? json(result.value, 200, cacheControl)
     : json({ documents: [] });
+}
+
+export async function getSiteContent() {
+  if (isLocalContent) return { value: localSiteContent, available: true };
+
+  const result = await readActiveContentJson<SiteContent>("site-content.json");
+  return result.status === "ready"
+    ? { value: result.value, available: true }
+    : { value: emptySiteContent, available: false };
 }

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import { ArrowUpRight } from "@lucide/vue";
-import type { LinkItem } from "@content/links";
+import type { Mutual } from "@/types/site-content";
 
-defineProps<{ link: LinkItem }>();
+defineProps<{ link: Mutual }>();
 
 const hostname = (url: string) => new URL(url).hostname.replace(/^www\./, "");
 </script>

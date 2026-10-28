@@ -13,7 +13,7 @@
     "types": ["vite-plus/client", "@vizejs/vite-plugin"],
     "paths": {
       "@/*": ["./src/*"],
-      "@content/*": ["../../contents/*"]
+      "@content-data/*": ["../../packages/content-dev/data/*"]
     },
     "resolveJsonModule": true,
     "isolatedModules": true,

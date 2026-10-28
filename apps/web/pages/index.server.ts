@@ -1,5 +1,5 @@
 import { defineHandler, defineHead, type InferProps } from "void";
-import { listContent } from "@/content-api";
+import { getSiteContent, listContent } from "@/content-api";
 import type { BlogSummary } from "@/types/blog";
 import type { WorkItem } from "@/types/work";
 
@@ -9,16 +9,24 @@ const readJson = async <T>(response: Response): Promise<T> => {
 };
 
 export const loader = defineHandler(async (c) => {
-  const [blogsResponse, worksResponse] = await Promise.all([
+  const [blogsResponse, worksResponse, siteContent] = await Promise.all([
     listContent("blogs"),
     listContent("works"),
+    getSiteContent(),
   ]);
-  if (!blogsResponse.ok || !worksResponse.ok) c.header("x-revalidate", "0");
+  if (!blogsResponse.ok || !worksResponse.ok || !siteContent.available) {
+    c.header("x-revalidate", "0");
+  }
   const [blogs, works] = await Promise.all([
     readJson<BlogSummary[]>(blogsResponse),
     readJson<WorkItem[]>(worksResponse),
   ]);
-  return { blogs: blogs.slice(0, 6), works: works.slice(0, 6) };
+  return {
+    blogs: blogs.slice(0, 6),
+    works: works.slice(0, 6),
+    about: siteContent.value.about,
+    tracks: siteContent.value.tracks,
+  };
 });
 
 export type Props = InferProps<typeof loader>;

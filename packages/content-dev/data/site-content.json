@@ -1,0 +1,161 @@
+{
+  "about": {
+    "certifications": [
+      {
+        "title": "情報処理安全確保支援士 (未登録)",
+        "date": "2025年度秋"
+      },
+      {
+        "title": "応用情報技術者",
+        "date": "2024年度秋"
+      }
+    ],
+    "awards": [
+      {
+        "date": "2023年8月",
+        "title": "U☆PoC～UECアイディア実証コンテスト～",
+        "description": "学際向けモバイルオーダーアプリで出展し，2つの企業賞を受賞しました"
+      },
+      {
+        "date": "2024年8月",
+        "title": "U☆PoC～UECアイディア実証コンテスト～",
+        "description": "電通大生向けサービス開発をきっかけとしたプロジェクトで出展し，3つの企業賞を受賞しました"
+      }
+    ],
+    "timeline": [
+      {
+        "date": "2023年4月〜",
+        "title": "電気通信大学 I類 CS プログラム",
+        "description": "主にプログラミング言語・言語処理系について学んでいます"
+      },
+      {
+        "date": "2023年4月〜",
+        "title": "技術系学生団体 team411",
+        "description": "Web アプリケーションをチームで開発しています"
+      },
+      {
+        "date": "2024年11月〜2025年3月",
+        "title": "第74回調布祭実行委員会 技術局",
+        "description": "調布祭公式サイトのデザイン・制作を担当しました"
+      },
+      {
+        "date": "2025年8月",
+        "title": "はてなサマーインターンシップ 2025",
+        "description": "ノベルチームでカクヨムにパスキーログイン機能を実装しました"
+      },
+      {
+        "date": "2025年10〜12月",
+        "title": "ドワンゴ長期インターンシップ",
+        "description": "教育事業本部でフロントエンド開発を行いました"
+      },
+      {
+        "date": "2026年1月〜",
+        "title": "株式会社はてな アルバイト",
+        "description": "学生アルバイトとして，Web 開発をメインに行っています"
+      },
+      {
+        "date": "2026年4月〜",
+        "title": "電気通信大学 佐藤研究室",
+        "description": "アセンブリ言語の形式意味論の構築に関する研究を行っています"
+      }
+    ]
+  },
+  "mutuals": [
+    {
+      "name": "e_chan1007",
+      "url": "https://e-chan.me",
+      "description": "てるてる坊主の人。最近サイトが更新されてモダンになった。"
+    },
+    {
+      "name": "kanaru.me",
+      "url": "https://kanaru.me",
+      "description": "リロードしないとまともに表示されないサイト。早く直して"
+    },
+    {
+      "name": "Keita Ito",
+      "url": "https://keitaito.net",
+      "description": "本名はえぐちじゃないらしい"
+    },
+    {
+      "name": "Syougo Matsunaga",
+      "url": "https://portfolio.akaaku.net/",
+      "description": "令和最新版デザイン。ブログシステム待ってます。"
+    },
+    {
+      "name": "SHINNの研究室",
+      "url": "https://shinn-chan.net/",
+      "description": "電通大の数学徒。記事書いてね〜"
+    },
+    {
+      "name": "かとうのHomePage",
+      "url": "https://kat0h.com/",
+      "description": "古き良きデザイン。更新待ってます。"
+    },
+    {
+      "name": "はんかくくんのページ",
+      "url": "https://kqiita.github.io/",
+      "description": "きーたちゃん♡"
+    },
+    {
+      "name": "TABI.PROJECT",
+      "url": "https://tabitostudio.github.io/",
+      "description": "ロボット作ってる強い人。"
+    },
+    {
+      "name": "ゆいのページ",
+      "url": "https://yuino.dev/",
+      "description": "ゆいのフレームワークを早く公開してください。"
+    },
+    {
+      "name": "へる破壊財団",
+      "url": "https://helkun.dev/",
+      "description": "へるーれっとにお世話になっております。"
+    },
+    {
+      "name": "あづみのメモ帳",
+      "url": "https://azumino.pages.dev/",
+      "description": "一生工事中らしいです。"
+    },
+    {
+      "name": "すしのへや",
+      "url": "https://sushichan.live/",
+      "description": "技術強すぎ人類。"
+    },
+    {
+      "name": "エリンギ@McbeEringi",
+      "url": "https://mcbeeringi.github.io/",
+      "description": "Arch Linuxは最高だよね。"
+    },
+    {
+      "name": "y-chan's website",
+      "url": "https://y-chan.dev/",
+      "description": "可愛いエンジニア。"
+    }
+  ],
+  "tracks": [
+    {
+      "title": "物語りのワルツ",
+      "artist": "ヰ世界情緒",
+      "url": "https://music.youtube.com/watch?v=Kz424oVx9_o",
+      "artworkUrl": "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e023eab04e0b7c22ebcb5fbccb8"
+    },
+    {
+      "title": "シリウスの心臓",
+      "artist": "ヰ世界情緒",
+      "url": "https://music.youtube.com/watch?v=UKZt1vq8bKI",
+      "artworkUrl": "https://image-cdn-ak.spotifycdn.com/image/ab67616d0000b2734a63127b8b94807095cb6e8d"
+    },
+    {
+      "title": "かたちなきもの",
+      "artist": "ヰ世界情緒",
+      "url": "https://music.youtube.com/watch?v=W4Gt1Er5q4Y",
+      "artworkUrl": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02d274071dbe1e4a3f62de325c"
+    },
+    {
+      "title": "みらいのかたち",
+      "artist": "ヰ世界情緒",
+      "url": "https://music.youtube.com/watch?v=NWu9EozfR6M",
+      "artworkUrl": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02fda039a03db599dc4d311faa"
+    }
+  ]
+}

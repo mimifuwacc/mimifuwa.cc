@@ -10,7 +10,8 @@ import { mimifuwaccContentOptions, type MimifuwaccContentOptions } from "./confi
 
 type Action = "preview" | "build" | "deploy";
 const [requestedAction = "preview", ...args] = process.argv.slice(2);
-const usage = "Usage: mimifuwacc <preview|build|deploy> [--content directory] [--site directory]";
+const usage =
+  "Usage: mimifuwacc <preview|build|deploy> [--content directory] [--data directory] [--site directory]";
 
 if (requestedAction === "--help" || requestedAction === "-h") {
   console.info(usage);
@@ -38,7 +39,7 @@ const readOption = (name: string): string | undefined => {
 };
 
 for (const arg of args) {
-  if (arg.startsWith("--") && arg !== "--content" && arg !== "--site") {
+  if (arg.startsWith("--") && arg !== "--content" && arg !== "--data" && arg !== "--site") {
     console.error(`Unknown option: ${arg}\n${usage}`);
     process.exit(2);
   }
@@ -110,7 +111,28 @@ async function deploy() {
     const collections = Object.fromEntries(
       Object.keys(options.collections).map((name) => [name, collectionModule.getCollection(name)]),
     );
-    await writeContentPayload(outDir, collections);
+    const dataDir = resolve(appRoot, options.dataDir ?? "data");
+    const siteContentPath = join(dataDir, "site-content.json");
+    let siteContent: unknown;
+    try {
+      siteContent = JSON.parse(await readFile(siteContentPath, "utf8"));
+    } catch (error) {
+      throw new Error(`Could not read valid JSON from ${siteContentPath}`, { cause: error });
+    }
+    if (
+      !isRecord(siteContent) ||
+      !isRecord(siteContent.about) ||
+      !Array.isArray(siteContent.about.timeline) ||
+      !Array.isArray(siteContent.about.certifications) ||
+      !Array.isArray(siteContent.about.awards) ||
+      !Array.isArray(siteContent.mutuals) ||
+      !Array.isArray(siteContent.tracks)
+    ) {
+      throw new Error(
+        `${siteContentPath} must define about.timeline, about.certifications, about.awards, mutuals, and tracks arrays`,
+      );
+    }
+    await writeContentPayload(outDir, collections, siteContentPath);
   } finally {
     await server.close();
   }
@@ -244,6 +266,7 @@ async function collectPayload(outDir: string): Promise<PayloadFile[]> {
           "works/index.json",
           "works/content.json",
           "search-index.json",
+          "site-content.json",
         ].includes(path) ||
         (/^assets\/ox-content-[a-zA-Z0-9._/-]+$/.test(path) && !path.split("/").includes("..")),
     );
@@ -253,6 +276,7 @@ async function collectPayload(outDir: string): Promise<PayloadFile[]> {
     "blogs/content.json",
     "works/index.json",
     "works/content.json",
+    "site-content.json",
   ];
   const found = new Set(publishable.map(({ path }) => path));
   const missing = required.filter((path) => !found.has(path));
@@ -277,7 +301,15 @@ interface ContentEntry {
   html?: string;
 }
 
-async function writeContentPayload(outDir: string, collections: Record<string, ContentEntry[]>) {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+async function writeContentPayload(
+  outDir: string,
+  collections: Record<string, ContentEntry[]>,
+  siteContentPath: string,
+) {
   const pages = Object.entries(collections).flatMap(([section, entries]) =>
     entries.map((entry) => {
       const frontmatter = entry.frontmatter ?? {};
@@ -367,6 +399,7 @@ async function writeContentPayload(outDir: string, collections: Record<string, C
     await mkdir(dirname(file), { recursive: true });
     await writeFile(file, `${JSON.stringify(data)}\n`);
   }
+  await writeFile(join(outDir, "site-content.json"), await readFile(siteContentPath));
 }
 
 function getRevision() {
@@ -389,6 +422,7 @@ if (action === "deploy") {
   await deploy();
 } else {
   const contentDir = resolve(readOption("--content") ?? "articles");
+  const contentDataDir = resolve(readOption("--data") ?? "data");
   const siteDir = resolve(
     readOption("--site") ?? process.env.MIMIFUWA_SITE_DIR ?? "../mimifuwa.cc/apps/web",
   );
@@ -408,6 +442,7 @@ if (action === "deploy") {
       env: {
         ...process.env,
         CONTENT_DIR: contentDir,
+        CONTENT_DATA_DIR: contentDataDir,
         DEPLOY_ENV: "local",
         PATH: pathEntries.join(delimiter),
       },

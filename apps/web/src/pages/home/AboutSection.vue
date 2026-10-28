@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
-import { awards, certifications, timelineData } from "@content/about";
 import SiteButton from "@/components/SiteButton.vue";
 import ContentCard from "@/components/ContentCard.vue";
 import SiteSection from "@/components/SiteSection.vue";
 import ProfileUuid from "@/pages/home/ProfileUuid.vue";
+import type { SiteContent } from "@/types/site-content";
 
-defineProps<{ avatar: string }>();
+defineProps<{ about: SiteContent["about"]; avatar: string }>();
 
 const technicalInterests = ["TypeScript", "React", "Vue", "Nix", "K Framework"];
 
@@ -50,7 +50,7 @@ function timelineDateParts(date: string) {
 
           <ContentCard title="Certifications">
             <ul class="certification-list">
-              <li v-for="item in certifications" :key="item.title">
+              <li v-for="item in about.certifications" :key="item.title">
                 <time class="certification-date">{{ item.date }}</time>
                 <strong>{{ item.title }}</strong>
               </li>
@@ -59,7 +59,7 @@ function timelineDateParts(date: string) {
 
           <ContentCard title="Awards">
             <ul class="award-list">
-              <li v-for="item in awards" :key="item.date + item.title">
+              <li v-for="item in about.awards" :key="item.date + item.title">
                 <time>{{ item.date }}</time>
                 <strong>{{ item.title }}</strong>
                 <span>{{ item.description }}</span>
@@ -72,7 +72,7 @@ function timelineDateParts(date: string) {
           <ContentCard title="Timeline">
             <div class="timeline">
               <article
-                v-for="event in timelineData"
+                v-for="event in about.timeline"
                 :key="event.date + event.title"
                 class="timeline-event"
               >
