@@ -6,15 +6,21 @@ import BlogPreviewSection from "@/pages/home/BlogPreviewSection.vue";
 import HomeHero from "@/pages/home/HomeHero.vue";
 import OnRepeatSection from "@/pages/home/OnRepeatSection.vue";
 import WorksSection from "@/pages/home/WorksSection.vue";
+import type { SiteContent } from "@/types/site-content";
 
 const avatar = "/mimifuwacc.png";
-defineProps<{ blogs: BlogSummary[]; works: WorkItem[] }>();
+defineProps<{
+  about: SiteContent["about"];
+  blogs: BlogSummary[];
+  tracks: SiteContent["tracks"];
+  works: WorkItem[];
+}>();
 </script>
 
 <template>
   <HomeHero :avatar="avatar" />
-  <AboutSection :avatar="avatar" />
+  <AboutSection :about="about" :avatar="avatar" />
   <BlogPreviewSection :posts="blogs" />
   <WorksSection :works="works" />
-  <OnRepeatSection />
+  <OnRepeatSection :tracks="tracks" />
 </template>

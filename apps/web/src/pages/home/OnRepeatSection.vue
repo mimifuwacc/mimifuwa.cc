@@ -3,7 +3,9 @@ import { sanitizeUrl } from "@braintree/sanitize-url";
 import SiteSection from "@/components/SiteSection.vue";
 import { ArrowRight } from "@lucide/vue";
 import SiteButton from "@/components/SiteButton.vue";
-import { tracks } from "@/lib/on-repeat";
+import type { Track } from "@/types/site-content";
+
+defineProps<{ tracks: Track[] }>();
 </script>
 
 <template>

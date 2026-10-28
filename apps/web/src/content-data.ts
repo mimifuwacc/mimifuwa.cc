@@ -17,7 +17,6 @@ interface OxContentCollections {
 const asString = (value: unknown) => (typeof value === "string" ? value : undefined);
 const asStringList = (value: unknown) =>
   Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
-
 const toArticlePage = (section: ArticlePage["section"], entry: OxContentEntry): ArticlePage => {
   const frontmatter = entry.frontmatter ?? {};
   const date = frontmatter.date;

@@ -14,6 +14,7 @@ export default defineConfig({
     mimifuwaccContent({
       target: { url: "https://example.com" },
       srcDir: "./articles",
+      dataDir: "./data",
       collections: {
         blogs: { source: "blogs/**/*", include: ["html"] },
         works: { source: "works/**/*", include: ["html"] },
@@ -23,11 +24,11 @@ export default defineConfig({
 });
 ```
 
-The plugin defines the Markdown source and collections. The CLI publishes generated content to the `STORAGE` R2 bucket configured by the site deployment.
+The plugin defines the Markdown source and collections. Structured site data such as the profile, Mutuals, and On Repeat entries lives in `data/site-content.json`; the CLI publishes it alongside the generated article content to the `STORAGE` R2 bucket configured by the site deployment.
 
 ## Local preview
 
-In the site repository, `vp run dev` serves the sample articles in `packages/content-dev/articles`. It does not contact the publish target.
+In the site repository, `vp run dev` serves the sample articles and `packages/content-dev/data/site-content.json`. It does not contact the publish target.
 
 ## Publish content
 
@@ -39,7 +40,7 @@ CONTENT_DIR=packages/content-dev/articles vp exec --filter @mimifuwacc/cli -- mi
 
 The CLI loads only the Ox Content plugin, builds the collection payload, uploads it under a revision key with Cloudflare's `cf` CLI, and updates the active revision in R2. It does not build or deploy the website. In this workspace, `cf` is installed with the other dependencies through Vite+. `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` must be available in the environment; the token needs permission to write R2 objects.
 
-The `dev` branch workflow publishes `packages/content-dev/articles`. A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the site and the same dev articles. A stable version tag such as `v5.0.0` publishes the site and `mimifuwa.cc-content/articles` from that repository's `main` branch.
+The `dev` branch workflow publishes `packages/content-dev/articles` and `packages/content-dev/data/site-content.json`. A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the site and the same dev content. A stable version tag such as `v5.0.0` publishes the site and the articles and structured data from `mimifuwa.cc-content`'s `main` branch.
 
 ## npm releases
 

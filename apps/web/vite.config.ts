@@ -22,6 +22,8 @@ const appVersion = (() => {
 })();
 const contentDir =
   process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-dev/articles");
+const contentDataDir =
+  process.env.CONTENT_DATA_DIR ?? resolve(appDir, "../../packages/content-dev/data");
 const config = {
   define: {
     __DEPLOY_ENV__: JSON.stringify(process.env.DEPLOY_ENV ?? "local"),
@@ -30,7 +32,7 @@ const config = {
   resolve: {
     alias: {
       "@": resolve(appDir, "src"),
-      "@content": resolve(appDir, "../../contents"),
+      "@content-data": contentDataDir,
     },
   },
   plugins: [
@@ -42,6 +44,7 @@ const config = {
             : "https://mimifuwa-cc-prod.m8c.workers.dev",
       },
       srcDir: contentDir,
+      dataDir: contentDataDir,
       collections: {
         blogs: { source: "blogs/**/*", include: ["html"] },
         works: { source: "works/**/*", include: ["html"] },

@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { links } from "@content/links";
 import LinkCard from "@/components/LinkCard.vue";
 import SiteSection from "@/components/SiteSection.vue";
+import type { Mutual } from "@/types/site-content";
+
+defineProps<{ links: Mutual[] }>();
 </script>
 
 <template>

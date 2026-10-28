@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import SiteSection from "@/components/SiteSection.vue";
-import { tracks } from "@/lib/on-repeat";
+import type { Track } from "@/types/site-content";
+
+defineProps<{ tracks: Track[] }>();
 </script>
 
 <template>

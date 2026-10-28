@@ -6,5 +6,5 @@ defineProps<Props>();
 </script>
 
 <template>
-  <HomePage :blogs="blogs" :works="works" />
+  <HomePage :about="about" :blogs="blogs" :tracks="tracks" :works="works" />
 </template>
