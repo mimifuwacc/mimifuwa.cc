@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 import { Link } from "@void/vue";
 import { ArrowUp } from "@lucide/vue";
 import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
+const appVersion = __APP_VERSION__;
 const showBackToTop = ref(false);
 
 const updateBackToTop = () => {
@@ -23,7 +24,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
     aria-label="Site shortcuts"
   >
     <Link aria-label="mimifuwa.cc home" class="site-signature" href="/">
-      <span aria-hidden="true" class="site-version">v.4.0.0</span>
+      <span aria-hidden="true" class="site-version">{{ appVersion }}</span>
       <span aria-hidden="true" class="site-url">https://mimifuwa.cc/</span>
     </Link>
     <div class="site-rail-middle">
