@@ -5,22 +5,40 @@ import { ArrowUp } from "@lucide/vue";
 import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
 const appVersion = __APP_VERSION__;
 const showBackToTop = ref(false);
+const scrollReady = ref(false);
 
 const updateBackToTop = () => {
   showBackToTop.value = window.scrollY > 480;
 };
+const handleScroll = () => {
+  updateBackToTop();
+  if (window.scrollY <= 480) {
+    delete document.documentElement.dataset.restoredScroll;
+  }
+};
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+  });
+};
 
 onMounted(() => {
   updateBackToTop();
-  window.addEventListener("scroll", updateBackToTop, { passive: true });
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      scrollReady.value = true;
+    });
+  });
 });
-onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
+onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
 </script>
 
 <template>
   <aside
     class="site-rail"
-    :class="{ 'has-back-to-top': showBackToTop }"
+    :class="{ 'has-back-to-top': showBackToTop, 'scroll-ready': scrollReady }"
     aria-label="Site shortcuts"
   >
     <Link aria-label="mimifuwa.cc home" class="site-signature" href="/">
@@ -43,12 +61,17 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
         </a>
       </nav>
     </div>
-    <Transition name="rail-button">
-      <a v-if="showBackToTop" aria-label="Back to top" class="back-to-top" href="#top">
-        <span class="back-to-top-icon"><ArrowUp aria-hidden="true" /></span>
-        <span aria-hidden="true" class="back-to-top-label">BACK TO TOP</span>
-      </a>
-    </Transition>
+    <button
+      aria-label="Back to top"
+      class="back-to-top"
+      type="button"
+      :class="{ 'is-visible': showBackToTop }"
+      :tabindex="showBackToTop ? 0 : -1"
+      @click="scrollToTop"
+    >
+      <span class="back-to-top-icon"><ArrowUp aria-hidden="true" /></span>
+      <span aria-hidden="true" class="back-to-top-label">BACK TO TOP</span>
+    </button>
   </aside>
 </template>
 
@@ -111,8 +134,25 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
   transition: transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
+.site-rail:not(.scroll-ready) .site-rail-middle,
+.site-rail:not(.scroll-ready) .back-to-top {
+  transition: none !important;
+}
+
 .has-back-to-top .site-rail-middle {
   transform: translate(-50%, calc(50% - 50vh + 2rem));
+}
+
+:global(html[data-restored-scroll="past-rail-threshold"] .site-rail-middle) {
+  transform: translate(-50%, calc(50% - 50vh + 2rem));
+  transition: none;
+}
+
+:global(html[data-restored-scroll="past-rail-threshold"] .back-to-top) {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%);
+  transition: none !important;
 }
 
 .site-rail-note {
@@ -158,9 +198,28 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
   align-items: center;
   flex-direction: column;
   gap: 0.7rem;
+  min-height: 0;
+  padding: 0;
+  border: 0;
   color: var(--foreground);
+  background: transparent;
+  opacity: 0;
+  visibility: hidden;
   text-decoration: none;
   transform: translateX(-50%);
+  transition:
+    opacity var(--ui-transition-duration) ease,
+    visibility 0s linear var(--ui-transition-duration);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--ui-transition-duration) ease;
+}
+
+.back-to-top:hover {
+  background: transparent;
 }
 
 .back-to-top-icon {
@@ -194,19 +253,6 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
   background: var(--foreground);
 }
 
-.rail-button-enter-active,
-.rail-button-leave-active {
-  transition:
-    opacity var(--ui-transition-duration) ease,
-    transform var(--ui-transition-duration) ease;
-}
-
-.rail-button-enter-from,
-.rail-button-leave-to {
-  opacity: 0;
-  transform: translate(-50%, 0.6rem);
-}
-
 @media (max-width: 64rem) {
   .site-signature {
     display: none;
@@ -234,8 +280,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
 @media (prefers-reduced-motion: reduce) {
   .site-rail-middle,
   .back-to-top-icon,
-  .rail-button-enter-active,
-  .rail-button-leave-active {
+  .back-to-top {
     transition: none;
   }
 }
