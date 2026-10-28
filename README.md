@@ -32,3 +32,11 @@ vp run -r build
 - `vX.Y.Z` tag は CLI を npm の `latest` として公開し、本番サイトと `mimifuwa.cc-content` の `main` の記事をデプロイした後、GitHub Release を作成します。
 - `vX.Y.Z-dev.N` や `vX.Y.Z-alpha.N` tag は CLI を対応する npm prerelease tag で公開し、dev Worker と `packages/content-dev` の記事をデプロイします。
 - Cloudflare の認証情報は GitHub Actions の `dev` / `production` 環境シークレットで管理します。
+
+リリースは最新の `dev` に切り替えて、確認プロンプト付きのタスクからタグを作成します。
+
+```sh
+vp run release -- v5.0.1
+```
+
+タグ付け前に対象コミットとデプロイ内容を表示し、`yes` を選んだ場合だけ署名付きタグを作って push します。事前確認には `vp run release -- v5.0.1 --dry-run` を使えます。
