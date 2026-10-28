@@ -42,6 +42,7 @@
 }
 
 html {
+  background: var(--background);
   min-width: 320px;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 1rem);
@@ -55,15 +56,14 @@ body {
   background: var(--background);
   font-size: 16px;
   line-height: 1.7;
-  transition:
-    color var(--ui-transition-duration) ease,
-    background-color var(--ui-transition-duration) ease;
 }
 
-.site-header,
-.site-sidebar,
-.hero,
-.mobile-menu {
+.theme-transition,
+.theme-transition body,
+.theme-transition .site-header,
+.theme-transition .site-sidebar,
+.theme-transition .hero,
+.theme-transition .mobile-menu {
   transition:
     color var(--ui-transition-duration) ease,
     background-color var(--ui-transition-duration) ease;
