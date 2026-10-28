@@ -35,6 +35,9 @@ jobs:
       - name: Build content CLI
         run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
 
+      - name: Set package versions from the latest tag
+        run: node scripts/set-package-version.mjs "$(git describe --tags --abbrev=0)"
+
       - name: Deploy Vue site to Void
         run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
