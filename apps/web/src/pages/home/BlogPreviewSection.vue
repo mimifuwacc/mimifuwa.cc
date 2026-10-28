@@ -41,7 +41,7 @@ onMounted(async () => {
   gap: 2.25rem 1.5rem;
 }
 
-@media (min-width: 48.001rem) and (max-width: 70rem) {
+@media (min-width: 48.001rem) and (max-width: 90rem) {
   .blog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

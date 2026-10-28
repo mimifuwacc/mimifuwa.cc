@@ -13,7 +13,7 @@
   --button-primary-hover-color: var(--foreground);
   --button-primary-hover-background: var(--background);
   --ui-transition-duration: 150ms;
-  --sidebar-width: 18rem;
+  --sidebar-width: clamp(12rem, 18vw, 18rem);
   --header-height: 3.75rem;
   font-family: Inter, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
   font-synthesis: none;
@@ -135,7 +135,7 @@ img {
 
 .site-shell {
   display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width);
   min-height: 100vh;
 }
 
@@ -143,15 +143,6 @@ img {
   grid-column: 2;
   grid-row: 1;
   min-width: 0;
-}
-
-/* Center on the full viewport only when the content clears the fixed-width left rail. */
-@media (min-width: 110rem) {
-  .site-shell > main .container,
-  .site-shell > main .container-wide,
-  .site-footer .container-wide {
-    transform: translateX(calc(var(--sidebar-width) / -2));
-  }
 }
 
 .site-header {

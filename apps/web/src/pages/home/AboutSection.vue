@@ -297,7 +297,7 @@ function timelineDateParts(date: string) {
   grid-column: 2;
 }
 
-@media (max-width: 56rem) {
+@media (max-width: 72rem) {
   .about-columns {
     grid-template-columns: minmax(0, 1fr);
     gap: 2rem;

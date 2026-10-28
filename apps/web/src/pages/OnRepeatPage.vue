@@ -72,13 +72,7 @@ import { tracks } from "../lib/on-repeat";
   text-underline-offset: 0.2em;
 }
 
-@media (min-width: 48.001rem) and (max-width: 70rem) {
-  .track-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 48.001rem) and (max-width: 70rem) {
+@media (min-width: 48.001rem) and (max-width: 90rem) {
   .track-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

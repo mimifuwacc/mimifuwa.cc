@@ -87,7 +87,7 @@ import { tracks } from "../../lib/on-repeat";
   display: none;
 }
 
-@media (min-width: 48.001rem) and (max-width: 70rem) {
+@media (min-width: 48.001rem) and (max-width: 90rem) {
   .track-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
