@@ -1,5 +1,6 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 import { mimifuwaccContent } from "../../packages/cli/src/vite";
 import { defineConfig } from "@vizejs/vite-plugin/vite-plus";
 import { voidVue } from "@void/vue/plugin";
@@ -7,11 +8,24 @@ import { voidPlugin } from "void";
 import { contentDevApi } from "./src/content-dev-api";
 
 const appDir = dirname(fileURLToPath(import.meta.url));
+const appVersion = (() => {
+  if (process.env.APP_VERSION) return process.env.APP_VERSION;
+
+  try {
+    return execFileSync("git", ["describe", "--tags", "--abbrev=0"], {
+      cwd: appDir,
+      encoding: "utf8",
+    }).trim();
+  } catch {
+    return "dev";
+  }
+})();
 const contentDir =
   process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-dev/articles");
 const config = {
   define: {
     __DEPLOY_ENV__: JSON.stringify(process.env.DEPLOY_ENV ?? "local"),
+    __APP_VERSION__: JSON.stringify(appVersion),
   },
   resolve: {
     alias: {
