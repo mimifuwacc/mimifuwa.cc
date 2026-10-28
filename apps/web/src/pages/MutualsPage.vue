@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { links } from "../../../../contents/links";
-import LinkCard from "../components/LinkCard.vue";
-import SiteSection from "../components/SiteSection.vue";
+import { links } from "@content/links";
+import LinkCard from "@/components/LinkCard.vue";
+import SiteSection from "@/components/SiteSection.vue";
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import BlogCard from "../components/BlogCard.vue";
-import SiteSection from "../components/SiteSection.vue";
-import type { BlogSummary } from "../types/blog";
+import BlogCard from "@/components/BlogCard.vue";
+import SiteSection from "@/components/SiteSection.vue";
+import type { BlogSummary } from "@/types/blog";
 
 defineProps<{ posts: BlogSummary[]; hasError: boolean }>();
 </script>

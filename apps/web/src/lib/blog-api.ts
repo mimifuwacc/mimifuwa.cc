@@ -1,4 +1,4 @@
-import type { BlogSummary } from "../types/blog";
+import type { BlogSummary } from "@/types/blog";
 
 export interface BlogArticle extends BlogSummary {
   html: string;

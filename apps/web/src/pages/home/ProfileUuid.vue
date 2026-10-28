@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Check, Copy } from "@lucide/vue";
-import SiteButton from "../../components/SiteButton.vue";
+import SiteButton from "@/components/SiteButton.vue";
 
 const uuid = "fa6c2a8f-27b1-4611-a0f5-19b0d6c20612";
 const copied = ref(false);

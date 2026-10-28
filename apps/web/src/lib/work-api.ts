@@ -1,4 +1,4 @@
-import type { WorkItem } from "../types/work";
+import type { WorkItem } from "@/types/work";
 
 let worksRequest: Promise<WorkItem[]> | undefined;
 const workRequests = new Map<string, Promise<WorkItem | null>>();

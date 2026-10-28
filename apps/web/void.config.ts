@@ -22,10 +22,6 @@ export default defineConfig({
     link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
   },
   routing: {
-    redirects: {
-      "/on-repeat/": { to: "/onrepeat/", status: 301 },
-      "/links": { to: "/mutuals/", status: 301 },
-    },
     revalidate: {
       "/": 300,
       "/blogs/*": 300,

@@ -2,8 +2,8 @@
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import { ArrowRight } from "@lucide/vue";
 import { Link } from "@void/vue";
-import InlineTagList from "./InlineTagList.vue";
-import type { BlogSummary } from "../types/blog";
+import InlineTagList from "@/components/InlineTagList.vue";
+import type { BlogSummary } from "@/types/blog";
 
 defineProps<{ post: BlogSummary }>();
 

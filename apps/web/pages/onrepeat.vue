@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import OnRepeatPage from "../src/pages/OnRepeatPage.vue";
+import OnRepeatPage from "@/pages/OnRepeatPage.vue";
 </script>
 
 <template>

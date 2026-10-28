@@ -1,6 +1,6 @@
 import { defineHandler, defineHead, type InferProps } from "void";
-import { getContent } from "../../src/content-api";
-import type { WorkItem } from "../../src/types/work";
+import { getContent } from "@/content-api";
+import type { WorkItem } from "@/types/work";
 
 export const loader = defineHandler(async (c) => {
   const response = await getContent("works", c.req.param("slug") ?? "");

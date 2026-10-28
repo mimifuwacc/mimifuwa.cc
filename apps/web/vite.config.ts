@@ -16,6 +16,7 @@ const config = {
   resolve: {
     alias: {
       "@": resolve(appDir, "src"),
+      "@content": resolve(appDir, "../../contents"),
     },
   },
   plugins: [

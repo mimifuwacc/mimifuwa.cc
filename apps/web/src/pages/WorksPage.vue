@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import SiteSection from "../components/SiteSection.vue";
-import WorkCard from "../components/WorkCard.vue";
-import type { WorkItem } from "../types/work";
+import SiteSection from "@/components/SiteSection.vue";
+import WorkCard from "@/components/WorkCard.vue";
+import type { WorkItem } from "@/types/work";
 
 defineProps<{ works: WorkItem[]; hasError: boolean }>();
 </script>

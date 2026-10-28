@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { sanitizeUrl } from "@braintree/sanitize-url";
-import SiteSection from "../../components/SiteSection.vue";
+import SiteSection from "@/components/SiteSection.vue";
 import { ArrowRight } from "@lucide/vue";
-import SiteButton from "../../components/SiteButton.vue";
-import { tracks } from "../../lib/on-repeat";
+import SiteButton from "@/components/SiteButton.vue";
+import { tracks } from "@/lib/on-repeat";
 </script>
 
 <template>

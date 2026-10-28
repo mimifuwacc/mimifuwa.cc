@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import InlineTagList from "../components/InlineTagList.vue";
-import type { BlogArticle } from "../types/blog";
+import InlineTagList from "@/components/InlineTagList.vue";
+import type { BlogArticle } from "@/types/blog";
 
 defineProps<{ article: BlogArticle | null; hasError: boolean }>();
 

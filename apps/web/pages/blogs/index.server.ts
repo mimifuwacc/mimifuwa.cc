@@ -1,6 +1,6 @@
 import { defineHandler, defineHead, type InferProps } from "void";
-import { listContent } from "../../src/content-api";
-import type { BlogSummary } from "../../src/types/blog";
+import { listContent } from "@/content-api";
+import type { BlogSummary } from "@/types/blog";
 
 export const loader = defineHandler(async (c) => {
   const response = await listContent("blogs");

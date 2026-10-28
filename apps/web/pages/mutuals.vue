@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MutualsPage from "../src/pages/MutualsPage.vue";
+import MutualsPage from "@/pages/MutualsPage.vue";
 </script>
 
 <template>

@@ -12,7 +12,8 @@
     "moduleResolution": "Bundler",
     "types": ["vite-plus/client", "@vizejs/vite-plugin"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@content/*": ["../../contents/*"]
     },
     "resolveJsonModule": true,
     "isolatedModules": true,

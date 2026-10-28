@@ -1,7 +1,7 @@
 import { defineHandler, defineHead, type InferProps } from "void";
-import { listContent } from "../src/content-api";
-import type { BlogSummary } from "../src/types/blog";
-import type { WorkItem } from "../src/types/work";
+import { listContent } from "@/content-api";
+import type { BlogSummary } from "@/types/blog";
+import type { WorkItem } from "@/types/work";
 
 const readJson = async <T>(response: Response): Promise<T> => {
   if (!response.ok) throw new Error(`Content request failed: ${response.status}`);

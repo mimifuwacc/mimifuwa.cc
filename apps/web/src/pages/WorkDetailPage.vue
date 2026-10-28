@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ArrowLeft, ArrowUpRight } from "@lucide/vue";
-import SiteButton from "../components/SiteButton.vue";
-import InlineTagList from "../components/InlineTagList.vue";
-import type { WorkItem } from "../types/work";
+import SiteButton from "@/components/SiteButton.vue";
+import InlineTagList from "@/components/InlineTagList.vue";
+import type { WorkItem } from "@/types/work";
 
 defineProps<{ work: WorkItem | null; hasError: boolean }>();
 </script>

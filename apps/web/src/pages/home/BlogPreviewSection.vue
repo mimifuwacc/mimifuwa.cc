@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ArrowRight } from "@lucide/vue";
-import BlogCard from "../../components/BlogCard.vue";
-import SiteButton from "../../components/SiteButton.vue";
-import SiteSection from "../../components/SiteSection.vue";
-import type { BlogSummary } from "../../types/blog";
+import BlogCard from "@/components/BlogCard.vue";
+import SiteButton from "@/components/SiteButton.vue";
+import SiteSection from "@/components/SiteSection.vue";
+import type { BlogSummary } from "@/types/blog";
 
 defineProps<{ posts: BlogSummary[] }>();
 </script>

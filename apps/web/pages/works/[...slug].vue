@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Props } from "./[...slug].server";
-import WorkDetailPage from "../../src/pages/WorkDetailPage.vue";
+import WorkDetailPage from "@/pages/WorkDetailPage.vue";
 
 defineProps<Props>();
 </script>

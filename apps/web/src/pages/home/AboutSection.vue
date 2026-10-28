@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
-import { awards, certifications, timelineData } from "../../../../../contents/about";
-import SiteButton from "../../components/SiteButton.vue";
-import ContentCard from "../../components/ContentCard.vue";
-import SiteSection from "../../components/SiteSection.vue";
-import ProfileUuid from "./ProfileUuid.vue";
+import { awards, certifications, timelineData } from "@content/about";
+import SiteButton from "@/components/SiteButton.vue";
+import ContentCard from "@/components/ContentCard.vue";
+import SiteSection from "@/components/SiteSection.vue";
+import ProfileUuid from "@/pages/home/ProfileUuid.vue";
 
 defineProps<{ avatar: string }>();
 

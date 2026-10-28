@@ -2,8 +2,8 @@
 import { ArrowRight } from "@lucide/vue";
 import { Link } from "@void/vue";
 import { sanitizeUrl } from "@braintree/sanitize-url";
-import type { WorkItem } from "../types/work";
-import InlineTagList from "./InlineTagList.vue";
+import type { WorkItem } from "@/types/work";
+import InlineTagList from "@/components/InlineTagList.vue";
 
 defineProps<{ work: WorkItem }>();
 </script>

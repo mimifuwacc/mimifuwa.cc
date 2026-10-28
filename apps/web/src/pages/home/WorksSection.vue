@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ArrowRight } from "@lucide/vue";
-import SiteButton from "../../components/SiteButton.vue";
-import SiteSection from "../../components/SiteSection.vue";
-import WorkCard from "../../components/WorkCard.vue";
-import type { WorkItem } from "../../types/work";
+import SiteButton from "@/components/SiteButton.vue";
+import SiteSection from "@/components/SiteSection.vue";
+import WorkCard from "@/components/WorkCard.vue";
+import type { WorkItem } from "@/types/work";
 
 defineProps<{ works: WorkItem[] }>();
 </script>

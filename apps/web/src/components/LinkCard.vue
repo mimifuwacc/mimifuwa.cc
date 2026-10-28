@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import { ArrowUpRight } from "@lucide/vue";
-import type { LinkItem } from "../../../../contents/links";
+import type { LinkItem } from "@content/links";
 
 defineProps<{ link: LinkItem }>();
 
