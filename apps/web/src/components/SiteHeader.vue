@@ -33,8 +33,17 @@ const matches = computed(() => {
     .slice(0, 20);
 });
 
-const isActive = (href: string) =>
-  router.path === href || (href !== "/" && router.path.startsWith(href));
+const currentPath = computed(() => {
+  const pathname = router.url.pathname.replace(/\/{2,}/g, "/");
+  return pathname === "/" ? pathname : `${pathname.replace(/\/$/, "")}/`;
+});
+const isActive = (href: string) => {
+  const normalizedHref = href === "/" ? href : `${href.replace(/\/$/, "")}/`;
+  return (
+    currentPath.value === normalizedHref ||
+    (normalizedHref !== "/" && currentPath.value.startsWith(normalizedHref))
+  );
+};
 
 watch(menuOpen, async (open) => {
   if (!open) return;
