@@ -35,13 +35,7 @@ jobs:
             exit 1
           fi
 
-          node --input-type=module - "$PACKAGE_VERSION" <<'NODE'
-          import { readFileSync, writeFileSync } from 'node:fs';
-          const path = 'packages/cli/package.json';
-          const manifest = JSON.parse(readFileSync(path, 'utf8'));
-          manifest.version = process.argv[2];
-          writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
-          NODE
+          node scripts/set-package-version.mjs "$PACKAGE_VERSION"
 
           if [[ "$PACKAGE_VERSION" == *-* ]]; then
             PRERELEASE="${PACKAGE_VERSION#*-}"
@@ -86,7 +80,11 @@ jobs:
           run-install: true
 
       - name: Deploy site to Cloudflare
-        run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
+        env:
+          PACKAGE_VERSION: ${{ needs.publish-cli.outputs.version }}
+        run: |
+          node scripts/set-package-version.mjs "$PACKAGE_VERSION"
+          vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
       - name: Read the production content target
         if: ${{ !contains(github.ref_name, '-') }}
