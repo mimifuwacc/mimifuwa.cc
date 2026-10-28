@@ -145,7 +145,8 @@ img {
   min-width: 0;
 }
 
-@media (min-width: 48.001rem) {
+/* Center on the full viewport only when the content clears the fixed-width left rail. */
+@media (min-width: 110rem) {
   .site-shell > main .container,
   .site-shell > main .container-wide,
   .site-footer .container-wide {
