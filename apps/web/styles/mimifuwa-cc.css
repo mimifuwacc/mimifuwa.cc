@@ -13,7 +13,7 @@
   --button-primary-hover-color: var(--foreground);
   --button-primary-hover-background: var(--background);
   --ui-transition-duration: 150ms;
-  --sidebar-width: 18rem;
+  --sidebar-width: clamp(12rem, 18vw, 18rem);
   --header-height: 3.75rem;
   font-family: Inter, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
   font-synthesis: none;
@@ -135,7 +135,7 @@ img {
 
 .site-shell {
   display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width);
   min-height: 100vh;
 }
 
@@ -143,14 +143,6 @@ img {
   grid-column: 2;
   grid-row: 1;
   min-width: 0;
-}
-
-@media (min-width: 48.001rem) {
-  .site-shell > main .container,
-  .site-shell > main .container-wide,
-  .site-footer .container-wide {
-    transform: translateX(calc(var(--sidebar-width) / -2));
-  }
 }
 
 .site-header {
@@ -776,7 +768,11 @@ kbd {
   color: var(--muted-foreground);
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 72rem) {
+  .site-rail {
+    display: none;
+  }
+
   .site-shell {
     display: flex;
     flex-direction: column;
@@ -884,6 +880,13 @@ kbd {
   .link-card-copy {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.15rem;
+  }
+}
+
+@media (min-width: 40.001rem) and (max-width: 72rem) {
+  .container,
+  .container-wide {
+    width: min(calc(100% - 2rem), 48rem);
   }
 }
 

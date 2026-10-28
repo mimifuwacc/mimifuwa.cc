@@ -98,6 +98,7 @@ function timelineDateParts(date: string) {
 <style scoped>
 .about-content {
   width: 100%;
+  container-type: inline-size;
 }
 
 .about-intro {
@@ -158,10 +159,16 @@ function timelineDateParts(date: string) {
 
 .about-columns {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: clamp(2rem, 3.5vw, 3.5rem);
   padding-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+@container (min-width: 52rem) {
+  .about-columns {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
 }
 
 .about-primary,
@@ -297,12 +304,7 @@ function timelineDateParts(date: string) {
   grid-column: 2;
 }
 
-@media (max-width: 56rem) {
-  .about-columns {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2rem;
-  }
-
+@media (max-width: 40rem) {
   .timeline-event {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.35rem;
