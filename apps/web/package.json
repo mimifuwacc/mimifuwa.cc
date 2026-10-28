@@ -12,7 +12,7 @@
     "@iconify-prerendered/vue-fa-brands": "^0.28.1722793346",
     "@lucide/vue": "^1.61.0",
     "@ox-content/vite-plugin": "alpha",
-    "@vizejs/vite-plugin": "0.550.0",
+    "@vizejs/vite-plugin": "0.565.0",
     "@void/vue": "1.2.1",
     "vue": "3.6.0-rc.13"
   },
@@ -22,7 +22,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "vize": "0.550.0",
+    "vize": "0.565.0",
     "void": "1.2.1"
   },
   "engines": {
