@@ -12,6 +12,7 @@ import { mimifuwaccContent } from "@mimifuwacc/cli/vite";
 export default defineConfig({
   plugins: [
     mimifuwaccContent({
+      target: { url: "https://example.com" },
       srcDir: "./articles",
       collections: {
         blogs: { source: "blogs/**/*", include: ["html"] },

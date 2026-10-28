@@ -5,6 +5,8 @@ import { defineMimifuwaccContentConfig, mimifuwaccContentOptions } from "./confi
 type OxContentOptions = NonNullable<Parameters<typeof oxContent>[0]>;
 
 export interface MimifuwaccContentOptions {
+  /** Public URL of the site that serves the published content. */
+  target: { url: string };
   /** The Ox Content source directory, relative to the Vite root. */
   srcDir: string;
   /** Ox Content collection definitions. Include `html` for publishable article bodies. */
