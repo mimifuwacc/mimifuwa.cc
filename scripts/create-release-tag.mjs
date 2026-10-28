@@ -21,7 +21,8 @@ function usage() {
   process.stdout.write("Example: vp run release -- v5.0.1\n");
 }
 
-const args = process.argv.slice(2);
+// `vp run release -- ...` forwards the separator to the script as an argument.
+const args = process.argv.slice(2).filter((arg) => arg !== "--");
 
 if (args.includes("--help")) {
   usage();
