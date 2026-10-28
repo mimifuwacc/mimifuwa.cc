@@ -49,7 +49,7 @@ const config = {
     }),
     contentDevApi(),
     voidPlugin(),
-    ...voidVue({ viewTransitions: true }),
+    ...voidVue(),
   ],
 };
 

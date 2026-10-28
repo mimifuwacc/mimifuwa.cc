@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { Link, useRouter } from "@void/vue";
+import { Link, useNavigation, useRouter } from "@void/vue";
 import { Menu, Moon, Sun, X } from "@lucide/vue";
 
 interface SearchDocument {
@@ -11,12 +11,16 @@ interface SearchDocument {
 }
 
 const router = useRouter();
+const navigation = useNavigation();
 const menuOpen = ref(false);
 const menuDialog = ref<HTMLDialogElement>();
 const searchOpen = ref(false);
 const query = ref("");
 const documents = ref<SearchDocument[]>([]);
 const isDark = ref(false);
+const progressVisible = ref(false);
+let showProgressTimeout: ReturnType<typeof setTimeout> | undefined;
+let hideProgressTimeout: ReturnType<typeof setTimeout> | undefined;
 const navItems = [
   { href: "/", label: "Top" },
   { href: "/blogs/", label: "Blogs" },
@@ -44,6 +48,29 @@ const isActive = (href: string) => {
     (normalizedHref !== "/" && currentPath.value.startsWith(normalizedHref))
   );
 };
+
+watch(
+  () => navigation.state,
+  (state) => {
+    clearTimeout(showProgressTimeout);
+    clearTimeout(hideProgressTimeout);
+
+    if (state === "idle") {
+      if (progressVisible.value) {
+        hideProgressTimeout = setTimeout(() => {
+          progressVisible.value = false;
+        }, 180);
+      }
+      return;
+    }
+
+    if (!progressVisible.value) {
+      showProgressTimeout = setTimeout(() => {
+        progressVisible.value = true;
+      }, 120);
+    }
+  },
+);
 
 watch(menuOpen, async (open) => {
   if (!open) return;
@@ -100,10 +127,21 @@ const onKeydown = (event: KeyboardEvent) => {
 
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", onKeydown);
+  clearTimeout(showProgressTimeout);
+  clearTimeout(hideProgressTimeout);
 });
 </script>
 
 <template>
+  <div
+    aria-label="Loading page"
+    class="navigation-progress"
+    :class="{ 'is-active': progressVisible }"
+    :aria-hidden="!progressVisible"
+    role="progressbar"
+  >
+    <span />
+  </div>
   <header class="site-header">
     <div class="header-inner">
       <div class="header-brand-row">
