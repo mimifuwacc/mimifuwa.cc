@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { sanitizeUrl } from "@braintree/sanitize-url";
+import { Link } from "@void/vue";
 
 withDefaults(
   defineProps<{
@@ -16,7 +17,7 @@ withDefaults(
 </script>
 
 <template>
-  <a
+  <Link
     v-if="href"
     class="button"
     :class="`button--${variant}`"
@@ -25,7 +26,7 @@ withDefaults(
     :rel="external ? 'noopener noreferrer' : undefined"
   >
     <slot />
-  </a>
+  </Link>
   <button v-else class="button" :class="`button--${variant}`" :type="type">
     <slot />
   </button>

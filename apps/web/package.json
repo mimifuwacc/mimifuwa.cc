@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "vp dev",
     "deploy": "void deploy"
   },
   "dependencies": {
@@ -12,8 +13,8 @@
     "@lucide/vue": "^1.61.0",
     "@ox-content/vite-plugin": "alpha",
     "@vizejs/vite-plugin": "0.565.0",
-    "vue": "3.6.0-rc.13",
-    "vue-router": "^5.4.0"
+    "@void/vue": "1.2.1",
+    "vue": "3.6.0-rc.13"
   },
   "devDependencies": {
     "@mimifuwacc/cli": "workspace:*",

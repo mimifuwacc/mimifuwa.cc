@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import SiteFooter from "./SiteFooter.vue";
-import SiteHeader from "./SiteHeader.vue";
-import SiteRail from "./SiteRail.vue";
+import SiteFooter from "@/components/SiteFooter.vue";
+import SiteHeader from "@/components/SiteHeader.vue";
+import SiteRail from "@/components/SiteRail.vue";
 </script>
 
 <template>

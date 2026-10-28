@@ -1,47 +1,15 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
 import { ArrowLeft, ArrowUpRight } from "@lucide/vue";
-import SiteButton from "../components/SiteButton.vue";
-import InlineTagList from "../components/InlineTagList.vue";
-import { getWork } from "../lib/work-api";
-import type { WorkItem } from "../types/work";
+import SiteButton from "@/components/SiteButton.vue";
+import InlineTagList from "@/components/InlineTagList.vue";
+import type { WorkItem } from "@/types/work";
 
-const route = useRoute();
-const work = ref<WorkItem | null>(null);
-const loading = ref(true);
-const hasError = ref(false);
-
-watch(
-  work,
-  (current) => {
-    if (current) document.title = `${current.title} | Works | mimifuwa.cc`;
-  },
-  { immediate: true },
-);
-
-watch(
-  () => route.path,
-  async (path) => {
-    loading.value = true;
-    hasError.value = false;
-    work.value = null;
-    try {
-      work.value = await getWork(path);
-    } catch {
-      hasError.value = true;
-    } finally {
-      loading.value = false;
-    }
-  },
-  { immediate: true },
-);
+defineProps<{ work: WorkItem | null; hasError: boolean }>();
 </script>
 
 <template>
   <main class="work-detail-page container">
-    <p v-if="loading" aria-live="polite" class="work-detail-message">読み込み中...</p>
-    <section v-else-if="hasError || !work" class="work-detail-message">
+    <section v-if="hasError || !work" class="work-detail-message">
       <h1>{{ hasError ? "制作物を読み込めませんでした" : "制作物が見つかりません" }}</h1>
       <SiteButton href="/works/"><ArrowLeft aria-hidden="true" class="icon" /> Works に戻る</SiteButton>
     </section>

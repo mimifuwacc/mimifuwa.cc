@@ -12,12 +12,13 @@
     "moduleResolution": "Bundler",
     "types": ["vite-plus/client", "@vizejs/vite-plugin"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@content/*": ["../../contents/*"]
     },
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "ignoreDeprecations": "6.0"
   },
-  "include": ["env.ts", "routes", "src"]
+  "include": ["env.ts", "pages", "routes", "src"]
 }

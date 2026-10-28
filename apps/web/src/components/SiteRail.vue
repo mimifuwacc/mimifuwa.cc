@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import { Link } from "@void/vue";
 import { ArrowUp } from "@lucide/vue";
 import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
 const showBackToTop = ref(false);
@@ -21,10 +22,10 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
     :class="{ 'has-back-to-top': showBackToTop }"
     aria-label="Site shortcuts"
   >
-    <a aria-label="mimifuwa.cc home" class="site-signature" href="/">
+    <Link aria-label="mimifuwa.cc home" class="site-signature" href="/">
       <span aria-hidden="true" class="site-version">v.4.0.0</span>
       <span aria-hidden="true" class="site-url">https://mimifuwa.cc/</span>
-    </a>
+    </Link>
     <div class="site-rail-middle">
       <p class="site-rail-note">fa6c2a8f-27b1-4611-a0f5-19b0d6c20612</p>
       <nav aria-label="Social links" class="site-rail-socials">

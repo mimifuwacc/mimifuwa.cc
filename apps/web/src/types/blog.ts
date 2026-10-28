@@ -5,3 +5,7 @@ export interface BlogSummary {
   tags?: string[];
   url: string;
 }
+
+export interface BlogArticle extends BlogSummary {
+  html: string;
+}

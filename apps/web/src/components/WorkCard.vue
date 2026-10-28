@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ArrowRight } from "@lucide/vue";
-import type { WorkItem } from "../types/work";
-import InlineTagList from "./InlineTagList.vue";
+import { Link } from "@void/vue";
+import { sanitizeUrl } from "@braintree/sanitize-url";
+import type { WorkItem } from "@/types/work";
+import InlineTagList from "@/components/InlineTagList.vue";
 
 defineProps<{ work: WorkItem }>();
 </script>
 
 <template>
-  <RouterLink class="work-card" :to="work.url">
+  <Link class="work-card" :href="sanitizeUrl(work.url)">
     <div class="work-card-heading">
       <h3>{{ work.title }}</h3>
       <ArrowRight aria-hidden="true" class="icon" />
@@ -19,7 +21,7 @@ defineProps<{ work: WorkItem }>();
       :items="work.technologies"
       variant="outlined"
     />
-  </RouterLink>
+  </Link>
 </template>
 
 <style scoped>

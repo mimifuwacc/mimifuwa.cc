@@ -1,20 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
 import { ArrowRight } from "@lucide/vue";
-import SiteButton from "../../components/SiteButton.vue";
-import SiteSection from "../../components/SiteSection.vue";
-import WorkCard from "../../components/WorkCard.vue";
-import { getWorks } from "../../lib/work-api";
-import type { WorkItem } from "../../types/work";
+import SiteButton from "@/components/SiteButton.vue";
+import SiteSection from "@/components/SiteSection.vue";
+import WorkCard from "@/components/WorkCard.vue";
+import type { WorkItem } from "@/types/work";
 
-const works = ref<WorkItem[]>([]);
-onMounted(async () => {
-  try {
-    works.value = (await getWorks()).slice(0, 6);
-  } catch {
-    works.value = [];
-  }
-});
+defineProps<{ works: WorkItem[] }>();
 </script>
 
 <template>

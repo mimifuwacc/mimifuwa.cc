@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
-import InlineTagList from "../components/InlineTagList.vue";
-import { getBlogArticle, type BlogArticle } from "../lib/blog-api";
+import InlineTagList from "@/components/InlineTagList.vue";
+import type { BlogArticle } from "@/types/blog";
 
-const route = useRoute();
-const article = ref<BlogArticle | null>(null);
-const loading = ref(true);
-const hasError = ref(false);
+defineProps<{ article: BlogArticle | null; hasError: boolean }>();
 
 const formatDate = (date?: string) => {
   if (!date) return "";
@@ -18,37 +13,11 @@ const formatDate = (date?: string) => {
         parsed,
       );
 };
-
-watch(
-  article,
-  (current) => {
-    if (current) document.title = `${current.title} | mimifuwa.cc`;
-  },
-  { immediate: true },
-);
-
-watch(
-  () => route.path,
-  async (path) => {
-    loading.value = true;
-    hasError.value = false;
-    article.value = null;
-    try {
-      article.value = await getBlogArticle(path);
-    } catch {
-      hasError.value = true;
-    } finally {
-      loading.value = false;
-    }
-  },
-  { immediate: true },
-);
 </script>
 
 <template>
   <div class="article-page container">
-    <p v-if="loading" aria-live="polite" class="article-message">読み込み中...</p>
-    <section v-else-if="hasError || !article" class="article-message">
+    <section v-if="hasError || !article" class="article-message">
       <h1>{{ hasError ? "記事を読み込めませんでした" : "記事が見つかりません" }}</h1>
       <a class="square-button" href="/blogs/">Blogs に戻る</a>
     </section>
