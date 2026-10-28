@@ -768,7 +768,7 @@ kbd {
   color: var(--muted-foreground);
 }
 
-@media (max-width: 64rem) {
+@media (max-width: 72rem) {
   .site-shell {
     display: flex;
     flex-direction: column;
@@ -876,6 +876,13 @@ kbd {
   .link-card-copy {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.15rem;
+  }
+}
+
+@media (min-width: 40.001rem) and (max-width: 72rem) {
+  .container,
+  .container-wide {
+    width: min(calc(100% - 2rem), 48rem);
   }
 }
 
