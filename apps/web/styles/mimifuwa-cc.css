@@ -56,14 +56,15 @@ body {
   background: var(--background);
   font-size: 16px;
   line-height: 1.7;
+  transition:
+    color var(--ui-transition-duration) ease,
+    background-color var(--ui-transition-duration) ease;
 }
 
-.theme-transition,
-.theme-transition body,
-.theme-transition .site-header,
-.theme-transition .site-sidebar,
-.theme-transition .hero,
-.theme-transition .mobile-menu {
+.site-header,
+.site-sidebar,
+.hero,
+.mobile-menu {
   transition:
     color var(--ui-transition-duration) ease,
     background-color var(--ui-transition-duration) ease;
