@@ -1,11 +1,14 @@
 import { defineConfig } from "void/config";
 
-const deploymentEnv = process.env.DEPLOY_ENV;
+const deploymentEnv = (
+  globalThis as typeof globalThis & {
+    process?: { env?: Record<string, string | undefined> };
+  }
+).process?.env?.DEPLOY_ENV;
+const workerName = deploymentEnv === "dev" ? "mimifuwa-cc-dev" : "mimifuwa-cc-prod";
 
 export default defineConfig({
-  ...(deploymentEnv === "dev"
-    ? { cloudflare: { name: "mimifuwa-cc-dev", workers_dev: true } }
-    : {}),
+  cloudflare: { name: workerName, workers_dev: true },
   inference: {
     appType: "void",
     build: "vp build",
