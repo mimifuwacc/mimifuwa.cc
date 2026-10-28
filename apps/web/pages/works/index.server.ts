@@ -2,6 +2,9 @@ import { defineHandler, defineHead, type InferProps } from "void";
 import { listContent } from "@/content-api";
 import type { WorkItem } from "@/types/work";
 
+export const prerender = true;
+export const revalidate = 86400;
+
 export const loader = defineHandler(async (c) => {
   const response = await listContent("works");
   if (!response.ok) {
