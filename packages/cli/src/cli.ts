@@ -59,13 +59,23 @@ async function deploy() {
   );
   if (!plugin || typeof plugin !== "object") {
     throw new Error(
-      "Add mimifuwaccContent({ srcDir, collections }) to vite.config.ts before deploying",
+      "Add mimifuwaccContent({ target, srcDir, collections }) to vite.config.ts before deploying",
     );
   }
 
   const options = (plugin as { [mimifuwaccContentOptions]: MimifuwaccContentOptions })[
     mimifuwaccContentOptions
   ];
+  let targetUrl: URL;
+  try {
+    targetUrl = new URL(options.target.url);
+  } catch {
+    throw new Error("Set target.url in vite.config.ts to the public site URL");
+  }
+  if (targetUrl.protocol !== "https:") {
+    throw new Error("target.url must use HTTPS");
+  }
+
   console.info("Building content");
   const config = loaded.config;
   const appRoot = resolve(config.root ?? dirname(configFile));
@@ -126,7 +136,7 @@ async function deploy() {
       file: manifest,
       contentType: "application/json; charset=utf-8",
     });
-    console.info(`Published content revision ${revision}`);
+    console.info(`Published content revision ${revision} for ${targetUrl.origin}`);
   } finally {
     await rm(outDir, { recursive: true, force: true });
   }

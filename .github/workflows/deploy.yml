@@ -63,7 +63,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ contains(github.ref_name, '-') && 'dev' || 'production' }}
-      url: ${{ contains(github.ref_name, '-') && 'https://mimifuwa-cc-dev.m8c.workers.dev' || 'https://mimifuwa.cc' }}
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

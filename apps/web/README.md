@@ -4,7 +4,7 @@ Vue Router provides the shared site layout, blog index and article pages, works 
 
 Local development uses `packages/content-dev/articles` and serves the articles directly from the Vite dev server. The same articles are published to the dev Worker after a push to `dev`. Production articles are published separately from the `mimifuwa.cc-content` repository.
 
-GitHub Actions deploys the `mimifuwa-cc-dev` Worker and publishes `packages/content-dev/articles` when `dev` is updated or a version prerelease tag is pushed. A stable version tag deploys production and publishes articles from the `main` branch of `mimifuwa.cc-content`. The dev Worker URL is `https://mimifuwa-cc-dev.m8c.workers.dev`.
+GitHub Actions deploys separate dev and production Workers and publishes `packages/content-dev/articles` when `dev` is updated or a version prerelease tag is pushed. A stable version tag deploys production and publishes articles from the `main` branch of `mimifuwa.cc-content`. Worker names are configured in `void.config.ts`; Cloudflare derives each `workers.dev` URL from the Worker name and account subdomain. Custom domains can be added there when they are ready.
 
 Configure the `dev` and `production` GitHub Actions environments with these secrets:
 
