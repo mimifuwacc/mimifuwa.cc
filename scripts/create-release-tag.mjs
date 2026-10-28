@@ -21,7 +21,8 @@ function usage() {
   process.stdout.write("Example: vp run release -- v5.0.1\n");
 }
 
-const args = process.argv.slice(2);
+// `vp run release -- ...` forwards the separator to the script as an argument.
+const args = process.argv.slice(2).filter((arg) => arg !== "--");
 
 if (args.includes("--help")) {
   usage();
@@ -40,26 +41,8 @@ if (
   throw new Error("Pass one v-prefixed semantic version tag, such as v5.0.1");
 }
 
-const branch = git(["branch", "--show-current"]);
-
-if (branch !== "dev") {
-  throw new Error(
-    `Release tags must be created from dev; current branch is ${branch || "detached HEAD"}`,
-  );
-}
-
-if (git(["status", "--porcelain", "--untracked-files=no"])) {
-  throw new Error("Commit or discard tracked changes before creating a release tag");
-}
-
 git(["fetch", "--quiet", "origin", "dev", "--tags"]);
-
-const commit = git(["rev-parse", "HEAD"]);
-const remoteDev = git(["rev-parse", "refs/remotes/origin/dev"]);
-
-if (commit !== remoteDev) {
-  throw new Error("Local dev is not at origin/dev. Pull the latest dev commit and try again");
-}
+const commit = git(["rev-parse", "refs/remotes/origin/dev"]);
 
 if (git(["tag", "--list", tag])) {
   throw new Error(`Tag ${tag} already exists locally or on origin`);

@@ -52,8 +52,15 @@ watch(menuOpen, async (open) => {
 });
 
 const toggleTheme = () => {
+  const root = document.documentElement;
   isDark.value = !isDark.value;
-  document.documentElement.dataset.theme = isDark.value ? "dark" : "light";
+  root.dataset.theme = isDark.value ? "dark" : "light";
+  root.style.backgroundColor = isDark.value ? "#000000" : "#ffffff";
+  root.style.color = isDark.value ? "#ffffff" : "#000000";
+  root.style.colorScheme = isDark.value ? "dark" : "light";
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", isDark.value ? "#000000" : "#ffffff");
   localStorage.setItem("theme", isDark.value ? "dark" : "light");
 };
 
@@ -61,7 +68,11 @@ onMounted(async () => {
   const savedTheme = localStorage.getItem("theme");
   isDark.value =
     savedTheme === "dark" || (!savedTheme && matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.dataset.theme = isDark.value ? "dark" : "light";
+  const root = document.documentElement;
+  root.dataset.theme = isDark.value ? "dark" : "light";
+  root.style.backgroundColor = isDark.value ? "#000000" : "#ffffff";
+  root.style.color = isDark.value ? "#ffffff" : "#000000";
+  root.style.colorScheme = isDark.value ? "dark" : "light";
 
   try {
     const response = await fetch("/api/search-index");
