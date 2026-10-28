@@ -2,6 +2,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mimifuwaccContent } from "../../packages/cli/src/vite";
 import { defineConfig } from "@vizejs/vite-plugin/vite-plus";
+import { voidVue } from "@void/vue/plugin";
 import { voidPlugin } from "void";
 import { contentDevApi } from "./src/content-dev-api";
 
@@ -26,7 +27,8 @@ const config = {
       },
     }),
     contentDevApi(),
-    ...(process.env.NODE_ENV === "production" ? [voidPlugin()] : []),
+    voidPlugin(),
+    ...voidVue({ viewTransitions: true }),
   ],
 };
 

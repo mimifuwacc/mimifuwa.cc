@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "vp dev",
     "deploy": "void deploy"
   },
   "dependencies": {
@@ -11,9 +12,9 @@
     "@iconify-prerendered/vue-fa-brands": "^0.28.1722793346",
     "@lucide/vue": "^1.61.0",
     "@ox-content/vite-plugin": "alpha",
+    "@void/vue": "1.2.1",
     "@vizejs/vite-plugin": "0.550.0",
-    "vue": "3.6.0-rc.13",
-    "vue-router": "^5.4.0"
+    "vue": "3.6.0-rc.13"
   },
   "devDependencies": {
     "@mimifuwacc/cli": "workspace:*",

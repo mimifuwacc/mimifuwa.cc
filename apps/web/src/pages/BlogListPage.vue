@@ -1,29 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
 import BlogCard from "../components/BlogCard.vue";
 import SiteSection from "../components/SiteSection.vue";
-import { getBlogList } from "../lib/blog-api";
 import type { BlogSummary } from "../types/blog";
 
-const posts = ref<BlogSummary[]>([]);
-const loading = ref(true);
-const hasError = ref(false);
-
-onMounted(async () => {
-  try {
-    posts.value = await getBlogList();
-  } catch {
-    hasError.value = true;
-  } finally {
-    loading.value = false;
-  }
-});
+defineProps<{ posts: BlogSummary[]; hasError: boolean }>();
 </script>
 
 <template>
   <SiteSection id="blogs-page" heading-level="h1" title="Blogs">
-    <p v-if="loading" aria-live="polite" class="empty-state">読み込み中...</p>
-    <p v-else-if="hasError" class="empty-state" role="alert">記事を読み込めませんでした。</p>
+    <p v-if="hasError" class="empty-state" role="alert">記事を読み込めませんでした。</p>
     <p v-else-if="posts.length === 0" class="empty-state">
       記事が公開され次第、ここに表示されます。
     </p>

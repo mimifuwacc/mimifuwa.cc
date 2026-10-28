@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import { ArrowRight } from "@lucide/vue";
+import { Link } from "@void/vue";
 import InlineTagList from "./InlineTagList.vue";
 import type { BlogSummary } from "../types/blog";
 
@@ -18,7 +19,7 @@ const formatDate = (date?: string) => {
 </script>
 
 <template>
-  <a class="blog-card square-card" :href="sanitizeUrl(post.url)">
+  <Link class="blog-card square-card" :href="sanitizeUrl(post.url)">
     <div class="blog-card-body">
       <div class="blog-card-meta">
         <time v-if="post.date" :datetime="post.date">{{ formatDate(post.date) }}</time>
@@ -30,7 +31,7 @@ const formatDate = (date?: string) => {
       </p>
       <InlineTagList v-if="post.tags?.length" :items="post.tags.slice(0, 3)" variant="outlined" />
     </div>
-  </a>
+  </Link>
 </template>
 
 <style scoped>

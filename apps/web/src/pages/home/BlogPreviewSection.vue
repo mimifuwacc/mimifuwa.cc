@@ -1,20 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
 import { ArrowRight } from "@lucide/vue";
 import BlogCard from "../../components/BlogCard.vue";
 import SiteButton from "../../components/SiteButton.vue";
 import SiteSection from "../../components/SiteSection.vue";
-import { getBlogList } from "../../lib/blog-api";
 import type { BlogSummary } from "../../types/blog";
 
-const posts = ref<BlogSummary[]>([]);
-onMounted(async () => {
-  try {
-    posts.value = (await getBlogList()).slice(0, 6);
-  } catch {
-    posts.value = [];
-  }
-});
+defineProps<{ posts: BlogSummary[] }>();
 </script>
 
 <template>

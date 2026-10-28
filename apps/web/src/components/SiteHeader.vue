@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { sanitizeUrl } from "@braintree/sanitize-url";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { Link, useRouter } from "@void/vue";
 import { Menu, Moon, Sun, X } from "@lucide/vue";
 
 interface SearchDocument {
@@ -10,7 +10,7 @@ interface SearchDocument {
   body: string;
 }
 
-const route = useRoute();
+const router = useRouter();
 const menuOpen = ref(false);
 const menuDialog = ref<HTMLDialogElement>();
 const searchOpen = ref(false);
@@ -34,7 +34,7 @@ const matches = computed(() => {
 });
 
 const isActive = (href: string) =>
-  route.path === href || (href !== "/" && route.path.startsWith(href));
+  router.path === href || (href !== "/" && router.path.startsWith(href));
 
 watch(menuOpen, async (open) => {
   if (!open) return;
@@ -87,17 +87,17 @@ onBeforeUnmount(() => {
   <header class="site-header">
     <div class="header-inner">
       <div class="header-brand-row">
-        <a class="brand" href="/">mimifuwa.cc</a>
+        <Link class="brand" href="/">mimifuwa.cc</Link>
       </div>
       <nav aria-label="Main navigation" class="desktop-nav">
-        <a
+        <Link
           v-for="item in navItems"
           :key="item.href"
           :href="sanitizeUrl(item.href)"
           :aria-current="isActive(item.href) ? 'page' : undefined"
         >
           <span>{{ item.label }}</span>
-        </a>
+        </Link>
       </nav>
       <div class="header-theme">
         <button
@@ -157,7 +157,7 @@ onBeforeUnmount(() => {
         </button>
       </div>
       <nav aria-label="Main navigation" class="mobile-menu-links">
-        <a
+        <Link
           v-for="item in navItems"
           :key="item.href"
           :href="sanitizeUrl(item.href)"
@@ -165,7 +165,7 @@ onBeforeUnmount(() => {
           @click="menuOpen = false"
         >
           {{ item.label }}
-        </a>
+        </Link>
       </nav>
       <span aria-hidden="true" class="mobile-menu-brand">mimifuwa.cc</span>
     </div>
