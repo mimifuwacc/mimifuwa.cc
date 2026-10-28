@@ -27,8 +27,8 @@ export default defineConfig({
   routing: {
     revalidate: {
       "/": 300,
-      "/blogs": 300,
-      "/blogs/*": 300,
+      "/blogs": 86400,
+      "/blogs/*": 86400,
       "/works": 86400,
       "/works/*": 86400,
       "/onrepeat": 86400,
