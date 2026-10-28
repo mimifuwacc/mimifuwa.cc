@@ -205,7 +205,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", updateBackToTop));
   transform: translate(-50%, 0.6rem);
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 64rem) {
   .site-signature {
     display: none;
   }

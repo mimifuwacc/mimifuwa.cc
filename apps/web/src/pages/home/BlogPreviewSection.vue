@@ -41,7 +41,7 @@ onMounted(async () => {
   gap: 2.25rem 1.5rem;
 }
 
-@media (min-width: 48.001rem) and (max-width: 90rem) {
+@media (min-width: 40.001rem) and (max-width: 90rem) {
   .blog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -51,7 +51,7 @@ onMounted(async () => {
   display: none;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 40rem) {
   .blog-action-desktop {
     display: none;
   }

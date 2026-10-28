@@ -768,7 +768,7 @@ kbd {
   color: var(--muted-foreground);
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 64rem) {
   .site-shell {
     display: flex;
     flex-direction: column;
