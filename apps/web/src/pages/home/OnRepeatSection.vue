@@ -89,7 +89,11 @@ import { tracks } from "../../lib/on-repeat";
 
 @media (min-width: 40.001rem) and (max-width: 90rem) {
   .track-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .track-card:last-child:nth-child(4) {
+    grid-column: 1;
   }
 }
 

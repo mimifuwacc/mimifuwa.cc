@@ -78,7 +78,9 @@ const onKeydown = (event: KeyboardEvent) => {
   }
 };
 
-onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", onKeydown);
+});
 </script>
 
 <template>

@@ -769,6 +769,10 @@ kbd {
 }
 
 @media (max-width: 72rem) {
+  .site-rail {
+    display: none;
+  }
+
   .site-shell {
     display: flex;
     flex-direction: column;
