@@ -40,7 +40,7 @@ CONTENT_DIR=packages/content-dev/articles vp exec --filter @mimifuwacc/cli -- mi
 
 The CLI loads only the Ox Content plugin, builds the collection payload, uploads it under a revision key with Cloudflare's `cf` CLI, and updates the active revision in R2. It does not build or deploy the website. In this workspace, `cf` is installed with the other dependencies through Vite+. `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` must be available in the environment; the token needs permission to write R2 objects.
 
-The `dev` branch workflow publishes `packages/content-dev/articles` and `packages/content-dev/data/site-content.json`. A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the site and the same dev content. A stable version tag such as `v5.0.0` publishes the site and the articles and structured data from `mimifuwa.cc-content`'s `main` branch.
+The `main` branch workflow publishes `packages/content-dev/articles` and `packages/content-dev/data/site-content.json` to the dev Worker. A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the site and the same dev content. A stable version tag such as `v5.0.0` publishes the site and the articles and structured data from `mimifuwa.cc-content`'s `main` branch.
 
 ## npm releases
 

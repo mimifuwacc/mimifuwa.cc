@@ -41,8 +41,8 @@ if (
   throw new Error("Pass one v-prefixed semantic version tag, such as v5.0.1");
 }
 
-git(["fetch", "--quiet", "origin", "dev", "--tags"]);
-const commit = git(["rev-parse", "refs/remotes/origin/dev"]);
+git(["fetch", "--quiet", "origin", "main", "--tags"]);
+const commit = git(["rev-parse", "refs/remotes/origin/main"]);
 
 if (git(["tag", "--list", tag])) {
   throw new Error(`Tag ${tag} already exists locally or on origin`);

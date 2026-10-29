@@ -22,6 +22,6 @@ The site reads the active content revision from the `STORAGE` R2 bucket. The con
 
 ## Deployment
 
-- A push to `dev` deploys the `mimifuwa-cc-dev` Worker and publishes `packages/content-dev/articles` to its R2 bucket.
+- A push to `main` deploys the `mimifuwa-cc-dev` Worker and publishes `packages/content-dev/articles` to its R2 bucket.
 - A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the CLI under its prerelease npm tag, deploys the dev Worker, and publishes `packages/content-dev/articles`.
 - A stable version tag such as `v5.0.0` publishes the CLI under npm's `latest` tag and deploys production. After deployment, it dispatches and waits for the content repository's publish workflow to build and publish that repository's `main` branch.
