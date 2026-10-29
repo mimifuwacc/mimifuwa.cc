@@ -2,7 +2,7 @@
   "name": "@mimifuwacc/monorepo",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@11.28.8",
+  "packageManager": "pnpm@12.15.0",
   "scripts": {
     "dev": "vp run --filter @mimifuwacc/web dev",
     "format": "vp fmt --write",
