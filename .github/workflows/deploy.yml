@@ -85,20 +85,6 @@ jobs:
           node scripts/set-package-version.mjs "$PACKAGE_VERSION"
           vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
-      - name: Read the production content target
-        if: ${{ !contains(github.ref_name, '-') }}
-        id: storage
-        run: |
-          node --input-type=module <<'NODE'
-          import { appendFileSync, readFileSync } from 'node:fs';
-
-          const config = JSON.parse(readFileSync('apps/web/.void-wrangler.jsonc', 'utf8'));
-          const bucket = config.r2_buckets?.find((binding) => binding.binding === 'STORAGE')?.bucket_name;
-          if (!bucket) throw new Error('The deployed site config has no STORAGE R2 bucket');
-          if (!config.account_id) throw new Error('The deployed site config has no Cloudflare account_id');
-          appendFileSync(process.env.GITHUB_OUTPUT, `bucket=${bucket}\naccount_id=${config.account_id}\n`);
-          NODE
-
       - name: Publish dev content with the released CLI
         if: ${{ contains(github.ref_name, '-') }}
         env:
@@ -107,71 +93,6 @@ jobs:
           CF_BIN: ${{ github.workspace }}/node_modules/.bin/cf
           CLI_VERSION: ${{ needs.publish-cli.outputs.version }}
         run: vp dlx "@mimifuwacc/cli@$CLI_VERSION" deploy
-
-      - name: Create content repository token
-        if: ${{ !contains(github.ref_name, '-') }}
-        id: content-token
-        uses: actions/create-github-app-token@v3
-        with:
-          client-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
-          owner: mimifuwacc
-          repositories: mimifuwa.cc-content
-          permission-actions: write
-
-      - name: Publish production content from the content repository
-        if: ${{ !contains(github.ref_name, '-') }}
-        uses: actions/github-script@v8
-        with:
-          github-token: ${{ steps.content-token.outputs.token }}
-          script: |
-            const owner = "mimifuwacc";
-            const repo = "mimifuwa.cc-content";
-            const workflow_id = "publish-content.yml";
-            const baseline = new Set((await github.rest.actions.listWorkflowRuns({
-              owner, repo, workflow_id, event: "workflow_dispatch", branch: "main", per_page: 100,
-            })).data.workflow_runs.map((run) => run.id));
-            const dispatchedAt = Date.now() - 5000;
-
-            await github.rest.actions.createWorkflowDispatch({
-              owner,
-              repo,
-              workflow_id,
-              ref: "main",
-              inputs: {
-                cli_version: process.env.CLI_VERSION,
-                site_ref: process.env.SITE_REF,
-                content_ref: "main",
-                content_bucket: process.env.CONTENT_BUCKET,
-                cloudflare_account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
-              },
-            });
-
-            const deadline = Date.now() + 30 * 60 * 1000;
-            let contentRun;
-            while (Date.now() < deadline) {
-              const runs = (await github.rest.actions.listWorkflowRuns({
-                owner, repo, workflow_id, event: "workflow_dispatch", branch: "main", per_page: 100,
-              })).data.workflow_runs;
-              contentRun = runs.find((run) => !baseline.has(run.id) && Date.parse(run.created_at) >= dispatchedAt);
-              if (contentRun?.status === "completed") {
-                if (contentRun.conclusion !== "success") {
-                  core.setFailed(`Content publish workflow concluded with ${contentRun.conclusion}: ${contentRun.html_url}`);
-                } else {
-                  core.info(`Content publish completed: ${contentRun.html_url}`);
-                }
-                return;
-              }
-              await new Promise((resolve) => setTimeout(resolve, 10000));
-            }
-            core.setFailed(contentRun
-              ? `Timed out waiting for content publish: ${contentRun.html_url}`
-              : "Timed out waiting for the content publish workflow to start");
-        env:
-          CLI_VERSION: ${{ needs.publish-cli.outputs.version }}
-          SITE_REF: ${{ github.ref_name }}
-          CONTENT_BUCKET: ${{ steps.storage.outputs.bucket }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ steps.storage.outputs.account_id }}
 
   release:
     needs: deploy
