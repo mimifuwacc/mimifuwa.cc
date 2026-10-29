@@ -21,6 +21,8 @@ const isDark = ref(false);
 const progressVisible = ref(false);
 let showProgressTimeout: ReturnType<typeof setTimeout> | undefined;
 let hideProgressTimeout: ReturnType<typeof setTimeout> | undefined;
+let historyNavigationTimeout: ReturnType<typeof setTimeout> | undefined;
+let isHistoryNavigation = false;
 const navItems = [
   { href: "/", label: "Top" },
   { href: "/blogs/", label: "Blogs" },
@@ -56,11 +58,18 @@ watch(
     clearTimeout(hideProgressTimeout);
 
     if (state === "idle") {
+      isHistoryNavigation = false;
+      clearTimeout(historyNavigationTimeout);
       if (progressVisible.value) {
         hideProgressTimeout = setTimeout(() => {
           progressVisible.value = false;
         }, 180);
       }
+      return;
+    }
+
+    if (isHistoryNavigation) {
+      clearTimeout(historyNavigationTimeout);
       return;
     }
 
@@ -92,6 +101,8 @@ const toggleTheme = () => {
 };
 
 onMounted(async () => {
+  window.addEventListener("popstate", onHistoryNavigation);
+
   const savedTheme = localStorage.getItem("theme");
   isDark.value =
     savedTheme === "dark" || (!savedTheme && matchMedia("(prefers-color-scheme: dark)").matches);
@@ -125,10 +136,24 @@ const onKeydown = (event: KeyboardEvent) => {
   }
 };
 
-onBeforeUnmount(() => {
-  window.removeEventListener("keydown", onKeydown);
+const onHistoryNavigation = () => {
+  isHistoryNavigation = true;
   clearTimeout(showProgressTimeout);
   clearTimeout(hideProgressTimeout);
+  progressVisible.value = false;
+
+  clearTimeout(historyNavigationTimeout);
+  historyNavigationTimeout = setTimeout(() => {
+    isHistoryNavigation = false;
+  }, 1500);
+};
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", onKeydown);
+  window.removeEventListener("popstate", onHistoryNavigation);
+  clearTimeout(showProgressTimeout);
+  clearTimeout(hideProgressTimeout);
+  clearTimeout(historyNavigationTimeout);
 });
 </script>
 
