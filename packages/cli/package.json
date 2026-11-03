@@ -35,7 +35,7 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "@ox-content/vite-plugin": "3.4.0",
+    "@ox-content/vite-plugin": "3.5.0",
     "vite": "*"
   },
   "engines": {
