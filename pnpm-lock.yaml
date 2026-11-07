@@ -48,8 +48,8 @@ importers:
         specifier: 0.627.0
         version: 0.627.0(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(esbuild@0.28.2)(rolldown@1.2.14)(vite-plus@1.4.0(@types/node@24.13.2)(@vitest/ui@5.0.5)(esbuild@0.28.2)(jiti@2.7.0)(playwright@1.64.1)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(vue@3.6.0-rc.14(typescript@6.0.3))
       '@void/vue':
-        specifier: 1.5.0
-        version: 1.5.0(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(void@1.5.0(@types/node@24.13.2)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(arktype@2.2.9)(kysely@0.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(valibot@1.5.0(typescript@6.0.3))(vitest@5.0.5)(vue@3.6.0-rc.14(typescript@6.0.3))(workerd@1.20261101.1)(zod@4.6.7))(vue@3.6.0-rc.14(typescript@6.0.3))
+        specifier: 1.6.1
+        version: 1.6.1(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(void@1.5.0(@types/node@24.13.2)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(arktype@2.2.9)(kysely@0.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(valibot@1.5.0(typescript@6.0.3))(vitest@5.0.5)(vue@3.6.0-rc.14(typescript@6.0.3))(workerd@1.20261101.1)(zod@4.6.7))(vue@3.6.0-rc.14(typescript@6.0.3))
       vue:
         specifier: 3.6.0-rc.14
         version: 3.6.0-rc.14(typescript@6.0.3)
@@ -2966,11 +2966,11 @@ packages:
   '@void/platform@1.5.0':
     resolution: {integrity: sha512-lB0floJDyzvvfy36NdmTvTu1d9z/YSxAjSfHi1mn2t4EMYP1pDRa+ZUJaKnlTLGDuZXesRp9FmjPEK4hZAJxTA==}
 
-  '@void/vue@1.5.0':
-    resolution: {integrity: sha512-i7lylY6gGAgD0ejQYSyELhJycoQMypKIVoQZgZfmVBvlrrExxQdRtfzJ7VqaFjKY4o6iy07/qTg037eBlsuM3Q==}
+  '@void/vue@1.6.1':
+    resolution: {integrity: sha512-M+r6r2FqXWX5BWB6QUpgGF5D/hFvzugXu0nVtbccV7RzaG5Kgv3mVo5NpDrtgS7ueN3OKtXITC/h2+bv+5LIAg==}
     peerDependencies:
       vite: ^8.0.0
-      void: 1.5.0
+      void: 1.6.1
       vue: ^3.5.0
 
   '@voidzero-dev/vite-plus-core@1.4.0':
@@ -7278,7 +7278,7 @@ snapshots:
     dependencies:
       pathslash: 0.1.0
 
-  '@void/vue@1.5.0(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(void@1.5.0(@types/node@24.13.2)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(arktype@2.2.9)(kysely@0.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(valibot@1.5.0(typescript@6.0.3))(vitest@5.0.5)(vue@3.6.0-rc.14(typescript@6.0.3))(workerd@1.20261101.1)(zod@4.6.7))(vue@3.6.0-rc.14(typescript@6.0.3))':
+  '@void/vue@1.6.1(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(void@1.5.0(@types/node@24.13.2)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(arktype@2.2.9)(kysely@0.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(valibot@1.5.0(typescript@6.0.3))(vitest@5.0.5)(vue@3.6.0-rc.14(typescript@6.0.3))(workerd@1.20261101.1)(zod@4.6.7))(vue@3.6.0-rc.14(typescript@6.0.3))':
     dependencies:
       '@vitejs/plugin-vue': 6.0.10(@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1))(vue@3.6.0-rc.14(typescript@6.0.3))
       vite: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.1)'
