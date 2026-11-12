@@ -10,6 +10,7 @@ Configure the `dev` and `production` GitHub Actions environments with these secr
 
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_API_TOKEN`
+- `CROSS_REPO_READ_TOKEN` in `production`, a fine-grained token with Contents read access to `mimifuwa.cc-content`
 
 The Cloudflare API token needs these account permissions:
 

@@ -17,14 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Checkout production content
-        if: ${{ !contains(github.ref_name, '-') }}
-        uses: actions/checkout@v7
-        with:
-          repository: mimifuwacc/mimifuwa.cc-content
-          ref: main
-          path: mimifuwa.cc-content
-
       - name: Setup Vite+
         uses: voidzero-dev/setup-vp@v1.22.0
         with:
@@ -78,6 +70,15 @@ jobs:
       APP_VERSION: v${{ needs.publish-cli.outputs.version }}
     steps:
       - uses: actions/checkout@v7
+
+      - name: Checkout production content
+        if: ${{ !contains(github.ref_name, '-') }}
+        uses: actions/checkout@v7
+        with:
+          repository: mimifuwacc/mimifuwa.cc-content
+          ref: main
+          path: mimifuwa.cc-content
+          token: ${{ secrets.CROSS_REPO_READ_TOKEN }}
 
       - name: Setup Vite+
         uses: voidzero-dev/setup-vp@v1.22.0
