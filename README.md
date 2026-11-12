@@ -1,6 +1,6 @@
 # mimifuwa.cc
 
-Vue で構築した個人サイトです。Void を使って Cloudflare Workers にデプロイし、記事と Works の本文は `mimifuwa.cc-content` から R2 に公開します。
+Vue で構築した個人サイトです。Void を使って Cloudflare Workers にデプロイします。ブログと Works は Ox Content でビルド時に HTML 化し、`mimifuwa.cc-content` の main が更新されるたびに本番サイトを SSG で再デプロイします。R2 は API から使うコンテンツデータと画像の配信に使います。
 
 ## 開発
 
@@ -29,7 +29,7 @@ vp run -r build
 ## デプロイ
 
 - `main` への push は <https://mimifuwa-cc-dev.m8c.workers.dev> へ自動デプロイします。Blogs と Works は `packages/content-dev` のサンプルを表示します。
-- `vX.Y.Z` tag は CLI を npm の `latest` として公開し、本番サイトをデプロイした後、GitHub Release を作成します。content リポジトリの `main` へのマージで本番コンテンツを公開します。
+- `vX.Y.Z` tag は CLI を npm の `latest` として公開し、`mimifuwa.cc-content` の main を使って本番サイトを SSG でデプロイした後、GitHub Release を作成します。content リポジトリの main へのマージでも、R2 への公開後に同じ手順で本番サイトを再デプロイします。
 - `vX.Y.Z-dev.N` や `vX.Y.Z-alpha.N` tag は CLI を対応する npm prerelease tag で公開し、dev Worker と `packages/content-dev` の記事をデプロイします。
 - Cloudflare の認証情報は GitHub Actions の `dev` / `production` 環境シークレットで管理します。
 

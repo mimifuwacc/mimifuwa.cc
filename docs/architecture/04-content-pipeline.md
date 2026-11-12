@@ -18,10 +18,11 @@ vp run dev
 
 ## Build and publish
 
-The site reads the active content revision from the `STORAGE` R2 bucket. The content CLI publishes a complete revision with the released `@mimifuwacc/cli`, then switches the active revision pointer after all files are uploaded. The site reads only the active revision, so an incomplete upload is not shown to visitors.
+The production site builds its page HTML directly from the Ox Content collections during SSG. The content CLI also publishes a complete revision to the `STORAGE` R2 bucket, then switches the active revision pointer after all files are uploaded. API routes read only the active revision, so an incomplete upload is not shown to visitors.
 
 ## Deployment
 
 - A push to `main` deploys the `mimifuwa-cc-dev` Worker and publishes `packages/content-dev/articles` to its R2 bucket.
 - A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the CLI under its prerelease npm tag, deploys the dev Worker, and publishes `packages/content-dev/articles`.
-- A stable version tag such as `v5.0.0` publishes the CLI under npm's `latest` tag and deploys production. After deployment, it dispatches and waits for the content repository's publish workflow to build and publish that repository's `main` branch.
+- A stable version tag such as `v5.0.0` publishes the CLI under npm's `latest` tag and deploys production with the `mimifuwa.cc-content` `main` branch as its SSG source.
+- Every merge to `mimifuwa.cc-content` `main` publishes its content revision to R2, then checks out the latest stable site release and rebuilds and deploys production using the merged Markdown and JSON files.

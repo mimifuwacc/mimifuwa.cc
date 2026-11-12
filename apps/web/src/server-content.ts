@@ -12,3 +12,10 @@ export const collections = {
 };
 export const fixtures = createContentData(articlePagesFromCollections(collections));
 export const siteContent = localSiteContent satisfies SiteContent;
+
+export const getArticlePrerenderPaths = (section: "blogs" | "works") =>
+  collections[section].flatMap(({ path, frontmatter }) => {
+    if (section === "works" && typeof frontmatter.url !== "string") return [];
+    const slug = path.replace(new RegExp(`^/${section}/?`), "").replace(/\/+$/, "");
+    return slug ? [{ slug }] : [];
+  });

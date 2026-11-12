@@ -1,18 +1,17 @@
 import { defineHandler, defineHead, type InferProps } from "void";
-import { getContent } from "@/content-api";
-import type { BlogArticle } from "@/types/blog";
+import { rewriteContentAssetUrls } from "@/content-data";
+import { fixtures, getArticlePrerenderPaths } from "@/server-content";
 
-export const loader = defineHandler(async (c) => {
-  const response = await getContent("blogs", c.req.param("slug") ?? "");
-  if (response.status === 404) {
-    c.header("x-revalidate", "0");
-    return { article: null, hasError: false };
-  }
-  if (!response.ok) {
-    c.header("x-revalidate", "0");
-    return { article: null, hasError: true };
-  }
-  return { article: (await response.json()) as BlogArticle, hasError: false };
+export const prerender = true;
+
+export const getPrerenderPaths = () => getArticlePrerenderPaths("blogs");
+
+export const loader = defineHandler((c) => {
+  const slug = (c.req.param("slug") ?? "").replace(/^\/+|\/+$/g, "");
+  const url = `/blogs/${slug}/`;
+  const source = fixtures.blogContent.find((item) => item.url === url);
+  const article = source ? { ...source, html: rewriteContentAssetUrls(source.html) } : null;
+  return { article, hasError: false };
 });
 
 export type Props = InferProps<typeof loader>;

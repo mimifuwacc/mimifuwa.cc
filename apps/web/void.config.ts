@@ -9,6 +9,7 @@ const workerName = deploymentEnv === "dev" ? "mimifuwa-cc-dev" : "mimifuwa-cc-pr
 
 export default defineConfig({
   cloudflare: { name: workerName, workers_dev: true },
+  output: "static",
   inference: {
     appType: "void",
     build: "vp build",
@@ -24,17 +25,5 @@ export default defineConfig({
     ],
     link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
   },
-  routing: {
-    revalidate: {
-      "/": 300,
-      "/blogs": 300,
-      "/blogs/*": 300,
-      "/works": 300,
-      "/works/*": 300,
-      "/onrepeat": 86400,
-      "/onrepeat/*": 86400,
-      "/mutuals": 86400,
-      "/mutuals/*": 86400,
-    },
-  },
+  routing: { isr: false },
 });

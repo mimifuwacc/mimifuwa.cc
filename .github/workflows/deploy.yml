@@ -17,6 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Checkout production content
+        if: ${{ !contains(github.ref_name, '-') }}
+        uses: actions/checkout@v7
+        with:
+          repository: mimifuwacc/mimifuwa.cc-content
+          ref: main
+          path: mimifuwa.cc-content
+
       - name: Setup Vite+
         uses: voidzero-dev/setup-vp@v1.22.0
         with:
@@ -81,6 +89,8 @@ jobs:
       - name: Deploy site to Cloudflare
         env:
           PACKAGE_VERSION: ${{ needs.publish-cli.outputs.version }}
+          CONTENT_DIR: ${{ contains(github.ref_name, '-') && format('{0}/packages/content-dev/articles', github.workspace) || format('{0}/mimifuwa.cc-content/articles', github.workspace) }}
+          CONTENT_DATA_DIR: ${{ contains(github.ref_name, '-') && format('{0}/packages/content-dev/data', github.workspace) || format('{0}/mimifuwa.cc-content/data', github.workspace) }}
         run: |
           node scripts/set-package-version.mjs "$PACKAGE_VERSION"
           vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
