@@ -1,4 +1,5 @@
 import { readActiveContentJson } from "@/content-store";
+import { rewriteContentAssetUrls } from "@/content-data";
 import { fixtures, isLocalContent, siteContent as localSiteContent } from "@/server-content";
 import { emptySiteContent, type SiteContent } from "@/types/site-content";
 
@@ -6,8 +7,6 @@ type Section = "blogs" | "works";
 type ContentRecord = { url: string; html?: unknown };
 
 const cacheControl = "public, max-age=60, stale-while-revalidate=300";
-const rewriteContentAssetUrls = (html: string) =>
-  html.replace(/(["'(])\/assets\/(ox-content-[^"')\s]+)/g, "$1/api/content/assets/assets/$2");
 const json = (value: unknown, status = 200, cache?: string) =>
   Response.json(value, {
     status,

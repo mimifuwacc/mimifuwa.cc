@@ -1,18 +1,17 @@
 import { defineHandler, defineHead, type InferProps } from "void";
-import { getContent } from "@/content-api";
-import type { WorkItem } from "@/types/work";
+import { rewriteContentAssetUrls } from "@/content-data";
+import { fixtures, getArticlePrerenderPaths } from "@/server-content";
 
-export const loader = defineHandler(async (c) => {
-  const response = await getContent("works", c.req.param("slug") ?? "");
-  if (response.status === 404) {
-    c.header("x-revalidate", "0");
-    return { work: null, hasError: false };
-  }
-  if (!response.ok) {
-    c.header("x-revalidate", "0");
-    return { work: null, hasError: true };
-  }
-  return { work: (await response.json()) as WorkItem, hasError: false };
+export const prerender = true;
+
+export const getPrerenderPaths = () => getArticlePrerenderPaths("works");
+
+export const loader = defineHandler((c) => {
+  const slug = (c.req.param("slug") ?? "").replace(/^\/+|\/+$/g, "");
+  const url = `/works/${slug}/`;
+  const source = fixtures.workContent.find((item) => item.url === url);
+  const work = source ? { ...source, html: rewriteContentAssetUrls(source.html ?? "") } : null;
+  return { work, hasError: false };
 });
 
 export type Props = InferProps<typeof loader>;

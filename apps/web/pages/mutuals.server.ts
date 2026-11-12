@@ -1,11 +1,7 @@
 import { defineHandler, defineHead, type InferProps } from "void";
-import { getSiteContent } from "@/content-api";
+import { siteContent } from "@/server-content";
 
-export const loader = defineHandler(async (c) => {
-  const content = await getSiteContent();
-  if (!content.available) c.header("x-revalidate", "0");
-  return { links: content.value.mutuals };
-});
+export const loader = defineHandler(() => ({ links: siteContent.mutuals }));
 
 export type Props = InferProps<typeof loader>;
 
