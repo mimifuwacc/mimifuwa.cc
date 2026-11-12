@@ -71,6 +71,16 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Create token for production content
+        if: ${{ !contains(github.ref_name, '-') }}
+        id: content-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
+          owner: mimifuwacc
+          repositories: mimifuwa.cc-content
+
       - name: Checkout production content
         if: ${{ !contains(github.ref_name, '-') }}
         uses: actions/checkout@v7
@@ -78,7 +88,7 @@ jobs:
           repository: mimifuwacc/mimifuwa.cc-content
           ref: main
           path: mimifuwa.cc-content
-          token: ${{ secrets.CROSS_REPO_READ_TOKEN }}
+          token: ${{ steps.content-token.outputs.token }}
 
       - name: Setup Vite+
         uses: voidzero-dev/setup-vp@v1.22.0
