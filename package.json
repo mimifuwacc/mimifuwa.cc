@@ -14,6 +14,6 @@
   "devDependencies": {
     "cf": "1.0.0-beta.28",
     "vite": "catalog:",
-    "vite-plus": "1.5.0"
+    "vite-plus": "1.5.1"
   }
 }
