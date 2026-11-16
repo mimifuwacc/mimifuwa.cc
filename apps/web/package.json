@@ -22,7 +22,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "vize": "0.747.0",
+    "vize": "0.751.0",
     "void": "1.8.0"
   },
   "engines": {
