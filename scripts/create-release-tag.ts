@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { createInterface } from "node:readline/promises";
 import process from "node:process";
 
-function git(args) {
+function git(args: string[]): string {
   const result = spawnSync("git", args, { encoding: "utf8" });
 
   if (result.error) {
@@ -31,11 +31,12 @@ if (args.includes("--help")) {
 
 const dryRun = args.includes("--dry-run");
 const versions = args.filter((arg) => arg !== "--dry-run");
-const [tag] = versions;
+const tag = versions[0];
 
 if (
   versions.length !== 1 ||
-  !/^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$/.test(tag ?? "")
+  !tag ||
+  !/^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$/.test(tag)
 ) {
   usage();
   throw new Error("Pass one v-prefixed semantic version tag, such as v5.0.1");
@@ -66,7 +67,7 @@ if (!process.stdin.isTTY || !process.stdout.isTTY) {
 }
 
 const prompt = createInterface({ input: process.stdin, output: process.stdout });
-let answer;
+let answer: string;
 
 try {
   answer = await prompt.question("Create a signed tag and push it to origin? [y/N] ");

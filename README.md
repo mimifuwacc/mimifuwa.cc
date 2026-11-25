@@ -17,7 +17,7 @@ vp run dev
 CONTENT_DIR=/path/to/articles vp run dev
 ```
 
-`mimifuwa.cc-content` の CLI から起動する場合は `mimifuwacc preview --content articles` を使います。詳細は [content preview](./packages/cli/README.md) を参照してください。
+`mimifuwa.cc-content` の CLI から起動する場合は `mimifuwacc dev --content articles` を使います。詳細は [content development](./packages/cli/README.md) を参照してください。
 
 ## 確認
 
@@ -28,7 +28,7 @@ vp run -r build
 
 ## デプロイ
 
-- `main` への push は <https://mimifuwa-cc-dev.m8c.workers.dev> へ自動デプロイします。Blogs と Works は `packages/content-dev` のサンプルを表示します。
+- `main` への push は <https://mimifuwa-cc-dev.m8c.workers.dev> へ自動デプロイします。Posts と Works は `packages/content-dev` のサンプルを表示します。
 - `vX.Y.Z` tag は CLI を npm の `latest` として公開し、`mimifuwa.cc-content` の main を使って本番サイトを SSG でデプロイした後、GitHub Release を作成します。content リポジトリの main へのマージでも、R2 への公開後に同じ手順で本番サイトを再デプロイします。
 - `vX.Y.Z-dev.N` や `vX.Y.Z-alpha.N` tag は CLI を対応する npm prerelease tag で公開し、dev Worker と `packages/content-dev` の記事をデプロイします。
 - Cloudflare の認証情報は GitHub Actions の `dev` / `production` 環境シークレットで管理します。

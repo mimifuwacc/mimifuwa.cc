@@ -1,4 +1,4 @@
-export interface BlogSummary {
+export interface PostSummary {
   title: string;
   description?: string;
   date?: string;
@@ -6,6 +6,6 @@ export interface BlogSummary {
   url: string;
 }
 
-export interface BlogArticle extends BlogSummary {
+export interface PostArticle extends PostSummary {
   html: string;
 }

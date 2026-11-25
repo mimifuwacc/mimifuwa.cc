@@ -56,7 +56,7 @@ defineProps<{
   padding: 0.16rem 0.45rem;
   color: var(--background);
   background: var(--foreground);
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;

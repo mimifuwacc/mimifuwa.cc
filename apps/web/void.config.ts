@@ -16,7 +16,7 @@ export default defineConfig({
     outputDir: "dist",
   },
   head: {
-    titleTemplate: "%s | mimifuwa.cc",
+    titleTemplate: "%s",
     htmlAttrs: { lang: "ja" },
     meta: [
       { charset: "utf-8" },
@@ -25,5 +25,10 @@ export default defineConfig({
     ],
     link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
   },
-  routing: { isr: false },
+  routing: {
+    isr: false,
+    headers: {
+      "/og/*": ["Cache-Control: public, max-age=86400"],
+    },
+  },
 });

@@ -4,20 +4,12 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue"
 import { Link, useNavigation, useRouter } from "@void/vue";
 import { Menu, Moon, Sun, X } from "@lucide/vue";
 
-interface SearchDocument {
-  title: string;
-  url: string;
-  body: string;
-}
-
 const router = useRouter();
 const navigation = useNavigation();
 const menuOpen = ref(false);
 const menuDialog = ref<HTMLDialogElement>();
-const searchOpen = ref(false);
-const query = ref("");
-const documents = ref<SearchDocument[]>([]);
 const isDark = ref(false);
+const isScrolled = ref(false);
 const progressVisible = ref(false);
 let showProgressTimeout: ReturnType<typeof setTimeout> | undefined;
 let hideProgressTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -25,19 +17,11 @@ let historyNavigationTimeout: ReturnType<typeof setTimeout> | undefined;
 let isHistoryNavigation = false;
 const navItems = [
   { href: "/", label: "Top" },
-  { href: "/blogs/", label: "Blogs" },
+  { href: "/posts/", label: "Posts" },
   { href: "/works/", label: "Works" },
   { href: "/onrepeat/", label: "On Repeat" },
-  { href: "/mutuals/", label: "Mutuals" },
+  { href: "/links/", label: "Links" },
 ];
-
-const matches = computed(() => {
-  const search = query.value.trim().toLocaleLowerCase();
-  if (!search) return [];
-  return documents.value
-    .filter((document) => `${document.title} ${document.body}`.toLocaleLowerCase().includes(search))
-    .slice(0, 20);
-});
 
 const currentPath = computed(() => {
   const pathname = router.url.pathname.replace(/\/{2,}/g, "/");
@@ -100,8 +84,10 @@ const toggleTheme = () => {
   localStorage.setItem("theme", isDark.value ? "dark" : "light");
 };
 
-onMounted(async () => {
+onMounted(() => {
   window.addEventListener("popstate", onHistoryNavigation);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 
   const savedTheme = localStorage.getItem("theme");
   isDark.value =
@@ -111,29 +97,10 @@ onMounted(async () => {
   root.style.backgroundColor = isDark.value ? "#000000" : "#ffffff";
   root.style.color = isDark.value ? "#ffffff" : "#000000";
   root.style.colorScheme = isDark.value ? "dark" : "light";
-
-  try {
-    const response = await fetch("/api/search-index");
-    if (response.ok) {
-      const index = (await response.json()) as { documents?: SearchDocument[] };
-      documents.value = index.documents ?? [];
-    }
-  } catch {
-    documents.value = [];
-  }
-
-  window.addEventListener("keydown", onKeydown);
 });
 
-const onKeydown = (event: KeyboardEvent) => {
-  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-    event.preventDefault();
-    searchOpen.value = true;
-  }
-  if (event.key === "Escape") {
-    searchOpen.value = false;
-    menuOpen.value = false;
-  }
+const onScroll = () => {
+  isScrolled.value = window.scrollY > 0;
 };
 
 const onHistoryNavigation = () => {
@@ -149,8 +116,8 @@ const onHistoryNavigation = () => {
 };
 
 onBeforeUnmount(() => {
-  window.removeEventListener("keydown", onKeydown);
   window.removeEventListener("popstate", onHistoryNavigation);
+  window.removeEventListener("scroll", onScroll);
   clearTimeout(showProgressTimeout);
   clearTimeout(hideProgressTimeout);
   clearTimeout(historyNavigationTimeout);
@@ -167,7 +134,7 @@ onBeforeUnmount(() => {
   >
     <span />
   </div>
-  <header class="site-header">
+  <header class="site-header" :class="{ 'is-scrolled': isScrolled }">
     <div class="header-inner">
       <div class="header-brand-row">
         <Link class="brand" href="/">mimifuwa.cc</Link>
@@ -228,7 +195,7 @@ onBeforeUnmount(() => {
   >
     <div class="mobile-menu-inner">
       <div class="mobile-menu-header">
-        <span>CONTENTS</span>
+        <span class="mobile-menu-site-brand">mimifuwa.cc</span>
         <button
           aria-label="Close menu"
           autofocus
@@ -250,45 +217,35 @@ onBeforeUnmount(() => {
           {{ item.label }}
         </Link>
       </nav>
-      <span aria-hidden="true" class="mobile-menu-brand">mimifuwa.cc</span>
-    </div>
-  </dialog>
-
-  <dialog
-    v-if="searchOpen"
-    aria-label="Search articles"
-    class="search-dialog"
-    open
-    @click.self="searchOpen = false"
-  >
-    <div class="search-dialog-header">
-      <input
-        v-model="query"
-        aria-label="Search articles"
-        autofocus
-        placeholder="Search articles"
-        type="search"
-      />
-      <button
-        aria-label="Close search"
-        class="icon-button"
-        type="button"
-        @click="searchOpen = false"
-      >
-        <X aria-hidden="true" class="icon" />
-      </button>
-    </div>
-    <div class="search-results">
-      <a
-        v-for="result in matches"
-        :key="result.url"
-        class="search-result"
-        :href="sanitizeUrl(result.url)"
-      >
-        <strong>{{ result.title }}</strong>
-        <span>{{ result.body.slice(0, 160) }}</span>
-      </a>
-      <p v-if="query && matches.length === 0" class="search-empty">No results.</p>
     </div>
   </dialog>
 </template>
+
+<style scoped>
+.mobile-menu {
+  padding: env(safe-area-inset-top) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.mobile-menu-inner {
+  width: 100%;
+  margin-inline: 0;
+}
+
+.mobile-menu-header {
+  min-height: var(--header-height);
+}
+
+.mobile-menu-site-brand {
+  color: var(--background);
+  font-family: "Noto Sans JP Variable", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 850;
+  letter-spacing: -0.065em;
+  white-space: nowrap;
+}
+
+.mobile-menu-links {
+  padding-left: 1rem;
+}
+</style>

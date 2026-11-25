@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import type { BlogSummary } from "@/types/blog";
+import type { PostSummary } from "@/types/post";
 import type { WorkItem } from "@/types/work";
 import AboutSection from "@/pages/home/AboutSection.vue";
-import BlogPreviewSection from "@/pages/home/BlogPreviewSection.vue";
+import PostPreviewSection from "@/pages/home/PostPreviewSection.vue";
 import HomeHero from "@/pages/home/HomeHero.vue";
-import OnRepeatSection from "@/pages/home/OnRepeatSection.vue";
 import WorksSection from "@/pages/home/WorksSection.vue";
 import type { SiteContent } from "@/types/site-content";
 
 const avatar = "/mimifuwacc.png";
 defineProps<{
   about: SiteContent["about"];
-  blogs: BlogSummary[];
-  tracks: SiteContent["tracks"];
+  posts: PostSummary[];
   works: WorkItem[];
 }>();
 </script>
 
 <template>
-  <HomeHero :avatar="avatar" />
+  <HomeHero />
   <AboutSection :about="about" :avatar="avatar" />
-  <BlogPreviewSection :posts="blogs" />
+  <PostPreviewSection :posts="posts" />
   <WorksSection :works="works" />
-  <OnRepeatSection :tracks="tracks" />
 </template>

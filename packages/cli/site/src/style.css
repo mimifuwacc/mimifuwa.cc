@@ -1,0 +1,205 @@
+:root {
+  color-scheme: light;
+  font-family: "Noto Sans JP Variable", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  color: #000;
+  background: #fff;
+  --muted-foreground: #555;
+  --soft-border: #888;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  min-width: 320px;
+  scroll-padding-top: 1rem;
+}
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+}
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  color: var(--muted-foreground);
+}
+.site-header {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  font-weight: 700;
+}
+.site-header a {
+  text-decoration: none;
+}
+.container {
+  width: min(calc(100% - 2rem), 72rem);
+  margin-inline: auto;
+}
+.page {
+  padding-block: clamp(4rem, 10vw, 8rem);
+}
+.section-label {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: 0.16rem 0.45rem;
+  color: #fff;
+  background: #000;
+  font-family: "Noto Sans Mono Variable", monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-decoration: none;
+}
+.page-title {
+  margin: 0 0 3rem;
+  font-size: clamp(3.5rem, 9vw, 6rem);
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  line-height: 1.1;
+}
+.site-nav {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+.site-nav a {
+  text-decoration: none;
+}
+.site-nav a[aria-current="page"] {
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+.entry-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 3rem;
+}
+.entry-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--soft-border) 40%, #fff);
+  text-decoration: none;
+}
+.entry-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--muted-foreground);
+  font-family: "Noto Sans Mono Variable", monospace;
+  font-size: 0.8rem;
+}
+.entry-card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.entry-card p,
+.article-description {
+  margin: 0;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}
+.entry-card:hover h2 {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+.tag {
+  padding: 0.12rem 0.5rem;
+  border: 1px solid #000;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.article-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--soft-border) 40%, #fff);
+}
+.article-date {
+  display: block;
+  margin: 0.5rem 0 1rem;
+  color: var(--muted-foreground);
+  font-family: "Noto Sans Mono Variable", monospace;
+  font-size: 0.85rem;
+}
+.article-header h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  letter-spacing: -0.045em;
+  line-height: 1.2;
+}
+.article-description {
+  margin-bottom: 1rem;
+}
+.article-content {
+  overflow-wrap: anywhere;
+  font-size: 1.05rem;
+}
+.article-content > :first-child {
+  margin-top: 0;
+}
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4 {
+  margin: 1.75em 0 0.75em;
+  line-height: 1.3;
+}
+.article-content h2 {
+  padding-bottom: 0.35em;
+  border-bottom: 1px solid color-mix(in srgb, var(--soft-border) 40%, #fff);
+  font-size: 1.55em;
+}
+.article-content pre {
+  overflow-x: auto;
+  padding: 1rem;
+  background: #f2f2f2;
+}
+.article-content img {
+  max-width: 100%;
+  height: auto;
+}
+.back-link {
+  display: inline-block;
+  margin-top: 3rem;
+}
+.error {
+  padding: 2rem 0;
+}
+.loading {
+  color: var(--muted-foreground);
+}
+@media (max-width: 48rem) {
+  .site-header {
+    position: static;
+    padding: 1.25rem 1rem 0;
+  }
+  .page {
+    padding-top: 2.5rem;
+  }
+  .entry-list {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

@@ -1,13 +1,13 @@
 # Content pipeline
 
-The source of truth for blog posts and work entries is the `mimifuwa.cc-content` repository. It stores Markdown under `articles/blogs` and `articles/works`.
+The source of truth for posts and work entries is the `mimifuwa.cc-content` repository. It stores Markdown under `articles/posts` and `articles/works`.
 
 ## Local preview
 
-The content repository runs the `mimifuwacc` CLI from this repository. The CLI passes its selected article directory to the Vue app through `CONTENT_DIR`; the Ox Content Vite plugin loads the blogs and works collections from that directory.
+The content repository runs the `mimifuwacc` CLI from this repository. The CLI passes its selected article directory to the Vue app through `CONTENT_DIR`; the Ox Content Vite plugin loads the posts and works collections from that directory.
 
 ```sh
-mimifuwacc preview --content articles
+mimifuwacc dev --content articles
 ```
 
 When developing the site itself, the app uses a few fixtures from `packages/content-dev/articles`:
@@ -18,7 +18,7 @@ vp run dev
 
 ## Build and publish
 
-The production site builds its page HTML directly from the Ox Content collections during SSG. The content CLI also publishes a complete revision to the `STORAGE` R2 bucket, then switches the active revision pointer after all files are uploaded. API routes read only the active revision, so an incomplete upload is not shown to visitors.
+The production site builds its page HTML directly from the Ox Content collections during SSG. The content CLI publishes embedded media and the allowlist for remote Open Graph images to the `STORAGE` R2 bucket, then switches the active revision pointer after the files are uploaded. Asset routes read only the active revision, so an incomplete upload is not shown to visitors. Article and site data is compiled into the static pages and is not fetched through runtime JSON APIs.
 
 ## Deployment
 

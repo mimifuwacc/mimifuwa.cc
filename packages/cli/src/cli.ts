@@ -2,27 +2,39 @@
 import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { delimiter, dirname, join, relative, resolve, sep } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
-import { pathToFileURL } from "node:url";
-import { createServer, loadConfigFromFile, type PluginOption } from "vite";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  build as viteBuild,
+  createServer,
+  loadConfigFromFile,
+  type Plugin,
+  type PluginOption,
+} from "vite";
 import { mimifuwaccContentOptions, type MimifuwaccContentOptions } from "./config.js";
+import { createArticleOgHtml, screenshotArticleOgHtml } from "./og-image.js";
+import { mimifuwaccContentEmbeds } from "./vite.js";
 
-type Action = "preview" | "build" | "deploy";
-const [requestedAction = "preview", ...args] = process.argv.slice(2);
+type Action = "dev" | "build" | "deploy";
+const [requestedAction = "dev", ...args] = process.argv.slice(2);
+const action: Action | "help" =
+  requestedAction === "preview"
+    ? "dev"
+    : requestedAction === "--help" || requestedAction === "-h"
+      ? "help"
+      : (requestedAction as Action);
 const usage =
-  "Usage: mimifuwacc <preview|build|deploy> [--content directory] [--data directory] [--site directory]";
+  "Usage: mimifuwacc <dev|build|deploy> [--content directory] [--output directory] [--port number]";
 
-if (requestedAction === "--help" || requestedAction === "-h") {
+if (action === "help") {
   console.info(usage);
   process.exit(0);
 }
-if (requestedAction !== "preview" && requestedAction !== "build" && requestedAction !== "deploy") {
+if (action !== "dev" && action !== "build" && action !== "deploy") {
   console.error(usage);
   process.exit(2);
 }
-const action: Action = requestedAction;
-
 const readOption = (name: string): string | undefined => {
   const values = args.flatMap((arg, index) => (arg === name ? [args[index + 1]] : []));
   if (values.length > 1) {
@@ -39,7 +51,7 @@ const readOption = (name: string): string | undefined => {
 };
 
 for (const arg of args) {
-  if (arg.startsWith("--") && arg !== "--content" && arg !== "--data" && arg !== "--site") {
+  if (arg.startsWith("--") && arg !== "--content" && arg !== "--output" && arg !== "--port") {
     console.error(`Unknown option: ${arg}\n${usage}`);
     process.exit(2);
   }
@@ -99,7 +111,28 @@ async function deploy() {
         ogViewer: false,
         highlight: true,
         gfm: true,
+        cards: true,
+        containers: { types: { message: { title: "Info" } } },
+        embeds: {
+          github: true,
+          openGraph: true,
+          twitter: {
+            fetch: true,
+            appearance: "full",
+            mediaOutputDir: join(outDir, "assets/ox-content-twitter"),
+            mediaPublicPath: "/assets/ox-content-twitter",
+          },
+        },
         collections: options.collections,
+      }),
+      mimifuwaccContentEmbeds({
+        articleOgImages: false,
+        twitter: {
+          fetch: true,
+          appearance: "full",
+          mediaOutputDir: join(outDir, "assets/ox-content-twitter"),
+          mediaPublicPath: "/assets/ox-content-twitter",
+        },
       }),
     ],
   });
@@ -111,28 +144,7 @@ async function deploy() {
     const collections = Object.fromEntries(
       Object.keys(options.collections).map((name) => [name, collectionModule.getCollection(name)]),
     );
-    const dataDir = resolve(appRoot, options.dataDir ?? "data");
-    const siteContentPath = join(dataDir, "site-content.json");
-    let siteContent: unknown;
-    try {
-      siteContent = JSON.parse(await readFile(siteContentPath, "utf8"));
-    } catch (error) {
-      throw new Error(`Could not read valid JSON from ${siteContentPath}`, { cause: error });
-    }
-    if (
-      !isRecord(siteContent) ||
-      !isRecord(siteContent.about) ||
-      !Array.isArray(siteContent.about.timeline) ||
-      !Array.isArray(siteContent.about.certifications) ||
-      !Array.isArray(siteContent.about.awards) ||
-      !Array.isArray(siteContent.mutuals) ||
-      !Array.isArray(siteContent.tracks)
-    ) {
-      throw new Error(
-        `${siteContentPath} must define about.timeline, about.certifications, about.awards, mutuals, and tracks arrays`,
-      );
-    }
-    await writeContentPayload(outDir, collections, siteContentPath);
+    await writeContentPayload(outDir, collections);
   } finally {
     await server.close();
   }
@@ -260,24 +272,11 @@ async function collectPayload(outDir: string): Promise<PayloadFile[]> {
     .map((file) => ({ file, path: relative(outDir, file).split(sep).join("/") }))
     .filter(
       ({ path }) =>
-        [
-          "blogs/index.json",
-          "blogs/content.json",
-          "works/index.json",
-          "works/content.json",
-          "search-index.json",
-          "site-content.json",
-        ].includes(path) ||
+        path === "og-image-urls.json" ||
         (/^assets\/ox-content-[a-zA-Z0-9._/-]+$/.test(path) && !path.split("/").includes("..")),
     );
 
-  const required = [
-    "blogs/index.json",
-    "blogs/content.json",
-    "works/index.json",
-    "works/content.json",
-    "site-content.json",
-  ];
+  const required = ["og-image-urls.json"];
   const found = new Set(publishable.map(({ path }) => path));
   const missing = required.filter((path) => !found.has(path));
   if (missing.length) {
@@ -294,112 +293,32 @@ async function collectPayload(outDir: string): Promise<PayloadFile[]> {
 }
 
 interface ContentEntry {
-  path: string;
-  title: string;
-  description?: string;
-  frontmatter?: Record<string, unknown>;
   html?: string;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+function getOgImageUrls(collections: Record<string, ContentEntry[]>) {
+  const urls = new Set<string>();
+  for (const entry of Object.values(collections).flat()) {
+    const html = entry.html ?? "";
+    for (const match of html.matchAll(
+      /<img\b(?=[^>]*\bclass=["'][^"']*\box-ogp-image\b[^"']*["'])(?=[^>]*\bsrc=["'](https?:\/\/[^"']+)["'])[^>]*>/gi,
+    )) {
+      try {
+        const url = new URL(match[1].replace(/&amp;/g, "&"));
+        if (url.protocol === "https:" && !url.username && !url.password) urls.add(url.href);
+      } catch {
+        // Skip malformed image URLs; they cannot be fetched by the Worker proxy.
+      }
+    }
+  }
+  return [...urls];
 }
 
-async function writeContentPayload(
-  outDir: string,
-  collections: Record<string, ContentEntry[]>,
-  siteContentPath: string,
-) {
-  const pages = Object.entries(collections).flatMap(([section, entries]) =>
-    entries.map((entry) => {
-      const frontmatter = entry.frontmatter ?? {};
-      const date = frontmatter.date;
-      const url = `${entry.path.replace(/\/+$/, "") || `/${section}`}/`;
-      return {
-        title: entry.title,
-        description:
-          entry.description ??
-          (typeof frontmatter.excerpt === "string" ? frontmatter.excerpt : undefined),
-        date:
-          date instanceof Date
-            ? date.toISOString().slice(0, 10)
-            : typeof date === "string"
-              ? date
-              : undefined,
-        tags: Array.isArray(frontmatter.tags)
-          ? frontmatter.tags.filter((tag): tag is string => typeof tag === "string")
-          : [],
-        url,
-        section,
-        html: entry.html ?? "",
-        externalUrl: typeof frontmatter.url === "string" ? frontmatter.url : undefined,
-        technologies: Array.isArray(frontmatter.technologies)
-          ? frontmatter.technologies.filter((tag): tag is string => typeof tag === "string")
-          : [],
-      };
-    }),
+async function writeContentPayload(outDir: string, collections: Record<string, ContentEntry[]>) {
+  await writeFile(
+    join(outDir, "og-image-urls.json"),
+    `${JSON.stringify(getOgImageUrls(collections))}\n`,
   );
-  const blogs = pages.filter((page) => page.section === "blogs" && page.url !== "/blogs/");
-  const works = pages.filter((page) => page.section === "works");
-  const jsonFiles: Record<string, unknown> = {
-    "blogs/index.json": blogs.map(({ title, description, date, tags, url }) => ({
-      title,
-      description,
-      date,
-      tags,
-      url,
-    })),
-    "blogs/content.json": blogs.map(({ title, description, date, tags, url, html }) => ({
-      title,
-      description,
-      date,
-      tags,
-      url,
-      html,
-    })),
-    "works/index.json": works
-      .map(({ title, description, technologies, tags, externalUrl, url }) => ({
-        title,
-        description,
-        technologies: technologies.length ? technologies : tags,
-        externalUrl,
-        url,
-      }))
-      .filter((work) => typeof work.externalUrl === "string"),
-    "works/content.json": works
-      .map(({ title, description, technologies, tags, externalUrl, url, html }) => ({
-        title,
-        description,
-        technologies: technologies.length ? technologies : tags,
-        externalUrl,
-        url,
-        html,
-      }))
-      .filter((work) => typeof work.externalUrl === "string"),
-    "search-index.json": {
-      documents: blogs.map((article) => ({
-        title: article.title,
-        url: article.url,
-        body: article.html
-          .replace(/<[^>]*>/g, " ")
-          .replace(/&nbsp;/g, " ")
-          .replace(/&amp;/g, "&")
-          .replace(/&lt;/g, "<")
-          .replace(/&gt;/g, ">")
-          .replace(/&#39;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/\s+/g, " ")
-          .trim(),
-      })),
-    },
-  };
-
-  for (const [path, data] of Object.entries(jsonFiles)) {
-    const file = resolve(outDir, path);
-    await mkdir(dirname(file), { recursive: true });
-    await writeFile(file, `${JSON.stringify(data)}\n`);
-  }
-  await writeFile(join(outDir, "site-content.json"), await readFile(siteContentPath));
 }
 
 function getRevision() {
@@ -422,32 +341,252 @@ if (action === "deploy") {
   await deploy();
 } else {
   const contentDir = resolve(readOption("--content") ?? "articles");
-  const contentDataDir = resolve(readOption("--data") ?? "data");
-  const siteDir = resolve(
-    readOption("--site") ?? process.env.MIMIFUWA_SITE_DIR ?? "../mimifuwa.cc/apps/web",
-  );
-  const workspaceDir = resolve(siteDir, "../..");
-  const vpBin = resolve(workspaceDir, "node_modules/.bin/vp");
+  const outputDir = resolve(readOption("--output") ?? "dist");
+  const portValue = readOption("--port");
+  const port = portValue === undefined ? 5173 : Number(portValue);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error("--port must be an integer between 1 and 65535");
+  }
+  await runContentSite({ action, contentDir, outputDir, port });
+}
 
-  const pathEntries = [dirname(process.execPath), process.env.PATH].filter(
-    (entry): entry is string => Boolean(entry),
-  );
-  const { spawnSync } = await import("node:child_process");
-  const result = spawnSync(
-    vpBin,
-    ["run", "--filter", "@mimifuwacc/web", action === "build" ? "build" : "dev"],
-    {
-      cwd: workspaceDir,
-      stdio: "inherit",
-      env: {
-        ...process.env,
-        CONTENT_DIR: contentDir,
-        CONTENT_DATA_DIR: contentDataDir,
-        DEPLOY_ENV: "local",
-        PATH: pathEntries.join(delimiter),
-      },
+interface SiteEntry {
+  path: string;
+  title: string;
+  description?: string;
+  html?: string;
+  frontmatter?: Record<string, unknown>;
+}
+
+interface SitePage {
+  title: string;
+  description?: string;
+  date?: string;
+  tags: string[];
+  technologies: string[];
+  url: string;
+  ogImage: string;
+  ogPreview: string;
+  html: string;
+}
+
+async function runContentSite({
+  action,
+  contentDir,
+  outputDir,
+  port,
+}: {
+  action: "dev" | "build";
+  contentDir: string;
+  outputDir: string;
+  port: number;
+}) {
+  const root = process.cwd();
+  const templateRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../site");
+  const requireFromCli = createRequire(import.meta.url);
+  const oxContentPath = requireFromCli.resolve("@ox-content/vite-plugin");
+  const { oxContent } = (await import(pathToFileURL(oxContentPath).href)) as {
+    oxContent: (options: Record<string, unknown>) => PluginOption;
+  };
+  const contentPlugin = oxContent({
+    srcDir: contentDir,
+    ssg: false,
+    search: false,
+    docs: false,
+    ogViewer: false,
+    highlight: true,
+    gfm: true,
+    cards: true,
+    containers: { types: { message: { title: "Info" } } },
+    embeds: { github: true, openGraph: true, twitter: { fetch: false, appearance: "full" } },
+    collections: {
+      posts: { source: "posts/**/*", include: ["html"] },
+      works: { source: "works/**/*", include: ["html"] },
     },
-  );
-  if (result.error) throw result.error;
-  process.exit(result.status ?? 1);
+  });
+  const contentTransform = mimifuwaccContentEmbeds({
+    articleOgImages: false,
+    twitter: { fetch: false, appearance: "full" },
+  });
+  const contentServer = await createServer({
+    configFile: false,
+    root,
+    logLevel: "error",
+    server: { middlewareMode: true, hmr: false },
+    appType: "custom",
+    plugins: [contentPlugin, contentTransform],
+  });
+  contentServer.watcher.add(contentDir);
+  let pages: Record<"posts" | "works", SitePage[]> = { posts: [], works: [] };
+  const loadPages = async () => {
+    const module = (await contentServer.ssrLoadModule("virtual:ox-content/collections")) as {
+      getCollection(name: string): SiteEntry[];
+    };
+    pages = {
+      posts: mapSiteEntries(module.getCollection("posts"), "posts"),
+      works: mapSiteEntries(module.getCollection("works"), "works"),
+    };
+  };
+  await loadPages();
+
+  const ogData = (pathname: string) => {
+    const page = [...pages.posts, ...pages.works].find((entry) => entry.ogImage === `/${pathname}`);
+    if (!page) return undefined;
+    const section: "posts" | "works" = page.url.startsWith("/works/") ? "works" : "posts";
+    return {
+      title: page.title,
+      date: page.date,
+      tags: section === "works" && page.technologies.length ? page.technologies : page.tags,
+      section,
+    };
+  };
+  const content = () => JSON.stringify(pages);
+  const images = new Map<string, Buffer>();
+  const sitePlugin: Plugin = {
+    name: "@mimifuwa.cc/cli:content-site",
+    configureServer(server) {
+      server.watcher.add(contentDir);
+      server.middlewares.use((request, response, next) => {
+        const pathname = new URL(request.url ?? "/", "http://localhost").pathname.slice(1);
+        if (pathname === "__mimifuwacc/content.json") {
+          response.statusCode = 200;
+          response.setHeader("content-type", "application/json; charset=utf-8");
+          response.setHeader("cache-control", "no-store");
+          response.end(content());
+          return;
+        }
+        const previewMatch = pathname.match(/^__og\/(posts|works)\/(.+)\.html$/);
+        if (previewMatch) {
+          const data = ogData(`og/${previewMatch[1]}/${previewMatch[2]}.png`);
+          if (!data) return next();
+          response.statusCode = 200;
+          response.setHeader("content-type", "text/html; charset=utf-8");
+          response.setHeader("cache-control", "no-store");
+          response.end(createArticleOgHtml(data));
+          return;
+        }
+        next();
+      });
+    },
+    async handleHotUpdate({ file, server }) {
+      if (!file.startsWith(`${contentDir}${sep}`) || !/\.mdx?$/.test(file)) return;
+      contentServer.moduleGraph.invalidateAll();
+      await loadPages();
+      images.clear();
+      server.ws.send({ type: "full-reload" });
+      return [];
+    },
+    async generateBundle() {
+      this.emitFile({ type: "asset", fileName: "__mimifuwacc/content.json", source: content() });
+      const entries = [...pages.posts, ...pages.works];
+      let missingCredentials = 0;
+      for (let offset = 0; offset < entries.length; offset += 4) {
+        const chunk = entries.slice(offset, offset + 4);
+        const results = await Promise.all(
+          chunk.map(
+            async (page) =>
+              [
+                page.ogImage.slice(1),
+                await screenshotArticleOgHtml(createArticleOgHtml(ogData(page.ogImage.slice(1))!)),
+              ] as const,
+          ),
+        );
+        for (const [fileName, image] of results) {
+          if (image) images.set(fileName, image);
+          else missingCredentials += 1;
+        }
+      }
+      if (missingCredentials) {
+        this.warn(
+          `Skipped ${missingCredentials} article OG screenshots because CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN are not set. Preview HTML is available at /__og/<article-path>.html during development.`,
+        );
+      }
+      for (const [fileName, source] of images) {
+        this.emitFile({ type: "asset", fileName, source });
+      }
+    },
+  };
+
+  if (action === "dev") {
+    const server = await createServer({
+      configFile: false,
+      root: templateRoot,
+      plugins: [sitePlugin],
+      server: { host: "127.0.0.1", port, strictPort: true },
+    });
+    try {
+      await server.listen();
+      server.printUrls();
+      const close = async () => {
+        await Promise.all([server.close(), contentServer.close()]);
+        process.exit(0);
+      };
+      process.once("SIGINT", close);
+      process.once("SIGTERM", close);
+    } catch (error) {
+      await Promise.all([server.close(), contentServer.close()]);
+      throw error;
+    }
+    return;
+  }
+
+  try {
+    await rm(outputDir, { recursive: true, force: true });
+    await viteBuild({
+      configFile: false,
+      root: templateRoot,
+      base: "/",
+      publicDir: false,
+      plugins: [sitePlugin],
+      build: { outDir: outputDir, emptyOutDir: true },
+    });
+    const indexHtml = await readFile(join(outputDir, "index.html"));
+    for (const section of ["posts", "works"] as const) {
+      const routes = new Set([`/${section}/`]);
+      for (const page of pages[section]) routes.add(page.url);
+      for (const route of routes) {
+        const directory = resolve(outputDir, route.replace(/^\/+/, ""));
+        if (!directory.startsWith(`${outputDir}${sep}`)) continue;
+        await mkdir(directory, { recursive: true });
+        await writeFile(join(directory, "index.html"), indexHtml);
+      }
+    }
+  } finally {
+    await contentServer.close();
+  }
+}
+
+function mapSiteEntries(entries: SiteEntry[], section: "posts" | "works"): SitePage[] {
+  return entries.flatMap((entry) => {
+    const path = entry.path.replace(/\/+$/, "") || `/${section}`;
+    if (path === `/${section}` || path === section) return [];
+    const frontmatter = entry.frontmatter ?? {};
+    const dateValue = frontmatter.date;
+    const tags = Array.isArray(frontmatter.tags)
+      ? frontmatter.tags.filter((tag): tag is string => typeof tag === "string")
+      : [];
+    const technologies = Array.isArray(frontmatter.technologies)
+      ? frontmatter.technologies.filter((tag): tag is string => typeof tag === "string")
+      : [];
+    return [
+      {
+        title: entry.title,
+        description:
+          entry.description ??
+          (typeof frontmatter.excerpt === "string" ? frontmatter.excerpt : undefined),
+        date:
+          dateValue instanceof Date
+            ? dateValue.toISOString().slice(0, 10)
+            : typeof dateValue === "string"
+              ? dateValue
+              : undefined,
+        tags,
+        technologies,
+        url: `/${path.replace(/^\/+/, "")}/`,
+        ogImage: `/og/${path.replace(/^\/+|\/+$/g, "")}.png`,
+        ogPreview: `/__og/${path.replace(/^\/+|\/+$/g, "")}.html`,
+        html: entry.html ?? "",
+      },
+    ];
+  });
 }

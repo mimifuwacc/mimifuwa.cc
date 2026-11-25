@@ -7,13 +7,13 @@ declare const __DEPLOY_ENV__: string;
 
 export const isLocalContent = __DEPLOY_ENV__ === "local";
 export const collections = {
-  blogs: getCollection("blogs"),
+  posts: getCollection("posts"),
   works: getCollection("works"),
 };
 export const fixtures = createContentData(articlePagesFromCollections(collections));
 export const siteContent = localSiteContent satisfies SiteContent;
 
-export const getArticlePrerenderPaths = (section: "blogs" | "works") =>
+export const getArticlePrerenderPaths = (section: "posts" | "works") =>
   collections[section].flatMap(({ path, frontmatter }) => {
     if (section === "works" && typeof frontmatter.url !== "string") return [];
     const slug = path.replace(new RegExp(`^/${section}/?`), "").replace(/\/+$/, "");

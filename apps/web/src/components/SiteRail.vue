@@ -41,7 +41,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
     :class="{ 'has-back-to-top': showBackToTop, 'scroll-ready': scrollReady }"
     aria-label="Site shortcuts"
   >
-    <Link aria-label="mimifuwa.cc home" class="site-signature" href="/">
+    <Link aria-label="mimifuwa.cc Top" class="site-signature" href="/">
       <span aria-hidden="true" class="site-version">{{ appVersion }}</span>
       <span aria-hidden="true" class="site-url">https://mimifuwa.cc/</span>
     </Link>
@@ -103,7 +103,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
 
 .site-version,
 .site-url {
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   writing-mode: vertical-rl;
 }
@@ -158,7 +158,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
 .site-rail-note {
   margin: 0;
   color: var(--muted-foreground);
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.08em;
   line-height: 1.7;
@@ -241,7 +241,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
 }
 
 .back-to-top-label {
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.12em;

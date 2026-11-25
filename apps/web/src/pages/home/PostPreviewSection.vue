@@ -1,64 +1,64 @@
 <script setup lang="ts">
 import { ArrowRight } from "@lucide/vue";
-import BlogCard from "@/components/BlogCard.vue";
+import PostCard from "@/components/PostCard.vue";
 import SiteButton from "@/components/SiteButton.vue";
 import SiteSection from "@/components/SiteSection.vue";
-import type { BlogSummary } from "@/types/blog";
+import type { PostSummary } from "@/types/post";
 
-defineProps<{ posts: BlogSummary[] }>();
+defineProps<{ posts: PostSummary[] }>();
 </script>
 
 <template>
-  <SiteSection v-if="posts.length" id="blog-section" eyebrow="Notes & Thoughts" title="Blogs">
+  <SiteSection v-if="posts.length" id="post-section" eyebrow="Notes & Thoughts" title="Posts">
     <template #action>
-      <SiteButton class="blog-action-desktop" href="/blogs/">
+      <SiteButton class="post-action-desktop" href="/posts/">
         See more <ArrowRight aria-hidden="true" class="icon" />
       </SiteButton>
     </template>
-    <div class="blog-grid">
-      <BlogCard v-for="post in posts" :key="post.url" :post="post" />
+    <div class="post-grid">
+      <PostCard v-for="post in posts" :key="post.url" :post="post" />
     </div>
-    <div class="blog-actions-mobile">
-      <SiteButton href="/blogs/">See more <ArrowRight aria-hidden="true" class="icon" /></SiteButton
+    <div class="post-actions-mobile">
+      <SiteButton href="/posts/">See more <ArrowRight aria-hidden="true" class="icon" /></SiteButton
       >
     </div>
   </SiteSection>
 </template>
 
 <style scoped>
-.blog-grid {
+.post-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2.25rem 1.5rem;
 }
 
 @media (min-width: 40.001rem) and (max-width: 90rem) {
-  .blog-grid {
+  .post-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-.blog-actions-mobile {
+.post-actions-mobile {
   display: none;
 }
 
 @media (max-width: 40rem) {
-  .blog-action-desktop {
+  .post-action-desktop {
     display: none;
   }
 
-  .blog-grid {
+  .post-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
   }
 
-  .blog-actions-mobile {
+  .post-actions-mobile {
     display: flex;
     justify-content: flex-end;
     margin-top: 1.25rem;
   }
 
-  .blog-actions-mobile :deep(.button) {
+  .post-actions-mobile :deep(.button) {
     min-height: 2.25rem;
     padding: 0.45rem 0.7rem;
     font-size: 0.85rem;

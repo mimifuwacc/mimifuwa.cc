@@ -14,11 +14,11 @@ const year = new Date().getFullYear();
       </div>
       <div class="footer-links">
         <nav aria-label="Footer navigation" class="footer-nav">
-          <Link href="/">Home</Link>
-          <Link href="/blogs/">Blogs</Link>
+          <Link href="/">Top</Link>
+          <Link href="/posts/">Posts</Link>
           <Link href="/works/">Works</Link>
           <Link href="/onrepeat/">OnRepeat</Link>
-          <Link href="/mutuals/">Mutuals</Link>
+          <Link href="/links/">Links</Link>
         </nav>
         <nav aria-label="Social links" class="social-links">
           <a

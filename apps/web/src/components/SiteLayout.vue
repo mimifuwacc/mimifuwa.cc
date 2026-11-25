@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { setLucideProps } from "@lucide/vue";
 import SiteFooter from "@/components/SiteFooter.vue";
 import SiteHeader from "@/components/SiteHeader.vue";
 import SiteRail from "@/components/SiteRail.vue";
+
+setLucideProps({});
 </script>
 
 <template>
