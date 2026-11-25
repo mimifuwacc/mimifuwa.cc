@@ -6,7 +6,6 @@ import { defineConfig } from "@vizejs/vite-plugin/vite-plus";
 import type { Plugin } from "vite-plus";
 import { voidVue } from "@void/vue/plugin";
 import { voidPlugin } from "void";
-import { contentDevApi } from "./src/content-dev-api";
 
 const appDir = dirname(fileURLToPath(import.meta.url));
 const appVersion = (() => {
@@ -59,13 +58,11 @@ const config = {
             : "https://mimifuwa-cc-prod.m8c.workers.dev",
       },
       srcDir: contentDir,
-      dataDir: contentDataDir,
       collections: {
         posts: { source: "posts/**/*", include: ["html"] },
         works: { source: "works/**/*", include: ["html"] },
       },
     }),
-    contentDevApi(),
     voidPlugin(),
     ...voidVue(),
   ],

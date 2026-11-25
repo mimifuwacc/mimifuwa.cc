@@ -120,20 +120,3 @@ export function createContentData(pages: ArticlePage[]) {
       .filter((work) => typeof work.externalUrl === "string"),
   };
 }
-
-export function getLocalContentResponse(
-  pathname: string,
-  data: ReturnType<typeof createContentData>,
-) {
-  if (pathname === "/api/posts") return { body: data.posts };
-  if (pathname === "/api/works") return { body: data.works };
-
-  const match = pathname.match(/^\/api\/(posts|works)\/(.+)$/);
-  if (!match) return null;
-
-  const [, section, slug] = match;
-  const url = `/${section}/${decodeURIComponent(slug).replace(/\/+$/, "")}/`;
-  const content = section === "posts" ? data.postContent : data.workContent;
-  const item = content.find((entry) => entry.url === url);
-  return item ? { body: item } : { status: 404, body: { error: "not_found" } };
-}

@@ -144,28 +144,7 @@ async function deploy() {
     const collections = Object.fromEntries(
       Object.keys(options.collections).map((name) => [name, collectionModule.getCollection(name)]),
     );
-    const dataDir = resolve(appRoot, options.dataDir ?? "data");
-    const siteContentPath = join(dataDir, "site-content.json");
-    let siteContent: unknown;
-    try {
-      siteContent = JSON.parse(await readFile(siteContentPath, "utf8"));
-    } catch (error) {
-      throw new Error(`Could not read valid JSON from ${siteContentPath}`, { cause: error });
-    }
-    if (
-      !isRecord(siteContent) ||
-      !isRecord(siteContent.about) ||
-      !Array.isArray(siteContent.about.timeline) ||
-      !Array.isArray(siteContent.about.certifications) ||
-      !Array.isArray(siteContent.about.awards) ||
-      !Array.isArray(siteContent.links) ||
-      !Array.isArray(siteContent.tracks)
-    ) {
-      throw new Error(
-        `${siteContentPath} must define about.timeline, about.certifications, about.awards, links, and tracks arrays`,
-      );
-    }
-    await writeContentPayload(outDir, collections, siteContentPath);
+    await writeContentPayload(outDir, collections);
   } finally {
     await server.close();
   }
@@ -293,25 +272,11 @@ async function collectPayload(outDir: string): Promise<PayloadFile[]> {
     .map((file) => ({ file, path: relative(outDir, file).split(sep).join("/") }))
     .filter(
       ({ path }) =>
-        [
-          "posts/index.json",
-          "posts/content.json",
-          "works/index.json",
-          "works/content.json",
-          "og-image-urls.json",
-          "site-content.json",
-        ].includes(path) ||
+        path === "og-image-urls.json" ||
         (/^assets\/ox-content-[a-zA-Z0-9._/-]+$/.test(path) && !path.split("/").includes("..")),
     );
 
-  const required = [
-    "posts/index.json",
-    "posts/content.json",
-    "works/index.json",
-    "works/content.json",
-    "og-image-urls.json",
-    "site-content.json",
-  ];
+  const required = ["og-image-urls.json"];
   const found = new Set(publishable.map(({ path }) => path));
   const missing = required.filter((path) => !found.has(path));
   if (missing.length) {
@@ -328,15 +293,7 @@ async function collectPayload(outDir: string): Promise<PayloadFile[]> {
 }
 
 interface ContentEntry {
-  path: string;
-  title: string;
-  description?: string;
-  frontmatter?: Record<string, unknown>;
   html?: string;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
 function getOgImageUrls(collections: Record<string, ContentEntry[]>) {
@@ -357,86 +314,11 @@ function getOgImageUrls(collections: Record<string, ContentEntry[]>) {
   return [...urls];
 }
 
-async function writeContentPayload(
-  outDir: string,
-  collections: Record<string, ContentEntry[]>,
-  siteContentPath: string,
-) {
-  const pages = Object.entries(collections).flatMap(([section, entries]) =>
-    entries.map((entry) => {
-      const frontmatter = entry.frontmatter ?? {};
-      const date = frontmatter.date;
-      const url = `${entry.path.replace(/\/+$/, "") || `/${section}`}/`;
-      return {
-        title: entry.title,
-        description:
-          entry.description ??
-          (typeof frontmatter.excerpt === "string" ? frontmatter.excerpt : undefined),
-        date:
-          date instanceof Date
-            ? date.toISOString().slice(0, 10)
-            : typeof date === "string"
-              ? date
-              : undefined,
-        tags: Array.isArray(frontmatter.tags)
-          ? frontmatter.tags.filter((tag): tag is string => typeof tag === "string")
-          : [],
-        url,
-        section,
-        html: entry.html ?? "",
-        externalUrl: typeof frontmatter.url === "string" ? frontmatter.url : undefined,
-        technologies: Array.isArray(frontmatter.technologies)
-          ? frontmatter.technologies.filter((tag): tag is string => typeof tag === "string")
-          : [],
-      };
-    }),
+async function writeContentPayload(outDir: string, collections: Record<string, ContentEntry[]>) {
+  await writeFile(
+    join(outDir, "og-image-urls.json"),
+    `${JSON.stringify(getOgImageUrls(collections))}\n`,
   );
-  const posts = pages.filter((page) => page.section === "posts" && page.url !== "/posts/");
-  const works = pages.filter((page) => page.section === "works");
-  const jsonFiles: Record<string, unknown> = {
-    "posts/index.json": posts.map(({ title, description, date, tags, url }) => ({
-      title,
-      description,
-      date,
-      tags,
-      url,
-    })),
-    "posts/content.json": posts.map(({ title, description, date, tags, url, html }) => ({
-      title,
-      description,
-      date,
-      tags,
-      url,
-      html,
-    })),
-    "works/index.json": works
-      .map(({ title, description, technologies, tags, externalUrl, url }) => ({
-        title,
-        description,
-        technologies: technologies.length ? technologies : tags,
-        externalUrl,
-        url,
-      }))
-      .filter((work) => typeof work.externalUrl === "string"),
-    "works/content.json": works
-      .map(({ title, description, technologies, tags, externalUrl, url, html }) => ({
-        title,
-        description,
-        technologies: technologies.length ? technologies : tags,
-        externalUrl,
-        url,
-        html,
-      }))
-      .filter((work) => typeof work.externalUrl === "string"),
-    "og-image-urls.json": getOgImageUrls(collections),
-  };
-
-  for (const [path, data] of Object.entries(jsonFiles)) {
-    const file = resolve(outDir, path);
-    await mkdir(dirname(file), { recursive: true });
-    await writeFile(file, `${JSON.stringify(data)}\n`);
-  }
-  await writeFile(join(outDir, "site-content.json"), await readFile(siteContentPath));
 }
 
 function getRevision() {

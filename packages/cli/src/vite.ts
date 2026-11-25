@@ -14,8 +14,6 @@ export interface MimifuwaccContentOptions {
   target: { url: string };
   /** The Ox Content source directory, relative to the Vite root. */
   srcDir: string;
-  /** Directory containing site-content.json, relative to the Vite root. */
-  dataDir?: string;
   /** Ox Content collection definitions. Include `html` for publishable article bodies. */
   collections: NonNullable<OxContentOptions["collections"]>;
 }

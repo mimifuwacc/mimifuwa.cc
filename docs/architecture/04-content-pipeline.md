@@ -18,7 +18,7 @@ vp run dev
 
 ## Build and publish
 
-The production site builds its page HTML directly from the Ox Content collections during SSG. The content CLI also publishes a complete revision to the `STORAGE` R2 bucket, then switches the active revision pointer after all files are uploaded. API routes read only the active revision, so an incomplete upload is not shown to visitors.
+The production site builds its page HTML directly from the Ox Content collections during SSG. The content CLI publishes embedded media and the allowlist for remote Open Graph images to the `STORAGE` R2 bucket, then switches the active revision pointer after the files are uploaded. Asset routes read only the active revision, so an incomplete upload is not shown to visitors. Article and site data is compiled into the static pages and is not fetched through runtime JSON APIs.
 
 ## Deployment
 

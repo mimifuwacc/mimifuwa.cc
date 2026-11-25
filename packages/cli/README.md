@@ -14,7 +14,6 @@ export default defineConfig({
     mimifuwaccContent({
       target: { url: "https://example.com" },
       srcDir: "./articles",
-      dataDir: "./data",
       collections: {
         posts: { source: "posts/**/*", include: ["html"] },
         works: { source: "works/**/*", include: ["html"] },
@@ -24,7 +23,7 @@ export default defineConfig({
 });
 ```
 
-The plugin defines the Markdown source and collections. Structured site data such as the profile, Links, and On Repeat entries lives in `data/site-content.json`; the CLI publishes it alongside the generated article content to the `STORAGE` R2 bucket configured by the site deployment.
+The plugin defines the Markdown source and collections. Structured site data such as the profile, Links, and On Repeat entries lives in `data/site-content.json` and is compiled into the site during SSG.
 
 ## Local development and build
 
@@ -47,7 +46,7 @@ Deploy the site first so its resolved `STORAGE` bucket configuration is availabl
 CONTENT_DIR=packages/content-dev/articles vp exec --filter @mimifuwacc/cli -- mimifuwacc deploy
 ```
 
-The CLI loads only the Ox Content plugin, builds the collection payload, uploads it under a revision key with Cloudflare's `cf` CLI, and updates the active revision in R2. It does not deploy the website. In this workspace, `cf` is installed with the other dependencies through Vite+. `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` must be available in the environment; the token needs permission to write R2 objects.
+The CLI loads Ox Content to collect embedded media and remote Open Graph image URLs, uploads those assets and an image allowlist under a revision key with Cloudflare's `cf` CLI, then updates the active revision in R2. It does not upload article JSON or site data because those are compiled into static pages. It does not deploy the website. In this workspace, `cf` is installed with the other dependencies through Vite+. `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` must be available in the environment; the token needs permission to write R2 objects.
 
 The `main` branch workflow publishes `packages/content-dev/articles` and `packages/content-dev/data/site-content.json` to the dev Worker. A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the site and the same dev content. A stable version tag such as `v5.0.0` publishes the site and the articles and structured data from `mimifuwa.cc-content`'s `main` branch.
 

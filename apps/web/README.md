@@ -1,10 +1,10 @@
 # web
 
-Void builds the shared site layout, post and work indexes, and each article detail page as static HTML from Ox Content collections. The API routes continue to read the active content revision from R2 for client data and search. The CLI uploads each content revision directly to the Worker's R2 bucket and switches the active revision after all files are uploaded.
+Void builds the shared site layout, post and work indexes, and each article detail page as static HTML from Ox Content collections. Runtime routes only serve embedded content assets from R2 and proxy allowlisted Open Graph images; page and article data is included in the static build.
 
 Local development uses `packages/content-dev/articles` and serves the articles directly from the Vite dev server. The same articles are published to the dev Worker after a push to `main`. Production articles are published separately from the `mimifuwa.cc-content` repository.
 
-GitHub Actions deploys separate dev and production Workers and builds the dev site from `packages/content-dev/articles` when this repository's `main` branch is updated or a version prerelease tag is pushed. A stable version tag uses the `main` branch of `mimifuwa.cc-content` for production SSG. Every merge to that content repository's `main` publishes its data to R2 and then rebuilds and deploys the production site from the latest stable site release. Worker names are configured in `void.config.ts`; Cloudflare derives each `workers.dev` URL from the Worker name and account subdomain. Custom domains can be added there when they are ready.
+GitHub Actions deploys separate dev and production Workers and builds the dev site from `packages/content-dev/articles` when this repository's `main` branch is updated or a version prerelease tag is pushed. A stable version tag uses the `main` branch of `mimifuwa.cc-content` for production SSG. Every merge to that content repository's `main` rebuilds and deploys the production site from the latest stable site release, then publishes embedded media and the Open Graph image allowlist to R2. Worker names are configured in `void.config.ts`; Cloudflare derives each `workers.dev` URL from the Worker name and account subdomain. Custom domains can be added there when they are ready.
 
 Configure the `dev` and `production` GitHub Actions environments with these secrets:
 
