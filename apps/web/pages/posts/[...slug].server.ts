@@ -22,9 +22,12 @@ export const head = defineHead<Props>((c, { article }) => {
   const slug = (c.req.param("slug") ?? "").replace(/^\/+|\/+$/g, "");
   const path = `/posts/${slug.split("/").map(encodeURIComponent).join("/")}/`;
   const origin = import.meta.env.DEV ? new URL(c.req.url).origin : __SITE_ORIGIN__;
-  const imagePath = import.meta.env.DEV
-    ? `/__og/posts/${slug.split("/").map(encodeURIComponent).join("/")}.html`
-    : `/og${path.slice(0, -1)}.png`;
+  const imagePath =
+    __DEPLOY_ENV__ === "dev"
+      ? "/og/default.png"
+      : import.meta.env.DEV
+        ? `/__og/posts/${slug.split("/").map(encodeURIComponent).join("/")}.html`
+        : `/og${path.slice(0, -1)}.png`;
   const absoluteUrl = (value: string) => (origin ? new URL(value, origin).href : value);
   const image = absoluteUrl(imagePath);
   const pageUrl = absoluteUrl(path);
