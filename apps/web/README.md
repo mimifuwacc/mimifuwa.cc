@@ -6,6 +6,8 @@ Local development uses `packages/content-dev/articles` and serves the articles d
 
 GitHub Actions deploys separate dev and production Workers and builds the dev site from `packages/content-dev/articles` when this repository's `main` branch is updated or a version prerelease tag is pushed. A stable version tag uses the `main` branch of `mimifuwa.cc-content` for production SSG. Every merge to that content repository's `main` rebuilds and deploys the production site from the latest stable site release, then publishes embedded media and the Open Graph image allowlist to R2. Worker names are configured in `void.config.ts`; Cloudflare derives each `workers.dev` URL from the Worker name and account subdomain. Custom domains can be added there when they are ready.
 
+`SITE_URL` sets the canonical origin used for page metadata and content publishing. It defaults to an empty string, so metadata URLs stay relative when it is unset. Deployment workflows pass the public URL for their environment.
+
 Configure the `dev` and `production` GitHub Actions environments with these secrets:
 
 - `CLOUDFLARE_ACCOUNT_ID`

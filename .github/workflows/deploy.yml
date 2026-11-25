@@ -68,6 +68,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       DEPLOY_ENV: ${{ contains(github.ref_name, '-') && 'dev' || 'release' }}
       APP_VERSION: v${{ needs.publish-cli.outputs.version }}
+      SITE_URL: ${{ contains(github.ref_name, '-') && 'https://mimifuwa-cc-dev.m8c.workers.dev' || 'https://mimifuwa.cc' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -112,6 +113,13 @@ jobs:
           CONTENT_DATA_DIR: ${{ contains(github.ref_name, '-') && format('{0}/packages/content-dev/data', github.workspace) || format('{0}/mimifuwa.cc-content/data', github.workspace) }}
           OG_IMAGE_CACHE_DIR: ${{ runner.temp }}/og-image-cache
         run: |
+          env_file="apps/web/.env.production.local"
+          trap 'rm -f "$env_file"' EXIT
+          umask 077
+          printf 'CLOUDFLARE_ACCOUNT_ID=%s\n' "$CLOUDFLARE_ACCOUNT_ID" > "$env_file"
+          printf 'CLOUDFLARE_API_TOKEN=%s\n' "$CLOUDFLARE_API_TOKEN" >> "$env_file"
+          printf 'OG_IMAGE_CACHE_DIR=%s\n' "$OG_IMAGE_CACHE_DIR" >> "$env_file"
+          printf 'SITE_URL=%s\n' "$SITE_URL" >> "$env_file"
           node scripts/set-package-version.ts "$PACKAGE_VERSION"
           vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 

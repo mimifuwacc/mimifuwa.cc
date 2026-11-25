@@ -21,11 +21,13 @@ export const head = defineHead<Props>((c, { work }) => {
 
   const slug = (c.req.param("slug") ?? "").replace(/^\/+|\/+$/g, "");
   const path = `/works/${slug.split("/").map(encodeURIComponent).join("/")}/`;
-  const origin = import.meta.env.DEV ? new URL(c.req.url).origin : "https://mimifuwa.cc";
+  const origin = import.meta.env.DEV ? new URL(c.req.url).origin : __SITE_ORIGIN__;
   const imagePath = import.meta.env.DEV
     ? `/__og/works/${slug.split("/").map(encodeURIComponent).join("/")}.html`
     : `/og${path.slice(0, -1)}.png`;
-  const image = new URL(imagePath, origin).href;
+  const absoluteUrl = (value: string) => (origin ? new URL(value, origin).href : value);
+  const image = absoluteUrl(imagePath);
+  const pageUrl = absoluteUrl(path);
   const description = work.description ?? "mimifuwa.cc の制作物";
 
   return {
@@ -36,7 +38,7 @@ export const head = defineHead<Props>((c, { work }) => {
       { property: "og:site_name", content: "mimifuwa.cc" },
       { property: "og:title", content: work.title },
       { property: "og:description", content: description },
-      { property: "og:url", content: new URL(path, origin).href },
+      { property: "og:url", content: pageUrl },
       { property: "og:image", content: image },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
@@ -46,6 +48,6 @@ export const head = defineHead<Props>((c, { work }) => {
       { name: "twitter:description", content: description },
       { name: "twitter:image", content: image },
     ],
-    link: [{ rel: "canonical", href: new URL(path, origin).href }],
+    link: [{ rel: "canonical", href: pageUrl }],
   };
 });

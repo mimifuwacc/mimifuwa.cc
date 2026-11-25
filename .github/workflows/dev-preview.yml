@@ -19,6 +19,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       DEPLOY_ENV: dev
+      SITE_URL: https://mimifuwa-cc-dev.m8c.workers.dev
     steps:
       - uses: actions/checkout@v7
         with:
@@ -48,7 +49,15 @@ jobs:
       - name: Deploy Vue site to Void
         env:
           OG_IMAGE_CACHE_DIR: ${{ runner.temp }}/og-image-cache
-        run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
+        run: |
+          env_file="apps/web/.env.production.local"
+          trap 'rm -f "$env_file"' EXIT
+          umask 077
+          printf 'CLOUDFLARE_ACCOUNT_ID=%s\n' "$CLOUDFLARE_ACCOUNT_ID" > "$env_file"
+          printf 'CLOUDFLARE_API_TOKEN=%s\n' "$CLOUDFLARE_API_TOKEN" >> "$env_file"
+          printf 'OG_IMAGE_CACHE_DIR=%s\n' "$OG_IMAGE_CACHE_DIR" >> "$env_file"
+          printf 'SITE_URL=%s\n' "$SITE_URL" >> "$env_file"
+          vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
       - name: Publish dev content
         env:

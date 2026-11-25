@@ -8,3 +8,4 @@ declare module "*.vue" {
 declare module "*.css";
 
 declare const __APP_VERSION__: string;
+declare const __SITE_ORIGIN__: string;
