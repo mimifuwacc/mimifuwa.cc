@@ -9,7 +9,10 @@ if (!version) {
 }
 
 for (const path of ["apps/web/package.json", "packages/cli/package.json"]) {
-  const manifest = JSON.parse(readFileSync(path, "utf8"));
+  const manifest = JSON.parse(readFileSync(path, "utf8")) as {
+    version?: string;
+    [key: string]: unknown;
+  };
   manifest.version = version;
   writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
 }

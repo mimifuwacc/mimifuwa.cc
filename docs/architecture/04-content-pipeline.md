@@ -1,13 +1,13 @@
 # Content pipeline
 
-The source of truth for blog posts and work entries is the `mimifuwa.cc-content` repository. It stores Markdown under `articles/blogs` and `articles/works`.
+The source of truth for posts and work entries is the `mimifuwa.cc-content` repository. It stores Markdown under `articles/posts` and `articles/works`.
 
 ## Local preview
 
-The content repository runs the `mimifuwacc` CLI from this repository. The CLI passes its selected article directory to the Vue app through `CONTENT_DIR`; the Ox Content Vite plugin loads the blogs and works collections from that directory.
+The content repository runs the `mimifuwacc` CLI from this repository. The CLI passes its selected article directory to the Vue app through `CONTENT_DIR`; the Ox Content Vite plugin loads the posts and works collections from that directory.
 
 ```sh
-mimifuwacc preview --content articles
+mimifuwacc dev --content articles
 ```
 
 When developing the site itself, the app uses a few fixtures from `packages/content-dev/articles`:

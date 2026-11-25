@@ -31,13 +31,23 @@ jobs:
           cache: true
           run-install: true
 
+      - name: Restore article OG image cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/og-image-cache
+          key: ${{ runner.os }}-og-images-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-og-images-
+
       - name: Build content CLI
         run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
 
       - name: Set package versions from the latest tag
-        run: node scripts/set-package-version.mjs "$(git describe --tags --abbrev=0)"
+        run: node scripts/set-package-version.ts "$(git describe --tags --abbrev=0)"
 
       - name: Deploy Vue site to Void
+        env:
+          OG_IMAGE_CACHE_DIR: ${{ runner.temp }}/og-image-cache
         run: vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
       - name: Publish dev content

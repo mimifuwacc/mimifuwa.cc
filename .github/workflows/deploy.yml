@@ -35,7 +35,7 @@ jobs:
             exit 1
           fi
 
-          node scripts/set-package-version.mjs "$PACKAGE_VERSION"
+          node scripts/set-package-version.ts "$PACKAGE_VERSION"
 
           if [[ "$PACKAGE_VERSION" == *-* ]]; then
             PRERELEASE="${PACKAGE_VERSION#*-}"
@@ -97,13 +97,22 @@ jobs:
           cache: true
           run-install: true
 
+      - name: Restore article OG image cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/og-image-cache
+          key: ${{ runner.os }}-og-images-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-og-images-
+
       - name: Deploy site to Cloudflare
         env:
           PACKAGE_VERSION: ${{ needs.publish-cli.outputs.version }}
           CONTENT_DIR: ${{ contains(github.ref_name, '-') && format('{0}/packages/content-dev/articles', github.workspace) || format('{0}/mimifuwa.cc-content/articles', github.workspace) }}
           CONTENT_DATA_DIR: ${{ contains(github.ref_name, '-') && format('{0}/packages/content-dev/data', github.workspace) || format('{0}/mimifuwa.cc-content/data', github.workspace) }}
+          OG_IMAGE_CACHE_DIR: ${{ runner.temp }}/og-image-cache
         run: |
-          node scripts/set-package-version.mjs "$PACKAGE_VERSION"
+          node scripts/set-package-version.ts "$PACKAGE_VERSION"
           vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
       - name: Publish dev content with the released CLI
