@@ -9,9 +9,10 @@ export function createSiteHead(
     path,
   }: { title: string; description?: string; path: string },
 ) {
-  const origin = import.meta.env.DEV ? new URL(requestUrl).origin : "https://mimifuwa.cc";
-  const url = new URL(path, origin).href;
-  const image = new URL("/og/default.png", origin).href;
+  const origin = import.meta.env.DEV ? new URL(requestUrl).origin : __SITE_ORIGIN__;
+  const absoluteUrl = (value: string) => (origin ? new URL(value, origin).href : value);
+  const url = absoluteUrl(path);
+  const image = absoluteUrl("/og/default.png");
 
   return {
     title: title === siteName ? title : `${title} | ${siteName}`,
