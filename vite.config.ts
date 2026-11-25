@@ -190,7 +190,7 @@ export default defineConfig({
   // pre-commit (`vp staged`) でステージ済みファイルに対して実行する
   staged: {
     "*.{ts,tsx,js,jsx}": "vp lint --fix",
-    "*.vue": "vp exec --filter @mimifuwacc/web -- vize fmt --write",
+    "*.vue": "vp run --filter @mimifuwacc/web fmt",
     "*.{ts,tsx,js,jsx,json,css,md,yml,yaml}": "vp fmt --write",
   },
 });

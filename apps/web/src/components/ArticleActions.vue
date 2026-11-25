@@ -61,9 +61,9 @@ onBeforeUnmount(() => clearTimeout(copyTimeout));
       <div class="share-links">
         <button
           v-if="canNativeShare"
-          type="button"
           aria-label="記事を共有"
           class="share-button native-share"
+          type="button"
           @click="shareNative"
         >
           <svg
@@ -114,8 +114,8 @@ onBeforeUnmount(() => clearTimeout(copyTimeout));
           <span aria-hidden="true" class="hatena-bookmark-mark">B!</span>
         </a>
         <button
-          type="button"
           class="share-button"
+          type="button"
           :aria-label="copyMessage || 'リンクをコピー'"
           :title="copyMessage || 'リンクをコピー'"
           @click="copyLink"

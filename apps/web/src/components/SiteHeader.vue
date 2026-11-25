@@ -151,9 +151,9 @@ onBeforeUnmount(() => {
       </nav>
       <div class="header-theme">
         <button
-          type="button"
           aria-label="Toggle color theme"
           class="icon-button theme-toggle"
+          type="button"
           @click="toggleTheme"
         >
           <Sun v-if="isDark" aria-hidden="true" class="icon" />
@@ -163,17 +163,17 @@ onBeforeUnmount(() => {
       </div>
       <div class="mobile-actions">
         <button
-          type="button"
           aria-label="Toggle color theme"
           class="icon-button theme-toggle"
+          type="button"
           @click="toggleTheme"
         >
           <Sun v-if="isDark" aria-hidden="true" class="icon" />
           <Moon v-else aria-hidden="true" class="icon" />
         </button>
         <button
-          type="button"
           class="icon-button menu-toggle"
+          type="button"
           :aria-expanded="menuOpen"
           :aria-label="menuOpen ? 'Close menu' : 'Open menu'"
           @click="menuOpen = !menuOpen"
@@ -197,10 +197,10 @@ onBeforeUnmount(() => {
       <div class="mobile-menu-header">
         <span class="mobile-menu-site-brand">mimifuwa.cc</span>
         <button
-          type="button"
           aria-label="Close menu"
           autofocus
           class="icon-button mobile-menu-close"
+          type="button"
           @click="menuOpen = false"
         >
           <X aria-hidden="true" class="icon" />

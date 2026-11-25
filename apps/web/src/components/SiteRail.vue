@@ -62,9 +62,9 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
       </nav>
     </div>
     <button
-      type="button"
       aria-label="Back to top"
       class="back-to-top"
+      type="button"
       :class="{ 'is-visible': showBackToTop }"
       :tabindex="showBackToTop ? 0 : -1"
       @click="scrollToTop"

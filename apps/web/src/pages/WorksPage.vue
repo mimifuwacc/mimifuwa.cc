@@ -42,8 +42,8 @@ const filteredWorks = computed(() => {
             <button
               v-for="technology in technologies"
               :key="technology"
-              type="button"
               class="filter-tag"
+              type="button"
               :class="{ 'is-selected': selectedTechnology === technology }"
               :aria-pressed="selectedTechnology === technology"
               @click="selectedTechnology = selectedTechnology === technology ? '' : technology"
@@ -52,8 +52,8 @@ const filteredWorks = computed(() => {
             </button>
             <button
               v-if="selectedTechnology"
-              type="button"
               class="filter-clear"
+              type="button"
               @click="selectedTechnology = ''"
             >
               クリア

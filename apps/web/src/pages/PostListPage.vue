@@ -36,15 +36,15 @@ const filteredPosts = computed(() => {
             <button
               v-for="tag in tags"
               :key="tag"
-              type="button"
               class="filter-tag"
+              type="button"
               :class="{ 'is-selected': selectedTag === tag }"
               :aria-pressed="selectedTag === tag"
               @click="selectedTag = selectedTag === tag ? '' : tag"
             >
               {{ tag }}
             </button>
-            <button v-if="selectedTag" type="button" class="filter-clear" @click="selectedTag = ''">
+            <button v-if="selectedTag" class="filter-clear" type="button" @click="selectedTag = ''">
               クリア
             </button>
           </div>
