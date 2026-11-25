@@ -41,7 +41,7 @@ const copyUuid = async () => {
 
 .uuid-label {
   color: var(--muted-foreground);
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -49,7 +49,7 @@ const copyUuid = async () => {
 
 .profile-uuid code {
   color: var(--muted-foreground);
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   overflow-wrap: anywhere;
 }

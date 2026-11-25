@@ -15,7 +15,7 @@ export interface Award {
   description?: string;
 }
 
-export interface Mutual {
+export interface SiteLink {
   name: string;
   url: string;
   description: string;
@@ -35,12 +35,12 @@ export interface SiteContent {
     certifications: Certification[];
     awards: Award[];
   };
-  mutuals: Mutual[];
+  links: SiteLink[];
   tracks: Track[];
 }
 
 export const emptySiteContent: SiteContent = {
   about: { timeline: [], certifications: [], awards: [] },
-  mutuals: [],
+  links: [],
   tracks: [],
 };

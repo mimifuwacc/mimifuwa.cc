@@ -3,7 +3,7 @@ import { rewriteContentAssetUrls } from "@/content-data";
 import { fixtures, isLocalContent, siteContent as localSiteContent } from "@/server-content";
 import { emptySiteContent, type SiteContent } from "@/types/site-content";
 
-type Section = "blogs" | "works";
+type Section = "posts" | "works";
 type ContentRecord = { url: string; html?: unknown };
 
 const cacheControl = "public, max-age=60, stale-while-revalidate=300";
@@ -25,7 +25,7 @@ export async function listContent(section: Section) {
 export async function getContent(section: Section, slug: string) {
   const articleUrl = `/${section}/${slug.replace(/^\/+|\/+$/g, "")}/`;
   if (isLocalContent) {
-    const pages = section === "blogs" ? fixtures.blogContent : fixtures.workContent;
+    const pages = section === "posts" ? fixtures.postContent : fixtures.workContent;
     const page = pages.find((item) => item.url === articleUrl);
     return page ? json(page) : json({ error: "not_found" }, 404);
   }
@@ -41,15 +41,6 @@ export async function getContent(section: Section, slug: string) {
     200,
     cacheControl,
   );
-}
-
-export async function getSearchIndex() {
-  if (isLocalContent) return json(fixtures.searchIndex);
-
-  const result = await readActiveContentJson("search-index.json");
-  return result.status === "ready"
-    ? json(result.value, 200, cacheControl)
-    : json({ documents: [] });
 }
 
 export async function getSiteContent() {

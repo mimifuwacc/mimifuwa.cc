@@ -1,6 +1,6 @@
 # web
 
-Void builds the shared site layout, blog and work indexes, and each article detail page as static HTML from Ox Content collections. The API routes continue to read the active content revision from R2 for client data and search. The CLI uploads each content revision directly to the Worker's R2 bucket and switches the active revision after all files are uploaded.
+Void builds the shared site layout, post and work indexes, and each article detail page as static HTML from Ox Content collections. The API routes continue to read the active content revision from R2 for client data and search. The CLI uploads each content revision directly to the Worker's R2 bucket and switches the active revision after all files are uploaded.
 
 Local development uses `packages/content-dev/articles` and serves the articles directly from the Vite dev server. The same articles are published to the dev Worker after a push to `main`. Production articles are published separately from the `mimifuwa.cc-content` repository.
 
