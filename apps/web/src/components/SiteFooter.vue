@@ -17,7 +17,7 @@ const year = new Date().getFullYear();
           <Link href="/">Top</Link>
           <Link href="/posts/">Posts</Link>
           <Link href="/works/">Works</Link>
-          <Link href="/onrepeat/">OnRepeat</Link>
+          <Link href="/onrepeat/">On Repeat</Link>
           <Link href="/links/">Links</Link>
         </nav>
         <nav aria-label="Social links" class="social-links">

@@ -3,7 +3,6 @@ import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { mimifuwaccContent } from "../../packages/cli/src/vite";
 import { defineConfig } from "@vizejs/vite-plugin/vite-plus";
-import type { Plugin } from "vite-plus";
 import { voidVue } from "@void/vue/plugin";
 import { voidPlugin } from "void";
 
@@ -24,25 +23,11 @@ const contentDir =
   process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-dev/articles");
 const contentDataDir =
   process.env.CONTENT_DATA_DIR ?? resolve(appDir, "../../packages/content-dev/data");
-const siteOrigin = process.env.SITE_URL ?? "";
-const contentPreviewHmr: Plugin = {
-  name: "mimifuwa-content-preview-hmr",
-  handleHotUpdate({ file, server }) {
-    const isMarkdownContent = file.startsWith(`${contentDir}/`) && /\.mdx?$/.test(file);
-    if (!isMarkdownContent) return;
-
-    server.ws.send({ type: "full-reload" });
-    return [];
-  },
-  configureServer(server) {
-    server.watcher.add(contentDir);
-  },
-};
 const config = {
   define: {
     __DEPLOY_ENV__: JSON.stringify(process.env.DEPLOY_ENV ?? "local"),
+    __SITE_ORIGIN__: JSON.stringify(process.env.SITE_URL ?? ""),
     __APP_VERSION__: JSON.stringify(appVersion),
-    __SITE_ORIGIN__: JSON.stringify(siteOrigin),
   },
   resolve: {
     alias: {
@@ -51,9 +36,13 @@ const config = {
     },
   },
   plugins: [
-    contentPreviewHmr,
     mimifuwaccContent({
-      target: { url: siteOrigin },
+      target: {
+        url:
+          process.env.DEPLOY_ENV === "dev"
+            ? "https://mimifuwa-cc-dev.m8c.workers.dev"
+            : "https://mimifuwa-cc-prod.m8c.workers.dev",
+      },
       srcDir: contentDir,
       collections: {
         posts: { source: "posts/**/*", include: ["html"] },
