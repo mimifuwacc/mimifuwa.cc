@@ -26,6 +26,7 @@ const contentDataDir =
 const config = {
   define: {
     __DEPLOY_ENV__: JSON.stringify(process.env.DEPLOY_ENV ?? "local"),
+    __SITE_ORIGIN__: JSON.stringify(process.env.SITE_URL ?? ""),
     __APP_VERSION__: JSON.stringify(appVersion),
   },
   resolve: {
@@ -44,7 +45,7 @@ const config = {
       },
       srcDir: contentDir,
       collections: {
-        blogs: { source: "blogs/**/*", include: ["html"] },
+        posts: { source: "posts/**/*", include: ["html"] },
         works: { source: "works/**/*", include: ["html"] },
       },
     }),
