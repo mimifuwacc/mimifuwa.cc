@@ -10,7 +10,7 @@ const nodeEnv = (
     process?: { env?: Record<string, string | undefined> };
   }
 ).process?.env?.NODE_ENV;
-const workerName = deploymentEnv === "dev" ? "mimifuwa-cc-dev" : "mimifuwa-cc-prod";
+const workerName = deploymentEnv === "release" ? "mimifuwa-cc-prod" : "mimifuwa-cc-dev";
 
 export default defineConfig({
   cloudflare: { name: workerName, workers_dev: true },
