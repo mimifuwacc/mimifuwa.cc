@@ -99,7 +99,7 @@ jobs:
           run-install: true
 
       - name: Restore article OG image cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}/og-image-cache
           key: ${{ runner.os }}-og-images-${{ github.sha }}
