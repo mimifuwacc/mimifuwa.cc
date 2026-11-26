@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 import ArticleActions from "@/components/ArticleActions.vue";
 import InlineTagList from "@/components/InlineTagList.vue";
 import { addTableOfContents } from "@/lib/table-of-contents";
@@ -7,13 +7,6 @@ import type { PostArticle } from "@/types/post";
 
 const props = defineProps<{ article: PostArticle | null; hasError: boolean }>();
 const tableOfContents = computed(() => addTableOfContents(props.article?.html ?? ""));
-const tocDetails = ref<HTMLDetailsElement | null>(null);
-
-onMounted(() => {
-  if (window.matchMedia("(max-width: 48rem)").matches && tocDetails.value) {
-    tocDetails.value.open = false;
-  }
-});
 
 const formatDate = (date?: string) => {
   if (!date) return "";
@@ -36,11 +29,12 @@ const formatDate = (date?: string) => {
       <header class="article-header">
         <p class="section-kicker">Posts</p>
         <h1>{{ article.title }}</h1>
+        <p v-if="article.description" class="article-description">{{ article.description }}</p>
         <time v-if="article.date" :datetime="article.date">{{ formatDate(article.date) }}</time>
         <InlineTagList v-if="article.tags?.length" :items="article.tags" variant="outlined" />
       </header>
       <div class="article-body-layout">
-        <details v-if="tableOfContents.items.length" ref="tocDetails" class="article-toc" open>
+        <details v-if="tableOfContents.items.length" class="article-toc" open>
           <summary>目次</summary>
           <nav aria-label="目次">
             <ol>
@@ -158,6 +152,14 @@ const formatDate = (date?: string) => {
   font-size: clamp(2rem, 5vw, 3.25rem);
   letter-spacing: -0.045em;
   line-height: 1.2;
+}
+
+.article-description {
+  margin: 0 0 1rem;
+  color: var(--muted-foreground);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  word-break: auto-phrase;
 }
 
 .article-header time {
