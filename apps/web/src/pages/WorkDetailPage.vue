@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 import { ArrowUpRight } from "@lucide/vue";
 import ArticleActions from "@/components/ArticleActions.vue";
 import SiteButton from "@/components/SiteButton.vue";
@@ -9,13 +9,6 @@ import type { WorkItem } from "@/types/work";
 
 const props = defineProps<{ work: WorkItem | null; hasError: boolean }>();
 const tableOfContents = computed(() => addTableOfContents(props.work?.html ?? ""));
-const tocDetails = ref<HTMLDetailsElement | null>(null);
-
-onMounted(() => {
-  if (window.matchMedia("(max-width: 48rem)").matches && tocDetails.value) {
-    tocDetails.value.open = false;
-  }
-});
 
 const formatDate = (date?: string) => {
   if (!date) return "";
@@ -49,7 +42,7 @@ const formatDate = (date?: string) => {
         </SiteButton>
       </header>
       <div v-if="work.html" class="work-detail-body-layout">
-        <details v-if="tableOfContents.items.length" ref="tocDetails" class="work-detail-toc" open>
+        <details v-if="tableOfContents.items.length" class="work-detail-toc" open>
           <summary>目次</summary>
           <nav aria-label="目次">
             <ol>
@@ -193,12 +186,11 @@ const formatDate = (date?: string) => {
 }
 
 .work-detail-description {
-  max-width: 44rem;
   margin: 0;
   color: var(--muted-foreground);
   font-size: 1.1rem;
   line-height: 1.7;
-  text-wrap: pretty;
+  word-break: auto-phrase;
 }
 
 .work-detail-content {

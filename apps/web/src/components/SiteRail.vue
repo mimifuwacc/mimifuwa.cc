@@ -4,6 +4,8 @@ import { Link } from "@void/vue";
 import { ArrowUp } from "@lucide/vue";
 import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
 const appVersion = __APP_VERSION__;
+const siteRailLabel =
+  __DEPLOY_ENV__ === "release" ? appVersion : __DEPLOY_ENV__ === "local" ? "local" : "dev";
 const showBackToTop = ref(false);
 const scrollReady = ref(false);
 
@@ -42,7 +44,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
     aria-label="Site shortcuts"
   >
     <Link aria-label="mimifuwa.cc Top" class="site-signature" href="/">
-      <span aria-hidden="true" class="site-version">{{ appVersion }}</span>
+      <span aria-hidden="true" class="site-version">{{ siteRailLabel }}</span>
       <span aria-hidden="true" class="site-url">https://mimifuwa.cc/</span>
     </Link>
     <div class="site-rail-middle">

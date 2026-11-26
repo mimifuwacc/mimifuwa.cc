@@ -22,6 +22,18 @@ export type MimifuwaccContentPlugin = Plugin & {
   [mimifuwaccContentOptions]: MimifuwaccContentOptions;
 };
 
+type ArticleOgData = {
+  title: string;
+  description?: string;
+  date?: string;
+  tags?: string[];
+  section: "posts" | "works";
+};
+
+const sharedArticleOgData = globalThis as typeof globalThis & {
+  __mimifuwaContentArticleOgData?: Map<string, ArticleOgData>;
+};
+
 function cardifyLinkedUrls(html: string) {
   return html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (link, attributes, label) => {
     const href = attributes.match(/\bhref=["'](https?:\/\/[^"']+)["']/i)?.[1];
@@ -57,16 +69,7 @@ export function mimifuwaccContentEmbeds(
   const twitter = options.twitter ?? defaultTweetOptions;
   const articleOgImages = options.articleOgImages !== false;
   const generatedImages = new Map<string, Buffer>();
-  const articleOgData = new Map<
-    string,
-    {
-      title: string;
-      description?: string;
-      date?: string;
-      tags?: string[];
-      section: "posts" | "works";
-    }
-  >();
+  const articleOgData = (sharedArticleOgData.__mimifuwaContentArticleOgData ??= new Map());
   return {
     name: "mimifuwacc-content-embeds",
     configureServer(server: ViteDevServer) {
