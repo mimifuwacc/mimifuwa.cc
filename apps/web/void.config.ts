@@ -63,17 +63,4 @@ export default defineConfig({
         : [{ rel: "stylesheet", href: "/styles/mimifuwa-cc.css?direct" }]),
     ],
   },
-  routing: {
-    revalidate: {
-      "/": 300,
-      "/blogs": 300,
-      "/blogs/*": 300,
-      "/works": 300,
-      "/works/*": 300,
-      "/onrepeat": 86400,
-      "/onrepeat/*": 86400,
-      "/mutuals": 86400,
-      "/mutuals/*": 86400,
-    },
-  },
 });
