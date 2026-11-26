@@ -37,12 +37,7 @@ const config = {
   },
   plugins: [
     mimifuwaccContent({
-      target: {
-        url:
-          process.env.DEPLOY_ENV === "dev"
-            ? "https://mimifuwa-cc-dev.m8c.workers.dev"
-            : "https://mimifuwa-cc-prod.m8c.workers.dev",
-      },
+      target: { url: process.env.SITE_URL ?? "" },
       srcDir: contentDir,
       collections: {
         posts: { source: "posts/**/*", include: ["html"] },
