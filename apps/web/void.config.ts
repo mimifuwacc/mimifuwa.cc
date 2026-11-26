@@ -20,7 +20,6 @@ export default defineConfig({
     outputDir: "dist",
   },
   head: {
-    titleTemplate: "%s - mimifuwa.cc",
     htmlAttrs: { lang: "ja" },
     meta: [
       { charset: "utf-8" },
