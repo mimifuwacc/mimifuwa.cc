@@ -32,14 +32,6 @@ jobs:
           cache: true
           run-install: true
 
-      - name: Restore article OG image cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ runner.temp }}/og-image-cache
-          key: ${{ runner.os }}-og-images-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-og-images-
-
       - name: Build content CLI
         run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
 
@@ -47,16 +39,11 @@ jobs:
         run: node scripts/set-package-version.ts "$(git describe --tags --abbrev=0)"
 
       - name: Deploy Vue site to Void
-        env:
-          OG_IMAGE_CACHE_DIR: ${{ runner.temp }}/og-image-cache
         run: |
-          env_file="apps/web/.env.production.local"
+          env_file="apps/web/.env"
           trap 'rm -f "$env_file"' EXIT
           umask 077
-          printf 'CLOUDFLARE_ACCOUNT_ID=%s\n' "$CLOUDFLARE_ACCOUNT_ID" > "$env_file"
-          printf 'CLOUDFLARE_API_TOKEN=%s\n' "$CLOUDFLARE_API_TOKEN" >> "$env_file"
-          printf 'OG_IMAGE_CACHE_DIR=%s\n' "$OG_IMAGE_CACHE_DIR" >> "$env_file"
-          printf 'SITE_URL=%s\n' "$SITE_URL" >> "$env_file"
+          printf 'SITE_URL=%s\n' "$SITE_URL" > "$env_file"
           vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
       - name: Publish dev content

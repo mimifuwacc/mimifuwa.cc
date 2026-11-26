@@ -113,7 +113,7 @@ jobs:
           CONTENT_DATA_DIR: ${{ contains(github.ref_name, '-') && format('{0}/packages/content-dev/data', github.workspace) || format('{0}/mimifuwa.cc-content/data', github.workspace) }}
           OG_IMAGE_CACHE_DIR: ${{ runner.temp }}/og-image-cache
         run: |
-          env_file="apps/web/.env.production.local"
+          env_file="apps/web/.env"
           trap 'rm -f "$env_file"' EXIT
           umask 077
           printf 'CLOUDFLARE_ACCOUNT_ID=%s\n' "$CLOUDFLARE_ACCOUNT_ID" > "$env_file"
