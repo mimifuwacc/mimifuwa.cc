@@ -1,102 +1,72 @@
-name: Release
+name: Deploy
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_call:
+    inputs:
+      content_repository:
+        description: Repository containing the production content
+        required: true
+        type: string
+      content_ref:
+        description: Git ref of the content to deploy
+        required: true
+        type: string
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
+concurrency:
+  group: production-site-deploy-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
-  publish-cli:
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.release.outputs.version }}
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Setup Vite+
-        uses: voidzero-dev/setup-vp@v1.22.0
-        with:
-          node-version-file: .node-version
-          cache: true
-          run-install: true
-
-      - name: Verify release tag and select npm dist-tag
-        id: release
-        env:
-          RELEASE_TAG: ${{ github.ref_name }}
-        run: |
-          PACKAGE_VERSION="${RELEASE_TAG#v}"
-          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]; then
-            echo "Release tag must use v<semver>: $RELEASE_TAG" >&2
-            exit 1
-          fi
-
-          node scripts/set-package-version.ts "$PACKAGE_VERSION"
-
-          if [[ "$PACKAGE_VERSION" == *-* ]]; then
-            PRERELEASE="${PACKAGE_VERSION#*-}"
-            NPM_TAG="${PRERELEASE%%.*}"
-            if [[ "$NPM_TAG" =~ ^[0-9]+$ ]]; then
-              NPM_TAG=next
-            fi
-          else
-            NPM_TAG=latest
-          fi
-
-          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
-
-      - name: Build CLI package
-        run: vp run --filter @mimifuwacc/cli build
-
-      - name: Publish CLI package
-        env:
-          NPM_TAG: ${{ steps.release.outputs.npm_tag }}
-        run: vp pm publish ./packages/cli --access public --provenance --tag "$NPM_TAG" --no-git-checks -- --ignore-scripts
-
   deploy:
-    needs: publish-cli
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ contains(github.ref_name, '-') && 'dev' || 'production' }}
+    environment: production
     env:
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CONTENT_BUCKET: ${{ vars.CONTENT_BUCKET }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      DEPLOY_ENV: ${{ contains(github.ref_name, '-') && 'dev' || 'release' }}
-      APP_VERSION: v${{ needs.publish-cli.outputs.version }}
-      SITE_URL: ${{ contains(github.ref_name, '-') && 'https://mimifuwa-cc-dev.m8c.workers.dev' || 'https://mimifuwa.cc' }}
+      CONTENT_REVISION: ${{ inputs.content_ref }}
+      SITE_URL: https://mimifuwa.cc
     steps:
-      - uses: actions/checkout@v7
-
-      - name: Create token for production content
-        if: ${{ !contains(github.ref_name, '-') }}
-        id: content-token
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
-          private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
-          owner: mimifuwacc
-          repositories: mimifuwa.cc-content
-
-      - name: Checkout production content
-        if: ${{ !contains(github.ref_name, '-') }}
+      - name: Checkout content
         uses: actions/checkout@v7
         with:
-          repository: mimifuwacc/mimifuwa.cc-content
-          ref: main
-          path: mimifuwa.cc-content
-          token: ${{ steps.content-token.outputs.token }}
+          repository: ${{ inputs.content_repository }}
+          ref: ${{ inputs.content_ref }}
+          path: content
+
+      - name: Resolve the latest stable site release
+        id: site-release
+        run: |
+          tag="$(curl --fail --silent --show-error https://api.github.com/repos/mimifuwacc/mimifuwa.cc/releases/latest | jq --exit-status --raw-output .tag_name)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout released site
+        uses: actions/checkout@v7
+        with:
+          repository: mimifuwacc/mimifuwa.cc
+          ref: ${{ steps.site-release.outputs.tag }}
+          path: mimifuwa.cc
+          fetch-depth: 0
 
       - name: Setup Vite+
         uses: voidzero-dev/setup-vp@v1.22.0
         with:
-          node-version-file: .node-version
+          node-version-file: mimifuwa.cc/.node-version
           cache: true
-          run-install: true
+          run-install: false
+
+      - name: Install content dependencies
+        working-directory: content
+        run: vp install --frozen-lockfile
+
+      - name: Install site dependencies
+        working-directory: mimifuwa.cc
+        run: vp install --frozen-lockfile
 
       - name: Restore article OG image cache
         uses: actions/cache@v4
@@ -106,11 +76,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-og-images-
 
-      - name: Deploy site to Cloudflare
+      - name: Publish content assets
+        working-directory: content
         env:
-          PACKAGE_VERSION: ${{ needs.publish-cli.outputs.version }}
-          CONTENT_DIR: ${{ contains(github.ref_name, '-') && format('{0}/packages/content-dev/articles', github.workspace) || format('{0}/mimifuwa.cc-content/articles', github.workspace) }}
-          CONTENT_DATA_DIR: ${{ contains(github.ref_name, '-') && format('{0}/packages/content-dev/data', github.workspace) || format('{0}/mimifuwa.cc-content/data', github.workspace) }}
+          CF_BIN: ${{ github.workspace }}/content/node_modules/.bin/cf
+        run: vp dlx @mimifuwacc/cli@latest deploy
+
+      - name: Deploy SSG site
+        working-directory: mimifuwa.cc
+        env:
+          APP_VERSION: v${{ steps.site-release.outputs.version }}
+          CONTENT_DIR: ${{ github.workspace }}/content/articles
+          CONTENT_DATA_DIR: ${{ github.workspace }}/content/data
+          DEPLOY_ENV: release
           OG_IMAGE_CACHE_DIR: ${{ runner.temp }}/og-image-cache
         run: |
           env_file="apps/web/.env"
@@ -120,28 +98,5 @@ jobs:
           printf 'CLOUDFLARE_API_TOKEN=%s\n' "$CLOUDFLARE_API_TOKEN" >> "$env_file"
           printf 'OG_IMAGE_CACHE_DIR=%s\n' "$OG_IMAGE_CACHE_DIR" >> "$env_file"
           printf 'SITE_URL=%s\n' "$SITE_URL" >> "$env_file"
-          node scripts/set-package-version.ts "$PACKAGE_VERSION"
+          node scripts/set-package-version.ts "${APP_VERSION#v}"
           vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
-
-      - name: Publish dev content with the released CLI
-        if: ${{ contains(github.ref_name, '-') }}
-        env:
-          CONTENT_DIR: ${{ github.workspace }}/packages/content-dev/articles
-          CONTENT_REVISION: ${{ github.sha }}
-          CF_BIN: ${{ github.workspace }}/node_modules/.bin/cf
-          CLI_VERSION: ${{ needs.publish-cli.outputs.version }}
-        run: vp dlx "@mimifuwacc/cli@$CLI_VERSION" deploy
-
-  release:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
-          generate_release_notes: true
-          prerelease: ${{ contains(github.ref_name, '-') }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

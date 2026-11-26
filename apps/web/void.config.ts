@@ -5,7 +5,7 @@ const deploymentEnv = (
     process?: { env?: Record<string, string | undefined> };
   }
 ).process?.env?.DEPLOY_ENV;
-const workerName = deploymentEnv === "dev" ? "mimifuwa-cc-dev" : "mimifuwa-cc-prod";
+const workerName = deploymentEnv === "preview" ? "mimifuwa-cc-dev" : "mimifuwa-cc-prod";
 
 export default defineConfig({
   cloudflare: { name: workerName, workers_dev: true },

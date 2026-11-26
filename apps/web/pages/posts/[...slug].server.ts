@@ -23,7 +23,7 @@ export const head = defineHead<Props>((c, { article }) => {
   const path = `/posts/${slug.split("/").map(encodeURIComponent).join("/")}/`;
   const origin = import.meta.env.DEV ? new URL(c.req.url).origin : __SITE_ORIGIN__;
   const imagePath =
-    __DEPLOY_ENV__ === "dev"
+    __DEPLOY_ENV__ === "preview"
       ? "/og/default.png"
       : import.meta.env.DEV
         ? `/__og/posts/${slug.split("/").map(encodeURIComponent).join("/")}.html`

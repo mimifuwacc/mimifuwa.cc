@@ -1,4 +1,4 @@
-name: Dev Preview
+name: Deploy preview
 
 on:
   push:
@@ -14,11 +14,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: dev
+      name: preview
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      DEPLOY_ENV: dev
+      DEPLOY_ENV: preview
       SITE_URL: https://mimifuwa-cc-dev.m8c.workers.dev
     steps:
       - uses: actions/checkout@v7
