@@ -139,7 +139,7 @@ export function mimifuwaccContentEmbeds(
       return `${code.slice(0, jsonStart)}${JSON.stringify(collections)}${code.slice(end)}`;
     },
     async generateBundle() {
-      if (!articleOgImages) return;
+      if (!articleOgImages || this.environment.name !== "client") return;
       let missingCredentials = 0;
       const entries = [...articleOgData];
       for (let offset = 0; offset < entries.length; offset += 4) {
