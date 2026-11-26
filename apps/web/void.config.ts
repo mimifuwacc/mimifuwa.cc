@@ -5,6 +5,11 @@ const deploymentEnv = (
     process?: { env?: Record<string, string | undefined> };
   }
 ).process?.env?.DEPLOY_ENV;
+const nodeEnv = (
+  globalThis as typeof globalThis & {
+    process?: { env?: Record<string, string | undefined> };
+  }
+).process?.env?.NODE_ENV;
 const workerName = deploymentEnv === "dev" ? "mimifuwa-cc-dev" : "mimifuwa-cc-prod";
 
 export default defineConfig({
@@ -22,7 +27,14 @@ export default defineConfig({
       { name: "viewport", content: "width=device-width, initial-scale=1.0" },
       { name: "theme-color", content: "#ffffff" },
     ],
-    link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
+    link: [
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      // In development, Vize injects the layout CSS from JavaScript after the SSR HTML is visible.
+      // Load the same CSS in the head so the first paint uses the site's base styles.
+      ...(nodeEnv === "production"
+        ? []
+        : [{ rel: "stylesheet", href: "/styles/mimifuwa-cc.css?direct" }]),
+    ],
   },
   routing: {
     revalidate: {
