@@ -41,7 +41,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
     :class="{ 'has-back-to-top': showBackToTop, 'scroll-ready': scrollReady }"
     aria-label="Site shortcuts"
   >
-    <Link aria-label="mimifuwa.cc home" class="site-signature" href="/">
+    <Link aria-label="mimifuwa.cc Top" class="site-signature" href="/">
       <span aria-hidden="true" class="site-version">{{ appVersion }}</span>
       <span aria-hidden="true" class="site-url">https://mimifuwa.cc/</span>
     </Link>

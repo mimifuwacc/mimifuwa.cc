@@ -15,7 +15,7 @@ export function createSiteHead(
   const image = absoluteUrl("/og/default.png");
 
   return {
-    title: title === siteName ? title : `${title} | ${siteName}`,
+    title: title === siteName ? title : `${title} - ${siteName}`,
     meta: [
       { name: "description", content: description },
       { property: "og:type", content: "website" },

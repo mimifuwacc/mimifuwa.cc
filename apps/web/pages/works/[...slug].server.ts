@@ -34,7 +34,7 @@ export const head = defineHead<Props>((c, { work }) => {
   const description = work.description ?? "mimifuwa.cc の制作物";
 
   return {
-    title: `${work.title} | mimifuwa.cc`,
+    title: `${work.title} - mimifuwa.cc`,
     meta: [
       { name: "description", content: description },
       { property: "og:type", content: "article" },
