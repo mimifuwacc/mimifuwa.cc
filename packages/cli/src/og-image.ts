@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-const rendererVersion = "browser-run-1";
+const rendererVersion = "browser-run-2026-11-26";
 
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => {
@@ -151,7 +151,7 @@ export async function screenshotArticleOgHtml(html: string) {
       body: JSON.stringify({
         html,
         viewport: { width: 1200, height: 630, deviceScaleFactor: 1 },
-        waitForSelector: "html[data-og-ready='true']",
+        waitForSelector: { selector: "html[data-og-ready='true']" },
       }),
     },
   );
