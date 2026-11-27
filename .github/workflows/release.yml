@@ -54,8 +54,9 @@ jobs:
       - name: Publish CLI to GitHub Packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PNPM_CONFIG__AUTH: '{"https://npm.pkg.github.com":{"@mimifuwacc":{"authToken":"${NODE_AUTH_TOKEN}"}}}'
           PACKAGE_TAG: ${{ steps.release.outputs.package_tag }}
-        run: pnpm --filter @mimifuwacc/cli publish --no-git-checks --ignore-scripts --tag "$PACKAGE_TAG"
+        run: pnpm --filter @mimifuwacc/cli publish --no-git-checks --ignore-scripts --no-provenance --tag "$PACKAGE_TAG"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
