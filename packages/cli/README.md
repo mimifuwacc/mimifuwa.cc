@@ -6,6 +6,14 @@ Vite plugin and CLI for processing and publishing Mimifuwacc's Ox Content articl
 
 Install `@mimifuwacc/cli` and `@ox-content/vite-plugin` as development dependencies, then configure the content source in `vite.config.ts`:
 
+The CLI is published to GitHub Packages. Add this to the consuming repository's `.npmrc`:
+
+```ini
+@mimifuwacc:registry=https://npm.pkg.github.com
+```
+
+GitHub Packages' npm registry requires a classic personal access token with `read:packages` for local installs. `gh auth login` credentials alone are not accepted by this registry. In GitHub Actions, use `GITHUB_TOKEN` with `packages: read` and grant the consuming repository Actions access to the package.
+
 ```ts
 import { mimifuwaccContent } from "@mimifuwacc/cli/vite";
 
@@ -48,8 +56,8 @@ CONTENT_DIR=packages/content-dev/articles vp exec --filter @mimifuwacc/cli -- mi
 
 The CLI loads Ox Content to collect embedded media and remote Open Graph image URLs, uploads those assets and an image allowlist under a revision key with Cloudflare's `cf` CLI, then updates the active revision in R2. It does not upload article JSON or site data because those are compiled into static pages. It does not deploy the website. In this workspace, `cf` is installed with the other dependencies through Vite+. `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` must be available in the environment; the token needs permission to write R2 objects.
 
-The `mimifuwa.cc` repository deploys a preview from `main`. A version tag publishes this CLI package to npm and creates a GitHub Release; it does not deploy the site. Merging content into `mimifuwa.cc-content`'s `main` calls the reusable deployment workflow in `mimifuwa.cc`, which publishes the content and rebuilds and deploys production using the latest stable site release.
+The `mimifuwa.cc` repository deploys a preview from `main`. A version tag publishes this CLI package to GitHub Packages and creates a GitHub Release; it does not deploy the site. Merging content into `mimifuwa.cc-content`'s `main` calls the reusable deployment workflow in `mimifuwa.cc`, which publishes the content and rebuilds and deploys production using the latest stable site release.
 
-## npm releases
+## GitHub Packages releases
 
-The release workflow publishes tags named `v<version>` (for example, `v5.0.0`, `v5.0.0-dev.0`, or `v5.0.0-alpha.0`). It takes the package version from the tag and sets that version in the publish job's package manifest. Stable releases use npm's `latest` dist-tag; prereleases use the first prerelease identifier as the dist-tag (`dev`, `alpha`, and so on). Each tag also creates a GitHub Release so the content repository can build production from the latest stable site code. Configure npm Trusted Publishing for this repository and `.github/workflows/release.yml`; publishing uses OIDC and does not require a long-lived npm token.
+The release workflow publishes tags named `v<version>` (for example, `v5.0.0`, `v5.0.0-dev.0`, or `v5.0.0-alpha.0`). It takes the package version from the tag and sets that version in the publish job's package manifest. Stable releases use the `latest` dist-tag; prereleases use the first prerelease identifier as the dist-tag (`dev`, `alpha`, and so on). Each tag also creates a GitHub Release so the content repository can build production from the latest stable site code. Publishing uses the workflow's `GITHUB_TOKEN` with `packages: write`.

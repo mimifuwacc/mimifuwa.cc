@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: write
-  id-token: write
+  packages: write
 
 jobs:
   publish-cli:
@@ -24,7 +24,7 @@ jobs:
           cache: true
           run-install: true
 
-      - name: Verify release tag and select npm dist-tag
+      - name: Verify release tag and select package dist-tag
         id: release
         env:
           RELEASE_TAG: ${{ github.ref_name }}
@@ -48,15 +48,16 @@ jobs:
           fi
 
           echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+          echo "package_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Build CLI package
         run: vp run --filter @mimifuwacc/cli build
 
       - name: Publish CLI package
         env:
-          NPM_TAG: ${{ steps.release.outputs.npm_tag }}
-        run: vp pm publish ./packages/cli --access public --provenance --tag "$NPM_TAG" --no-git-checks -- --ignore-scripts
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_TAG: ${{ steps.release.outputs.package_tag }}
+        run: vp pm publish ./packages/cli --registry https://npm.pkg.github.com --tag "$PACKAGE_TAG" --no-git-checks -- --ignore-scripts
 
   release:
     needs: publish-cli
