@@ -9,7 +9,7 @@ export type Props = InferProps<typeof loader>;
 export const head = defineHead((c) =>
   createSiteHead(c.req.url, {
     title: "Links",
-    description: "友人や一緒にものづくりをする人たちのサイトをまとめています．",
+    description: "Websites by friends and collaborators",
     path: "/links/",
   }),
 );
