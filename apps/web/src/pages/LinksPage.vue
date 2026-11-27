@@ -10,7 +10,7 @@ defineProps<{ links: SiteLink[] }>();
   <SiteSection
     id="links-page"
     heading-level="h1"
-    subtitle="Sites by friends and fellow makers."
+    subtitle="Websites by friends and collaborators"
     title="Links"
   >
     <div class="links-grid">

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-const rendererVersion = "browser-run-2026-11-26";
+const rendererVersion = "browser-run-2026-11-27";
 
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => {
@@ -16,42 +16,6 @@ const escapeHtml = (value: string) =>
     return entities[character];
   });
 
-const wrapText = (value: string, limit: number, maxLines: number) => {
-  const words = value.trim().split(/\s+/).filter(Boolean);
-  const lines: string[] = [];
-  let line = "";
-
-  for (const word of words) {
-    const characters = Array.from(word);
-    if (characters.length > limit) {
-      if (line) {
-        lines.push(line);
-        line = "";
-      }
-      for (let offset = 0; offset < characters.length; offset += limit) {
-        lines.push(characters.slice(offset, offset + limit).join(""));
-      }
-      continue;
-    }
-
-    const candidate = line ? `${line} ${word}` : word;
-    if (Array.from(candidate).length > limit && line) {
-      lines.push(line);
-      line = word;
-    } else {
-      line = candidate;
-    }
-  }
-  if (line) lines.push(line);
-
-  const visible = lines.slice(0, maxLines);
-  if (lines.length > maxLines) {
-    const last = Array.from(visible[maxLines - 1]);
-    visible[maxLines - 1] = `${last.slice(0, limit - 1).join("")}…`;
-  }
-  return visible.length ? visible : [""];
-};
-
 export function createArticleOgHtml({
   title,
   date,
@@ -63,7 +27,6 @@ export function createArticleOgHtml({
   tags?: string[];
   section: "posts" | "works";
 }) {
-  const titleLines = wrapText(title, 20, 2);
   const parsedDate = date ? new Date(date) : undefined;
   const dateLabel =
     parsedDate && Number.isFinite(parsedDate.getTime())
@@ -99,8 +62,7 @@ export function createArticleOgHtml({
       .section { width: max-content; padding: 6px 16px; background: #000; color: #fff; font-size: 19px; line-height: 28px; font-weight: 700; letter-spacing: .04em; }
       .content { align-self: center; }
       .date { margin: 0 0 36px; color: #555; font: 400 24px/1.4 "Noto Sans Mono", monospace; letter-spacing: .01em; }
-      h1 { margin: 0; font-size: 66px; line-height: 1.16; font-weight: 700; letter-spacing: -.035em; }
-      h1 span { display: block; }
+      h1 { margin: 0; font-size: 66px; line-height: 1.16; font-weight: 700; letter-spacing: -.035em; word-break: auto-phrase; text-wrap: pretty; }
       .tags { display: flex; gap: 12px; margin-top: 36px; }
       .tag { padding: 4px 16px 5px; border: 2px solid #000; font-size: 20px; line-height: 30px; font-weight: 600; }
       footer { justify-self: end; font-size: 30px; line-height: 38px; font-weight: 700; }
@@ -111,7 +73,7 @@ export function createArticleOgHtml({
       <div class="section">${sectionLabel}</div>
       <div class="content">
         ${dateLabel ? `<p class="date">${escapeHtml(dateLabel)}</p>` : ""}
-        <h1>${titleLines.map((line) => `<span>${escapeHtml(line)}</span>`).join("")}</h1>
+        <h1>${escapeHtml(title)}</h1>
         ${visibleTags.length ? `<div class="tags">${visibleTags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
       </div>
       <footer>mimifuwa.cc</footer>

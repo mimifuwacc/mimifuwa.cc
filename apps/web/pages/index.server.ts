@@ -15,7 +15,7 @@ export type Props = InferProps<typeof loader>;
 export const head = defineHead((c) =>
   createSiteHead(c.req.url, {
     title: "mimifuwa.cc",
-    description: "個人の活動や制作物、記事をまとめています。",
+    description: "Web App Developer / ヰ組",
     path: "/",
   }),
 );

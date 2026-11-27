@@ -93,6 +93,8 @@ const formatDate = (date?: string) => {
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.4;
+  word-break: auto-phrase;
+  text-wrap: pretty;
 }
 
 .work-card-description {
@@ -100,6 +102,8 @@ const formatDate = (date?: string) => {
   color: var(--muted-foreground);
   font-size: 0.875rem;
   line-height: 1.55;
+  word-break: auto-phrase;
+  text-wrap: pretty;
 }
 
 .work-card:hover .work-card-title {

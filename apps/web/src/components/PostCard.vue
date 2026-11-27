@@ -75,6 +75,8 @@ const formatDate = (date?: string) => {
   margin: 0;
   font-size: 1.15rem;
   font-weight: 700;
+  word-break: auto-phrase;
+  text-wrap: pretty;
 }
 
 .post-card-description {
@@ -82,6 +84,8 @@ const formatDate = (date?: string) => {
   color: var(--muted-foreground);
   font-size: 0.875rem;
   line-height: 1.55;
+  word-break: auto-phrase;
+  text-wrap: pretty;
 }
 
 .post-card:hover .post-card-title {
