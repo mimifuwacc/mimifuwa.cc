@@ -17,7 +17,7 @@
     "site"
   ],
   "dependencies": {
-    "@ox-content/vite-plugin": "3.9.0",
+    "@ox-content/vite-plugin": "3.10.0",
     "@fontsource-variable/noto-sans-jp": "^5.3.1",
     "@fontsource-variable/noto-sans-mono": "^5.3.0",
     "vite": "catalog:"
@@ -44,7 +44,7 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "@ox-content/vite-plugin": "3.9.0",
+    "@ox-content/vite-plugin": "3.10.0",
     "vite": "*"
   },
   "engines": {
