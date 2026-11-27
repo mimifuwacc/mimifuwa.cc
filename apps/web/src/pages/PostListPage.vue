@@ -20,7 +20,7 @@ const filteredPosts = computed(() => {
 </script>
 
 <template>
-  <SiteSection id="posts-page" heading-level="h1" title="Posts">
+  <SiteSection id="posts-page" heading-level="h1" subtitle="Notes & Thoughts" title="Posts">
     <p v-if="hasError" class="empty-state" role="alert">記事を読み込めませんでした</p>
     <p v-else-if="posts.length === 0" class="empty-state">
       記事が公開され次第ここに表示されます

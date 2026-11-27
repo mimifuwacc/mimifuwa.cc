@@ -23,7 +23,7 @@ const filteredWorks = computed(() => {
 </script>
 
 <template>
-  <SiteSection id="works-page" heading-level="h1" title="Works">
+  <SiteSection id="works-page" heading-level="h1" subtitle="Things I’ve made" title="Works">
     <p v-if="hasError" class="works-message" role="alert">制作物を読み込めませんでした</p>
     <p v-else-if="works.length === 0" class="works-message">制作物はまだありません</p>
     <template v-else>
