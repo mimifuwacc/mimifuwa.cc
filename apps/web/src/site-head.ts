@@ -1,5 +1,5 @@
 const siteName = "mimifuwa.cc";
-const defaultDescription = "個人の活動と記事をまとめています。";
+const defaultDescription = "Web App Developer / ヰ組";
 
 export function createSiteHead(
   requestUrl: string,
