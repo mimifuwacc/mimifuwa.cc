@@ -92,7 +92,7 @@ jobs:
         working-directory: content
         env:
           CF_BIN: ${{ github.workspace }}/content/node_modules/.bin/cf
-        run: vp dlx @mimifuwacc/cli@latest deploy
+        run: vp run publish
 
       - name: Deploy SSG site
         working-directory: mimifuwa.cc
