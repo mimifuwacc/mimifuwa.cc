@@ -12,7 +12,7 @@
     "prepare": "if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then git config core.hooksPath .githooks; fi"
   },
   "devDependencies": {
-    "cf": "1.0.0-rc.4",
+    "cf": "1.0.0-rc.5",
     "vite": "catalog:",
     "vite-plus": "1.6.0"
   }
