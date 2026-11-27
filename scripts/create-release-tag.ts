@@ -54,7 +54,7 @@ const prerelease = tag.includes("-");
 process.stdout.write(`Tag: ${tag}\n`);
 process.stdout.write(`Commit: ${commit}\n`);
 process.stdout.write(
-  `Release effects: ${prerelease ? "dev Worker, npm prerelease dist-tag, and sample content" : "production, npm latest, and mimifuwa.cc-content main"}\n`,
+  `Release effects: ${prerelease ? "dev Worker, GitHub Packages prerelease, and sample content" : "production, GitHub Packages latest, and mimifuwa.cc-content main"}\n`,
 );
 
 if (dryRun) {

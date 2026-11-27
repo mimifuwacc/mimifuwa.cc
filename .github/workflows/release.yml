@@ -7,11 +7,56 @@ on:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.22.0
+        with:
+          node-version-file: .node-version
+          cache: true
+          run-install: true
+
+      - name: Validate release tag and select package dist-tag
+        id: release
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          PACKAGE_VERSION="${RELEASE_TAG#v}"
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag must use v<semver>: $RELEASE_TAG" >&2
+            exit 1
+          fi
+
+          node scripts/set-package-version.ts "$PACKAGE_VERSION"
+
+          if [[ "$PACKAGE_VERSION" == *-* ]]; then
+            PACKAGE_TAG="${PACKAGE_VERSION#*-}"
+            PACKAGE_TAG="${PACKAGE_TAG%%.*}"
+            if [[ "$PACKAGE_TAG" =~ ^[0-9]+$ ]]; then
+              PACKAGE_TAG=next
+            fi
+          else
+            PACKAGE_TAG=latest
+          fi
+
+          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "package_tag=$PACKAGE_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Build CLI package
+        run: vp run --filter @mimifuwacc/cli build
+
+      - name: Publish CLI to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_TAG: ${{ steps.release.outputs.package_tag }}
+        run: pnpm --filter @mimifuwacc/cli publish --no-git-checks --ignore-scripts --tag "$PACKAGE_TAG"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:

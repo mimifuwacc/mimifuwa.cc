@@ -19,6 +19,7 @@ on:
 permissions:
   contents: read
   id-token: write
+  packages: read
 
 concurrency:
   group: production-site-deploy-${{ github.repository }}
@@ -74,6 +75,8 @@ jobs:
 
       - name: Install content dependencies
         working-directory: content
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
         run: vp install --frozen-lockfile
 
       - name: Install site dependencies
