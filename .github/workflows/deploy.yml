@@ -31,6 +31,7 @@ jobs:
     env:
       CONTENT_BUCKET: ${{ vars.CONTENT_BUCKET }}
       CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_WORKERS_SUBDOMAIN: ${{ vars.CLOUDFLARE_WORKERS_SUBDOMAIN }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.cloudflare_api_token }}
       CONTENT_REVISION: ${{ inputs.content_ref }}
       SITE_URL: https://mimifuwa.cc
@@ -39,6 +40,7 @@ jobs:
         run: |
           test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is not configured" >&2; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is not configured" >&2; exit 1; }
+          test -n "$CLOUDFLARE_WORKERS_SUBDOMAIN" || { echo "CLOUDFLARE_WORKERS_SUBDOMAIN is not configured" >&2; exit 1; }
           test -n "$CONTENT_BUCKET" || { echo "CONTENT_BUCKET is not configured" >&2; exit 1; }
 
       - name: Checkout content
