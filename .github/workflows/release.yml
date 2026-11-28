@@ -86,6 +86,7 @@ jobs:
           repositories: mimifuwa.cc-content
           permission-contents: write
           permission-pull-requests: write
+          permission-workflows: write
 
       - name: Checkout content repository
         uses: actions/checkout@v7
