@@ -1,0 +1,95 @@
+name: Deploy content upgrade preview
+
+on:
+  workflow_call:
+    inputs:
+      content_repository:
+        description: Repository containing the content to preview
+        required: true
+        type: string
+      content_ref:
+        description: Git ref of the content to preview
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+  packages: read
+
+concurrency:
+  group: content-upgrade-preview
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: preview
+      url: ${{ vars.SITE_URL }}
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_WORKER_NAME: ${{ vars.CLOUDFLARE_WORKER_NAME }}
+      DEPLOY_ENV: preview
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - name: Create content repository token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
+          owner: mimifuwacc
+          repositories: mimifuwa.cc-content
+          permission-contents: read
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Checkout content
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ inputs.content_repository }}
+          ref: ${{ inputs.content_ref }}
+          token: ${{ steps.app-token.outputs.token }}
+          path: content
+
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.22.0
+        with:
+          node-version-file: .node-version
+          cache: true
+          run-install: true
+
+      - name: Validate preview deployment configuration
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is not configured" >&2; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is not configured" >&2; exit 1; }
+          test -n "$CLOUDFLARE_WORKER_NAME" || { echo "CLOUDFLARE_WORKER_NAME is not configured" >&2; exit 1; }
+          test "$SITE_URL" = "https://preview.mimifuwa.cc" || { echo "Preview deployment must use https://preview.mimifuwa.cc" >&2; exit 1; }
+
+      - name: Build CLI
+        run: vp run --filter @mimifuwacc/cli build
+
+      - name: Deploy preview site with PR content
+        env:
+          APP_VERSION: ${{ github.ref_name }}
+          CONTENT_DIR: ${{ github.workspace }}/content/articles
+          CONTENT_DATA_DIR: ${{ github.workspace }}/content/data
+        run: |
+          env_file="apps/web/.env"
+          trap 'rm -f "$env_file"' EXIT
+          umask 077
+          printf 'SITE_URL=%s\n' "$SITE_URL" > "$env_file"
+          printf 'CLOUDFLARE_WORKER_NAME=%s\n' "$CLOUDFLARE_WORKER_NAME" >> "$env_file"
+          node scripts/set-package-version.ts "${APP_VERSION#v}"
+          vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
+
+      - name: Publish PR content assets
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/content/articles
+          CONTENT_REVISION: ${{ inputs.content_ref }}
+          CF_BIN: ${{ github.workspace }}/node_modules/.bin/cf
+        run: node packages/cli/dist/cli.js deploy
