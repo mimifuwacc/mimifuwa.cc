@@ -67,3 +67,54 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  upgrade-content:
+    if: ${{ !contains(github.ref_name, '-') }}
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Create content repository token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
+          owner: mimifuwacc
+          repositories: mimifuwa.cc-content
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout content repository
+        uses: actions/checkout@v7
+        with:
+          repository: mimifuwacc/mimifuwa.cc-content
+          token: ${{ steps.app-token.outputs.token }}
+          path: content
+
+      - name: Update site release references
+        working-directory: content
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          sed -i "s|mimifuwacc/mimifuwa.cc/.github/workflows/deploy.yml@[^[:space:]]*|mimifuwacc/mimifuwa.cc/.github/workflows/deploy.yml@${RELEASE_TAG}|" .github/workflows/publish-content.yml
+          sed -i "s|mimifuwacc/mimifuwa.cc.git//infra/terraform/modules/github-environment?ref=[^\"]*|mimifuwacc/mimifuwa.cc.git//infra/terraform/modules/github-environment?ref=${RELEASE_TAG}|" infra/terraform/main.tf
+
+      - name: Open upgrade pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          path: content
+          branch: chore/upgrade-site-${{ github.ref_name }}
+          delete-branch: true
+          commit-message: "chore(content): upgrade site to ${{ github.ref_name }}"
+          title: "chore(content): upgrade site to ${{ github.ref_name }}"
+          body: |
+            Updates the reusable deployment workflow and shared Terraform module to the `mimifuwa.cc` release `${{ github.ref_name }}`.
+
+            This pull request was opened automatically when the site release was published.
+          add-paths: |
+            .github/workflows/publish-content.yml
+            infra/terraform/main.tf
