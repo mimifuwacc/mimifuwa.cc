@@ -72,12 +72,28 @@ jobs:
     if: ${{ !contains(github.ref_name, '-') }}
     needs: release
     runs-on: ubuntu-latest
+    concurrency:
+      group: content-release-upgrade
+      cancel-in-progress: false
     permissions:
       contents: read
+      packages: read
       pull-requests: write
     steps:
+      - name: Skip stale release upgrades
+        id: release-check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest_tag=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq '.tagName')
+          if [ "$latest_tag" != "$GITHUB_REF_NAME" ]; then
+            echo "Skipping stale release $GITHUB_REF_NAME; latest release is $latest_tag."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create content repository token
         id: app-token
+        if: steps.release-check.outputs.skip != 'true'
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
@@ -89,13 +105,34 @@ jobs:
           permission-workflows: write
 
       - name: Checkout content repository
+        if: steps.release-check.outputs.skip != 'true'
         uses: actions/checkout@v7
         with:
           repository: mimifuwacc/mimifuwa.cc-content
           token: ${{ steps.app-token.outputs.token }}
           path: content
 
+      - name: Setup Node.js
+        if: steps.release-check.outputs.skip != 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+
+      - name: Install pnpm
+        if: steps.release-check.outputs.skip != 'true'
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.10.0
+
+      - name: Update CLI dependency lockfile
+        if: steps.release-check.outputs.skip != 'true'
+        working-directory: content
+        env:
+          PNPM_CONFIG__AUTH: '{"https://npm.pkg.github.com":{"@mimifuwacc":{"authToken":"${{ secrets.GITHUB_TOKEN }}"}}}'
+        run: pnpm update --lockfile-only @mimifuwacc/cli
+
       - name: Update site release references
+        if: steps.release-check.outputs.skip != 'true'
         working-directory: content
         env:
           RELEASE_TAG: ${{ github.ref_name }}
@@ -105,24 +142,26 @@ jobs:
 
       - name: Open upgrade pull request
         id: content-pr
+        if: steps.release-check.outputs.skip != 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.app-token.outputs.token }}
           path: content
-          branch: chore/upgrade-site-${{ github.ref_name }}
+          branch: chore/upgrade-site
           delete-branch: true
           commit-message: "chore(content): upgrade site to ${{ github.ref_name }}"
           title: "chore(content): upgrade site to ${{ github.ref_name }}"
           body: |
-            Updates the reusable deployment workflow and shared Terraform module to the `mimifuwa.cc` release `${{ github.ref_name }}`.
+            Updates the CLI lockfile, reusable deployment workflow, and shared Terraform module to the `mimifuwa.cc` release `${{ github.ref_name }}`.
 
             This pull request was opened automatically when the site release was published.
           add-paths: |
             .github/workflows/publish-content.yml
             infra/terraform/main.tf
+            pnpm-lock.yaml
 
       - name: Enable auto-merge for content upgrade
-        if: steps.content-pr.outputs.pull-request-number != ''
+        if: steps.release-check.outputs.skip != 'true' && steps.content-pr.outputs.pull-request-number != ''
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: mimifuwacc/mimifuwa.cc-content
