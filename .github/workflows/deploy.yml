@@ -11,10 +11,6 @@ on:
         description: Git ref of the content to deploy
         required: true
         type: string
-    secrets:
-      cloudflare_api_token:
-        description: Cloudflare token used to publish content and deploy the site
-        required: true
 
 permissions:
   contents: read
@@ -34,7 +30,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_WORKER_NAME: ${{ vars.CLOUDFLARE_WORKER_NAME }}
       CLOUDFLARE_WORKERS_SUBDOMAIN: ${{ vars.CLOUDFLARE_WORKERS_SUBDOMAIN }}
-      CLOUDFLARE_API_TOKEN: ${{ secrets.cloudflare_api_token }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CONTENT_REVISION: ${{ inputs.content_ref }}
       SITE_URL: https://mimifuwa.cc
     steps:

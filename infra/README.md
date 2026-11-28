@@ -75,3 +75,18 @@ machines.
 The GitHub provider can manage environment variables but cannot retrieve
 secret values. Keep `CLOUDFLARE_API_TOKEN` out of Terraform and add it with
 `gh secret set` as shown above.
+
+## Shared production environment module
+
+`modules/github-environment` is a small Terraform module for creating a GitHub
+Actions environment and its variables. The content repository consumes this
+module and the reusable deployment workflow from the same release tag. The
+release workflow opens an upgrade pull request in `mimifuwa.cc-content` after
+each stable release.
+
+The release workflow needs a GitHub App installed on `mimifuwa.cc-content`
+with **Contents: read and write** and **Pull requests: read and write**. Store
+its client ID and private key as the `CONTENT_REPO_APP_CLIENT_ID` and
+`CONTENT_REPO_APP_PRIVATE_KEY` repository secrets in `mimifuwa.cc`. GitHub App
+creation and installation are not supported by the GitHub Terraform provider;
+the workflow uses the App only to create the cross-repository upgrade PR.
