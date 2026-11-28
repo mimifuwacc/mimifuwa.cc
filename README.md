@@ -1,42 +1,61 @@
 # mimifuwa.cc
 
-Vue で構築した個人サイトです。Void を使って Cloudflare Workers にデプロイします。ブログと Works は Ox Content でビルド時に HTML 化し、`mimifuwa.cc-content` の main が更新されるたびに本番サイトを SSG で再デプロイします。R2 は API から使うコンテンツデータと画像の配信に使います。
+A personal website built with Vue and deployed to Cloudflare Workers using Void.
+Ox Content converts the blog and Works content to HTML at build time. Whenever
+the `main` branch of `mimifuwa.cc-content` is updated, the production site is
+rebuilt as a static site and redeployed. R2 serves content data and images used
+by the API.
 
-## 開発
+## Development
 
-Node.js 24.21 以降を用意して、依存関係をインストールします。
+Install Node.js 24.21 or later, then install the dependencies:
 
 ```sh
 vp install
 vp run dev
 ```
 
-ローカルでは `packages/content-preview/articles` のサンプル記事を使います。別の Markdown ディレクトリを確認するときは `CONTENT_DIR` を指定できます。
+Local development uses sample articles from `packages/content-preview/articles`.
+To use a different directory of Markdown files, set `CONTENT_DIR`:
 
 ```sh
 CONTENT_DIR=/path/to/articles vp run dev
 ```
 
-`mimifuwa.cc-content` の CLI から起動する場合は `mimifuwacc dev --content articles` を使います。詳細は [content development](./packages/cli/README.md) を参照してください。
+To start the site from the `mimifuwa.cc-content` CLI, run
+`mimifuwacc dev --content articles`. See [content development](./packages/cli/README.md)
+for details.
 
-## 確認
+## Checks
 
 ```sh
 vp check
 vp run -r build
 ```
 
-## デプロイ
+## Deployment
 
-- `main` への push は <https://preview.mimifuwa.cc> へ自動デプロイします。Posts と Works は `packages/content-preview` のサンプルを表示します。
-- `vX.Y.Z` tag は CLI を GitHub Packages の `latest` として公開し、`mimifuwa.cc-content` の main を使って本番サイトを SSG でデプロイした後、GitHub Release を作成します。content リポジトリの main へのマージでも、R2 への公開後に同じ手順で本番サイトを再デプロイします。
-- `vX.Y.Z-dev.N` や `vX.Y.Z-alpha.N` tag は CLI を対応する GitHub Packages prerelease tag で公開し、preview Worker と `packages/content-preview` の記事をデプロイします。
-- Cloudflare API トークンは GitHub Actions 環境シークレットで管理し、Account ID と Worker 名は各環境の変数として管理します。Preview 環境はこのリポジトリの Terraform が設定します。
+- Pushes to `main` are automatically deployed to <https://preview.mimifuwa.cc>.
+  Posts and Works use sample content from `packages/content-preview`.
+- A `vX.Y.Z` tag publishes the CLI to GitHub Packages with the `latest` tag,
+  deploys the production site as a static site using `main` from
+  `mimifuwa.cc-content`, and then creates a GitHub Release. Merges to the content
+  repository's `main` also redeploy the production site after publishing content
+  to R2.
+- A `vX.Y.Z-dev.N` or `vX.Y.Z-alpha.N` tag publishes the CLI to GitHub Packages
+  with the matching prerelease tag, then deploys the preview Worker with sample
+  articles from `packages/content-preview`.
+- Cloudflare API tokens are stored as GitHub Actions environment secrets.
+  Account IDs and Worker names are configured as environment variables. The
+  preview environment is managed by this repository's Terraform configuration.
 
-リリースタグは最新の `main` に対して、確認プロンプト付きのタスクから作成します。
+Create release tags from the latest `main` using the task that prompts for
+confirmation:
 
 ```sh
 vp run release -- v5.0.1
 ```
 
-タグ付け前に対象コミットとデプロイ内容を表示し、`yes` を選んだ場合だけ署名付きタグを作って push します。事前確認には `vp run release -- v5.0.1 --dry-run` を使えます。
+The task shows the target commit and deployment contents before tagging. It
+creates and pushes a signed tag only if you confirm with `yes`. To review the
+release without creating a tag, run `vp run release -- v5.0.1 --dry-run`.

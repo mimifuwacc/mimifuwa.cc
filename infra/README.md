@@ -5,13 +5,13 @@ This Terraform root manages the `preview` GitHub Actions environment and the
 configuration lives in the `mimifuwa.cc-content`
 repository so each repository owns its own deployment settings.
 
-| Setting | Source |
-| --- | --- |
-| Preview URL (`SITE_URL`) | Terraform variable |
-| Cloudflare account ID (`CLOUDFLARE_ACCOUNT_ID`) | Terraform-managed GitHub environment variable |
-| Worker name (`CLOUDFLARE_WORKER_NAME`) | Terraform-managed GitHub environment variable and Terraform variable |
-| Cloudflare zone ID | Terraform variable |
-| Cloudflare API token | GitHub environment secret, set with `gh secret set`; export it as `CLOUDFLARE_API_TOKEN` for Terraform |
+| Setting                                         | Source                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------- |
+| Preview URL (`SITE_URL`)                        | Terraform variable                                                        |
+| Cloudflare account ID (`CLOUDFLARE_ACCOUNT_ID`) | Terraform-managed GitHub environment variable                             |
+| Worker name (`CLOUDFLARE_WORKER_NAME`)          | GitHub Actions variable and Terraform input                               |
+| Cloudflare zone ID                              | Terraform variable                                                        |
+| Cloudflare API token                            | GitHub environment secret; export as `CLOUDFLARE_API_TOKEN` for Terraform |
 
 Void declares and deploys Worker code, bindings, and generated static assets in
 `apps/web/void.config.ts`. This Terraform root does not manage Worker scripts.
@@ -35,9 +35,13 @@ Void declares and deploys Worker code, bindings, and generated static assets in
    ```
 
    Import variables only if they already exist in `preview`:
-   `tofu import github_actions_environment_variable.site_url mimifuwa.cc:preview:SITE_URL`
-   or `tofu import github_actions_environment_variable.cloudflare_account_id mimifuwa.cc:preview:CLOUDFLARE_ACCOUNT_ID`,
-   or `tofu import github_actions_environment_variable.cloudflare_worker_name mimifuwa.cc:preview:CLOUDFLARE_WORKER_NAME`.
+
+   ```sh
+   tofu import github_actions_environment_variable.site_url mimifuwa.cc:preview:SITE_URL
+   tofu import github_actions_environment_variable.cloudflare_account_id mimifuwa.cc:preview:CLOUDFLARE_ACCOUNT_ID
+   tofu import github_actions_environment_variable.cloudflare_worker_name mimifuwa.cc:preview:CLOUDFLARE_WORKER_NAME
+   ```
+
    Repository-level variables do not need importing. Apply only after
    confirming the plan has no resource replacement or deletion.
 
