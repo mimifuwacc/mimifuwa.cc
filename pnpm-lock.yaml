@@ -46,7 +46,7 @@ importers:
         version: 0.28.1722793346(vue@3.6.0-rc.16(typescript@7.0.2))
       '@lucide/vue':
         specifier: ^1.61.0
-        version: 1.79.0(vue@3.6.0-rc.16(typescript@7.0.2))
+        version: 1.80.0(vue@3.6.0-rc.16(typescript@7.0.2))
       '@ox-content/vite-plugin':
         specifier: 3.10.0
         version: 3.10.0(@voidzero-dev/vite-plus-core@8.3.8001(@types/node@24.13.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.1))(@vue/compiler-sfc@3.6.0-rc.16)(csstype@3.2.4)(katex@0.16.47)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vue@3.6.0-rc.16(typescript@7.0.2))
@@ -1281,8 +1281,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@lucide/vue@1.79.0':
-    resolution: {integrity: sha512-Qe9DrDeNmIPbClkaOzUC9gW0czx1J3YFmk8ua7CDEByY/JZ7CB4v1s9Ps6lLbuxOSQVLnC8LBei+lS9qI5X0iw==}
+  '@lucide/vue@1.80.0':
+    resolution: {integrity: sha512-vNJr1C3Jx8yUkdTXFYx1iMQ73wkK/opZlTl6mLpvBykXdf5TE9alpfbLfGC4gzrkPV5Ra+YRsUS4TVGJFPASCA==}
     peerDependencies:
       vue: '>=3.0.1'
 
@@ -5887,7 +5887,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@lucide/vue@1.79.0(vue@3.6.0-rc.16(typescript@7.0.2))':
+  '@lucide/vue@1.80.0(vue@3.6.0-rc.16(typescript@7.0.2))':
     dependencies:
       vue: 3.6.0-rc.16(typescript@7.0.2)
 
