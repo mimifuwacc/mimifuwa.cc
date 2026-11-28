@@ -5,7 +5,7 @@ import { ArrowUp } from "@lucide/vue";
 import { IconGithub, IconTwitter } from "@iconify-prerendered/vue-fa-brands";
 const appVersion = __APP_VERSION__;
 const siteRailLabel =
-  __DEPLOY_ENV__ === "release" ? appVersion : __DEPLOY_ENV__ === "local" ? "local" : "dev";
+  __DEPLOY_ENV__ === "release" ? appVersion : __DEPLOY_ENV__ === "local" ? "local" : "preview";
 const showBackToTop = ref(false);
 const scrollReady = ref(false);
 

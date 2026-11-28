@@ -32,6 +32,7 @@ jobs:
     env:
       CONTENT_BUCKET: ${{ vars.CONTENT_BUCKET }}
       CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_WORKER_NAME: ${{ vars.CLOUDFLARE_WORKER_NAME }}
       CLOUDFLARE_WORKERS_SUBDOMAIN: ${{ vars.CLOUDFLARE_WORKERS_SUBDOMAIN }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.cloudflare_api_token }}
       CONTENT_REVISION: ${{ inputs.content_ref }}
@@ -41,6 +42,7 @@ jobs:
         run: |
           test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is not configured" >&2; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is not configured" >&2; exit 1; }
+          test -n "$CLOUDFLARE_WORKER_NAME" || { echo "CLOUDFLARE_WORKER_NAME is not configured" >&2; exit 1; }
           test -n "$CLOUDFLARE_WORKERS_SUBDOMAIN" || { echo "CLOUDFLARE_WORKERS_SUBDOMAIN is not configured" >&2; exit 1; }
           test -n "$CONTENT_BUCKET" || { echo "CONTENT_BUCKET is not configured" >&2; exit 1; }
 
@@ -110,6 +112,7 @@ jobs:
           trap 'rm -f "$env_file"' EXIT
           umask 077
           printf 'CLOUDFLARE_ACCOUNT_ID=%s\n' "$CLOUDFLARE_ACCOUNT_ID" > "$env_file"
+          printf 'CLOUDFLARE_WORKER_NAME=%s\n' "$CLOUDFLARE_WORKER_NAME" >> "$env_file"
           printf 'CLOUDFLARE_API_TOKEN=%s\n' "$CLOUDFLARE_API_TOKEN" >> "$env_file"
           printf 'OG_IMAGE_CACHE_DIR=%s\n' "$OG_IMAGE_CACHE_DIR" >> "$env_file"
           printf 'SITE_URL=%s\n' "$SITE_URL" >> "$env_file"

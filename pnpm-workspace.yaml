@@ -3,7 +3,7 @@ minimumReleaseAge: 4320
 packages:
   - apps/web
   - packages/cli
-  - packages/content-dev
+  - packages/content-preview
 
 onlyBuiltDependencies:
   - core-js-pure

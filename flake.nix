@@ -18,6 +18,8 @@
     in {
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
+          opentofu
+          github-cli
           nix-vite-plus.packages.${system}.vp
         ];
       };

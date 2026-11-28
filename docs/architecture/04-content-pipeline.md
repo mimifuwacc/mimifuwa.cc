@@ -10,7 +10,7 @@ The content repository runs the `mimifuwacc` CLI from this repository. The CLI p
 mimifuwacc dev --content articles
 ```
 
-When developing the site itself, the app uses a few fixtures from `packages/content-dev/articles`:
+When developing the site itself, the app uses a few fixtures from `packages/content-preview/articles`:
 
 ```sh
 vp run dev
@@ -22,7 +22,7 @@ The production site builds its page HTML directly from the Ox Content collection
 
 ## Deployment
 
-- A push to `main` deploys the `mimifuwa-cc-dev` Worker and publishes `packages/content-dev/articles` to its R2 bucket.
-- A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the CLI under its prerelease npm tag, deploys the dev Worker, and publishes `packages/content-dev/articles`.
-- A stable version tag such as `v5.0.0` publishes the CLI under npm's `latest` tag and deploys production with the `mimifuwa.cc-content` `main` branch as its SSG source.
+- A push to `main` deploys the Worker configured by the `preview` GitHub environment and publishes `packages/content-preview/articles` to its R2 bucket.
+- A version prerelease tag such as `v5.0.0-dev.0` or `v5.0.0-alpha.0` publishes the CLI under its prerelease GitHub Packages tag, deploys the preview Worker, and publishes `packages/content-preview/articles`.
+- A stable version tag such as `v5.0.0` publishes the CLI under GitHub Packages' `latest` tag and deploys production with the `mimifuwa.cc-content` `main` branch as its SSG source.
 - Every merge to `mimifuwa.cc-content` `main` publishes its content revision to R2, then checks out the latest stable site release and rebuilds and deploys production using the merged Markdown and JSON files.
