@@ -33,7 +33,7 @@ jobs:
           run-install: true
 
       - name: Build content CLI
-        run: vp exec --filter @mimifuwacc/cli -- tsc -p tsconfig.json
+        run: vp exec --filter @mimifuwacc/cli -- pnpm run build
 
       - name: Set package versions from the latest tag
         run: node scripts/set-package-version.ts "$(git describe --tags --abbrev=0)"

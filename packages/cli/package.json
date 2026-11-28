@@ -36,12 +36,12 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsrs -p tsconfig.json",
     "prepack": "pnpm run build"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",
-    "typescript": "catalog:"
+    "tsrs": "catalog:"
   },
   "peerDependencies": {
     "@ox-content/vite-plugin": "3.10.0",
