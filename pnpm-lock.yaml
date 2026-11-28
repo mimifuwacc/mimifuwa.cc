@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    tsrs:
+      specifier: 7.1.0-beta.tsrs2
+      version: 7.1.0-beta.tsrs2
     vite-plus:
       specifier: 1.7.0
       version: 1.7.0
@@ -95,7 +98,7 @@ importers:
         specifier: ^24.13.2
         version: 24.13.2
       tsrs:
-        specifier: 7.1.0-beta.tsrs2
+        specifier: 'catalog:'
         version: 7.1.0-beta.tsrs2
 
   packages/content-dev: {}

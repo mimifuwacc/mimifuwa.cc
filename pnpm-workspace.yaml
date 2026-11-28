@@ -13,6 +13,7 @@ onlyBuiltDependencies:
   - workerd
 
 catalog:
+  tsrs: 7.1.0-beta.tsrs2
   vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
   vite-plus: 1.7.0
 
