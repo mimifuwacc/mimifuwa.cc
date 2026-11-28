@@ -68,13 +68,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  upgrade-content:
+  open-content-upgrade:
     if: ${{ !contains(github.ref_name, '-') }}
     needs: release
     runs-on: ubuntu-latest
     concurrency:
       group: content-release-upgrade
       cancel-in-progress: false
+    outputs:
+      pull-request-number: ${{ steps.content-pr.outputs.pull-request-number }}
+      content-ref: ${{ steps.content-pr.outputs.pull-request-head-sha }}
     permissions:
       contents: read
       packages: read
@@ -154,15 +157,52 @@ jobs:
           body: |
             Updates the CLI lockfile, reusable deployment workflow, and shared Terraform module to the `mimifuwa.cc` release `${{ github.ref_name }}`.
 
-            This pull request was opened automatically when the site release was published.
+            The updated content is deployed to the shared preview environment before auto-merge is enabled.
           add-paths: |
             .github/workflows/publish-content.yml
             infra/terraform/main.tf
             pnpm-lock.yaml
 
+  deploy-content-preview:
+    needs: open-content-upgrade
+    if: needs.open-content-upgrade.outputs.pull-request-number != ''
+    uses: ./.github/workflows/deploy-content-preview.yml
+    permissions:
+      contents: read
+      id-token: write
+      packages: read
+    with:
+      content_repository: mimifuwacc/mimifuwa.cc-content
+      content_ref: ${{ needs.open-content-upgrade.outputs.content-ref }}
+    secrets: inherit
+
+  enable-content-auto-merge:
+    needs: [open-content-upgrade, deploy-content-preview]
+    if: needs.open-content-upgrade.outputs.pull-request-number != '' && needs.deploy-content-preview.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Create content repository token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CONTENT_REPO_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CONTENT_REPO_APP_PRIVATE_KEY }}
+          owner: mimifuwacc
+          repositories: mimifuwa.cc-content
+          permission-pull-requests: write
+
       - name: Enable auto-merge for content upgrade
-        if: steps.release-check.outputs.skip != 'true' && steps.content-pr.outputs.pull-request-number != ''
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: mimifuwacc/mimifuwa.cc-content
-        run: gh pr merge "${{ steps.content-pr.outputs.pull-request-number }}" --auto --squash
+          PR_NUMBER: ${{ needs.open-content-upgrade.outputs.pull-request-number }}
+          EXPECTED_CONTENT_REF: ${{ needs.open-content-upgrade.outputs.content-ref }}
+        run: |
+          current_ref=$(gh pr view "$PR_NUMBER" --json headRefOid --jq '.headRefOid')
+          if [ "$current_ref" != "$EXPECTED_CONTENT_REF" ]; then
+            echo "The upgrade PR changed during preview deployment; a newer release will deploy the latest commit."
+            exit 0
+          fi
+          gh pr merge "$PR_NUMBER" --auto --squash
