@@ -74,7 +74,7 @@ jobs:
       - name: Install content dependencies
         working-directory: content
         env:
-          PNPM_CONFIG__AUTH: '{"https://npm.pkg.github.com":{"@mimifuwacc":{"authToken":"${{ github.token }}"}}}'
+          PNPM_CONFIG__AUTH: '{"https://npm.pkg.github.com":{"@mimifuwacc":{"authToken":"${{ secrets.GITHUB_TOKEN }}"}}}'
         run: vp install --frozen-lockfile
 
       - name: Install site dependencies
