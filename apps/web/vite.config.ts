@@ -20,9 +20,9 @@ const appVersion = (() => {
   }
 })();
 const contentDir =
-  process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-dev/articles");
+  process.env.CONTENT_DIR ?? resolve(appDir, "../../packages/content-preview/articles");
 const contentDataDir =
-  process.env.CONTENT_DATA_DIR ?? resolve(appDir, "../../packages/content-dev/data");
+  process.env.CONTENT_DATA_DIR ?? resolve(appDir, "../../packages/content-preview/data");
 const config = {
   define: {
     __DEPLOY_ENV__: JSON.stringify(process.env.DEPLOY_ENV ?? "local"),

@@ -51,7 +51,7 @@ The `mimifuwa.cc` Vite development server also watches its configured `CONTENT_D
 Deploy the site first so its resolved `STORAGE` bucket configuration is available. Then run from the site workspace, setting `CONTENT_DIR` to the desired articles directory:
 
 ```sh
-CONTENT_DIR=packages/content-dev/articles vp exec --filter @mimifuwacc/cli -- mimifuwacc deploy
+CONTENT_DIR=packages/content-preview/articles vp exec --filter @mimifuwacc/cli -- mimifuwacc deploy
 ```
 
 The CLI loads Ox Content to collect embedded media and remote Open Graph image URLs, uploads those assets and an image allowlist under a revision key with Cloudflare's `cf` CLI, then updates the active revision in R2. It does not upload article JSON or site data because those are compiled into static pages. It does not deploy the website. In this workspace, `cf` is installed with the other dependencies through Vite+. `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` must be available in the environment; the token needs permission to write R2 objects.

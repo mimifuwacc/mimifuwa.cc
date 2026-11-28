@@ -1,13 +1,13 @@
 {
   "version": 1,
   "source": {
-    "name": "mimifuwa-cc-dev",
+    "name": "local",
     "workers_dev": true
   },
   "resolved": {
-    "name": "mimifuwa-cc-dev",
+    "name": "local",
     "workers_dev": true,
     "compatibility_date": "2026-02-24"
   },
-  "text": "{\n  \"name\": \"mimifuwa-cc-dev\",\n  \"workers_dev\": true,\n  \"compatibility_date\": \"2026-02-24\"\n}\n"
+  "text": "{\n  \"name\": \"local\",\n  \"workers_dev\": true,\n  \"compatibility_date\": \"2026-02-24\"\n}\n"
 }

@@ -1,0 +1,2 @@
+cloudflare_account_id = "replace-with-account-id"
+cloudflare_zone_id    = "replace-with-mimifuwa-cc-zone-id"

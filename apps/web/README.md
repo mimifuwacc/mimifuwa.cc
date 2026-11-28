@@ -2,16 +2,13 @@
 
 Void builds the shared site layout, post and work indexes, and each article detail page as static HTML from Ox Content collections. Runtime routes only serve embedded content assets from R2 and proxy allowlisted Open Graph images; page and article data is included in the static build.
 
-Local development uses `packages/content-dev/articles` and serves the articles directly from the Vite dev server. A merge to `main` deploys a preview from that content and publishes it to the preview Worker. Production content is managed by the `mimifuwa.cc-content` repository.
+Local development uses `packages/content-preview/articles` and serves the articles directly from the Vite dev server. A merge to `main` deploys a preview from that content and publishes it to the preview Worker. Production content is managed by the `mimifuwa.cc-content` repository.
 
-Version tags publish the CLI package to npm and create a GitHub Release; they do not deploy the site. The content repository calls this repository's reusable production deployment workflow when its `main` branch changes. That workflow publishes content assets and builds and deploys the production site from the latest stable site release. Worker names are configured in `void.config.ts`; Cloudflare derives each `workers.dev` URL from the Worker name and account subdomain. Custom domains can be added there when they are ready.
+Version tags publish the CLI package to GitHub Packages and create a GitHub Release; they do not deploy the site. The content repository calls this repository's reusable production deployment workflow when its `main` branch changes. That workflow publishes content assets and builds and deploys the production site from the latest stable site release. The Worker name is supplied as `CLOUDFLARE_WORKER_NAME` by each GitHub deployment environment; locally, the Void config uses a generic name. The preview name and custom domain are managed by Terraform. Production settings belong to the content repository.
 
 `SITE_URL` sets the canonical origin used for page metadata and content publishing. It defaults to an empty string, so metadata URLs stay relative when it is unset. Deployment workflows pass the public URL for their environment.
 
-Configure the `preview` GitHub Actions environment with these secrets:
-
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN`
+Configure the `preview` GitHub Actions environment with the `CLOUDFLARE_API_TOKEN` secret. Terraform manages the `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_WORKER_NAME`, and `SITE_URL` variables.
 
 Cloudflare API tokens need these account permissions:
 

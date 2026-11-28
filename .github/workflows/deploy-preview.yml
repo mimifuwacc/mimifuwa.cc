@@ -16,10 +16,11 @@ jobs:
     environment:
       name: preview
     env:
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_WORKER_NAME: ${{ vars.CLOUDFLARE_WORKER_NAME }}
       DEPLOY_ENV: preview
-      SITE_URL: https://mimifuwa-cc-dev.m8c.workers.dev
+      SITE_URL: ${{ vars.SITE_URL }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -35,6 +36,13 @@ jobs:
       - name: Build content CLI
         run: vp exec --filter @mimifuwacc/cli -- pnpm run build
 
+      - name: Validate preview deployment configuration
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is not configured" >&2; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is not configured" >&2; exit 1; }
+          test -n "$CLOUDFLARE_WORKER_NAME" || { echo "CLOUDFLARE_WORKER_NAME is not configured" >&2; exit 1; }
+          test -n "$SITE_URL" || { echo "SITE_URL is not configured" >&2; exit 1; }
+
       - name: Set package versions from the latest tag
         run: node scripts/set-package-version.ts "$(git describe --tags --abbrev=0)"
 
@@ -44,10 +52,11 @@ jobs:
           trap 'rm -f "$env_file"' EXIT
           umask 077
           printf 'SITE_URL=%s\n' "$SITE_URL" > "$env_file"
+          printf 'CLOUDFLARE_WORKER_NAME=%s\n' "$CLOUDFLARE_WORKER_NAME" >> "$env_file"
           vp exec --filter @mimifuwacc/web -- void deploy --platform cloudflare
 
-      - name: Publish dev content
+      - name: Publish preview content
         env:
-          CONTENT_DIR: ${{ github.workspace }}/packages/content-dev/articles
+          CONTENT_DIR: ${{ github.workspace }}/packages/content-preview/articles
           CF_BIN: ${{ github.workspace }}/node_modules/.bin/cf
         run: node packages/cli/dist/cli.js deploy

@@ -1,5 +1,5 @@
 {
-  "name": "@mimifuwacc/content-dev",
+  "name": "@mimifuwacc/content-preview",
   "private": true,
   "type": "module",
   "description": "Small local Ox Content fixture set for the mimifuwa.cc site."

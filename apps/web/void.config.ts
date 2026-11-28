@@ -1,19 +1,19 @@
 import { defineConfig } from "void/config";
 
-const deploymentEnv = (
+const workerName = (
   globalThis as typeof globalThis & {
     process?: { env?: Record<string, string | undefined> };
   }
-).process?.env?.DEPLOY_ENV;
+).process?.env?.CLOUDFLARE_WORKER_NAME;
 const nodeEnv = (
   globalThis as typeof globalThis & {
     process?: { env?: Record<string, string | undefined> };
   }
 ).process?.env?.NODE_ENV;
-const workerName = deploymentEnv === "release" ? "mimifuwa-cc-prod" : "mimifuwa-cc-dev";
+const localWorkerName = "local";
 
 export default defineConfig({
-  cloudflare: { name: workerName, workers_dev: true },
+  cloudflare: { name: workerName ?? localWorkerName, workers_dev: true },
   inference: {
     appType: "void",
     build: "vp build",

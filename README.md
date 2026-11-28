@@ -11,7 +11,7 @@ vp install
 vp run dev
 ```
 
-ローカルでは `packages/content-dev/articles` のサンプル記事を使います。別の Markdown ディレクトリを確認するときは `CONTENT_DIR` を指定できます。
+ローカルでは `packages/content-preview/articles` のサンプル記事を使います。別の Markdown ディレクトリを確認するときは `CONTENT_DIR` を指定できます。
 
 ```sh
 CONTENT_DIR=/path/to/articles vp run dev
@@ -28,10 +28,10 @@ vp run -r build
 
 ## デプロイ
 
-- `main` への push は <https://mimifuwa-cc-dev.m8c.workers.dev> へ自動デプロイします。Posts と Works は `packages/content-dev` のサンプルを表示します。
-- `vX.Y.Z` tag は CLI を npm の `latest` として公開し、`mimifuwa.cc-content` の main を使って本番サイトを SSG でデプロイした後、GitHub Release を作成します。content リポジトリの main へのマージでも、R2 への公開後に同じ手順で本番サイトを再デプロイします。
-- `vX.Y.Z-dev.N` や `vX.Y.Z-alpha.N` tag は CLI を対応する npm prerelease tag で公開し、dev Worker と `packages/content-dev` の記事をデプロイします。
-- Cloudflare の認証情報は GitHub Actions の `dev` / `production` 環境シークレットで管理します。
+- `main` への push は <https://preview.mimifuwa.cc> へ自動デプロイします。Posts と Works は `packages/content-preview` のサンプルを表示します。
+- `vX.Y.Z` tag は CLI を GitHub Packages の `latest` として公開し、`mimifuwa.cc-content` の main を使って本番サイトを SSG でデプロイした後、GitHub Release を作成します。content リポジトリの main へのマージでも、R2 への公開後に同じ手順で本番サイトを再デプロイします。
+- `vX.Y.Z-dev.N` や `vX.Y.Z-alpha.N` tag は CLI を対応する GitHub Packages prerelease tag で公開し、preview Worker と `packages/content-preview` の記事をデプロイします。
+- Cloudflare API トークンは GitHub Actions 環境シークレットで管理し、Account ID と Worker 名は各環境の変数として管理します。Preview 環境はこのリポジトリの Terraform が設定します。
 
 リリースタグは最新の `main` に対して、確認プロンプト付きのタスクから作成します。
 
