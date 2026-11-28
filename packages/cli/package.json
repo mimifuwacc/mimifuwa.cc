@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.13.2",
-    "tsrs": "7.1.0-beta.tsrs5"
+    "tsrs": "7.1.0-beta.tsrs2"
   },
   "peerDependencies": {
     "@ox-content/vite-plugin": "3.10.0",
