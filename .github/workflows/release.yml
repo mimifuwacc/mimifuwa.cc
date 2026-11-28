@@ -103,7 +103,7 @@ jobs:
           sed -i "s|mimifuwacc/mimifuwa.cc.git//infra/terraform/modules/github-environment?ref=[^\"]*|mimifuwacc/mimifuwa.cc.git//infra/terraform/modules/github-environment?ref=${RELEASE_TAG}|" infra/terraform/main.tf
 
       - name: Open upgrade pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.app-token.outputs.token }}
           path: content
