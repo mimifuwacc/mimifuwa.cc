@@ -104,6 +104,7 @@ jobs:
           sed -i "s|mimifuwacc/mimifuwa.cc.git//infra/terraform/modules/github-environment?ref=[^\"]*|mimifuwacc/mimifuwa.cc.git//infra/terraform/modules/github-environment?ref=${RELEASE_TAG}|" infra/terraform/main.tf
 
       - name: Open upgrade pull request
+        id: content-pr
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -119,3 +120,10 @@ jobs:
           add-paths: |
             .github/workflows/publish-content.yml
             infra/terraform/main.tf
+
+      - name: Enable auto-merge for content upgrade
+        if: steps.content-pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: mimifuwacc/mimifuwa.cc-content
+        run: gh pr merge "${{ steps.content-pr.outputs.pull-request-number }}" --auto --squash
