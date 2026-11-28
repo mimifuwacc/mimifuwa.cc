@@ -75,11 +75,3 @@ machines.
 The GitHub provider can manage environment variables but cannot retrieve
 secret values. Keep `CLOUDFLARE_API_TOKEN` out of Terraform and add it with
 `gh secret set` as shown above.
-
-## GitHub App bootstrap
-
-`github-app-manifest.json` is the checked-in permission specification for the
-release updater App. The official GitHub Terraform provider cannot register
-Apps, so GitHub still requires one owner-authorized registration step. Install
-the App only on `mimifuwa.cc-content`; store its App ID and private key in that
-repository as Actions secrets. The site repository does not need the App key.
