@@ -14,7 +14,7 @@
     "@iconify-prerendered/vue-fa-brands": "^0.28.1722793346",
     "@lucide/vue": "^1.61.0",
     "@ox-content/vite-plugin": "3.10.0",
-    "@vizejs/vite-plugin": "0.627.0",
+    "@vizejs/vite-plugin": "0.795.0",
     "@void/vue": "1.11.0",
     "vue": "3.6.0-rc.16"
   },
